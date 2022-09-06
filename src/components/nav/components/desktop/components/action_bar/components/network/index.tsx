@@ -1,6 +1,5 @@
 import React from 'react';
 import classnames from 'classnames';
-import { ExpandMore } from '@material-ui/icons';
 import { Typography } from '@material-ui/core';
 import { useRecoilValue } from 'recoil';
 import { readSelectedNetwork } from '@recoil/big_dipper_networks';
