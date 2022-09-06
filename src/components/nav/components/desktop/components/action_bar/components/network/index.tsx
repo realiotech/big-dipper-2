@@ -26,7 +26,7 @@ const Network:React.FC<{
       <Typography variant="body1">
         {selected}
       </Typography>
-      <ExpandMore />
+      {/* <ExpandMore /> */}
     </div>
   );
 };

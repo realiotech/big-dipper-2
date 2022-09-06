@@ -1,10 +1,10 @@
 {
   "maintainer": {
-    "name": "Forbole",
-    "url": "https://forbole.com"
+    "name": "Realio",
+    "url": "https://realio.fund"
   },
   "github": {
-    "reportIssue": "https://github.com/forbole/big-dipper-2.0-cosmos/issues"
+    "reportIssue": "https://github.com/realiotech/big-dipper-2.0-cosmos/issues"
   },
   "previewImage": "https://bigdipper.live/images/big-dipper-social-media.png",
   "version": "base-v2.1.0"

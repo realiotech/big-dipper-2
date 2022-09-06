@@ -4,7 +4,7 @@ import { useGetComponentDimension } from '@hooks';
 import { useStyles } from './styles';
 import {
   Network,
-  NetworkList,
+  // NetworkList,
   SettingsList,
 } from './components';
 import { SearchBar } from '../../..';
@@ -20,7 +20,7 @@ const ActionBar: React.FC<{
 }) => {
   const {
     ref: heightRef,
-    height,
+    // height,
   } = useGetComponentDimension();
   const classes = useStyles();
   return (
@@ -33,12 +33,12 @@ const ActionBar: React.FC<{
         />
         <SettingsList />
       </div>
-      <NetworkList
-        actionHeight={height}
-        className={classnames(classes.networkList, {
-          open: isNetwork,
-        })}
-      />
+      {/* <NetworkList */}
+      {/*   actionHeight={height} */}
+      {/*   className={classnames(classes.networkList, { */}
+      {/*     open: isNetwork, */}
+      {/*   })} */}
+      {/* /> */}
     </div>
   );
 };

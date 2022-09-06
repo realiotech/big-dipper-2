@@ -14,21 +14,21 @@ export const socialMediaLinks:{
   {
     component: <TelegramIcon />,
     className: 'telegram',
-    url: 'https://t.me/forbole',
+    url: 'https://t.me/realio_fund',
   },
   {
     component: <LinkedinIcon />,
     className: 'linkedin',
-    url: 'https://www.linkedin.com/company/forbole',
+    url: 'https://www.linkedin.com/company/realio',
   },
   {
     component: <TwitterIcon />,
     className: 'twitter',
-    url: 'https://twitter.com/bigdipperlive',
+    url: 'https://twitter.com/realio_network',
   },
   {
     component: <GithubIcon />,
     className: 'github',
-    url: 'https://github.com/forbole',
+    url: 'https://github.com/realiotech',
   },
 ];

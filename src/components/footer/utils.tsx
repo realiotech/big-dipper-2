@@ -1,4 +1,4 @@
-const FORBOLE_URL = 'https://www.forbole.com';
+const REALIO_URL = 'https://www.realio.fund';
 const BIG_DIPPER_URL = 'https://bigdipper.live';
 
 export const donateLink = {
@@ -11,20 +11,20 @@ export const footerLinks = [
     key: 'company',
     links: [
       {
-        key: 'forbole',
-        url: FORBOLE_URL,
+        key: 'realio',
+        url: REALIO_URL,
       },
       {
-        key: 'stakeNow',
-        url: `${FORBOLE_URL}/stake-now`,
+        key: 'rst',
+        url: `${REALIO_URL}/rst`,
       },
       {
         key: 'contact',
-        url: `${FORBOLE_URL}/contact`,
+        url: `${REALIO_URL}/#contact`,
       },
       {
         key: 'blog',
-        url: `${FORBOLE_URL}/blog`,
+        url: `${REALIO_URL}/blog`,
       },
     ],
   },
