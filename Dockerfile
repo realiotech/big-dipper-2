@@ -10,6 +10,7 @@ WORKDIR /app
 
 # Installing dependencies
 COPY package*.json ./
+RUN mkdir node_modules
 RUN npm ci
 
 # Copying source files
@@ -38,6 +39,7 @@ ENV NODE_ENV ${NODE_ENV}
 ENV PORT 3000
 ENV NEXT_PUBLIC_MATOMO_URL ${NEXT_PUBLIC_MATOMO_URL}
 ENV NEXT_PUBLIC_MATOMO_SITE_ID ${NEXT_PUBLIC_MATOMO_SITE_ID}
+ENV NEXTAUTH_URL http://localhost:3000
 
 # Building app
 RUN npm run build:next
