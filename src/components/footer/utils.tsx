@@ -1,9 +1,12 @@
 const REALIO_URL = 'https://www.realio.fund';
-const BIG_DIPPER_URL = 'https://bigdipper.live';
+const REALIO_APP_URL = 'https://app.realio.fund/login';
+const REALIO_NETWORK_URL = 'https://realio.network';
+const REALIO_GENESIS_URL = 'https://genesis.realio.network';
+const REALIOVERSE_URL = 'https://metaverse.realio.network';
 
 export const donateLink = {
   key: 'donate',
-  url: `${BIG_DIPPER_URL}/donate`,
+  url: `${REALIO_APP_URL}/donate`,
 };
 
 export const footerLinks = [
@@ -29,23 +32,23 @@ export const footerLinks = [
     ],
   },
   {
-    key: 'bigDipper',
+    key: 'applicationLinks',
     links: [
       {
-        key: 'about',
-        url: `${BIG_DIPPER_URL}/#about`,
+        key: 'realioPlatform',
+        url: `${REALIO_APP_URL}`,
       },
       {
-        key: 'faq',
-        url: `${BIG_DIPPER_URL}/faq`,
+        key: 'realioNetwork',
+        url: `${REALIO_NETWORK_URL}`,
       },
       {
-        key: 'termsAndConditions',
-        url: `${BIG_DIPPER_URL}/terms-and-conditions`,
+        key: 'realioDefi',
+        url: `${REALIO_GENESIS_URL}`,
       },
       {
-        key: 'privacyPolicy',
-        url: `${BIG_DIPPER_URL}/privacy-policy`,
+        key: 'realioVerse',
+        url: `${REALIOVERSE_URL}`,
       },
     ],
   },

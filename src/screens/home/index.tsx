@@ -14,7 +14,7 @@ const Home = () => {
   const classes = useStyles();
 
   return (
-    <Layout className={classes.root}>
+    <Layout className={classes.root} navTitle="Realio Network">
       <DataBlocks className={classes.dataBlocks} />
       <Hero className={classes.hero} />
       <Tokenomics className={classes.tokenomics} />

@@ -16,21 +16,22 @@ const TitleBar:React.FC<{
 }> = ({
   className, title,
 }) => {
-  const theme = useRecoilValue(readTheme);
+  // const theme = useRecoilValue(readTheme);
   const { t } = useTranslation('common');
   const classes = useStyles();
   const marketState = useRecoilValue(readMarket);
 
   const market = formatMarket(marketState);
 
-  const logoUrl = R.pathOr(chainConfig.logo.default, ['logo', theme], chainConfig);
+  // const logoUrl = R.pathOr(chainConfig.logo.default, ['logo', theme], chainConfig);
 
   return (
     <div className={classnames(className, classes.root)}>
       {
       title
         ? <Typography variant="h1">{title}</Typography>
-        : <img src={logoUrl} className={classes.logo} alt="logo" />
+        : <Typography variant="h1">{title}</Typography>
+        // : <img src={logoUrl} className={classes.logo} alt="logo" />
       }
       <div className={classes.content}>
         {market.map((x) => (

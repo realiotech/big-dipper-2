@@ -13,8 +13,8 @@ export const useStyles = () => {
           },
         },
         logo: {
-          width: '216px',
-          padding: theme.spacing(2, 1.75, 2.5),
+          width: '180px',
+          padding: theme.spacing(2, 0.75, 2.5),
           '&:hover': {
             cursor: 'pointer',
           },
