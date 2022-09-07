@@ -1,4 +1,3 @@
-import Big from 'big.js';
 import { formatNumber } from '@utils/format_token';
 
 export const formatMarket = (data: {
@@ -10,7 +9,8 @@ export const formatMarket = (data: {
 }) => {
   // todo add marketcap, inflation, apr data.
   // const exludedItems = [null, 0];
-  // const marketCap = exludedItems.includes(data.marketCap) ? 'N/A' : `$${formatNumber(data.marketCap.toString(), 2)}`;
+  // const marketCap = exludedItems.includes(data.marketCap) ? 'N/A' :
+  // `$${formatNumber(data.marketCap.toString(), 2)}`;
 
   return ([
     // {

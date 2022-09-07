@@ -1,0 +1,40 @@
+image: atlassian/default-image:2
+
+definitions:
+  services:
+    docker:
+      memory: 7128
+pipelines:
+  branches:
+    staging:
+      - step:
+          size: 2x
+          script:
+            - docker login $DOCKER_REGISTRY -u $DOCKER_REGISTRY_USER -p $DOCKER_REGISTRY_PASSWORD
+            - docker build --build-arg=NEXT_PUBLIC_CHAIN_TYPE=testnet --build-arg=NODE_ENV=production --build-arg=GIT_COMMIT=$BITBUCKET_COMMIT -t $DOCKER_REGISTRY/$BITBUCKET_REPO_SLUG:$BITBUCKET_COMMIT -f Dockerfile .
+            - docker tag $DOCKER_REGISTRY/$BITBUCKET_REPO_SLUG:$BITBUCKET_COMMIT $DOCKER_REGISTRY/$BITBUCKET_REPO_SLUG:latest
+            - docker push $DOCKER_REGISTRY/$BITBUCKET_REPO_SLUG:latest
+            - docker push $DOCKER_REGISTRY/$BITBUCKET_REPO_SLUG:$BITBUCKET_COMMIT
+            - git remote add sync git@github.com:realiotech/big-dipper-2.git
+            - git checkout -b chains/realionetwork/testnet
+            - git push sync chains/realionetwork/testnet
+          services:
+            - docker
+          caches:
+            - docker
+    master:
+      - step:
+          size: 2x
+          script:
+            - docker login $DOCKER_REGISTRY -u $DOCKER_REGISTRY_USER -p $DOCKER_REGISTRY_PASSWORD
+            - docker build --build-arg=NEXT_PUBLIC_CHAIN_TYPE=mainnet --build-arg=NODE_ENV=production --build-arg=GIT_COMMIT=$BITBUCKET_COMMIT -t $DOCKER_REGISTRY/$BITBUCKET_REPO_SLUG:$BITBUCKET_COMMIT -f Dockerfile .
+            - docker tag $DOCKER_REGISTRY/$BITBUCKET_REPO_SLUG:$BITBUCKET_COMMIT $DOCKER_REGISTRY/$BITBUCKET_REPO_SLUG:prod
+            - docker push $DOCKER_REGISTRY/$BITBUCKET_REPO_SLUG:prod
+            - docker push $DOCKER_REGISTRY/$BITBUCKET_REPO_SLUG:$BITBUCKET_COMMIT
+            - git remote add sync git@github.com:realiotech/big-dipper-2.git
+            - git checkout -b chains/realionetwork
+            - git push sync chains/realionetwork
+          services:
+            - docker
+          caches:
+            - docker
