@@ -2,10 +2,8 @@
 # This is a YAML-formatted file.
 # Declare variables to be passed into your templates.
 
-env: stage
-
 replicaCount: 1
-
+env: stage
 image:
   repository: registry.k8s.stage.realio.fund/realio-network-explorer
   pullPolicy: Always
@@ -68,8 +66,8 @@ resources:
   # resources, such as Minikube. If you do want to specify resources, uncomment the following
   # lines, adjust them as necessary, and remove the curly braces after 'resources:'.
   limits:
-    cpu: 200m
-    memory: 256Mi
+    cpu: 2000m
+    memory: 2Gi
   requests:
     cpu: 100m
     memory: 128Mi
