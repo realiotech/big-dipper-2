@@ -38,6 +38,9 @@ spec:
           image: "{{ .Values.image.repository }}:{{ .Values.image.tag | default .Chart.AppVersion }}"
           imagePullPolicy: {{ .Values.image.pullPolicy }}
           command: [ 'sh', '-c', "./bin/build_next_js.sh" ]
+          volumeMounts:
+            - name: next-build
+              mountPath: /app/.next
           envFrom:
             - configMapRef:
                 name: {{ .Release.Name }}-vars
@@ -52,6 +55,9 @@ spec:
           envFrom:
             - configMapRef:
                 name: {{ .Release.Name }}-vars
+          volumeMounts:
+            - name: next-build
+              mountPath: /app/.next
           ports:
             - name: http
               containerPort: {{ .Values.service.port }}
@@ -66,6 +72,9 @@ spec:
               port: http
           resources:
             {{- toYaml .Values.resources | nindent 12 }}
+      volumes:
+        - name: next-build
+          emptyDir: { }
       {{- with .Values.nodeSelector }}
       nodeSelector:
         {{- toYaml . | nindent 8 }}
