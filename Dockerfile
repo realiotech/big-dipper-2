@@ -12,9 +12,12 @@ WORKDIR /app
 COPY package*.json ./
 RUN mkdir node_modules
 RUN npm ci
+RUN npx browserslist@latest --update-db
 
 # Copying source files
 COPY . .
+
+RUN npm run build:next
 
 EXPOSE ${PORT}
 
