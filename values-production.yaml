@@ -8,40 +8,7 @@ image:
   repository: registry.k8s.stage.realio.fund/realio-network-explorer
   pullPolicy: Always
   # Overrides the image tag whose default is the chart appVersion.
-  tag: "latest"
-
-imagePullSecrets:
-  - name: regcred
-nameOverride: ""
-fullnameOverride: "realio-network-explorer"
-
-serviceAccount:
-  # Specifies whether a service account should be created
-  create: true
-  # Annotations to add to the service account
-  annotations: {}
-  # The name of the service account to use.
-  # If not set and create is true, a name is generated using the fullname template
-  name: ""
-
-podAnnotations: {}
-
-keelAnnotations:
-  keel.sh/policy: "force"
-  keel.sh/trigger: "webhook"
-  keel.sh/match-tag: "true"
-  keel.sh/notify: "development"
-
-podSecurityContext: {}
-  # fsGroup: 2000
-
-securityContext: {}
-  # capabilities:
-  #   drop:
-  #   - ALL
-  # readOnlyRootFilesystem: true
-  # runAsNonRoot: true
-  # runAsUser: 1000
+  tag: "prod"
 
 service:
   type: ClusterIP
@@ -53,7 +20,7 @@ ingress:
     traefik.ingress.kubernetes.io/preserve-host: "true"
     traefik.ingress.kubernetes.io/redirect-permanent: "true"
   hosts:
-    - host: explorer.k8s.stage.realio.fund
+    - host: explorer.k8s.realio.fund
       paths: [ '/' ]
   tls: [ ]
   #  - secretName: chart-example-tls
@@ -67,20 +34,7 @@ resources:
   # lines, adjust them as necessary, and remove the curly braces after 'resources:'.
   limits:
     cpu: 2000m
-    memory: 2Gi
+    memory: 4Gi
   requests:
     cpu: 100m
-    memory: 1Gi
-
-autoscaling:
-  enabled: false
-  minReplicas: 1
-  maxReplicas: 100
-  targetCPUUtilizationPercentage: 80
-  # targetMemoryUtilizationPercentage: 80
-
-nodeSelector: {}
-
-tolerations: []
-
-affinity: {}
+    memory: 2Gi

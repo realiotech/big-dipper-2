@@ -1,6 +1,6 @@
 #!/usr/bin/env sh
 
-npm run build:next
+NODE_ENV=production npm run build:next
 
 ls -lha /app/.next
 
