@@ -6,10 +6,9 @@ pipelines:
       - step:
           size: 2x # Total memory is 8GB
           script:
-            - npm ci
+            - NODE_ENV=development npm ci
             - npx browserslist@latest --update-db
-            - npm install --save-dev typescript @types/react
-            - npm run build:next
+            - NODE_ENV=production npm run build:next
             - docker login $DOCKER_REGISTRY -u $DOCKER_REGISTRY_USER -p $DOCKER_REGISTRY_PASSWORD
             - docker build --build-arg=GIT_COMMIT=$BITBUCKET_COMMIT -t $DOCKER_REGISTRY/$BITBUCKET_REPO_SLUG:$BITBUCKET_COMMIT -f Dockerfile-bitbucket .
             - docker tag $DOCKER_REGISTRY/$BITBUCKET_REPO_SLUG:$BITBUCKET_COMMIT $DOCKER_REGISTRY/$BITBUCKET_REPO_SLUG:latest
