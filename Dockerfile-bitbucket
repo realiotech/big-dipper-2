@@ -8,10 +8,14 @@ RUN apk add --no-cache git
 # Set app directory
 WORKDIR /app
 
-# build occurs on pipeline
+# Installing dependencies
+COPY package*.json ./
+RUN mkdir node_modules
+RUN npm ci
+RUN npx browserslist@latest --update-db
 
 # Copying source files
-ADD dist /app/dist
+ADD . .
 
 EXPOSE ${PORT}
 
