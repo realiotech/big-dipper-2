@@ -1,4 +1,4 @@
-image: atlassian/default-image:2
+image: node:14.5.0
 
 pipelines:
   branches:
@@ -6,8 +6,10 @@ pipelines:
       - step:
           size: 2x # Total memory is 8GB
           script:
+            - npm ci
+            - npm run build:next
             - docker login $DOCKER_REGISTRY -u $DOCKER_REGISTRY_USER -p $DOCKER_REGISTRY_PASSWORD
-            - docker build --build-arg=GIT_COMMIT=$BITBUCKET_COMMIT -t $DOCKER_REGISTRY/$BITBUCKET_REPO_SLUG:$BITBUCKET_COMMIT -f Dockerfile .
+            - docker build --build-arg=GIT_COMMIT=$BITBUCKET_COMMIT -t $DOCKER_REGISTRY/$BITBUCKET_REPO_SLUG:$BITBUCKET_COMMIT -f Dockerfile-bitbucket .
             - docker tag $DOCKER_REGISTRY/$BITBUCKET_REPO_SLUG:$BITBUCKET_COMMIT $DOCKER_REGISTRY/$BITBUCKET_REPO_SLUG:latest
             - docker push $DOCKER_REGISTRY/$BITBUCKET_REPO_SLUG:latest
             - docker push $DOCKER_REGISTRY/$BITBUCKET_REPO_SLUG:$BITBUCKET_COMMIT
@@ -22,8 +24,10 @@ pipelines:
       - step:
           size: 2x # Total memory is 8GB
           script:
+            - npm ci
+            - npm run build:next
             - docker login $DOCKER_REGISTRY -u $DOCKER_REGISTRY_USER -p $DOCKER_REGISTRY_PASSWORD
-            - docker build --build-arg=GIT_COMMIT=$BITBUCKET_COMMIT -t $DOCKER_REGISTRY/$BITBUCKET_REPO_SLUG:$BITBUCKET_COMMIT -f Dockerfile .
+            - docker build --build-arg=GIT_COMMIT=$BITBUCKET_COMMIT -t $DOCKER_REGISTRY/$BITBUCKET_REPO_SLUG:$BITBUCKET_COMMIT -f Dockerfile-bitbucket .
             - docker tag $DOCKER_REGISTRY/$BITBUCKET_REPO_SLUG:$BITBUCKET_COMMIT $DOCKER_REGISTRY/$BITBUCKET_REPO_SLUG:prod
             - docker push $DOCKER_REGISTRY/$BITBUCKET_REPO_SLUG:prod
             - docker push $DOCKER_REGISTRY/$BITBUCKET_REPO_SLUG:$BITBUCKET_COMMIT
