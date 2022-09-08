@@ -7,8 +7,8 @@ import {
 } from '@material-ui/core';
 import { useRecoilValue } from 'recoil';
 import { readTheme } from '@recoil/settings/selectors';
-import BigDipperLogoWhite from '@assets/big-dipper-white.svg';
-import BigDipperLogoRed from '@assets/big-dipper-red.svg';
+import RealioLogoLight from '@assets/realio-logo-black.svg';
+import RealioLogoDark from '@assets/realio-logo-white.svg';
 import { useStyles } from './styles';
 import { useDesktop } from './hooks';
 import {
@@ -67,13 +67,13 @@ const Desktop: React.FC<{
           }}
         >
           {theme === 'light' ? (
-            <BigDipperLogoRed
+            <RealioLogoLight
               className={classes.logo}
               onClick={toggleMenu}
               role="button"
             />
           ) : (
-            <BigDipperLogoWhite
+            <RealioLogoDark
               className={classes.logo}
               onClick={toggleMenu}
               role="button"

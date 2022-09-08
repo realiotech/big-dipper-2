@@ -3,10 +3,9 @@ import classnames from 'classnames';
 import Trans from 'next-translate/Trans';
 import { useRecoilValue } from 'recoil';
 import useTranslation from 'next-translate/useTranslation';
-import FooterLogoLight from '@assets/big-dipper-red.svg';
-import FooterLogoDark from '@assets/big-dipper-white.svg';
+import FooterLogoLight from '@assets/realio-logo-black.svg';
+import FooterLogoDark from '@assets/realio-logo-white.svg';
 import {
-  Button,
   Divider,
   Typography,
 } from '@material-ui/core';
@@ -16,7 +15,7 @@ import {
 import { readTheme } from '@recoil/settings/selectors';
 import { SocialMedia } from './components';
 import {
-  footerLinks, donateLink,
+  footerLinks,
 } from './utils';
 import { useStyles } from './styles';
 
@@ -75,22 +74,6 @@ const Footer: React.FC<{className?: string}> = ({ className }) => {
           <div className="footer__social">
             <h3>{t('common:community')}</h3>
             <SocialMedia />
-            <div>
-              <p className="footer__donate--excerpt">{t('common:donateExcerpt')}</p>
-              <a
-                href={donateLink.url}
-                target="_blank"
-                rel="noreferrer"
-              >
-                <Button
-                  className="footer__donate-button"
-                  variant="contained"
-                  color="primary"
-                >
-                  {t('common:donate')}
-                </Button>
-              </a>
-            </div>
           </div>
         </div>
       </div>
@@ -109,11 +92,7 @@ const Footer: React.FC<{className?: string}> = ({ className }) => {
             components={[
               (
                 // eslint-disable-next-line
-                <a
-                  target="_blank"
-                  rel="noreferrer"
-                  href="https://raw.githubusercontent.com/forbole/big-dipper-2.0-cosmos/master/LICENSE"
-                />
+                <p/>
               ),
             ]}
             values={{
