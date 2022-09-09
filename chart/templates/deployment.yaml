@@ -60,7 +60,7 @@ spec:
               mountPath: /app/.next
           ports:
             - name: http
-              containerPort: {{ .Values.service.port }}
+              containerPort: 3000
               protocol: TCP
           livenessProbe:
             httpGet:

@@ -1,6 +1,6 @@
 #!/usr/bin/env sh
 
-NODE_ENV=production npm run build:deploy
+NODE_ENV=production npm run build:next
 
 ls -lha /app/.next
 
