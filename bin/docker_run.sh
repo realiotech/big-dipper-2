@@ -2,4 +2,4 @@
 
 ls -lha /app/.next
 
-exec npm run start
+exec node /app/dist/index.js
