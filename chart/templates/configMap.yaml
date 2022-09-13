@@ -8,5 +8,5 @@ data:
   NEXT_PUBLIC_CHAIN_TYPE: "testnet"
   NEXT_PUBLIC_GRAPHQL_URL: "https://hasura.k8s.stage.realio.fund/v1/graphql"
   NEXT_PUBLIC_GRAPHQL_WS: "wss://hasura.k8s.stage.realio.fund/v1/graphql"
-  NEXT_PUBLIC_RPC_WEBSOCKET: "ws://143.198.11.84:26657/websocket"
+  NEXT_PUBLIC_RPC_WEBSOCKET: "wss://testnet.realio.network:26657/websocket"
   REACT_APP_ENVIRONMENT: "PROD"
