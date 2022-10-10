@@ -4,8 +4,8 @@ import Link from 'next/link';
 import { ExpandMore } from '@material-ui/icons';
 import { useRecoilValue } from 'recoil';
 import { readSelectedNetwork } from '@recoil/big_dipper_networks';
-import BigDipperLogoWhite from '@assets/big-dipper-white.svg';
-import BigDipperLogoRed from '@assets/big-dipper-red.svg';
+import RealioLogoDark from '@assets/realio-logo-white.svg';
+import RealioLogoLight from '@assets/realio-logo-black.svg';
 import { HOME } from '@utils/go_to_page';
 import { readTheme } from '@recoil/settings';
 import { useStyles } from './styles';
@@ -26,9 +26,9 @@ const Navbar = (props:NavbarProps) => {
       <Link href={HOME}>
         <a className={classes.a}>
           {theme === 'light' ? (
-            <BigDipperLogoRed className={classes.logo} />
+            <RealioLogoLight className={classes.logo} />
           ) : (
-            <BigDipperLogoWhite className={classes.logo} />
+            <RealioLogoDark className={classes.logo} />
           )}
         </a>
       </Link>
@@ -44,7 +44,7 @@ const Navbar = (props:NavbarProps) => {
           <p className="text">
             {selected}
           </p>
-          <ExpandMore fontSize="small" />
+          {/*<ExpandMore fontSize="small" />*/}
         </div>
         {/* =================================== */}
         {/* Hamburger */}
