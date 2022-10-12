@@ -49,10 +49,6 @@ Thumbs.db
 *.wmv
 
 .env
-<<<<<<< HEAD
-=======
-.env.*
-!.env.sample
 
 # vercel
 .vercel
@@ -61,4 +57,3 @@ Thumbs.db
 test.js
 
 .next
->>>>>>> staging
