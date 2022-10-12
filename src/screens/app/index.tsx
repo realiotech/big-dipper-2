@@ -32,7 +32,7 @@ function App(props: AppProps) {
         title={t('common:bigDipper')}
         description={t('common:description')}
         openGraph={{
-          title: `${t('common:bigDipper')} | ${chainConfig.title}`,
+          title: `${chainConfig.title}`,
           description: t('common:description'),
           url: location,
           ...OPEN_GRAPH_SEO,

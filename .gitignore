@@ -49,3 +49,16 @@ Thumbs.db
 *.wmv
 
 .env
+<<<<<<< HEAD
+=======
+.env.*
+!.env.sample
+
+# vercel
+.vercel
+
+
+test.js
+
+.next
+>>>>>>> staging
