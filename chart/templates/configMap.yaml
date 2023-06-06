@@ -3,6 +3,7 @@ kind: ConfigMap
 metadata:
   name: {{ .Release.Name }}-vars
 data:
+{{- if eq .Values.env "stage" }}
   NODE_ENV: "production"
   PORT: "3000"
   NEXT_PUBLIC_CHAIN_TYPE: "testnet"
@@ -10,3 +11,12 @@ data:
   NEXT_PUBLIC_GRAPHQL_WS: "wss://hasura.k8s.stage.realio.fund/v1/graphql"
   NEXT_PUBLIC_RPC_WEBSOCKET: "wss://testnet.realio.network:26657/websocket"
   REACT_APP_ENVIRONMENT: "PROD"
+{{- else }}
+  NODE_ENV: "production"
+  PORT: "3000"
+  NEXT_PUBLIC_CHAIN_TYPE: "mainnet"
+  NEXT_PUBLIC_GRAPHQL_URL: "https://hasura.k8s.realio.fund/v1/graphql"
+  NEXT_PUBLIC_GRAPHQL_WS: "wss://hasura.k8s.realio.fund/v1/graphql"
+  NEXT_PUBLIC_RPC_WEBSOCKET: "wss://api.realio.network:26657/websocket"
+  REACT_APP_ENVIRONMENT: "PROD"
+{{- end }}
