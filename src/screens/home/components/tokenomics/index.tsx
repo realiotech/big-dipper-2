@@ -41,14 +41,14 @@ const Tokenomics:React.FC<{
       percent: `${numeral((state.unbonding * 100) / state.total).format('0.00')}%`,
       fill: theme.palette.custom.tokenomics.three,
     },
-    {
-      legendKey: 'unbonded',
-      percentKey: 'unbondedPercent',
-      value: numeral(state.unbonded).format('0,0'),
-      rawValue: state.unbonded,
-      percent: `${numeral((state.unbonded * 100) / state.total).format('0.00')}%`,
-      fill: theme.palette.custom.tokenomics.two,
-    }
+    // {
+    //   legendKey: 'unbonded',
+    //   percentKey: 'unbondedPercent',
+    //   value: numeral(state.unbonded).format('0,0'),
+    //   rawValue: state.unbonded,
+    //   percent: `${numeral((state.unbonded * 100) / state.total).format('0.00')}%`,
+    //   fill: theme.palette.custom.tokenomics.two,
+    // },
   ];
 
   return (
@@ -57,18 +57,16 @@ const Tokenomics:React.FC<{
         {t('tokenomics')}
       </Typography>
       <div className={classes.data}>
-        {data.slice(0, 2).map((x) => (
+        {data.map((x) => (
           <div className="data__item" key={x.percentKey}>
             <Typography variant="h4">
               {x.value}
               {' '}
               {'RIO/RST'}
             </Typography>
-            {/*<Typography variant="caption">*/}
-            {/*  {t(x.percentKey, {*/}
-            {/*    percent: x.percent,*/}
-            {/*  })}*/}
-            {/*</Typography>*/}
+            <Typography variant="caption">
+              {t(x.legendKey)}
+            </Typography>
           </div>
         ))}
       </div>
@@ -95,7 +93,7 @@ const Tokenomics:React.FC<{
             // strokeWidth={3}
             isAnimationActive={false}
           >
-            {data.slice(0, 2).map((entry) => {
+            {data.map((entry) => {
               return (
                 <Cell key={entry.legendKey} fill={entry.fill} />
               );
@@ -112,10 +110,6 @@ const Tokenomics:React.FC<{
                       </Typography>
                       <Typography variant="body1">
                         {x.value}
-                        {' '}
-                        (
-                        {x.percent}
-                        )
                       </Typography>
                     </>
                   );
@@ -127,7 +121,7 @@ const Tokenomics:React.FC<{
 
         <div className={classes.legends}>
           {
-            data.slice(0, 2).map((x) => {
+            data.map((x) => {
               return (
                 <div className="legends__item" key={x.legendKey}>
                   <Typography variant="caption">
