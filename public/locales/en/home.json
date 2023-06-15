@@ -8,7 +8,7 @@
   "today": "Today",
   "lastMonth": "Last Month",
   "consensus": "Consensus",
-  "tokenomics": "Tokenomics",
+  "tokenomics": "Staking",
   "bondedPercent": "Bonded\n{{percent}}",
   "unbondedPercent": "Unbonded\n{{percent}}",
   "unbondingPercent": "Unbonding\n{{percent}}",
