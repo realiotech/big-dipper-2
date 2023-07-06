@@ -20,19 +20,15 @@ ingress:
     kubernetes.io/ingress.class: traefik
     traefik.ingress.kubernetes.io/preserve-host: "true"
     traefik.ingress.kubernetes.io/redirect-permanent: "true"
+    traefik.ingress.kubernetes.io/router.tls: "true"
+
   hosts:
-    - host: explorer.k8s.stage.realio.fund
-      paths:
-        - path: /
-          pathType: ImplementationSpecific
     - host: testnet-explorer.realio.network
       paths:
         - path: /
           pathType: ImplementationSpecific
-  tls: [ ]
-  #  - secretName: chart-example-tls
-  #    hosts:
-  #      - chart-example.local
+  tls:
+    - secretName: realio-network-tls-stage
 
 resources:
   # We usually recommend not to specify default resources and to leave this as a conscious

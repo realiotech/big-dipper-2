@@ -20,16 +20,14 @@ ingress:
     kubernetes.io/ingress.class: traefik
     traefik.ingress.kubernetes.io/preserve-host: "true"
     traefik.ingress.kubernetes.io/redirect-permanent: "true"
+    traefik.ingress.kubernetes.io/router.tls: "true"
   hosts:
-    - host: explorer.k8s.realio.fund
-      paths:
-        - path: /
-          pathType: ImplementationSpecific
     - host: explorer.realio.network
       paths:
         - path: /
           pathType: ImplementationSpecific
-  tls: [ ]
+  tls:
+    - secretName: realio-network-tls-prod
 
 
 resources:
