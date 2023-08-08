@@ -1,6 +1,6 @@
 {
   "title": "Realio Network Block Explorer",
-  "network": "realionetwork_9000-1",
+  "network": "realionetwork_3301-1",
   "icon": "https://cdn.realio.fund/realio/icons/rio_icon.png",
   "logo": {
     "default": "https://cdn.realio.fund/realio/icons/rio_icon.png"
@@ -11,7 +11,7 @@
     "account": "realio"
   },
   "genesis": {
-    "time": "2022-08-24T08:00:00",
+    "time": "2023-04-07T17:00:00",
     "height": 1
   },
   "primaryTokenUnit": "ario",
