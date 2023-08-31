@@ -1,7 +1,7 @@
 const REALIO_URL = 'https://www.realio.fund';
 const REALIO_APP_URL = 'https://app.realio.fund/login';
 const REALIO_NETWORK_URL = 'https://realio.network';
-const REALIO_GENESIS_URL = 'https://genesis.realio.network';
+const REALIO_DEFI_URL = 'https://defi.realio.network/';
 const REALIOVERSE_URL = 'https://metaverse.realio.network';
 
 export const donateLink = {
@@ -44,7 +44,7 @@ export const footerLinks = [
       },
       {
         key: 'realioDefi',
-        url: `${REALIO_GENESIS_URL}`,
+        url: `${REALIO_DEFI_URL}`,
       },
       {
         key: 'realioVerse',
