@@ -1,5 +1,6 @@
 # Unreleased
 
+
 ## Fixes
 - Add missing dependency of `useEffect` in `useProfilesRecoil` to avoid desmos profile from not being loaded ([\#904](https://github.com/forbole/big-dipper-2.0-cosmos/issues/904))
 
@@ -8,6 +9,7 @@
 - Removed the use of NEXT_PUBLIC_URL
 - Update graphql types generation structure (in preparation for third party modules)
 - Update preview image location
+- Link updated to point to the new Districts URL
 
 # base-v2.1.0 - 2021-04-19
 

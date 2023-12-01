@@ -2,7 +2,7 @@ const REALIO_URL = 'https://www.realio.fund';
 const REALIO_APP_URL = 'https://app.realio.fund/login';
 const REALIO_NETWORK_URL = 'https://realio.network';
 const REALIO_DEFI_URL = 'https://defi.realio.network/';
-const REALIOVERSE_URL = 'https://metaverse.realio.network';
+const DISTRICTS_URL = 'https://districts.xyz/';
 
 export const donateLink = {
   key: 'donate',
@@ -47,8 +47,8 @@ export const footerLinks = [
         url: `${REALIO_DEFI_URL}`,
       },
       {
-        key: 'realioVerse',
-        url: `${REALIOVERSE_URL}`,
+        key: 'Districts',
+        url: `${DISTRICTS_URL}`,
       },
     ],
   },
