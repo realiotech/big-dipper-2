@@ -47,7 +47,7 @@ export const footerLinks = [
         url: `${REALIO_DEFI_URL}`,
       },
       {
-        key: 'Districts',
+        key: 'districts',
         url: `${DISTRICTS_URL}`,
       },
     ],
