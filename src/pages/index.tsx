@@ -1,8 +1,7 @@
-import Home from '@screens/home';
 
 const HomePage = () => {
   return (
-    <Home />
+    <div></div>
   );
 };
 

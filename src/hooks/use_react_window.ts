@@ -69,7 +69,6 @@ export const useGrid = (columns: {
   };
 
   const getRowHeight = () => {
-    // this matches mui table height setup
     return 50;
   };
 
