@@ -7,6 +7,7 @@ import { usePagination } from './use_pagination';
 import { useInterval } from './use_interval';
 import { useDesmosProfile } from './use_desmos_profile';
 import { useWindowOrigin } from './use_window';
+import { useShallowMemo } from './use_shallow_memo';
 
 export {
   usePersistedState,
@@ -18,4 +19,5 @@ export {
   useInterval,
   useDesmosProfile,
   useWindowOrigin,
+  useShallowMemo
 };
