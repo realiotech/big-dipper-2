@@ -1,7 +1,7 @@
 import Layout from "@src/components/layout/layout";
 import { ThemeProvider } from "next-themes"
 import { AppProps } from "next/app"
-import { ChakraProvider, defaultSystem } from "@chakra-ui/react"
+import { ChakraProvider } from "@chakra-ui/react"
 import React from 'react';
 import { RecoilRoot } from 'recoil';
 import { DefaultSeo } from 'next-seo';
@@ -17,6 +17,7 @@ import {
     SEO_TITLE,
     SEO_DESCRIPTION,
 } from './utils';
+import { system } from "@src/theme";
 
 export default function App({ Component, pageProps }: AppProps) {
     const apolloClient = useApollo(pageProps.initialApolloState);
@@ -42,8 +43,8 @@ export default function App({ Component, pageProps }: AppProps) {
                 client={apolloClient}
             >
                 <RecoilRoot>
-                    <ChakraProvider value={defaultSystem}>
-                        <ThemeProvider attribute="class" disableTransitionOnChange>
+                    <ChakraProvider value={system}>
+                        <ThemeProvider attribute="class" disableTransitionOnChange defaultTheme="dark">
                             <Layout>
                                 <Component {...pageProps} />
                             </Layout>
