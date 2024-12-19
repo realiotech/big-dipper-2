@@ -17,7 +17,6 @@ import {
     SEO_TITLE,
     SEO_DESCRIPTION,
 } from './utils';
-import { system } from "@src/theme";
 
 export default function App({ Component, pageProps }: AppProps) {
     const apolloClient = useApollo(pageProps.initialApolloState);
