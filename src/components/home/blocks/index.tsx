@@ -17,9 +17,9 @@ const Blocks = () => {
                     <Link href='/blocks'>See more</Link>
                 </ChakraLink>
             </Flex>
-            <Table.Root striped>
+            <Table.Root variant={'line'} bgColor='inherit' color={'black'}>
                 <Table.Header>
-                    <Table.Row>
+                    <Table.Row bgColor='inherit' color={'black'}>
                         <Table.ColumnHeader>
                             Height
                         </Table.ColumnHeader>
@@ -44,10 +44,8 @@ const Blocks = () => {
                                 <Table.Row key={`block-${index}`}>
                                     <Table.Cell>
                                         <ChakraLink asChild>
-                                            <Link href={`/blocks/${item.height}`}>{numeral(item.height).format('0,0')}</Link>
+                                            <Link href={`/blocks/${item.height}`} color={'#1D86FF'}>{numeral(item.height).format('0,0')}</Link>
                                         </ChakraLink>
-                                    </Table.Cell>
-                                    <Table.Cell>
                                     </Table.Cell>
                                     <Table.Cell></Table.Cell>
                                     <Table.Cell></Table.Cell>
@@ -63,4 +61,4 @@ const Blocks = () => {
     )
 }
 
-export default Blocks
+export default Blocks;
