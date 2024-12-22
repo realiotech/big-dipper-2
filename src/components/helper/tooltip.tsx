@@ -1,7 +1,8 @@
-import { Box } from '@chakra-ui/react';
 import React from 'react';
+import { Box } from '@chakra-ui/react';
 
 const CustomToolTip: React.FC<{
+    className?: string;
     children: (data) => React.ReactNode;
     active?: boolean;
     payload?: any;
@@ -11,10 +12,10 @@ const CustomToolTip: React.FC<{
         payload,
         children,
     } = props;
-    if (payload && active) {
+    if (payload && active && payload?.[0]) {
         const { payload: data } = payload?.[0];
         return (
-            <Box bgColor={'red.400'} p={2}>
+            <Box>
                 {children(data)}
             </Box>
         );
