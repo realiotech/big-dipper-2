@@ -9,6 +9,7 @@ export default function Footer() {
         <SimpleGrid 
             w='full'
             columns={{ base: 1, lg: 6 }}
+            my='10'
             px='10'
             py='10'
             divideY={{ base: '2px', lg: '0px'}}

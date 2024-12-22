@@ -2,7 +2,7 @@ import NextLink from 'next/link';
 import { Avatar } from '../ui/avatar';
 import { Tooltip } from '../ui/tooltip';
 import { Flex, Link, Text } from '@chakra-ui/react';
-import { shortenString } from '@srcutils/shorten';
+import { shortenString } from '@src/utils/shorten';
 
 const Proposer = ({
     address,

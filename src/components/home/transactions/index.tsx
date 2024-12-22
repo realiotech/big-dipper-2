@@ -5,7 +5,7 @@ import { Skeleton } from "@src/components/ui/skeleton"
 import numeral from "numeral"
 import { getMiddleEllipsis } from "@src/utils/get_middle_ellipsis"
 import dayjs from '@utils/dayjs';
-import { Status } from "@srccomponents/ui/status"
+import { Status } from "@src/components/ui/status"
 
 const Transactions = () => {
     const { state } = useTransactions();
@@ -41,13 +41,17 @@ const Transactions = () => {
                     {state.items.length ? (
                         <For each={state.items}>
                             {(item, index) => (
-                                <Table.Row key={`block-${index}`}>
+                                <Table.Row key={`transaction-${index}`}>
                                     <Table.Cell>
                                         <ChakraLink asChild colorPalette='blue'>
                                             <Link href={`/blocks/${item.height}`}>{numeral(item.height).format('0,0')}</Link>
                                         </ChakraLink>
                                     </Table.Cell>
-                                    <Table.Cell>{getMiddleEllipsis(item.hash, { beginning: 15, ending: 5 })}</Table.Cell>
+                                    <Table.Cell>
+                                        <ChakraLink asChild colorPalette='blue'>
+                                            <Link href={`/transactions/${item.hash}`}>{getMiddleEllipsis(item.hash, { beginning: 15, ending: 5 })}</Link>
+                                        </ChakraLink>
+                                    </Table.Cell>
                                     <Table.Cell><Status value={item.success ? "success" : "error"}><Text>{item.success ? "Success" : "Failed"}</Text></Status></Table.Cell>
                                     <Table.Cell>{dayjs.utc(item.timestamp).fromNow()}</Table.Cell>
                                 </Table.Row>

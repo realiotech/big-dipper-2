@@ -5,8 +5,8 @@ import { Skeleton } from "@src/components/ui/skeleton"
 import numeral from "numeral"
 import { getMiddleEllipsis } from "@src/utils/get_middle_ellipsis"
 import dayjs from '@utils/dayjs';
-import Proposer from "@srccomponents/helper/proposer"
-import { useProfilesRecoil } from "@srcrecoil/profiles"
+import Proposer from "@src/components/helper/proposer"
+import { useProfilesRecoil } from "@src/recoil/profiles"
 
 const Blocks = () => {
     const { state } = useBlocks()
