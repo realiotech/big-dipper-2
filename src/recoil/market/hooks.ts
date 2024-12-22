@@ -9,14 +9,14 @@ import Big from 'big.js';
 import {
   useMarketDataQuery,
   MarketDataQuery,
-} from '@graphql/types/general_types';
-import { chainConfig } from '@configs';
+} from '@/graphql/types/general_types';
+import { chainConfig } from '@/configs';
 import {
   writeMarket,
-} from '@recoil/market';
-import { AtomState } from '@recoil/market/types';
-import { getDenom } from '@utils/get_denom';
-import { formatToken } from '@utils/format_token';
+} from '@/recoil/market';
+import { AtomState } from '@/recoil/market/types';
+import { getDenom } from '@/utils/get_denom';
+import { formatToken } from '@/utils/format_token';
 
 export const useMarketRecoil = () => {
   const [market, setMarket] = useRecoilState(writeMarket) as [AtomState, SetterOrUpdater<AtomState>];

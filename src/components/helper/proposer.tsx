@@ -2,7 +2,7 @@ import NextLink from 'next/link';
 import { Avatar } from '../ui/avatar';
 import { Tooltip } from '../ui/tooltip';
 import { Flex, Link, Text } from '@chakra-ui/react';
-import { shortenString } from '@src/utils/shorten';
+import { shortenString } from '@/utils/shorten';
 
 const Proposer = ({
     address,
@@ -16,7 +16,7 @@ const Proposer = ({
                     <Flex align={'center'} gap='2'>
                         <Avatar src={image} alt={name} size='xs' />
                         <Text>{shortenString(name, 20)}</Text>
-                    </Flex> 
+                    </Flex>
                 </Tooltip>
             </NextLink>
         </Link>

@@ -4,8 +4,8 @@ import numeral from 'numeral';
 import {
   useTokenomicsQuery,
   TokenomicsQuery,
-} from '@graphql/types/general_types';
-import { formatToken } from '@utils/format_token';
+} from '@/graphql/types/general_types';
+import { formatToken } from '@/utils/format_token';
 
 export const useTokenomics = () => {
   const [state, setState] = useState<{

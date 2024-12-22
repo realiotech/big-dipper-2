@@ -1,5 +1,5 @@
 import * as R from 'ramda';
-import { chainConfig } from '@configs';
+import { chainConfig } from '@/configs';
 
 /**
  * Helper Function to get Denom from a list
@@ -7,7 +7,7 @@ import { chainConfig } from '@configs';
  * @param value The value in base denom value
  */
 export const getDenom = (
-  list: {denom: string, amount: string | number}[] = [],
+  list: { denom: string, amount: string | number }[] = [],
   denom = chainConfig.primaryTokenUnit,
 ): {
   denom: string;

@@ -1,10 +1,10 @@
 import { GridItem, SimpleGrid, Text } from "@chakra-ui/react";
-import Consensus from "@src/components/home/consensus";
-import DataBlocks from "@src/components/home/data_blocks";
-import PriceChart from "@src/components/home/price_chart";
-import Tokenomics from "@src/components/home/tokenomics";
-import Blocks from "@src/components/home/blocks";
-import Transactions from "@src/components/home/transactions";
+import Consensus from "@/components/home/consensus";
+import DataBlocks from "@/components/home/data_blocks";
+import PriceChart from "@/components/home/price_chart";
+import Tokenomics from "@/components/home/tokenomics";
+import Blocks from "@/components/home/blocks";
+import Transactions from "@/components/home/transactions";
 export default function Home() {
   return (
     <SimpleGrid columns={{ base: 2, lg: 4 }} gap='10'>

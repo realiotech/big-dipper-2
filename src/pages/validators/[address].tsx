@@ -20,7 +20,7 @@ import {
 import {
     ProgressBar,
     ProgressRoot,
-} from "@src/components/ui/progress";
+} from "@/components/ui/progress";
 // import { Progress } from "@chakra-ui/react";
 
 export default function ValidatorDetails() {

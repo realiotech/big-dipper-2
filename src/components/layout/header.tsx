@@ -3,9 +3,9 @@ import { InputGroup } from "../ui/input-group";
 import { Search } from "../icons/search";
 import { Wallet } from "../icons/wallet";
 import { useRecoilValue } from 'recoil';
-import { readMarket } from '@recoil/market';
-import { chainConfig } from "@src/configs";
-import { formatMarket } from "@src/utils/format_market";
+import { readMarket } from '@/recoil/market';
+import { chainConfig } from "@/configs";
+import { formatMarket } from "@/utils/format_market";
 
 export default function Header() {
     const marketState = useRecoilValue(readMarket);
@@ -27,7 +27,7 @@ export default function Header() {
                 </Text>
             </HStack>
             <InputGroup startElement={<Search />} >
-                <Input h='60px' borderRadius='60px' fontSize={'16px'} w={{base: 'full', lg: '550px'}}
+                <Input h='60px' borderRadius='60px' fontSize={'16px'} w={{ base: 'full', lg: '550px' }}
                     placeholder="Search for validator / tx hash / block height / address" />
             </InputGroup>
             <Center w='250px' h='60px' borderRadius='60px' fontSize={'16px'} border='1px solid #e4e4e7'>

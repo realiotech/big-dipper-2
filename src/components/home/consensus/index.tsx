@@ -11,10 +11,10 @@ import {
 } from 'recharts';
 import {
     useProfileRecoil,
-} from '@recoil/profiles';
+} from '@/recoil/profiles';
 import { useConsensus } from './hooks';
 import { Box, GridItem, Text } from '@chakra-ui/react';
-import { Avatar } from '@src/components/ui/avatar';
+import { Avatar } from '@/components/ui/avatar';
 
 const Consensus = () => {
     const { state } = useConsensus();

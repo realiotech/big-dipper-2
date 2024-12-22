@@ -2,10 +2,10 @@ import {
   useState, useEffect,
 } from 'react';
 import axios from 'axios';
-import { DesmosProfileQuery } from '@graphql/types/profile_types';
+import { DesmosProfileQuery } from '@/graphql/types/profile_types';
 import {
   DesmosProfileDocument, DesmosProfileLinkDocument, DesmosProfileDtagDocument,
-} from '@src/graphql/profiles/desmos_profile_graphql';
+} from '@/graphql/profiles/desmos_profile_graphql';
 
 type Options = {
   address?: string;
@@ -67,7 +67,7 @@ export const useDesmosProfile = (options: Options) => {
   };
 
   const fetchDesmosProfile = async (input: string) => {
-    let data:DesmosProfileQuery = {
+    let data: DesmosProfileQuery = {
       profile: [],
     };
 
@@ -93,7 +93,7 @@ export const useDesmosProfile = (options: Options) => {
     }
   };
 
-  const formatDesmosProfile = (data:DesmosProfileQuery): DesmosProfile => {
+  const formatDesmosProfile = (data: DesmosProfileQuery): DesmosProfile => {
     if (!data.profile.length) {
       return null;
     }

@@ -1,9 +1,9 @@
 import numeral from 'numeral';
 import * as R from 'ramda';
 import { useCallback, useEffect, useState } from 'react';
-import { chainConfig } from '@src/configs';
-import { hexToBech32 } from '@src/utils/hex_to_bech32';
-import { useShallowMemo } from '@src/hooks';
+import { chainConfig } from '@/configs';
+import { hexToBech32 } from '@/utils/hex_to_bech32';
+import { useShallowMemo } from '@/hooks';
 const { prefix } = chainConfig;
 
 /* Checking if the code is running on the server or the client. */

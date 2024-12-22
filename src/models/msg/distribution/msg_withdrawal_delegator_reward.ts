@@ -1,6 +1,6 @@
 import * as R from 'ramda';
-import { formatToken } from '@utils/format_token';
-import { chainConfig } from '@configs';
+import { formatToken } from '@/utils/format_token';
+import { chainConfig } from '@/configs';
 import { Categories } from '../types';
 
 class MsgWithdrawDelegatorReward {

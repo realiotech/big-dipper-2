@@ -7,15 +7,15 @@ import * as R from 'ramda';
 import {
   useValidatorAddressesQuery,
   ValidatorAddressesQuery,
-} from '@graphql/types/general_types';
-import { chainConfig } from '@configs';
-import { useDesmosProfile } from '@hooks';
+} from '@/graphql/types/general_types';
+import { chainConfig } from '@/configs';
+import { useDesmosProfile } from '@/hooks';
 import {
   atomFamilyState as validatorAtomState,
-} from '@recoil/validators';
+} from '@/recoil/validators';
 import {
   atomFamilyState as profileAtomFamilyState,
-} from '@recoil/profiles';
+} from '@/recoil/profiles';
 
 export const useValidatorRecoil = () => {
   const [loading, setLoading] = useState(true);
@@ -83,10 +83,10 @@ export const useValidatorRecoil = () => {
         if (profile) {
           // sets profile priority
           const moniker = R.pathOr(undefined, ['nickname'], profile)
-        || R.pathOr('', ['validatorDescriptions', 0, 'moniker'], x);
+            || R.pathOr('', ['validatorDescriptions', 0, 'moniker'], x);
           const imageUrl = (
             R.pathOr('', ['imageUrl'], profile)
-          || R.pathOr('', ['validatorDescriptions', 0, 'avatarUrl'], x)
+            || R.pathOr('', ['validatorDescriptions', 0, 'avatarUrl'], x)
           );
 
           set(profileAtomFamilyState(delegatorAddress), {

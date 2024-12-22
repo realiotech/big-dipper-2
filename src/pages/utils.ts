@@ -1,4 +1,4 @@
-import { generalConfig } from '@configs';
+import { generalConfig } from '@/configs';
 
 export const OPEN_GRAPH_SEO = {
     type: 'website',

@@ -2,9 +2,9 @@ import { useState } from 'react';
 import * as R from 'ramda';
 import {
   useTokenPriceHistoryQuery,
-} from '@graphql/types/general_types';
-import { chainConfig } from '@configs';
-import dayjs from '@utils/dayjs';
+} from '@/graphql/types/general_types';
+import { chainConfig } from '@/configs';
+import dayjs from '@/utils/dayjs';
 import numeral from 'numeral';
 import { HeroState } from './types';
 

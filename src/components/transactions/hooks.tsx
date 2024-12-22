@@ -4,7 +4,7 @@ import {
   useTransactionsQuery,
   useTransactionsListenerSubscription,
   TransactionsListenerSubscription,
-} from '@graphql/types/general_types';
+} from '@/graphql/types/general_types';
 import { TransactionsState } from './types';
 
 export const useTransactions = () => {

@@ -1,6 +1,6 @@
 import React from 'react';
 import { AreaChart, Area, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer } from 'recharts';
-import dayjs, { formatDayJs } from '@utils/dayjs';
+import dayjs, { formatDayJs } from '@/utils/dayjs';
 import { useHero, usePrice } from './hooks';
 import { Box, GridItem, Text } from '@chakra-ui/react';
 import { TokenPriceType } from './types';
@@ -17,7 +17,7 @@ const TokenPrice: React.FC<{ items: TokenPriceType[] } & ComponentDefault> = (pr
       time: formatTime(dayjs.utc(x.time), "locale"),
       fullTime: formatDayJs(dayjs.utc(x.time), "locale"),
       value: x.value,
-    })    
+    })
   })
   return (
     <ResponsiveContainer width="99%" maxHeight={300}>

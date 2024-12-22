@@ -4,9 +4,9 @@ import {
 } from 'recoil';
 import * as R from 'ramda';
 import { bech32 } from 'bech32';
-import { chainConfig } from '@configs';
-import { readValidator } from '@recoil/validators';
-import { AtomState as ProfileAtomState } from '@recoil/profiles/types';
+import { chainConfig } from '@/configs';
+import { readValidator } from '@/recoil/validators';
+import { AtomState as ProfileAtomState } from '@/recoil/profiles/types';
 import { atomFamilyState } from './atom';
 
 // ======================================================================
@@ -15,7 +15,7 @@ import { atomFamilyState } from './atom';
 
 const getDelegatorAddress = ({
   address, get,
-}: {address: string, get: GetRecoilValue}): string => {
+}: { address: string, get: GetRecoilValue }): string => {
   const consensusRegex = `^(${chainConfig.prefix.consensus})`;
   const validatorRegex = `^(${chainConfig.prefix.validator})`;
   const delegatorRegex = `^(${chainConfig.prefix.account})`;
@@ -48,7 +48,7 @@ export const validatorToDelegatorAddress = (address: string) => {
  */
 const getReturnAddress = ({
   address, get,
-}: {address: string, get: GetRecoilValue}): string => {
+}: { address: string, get: GetRecoilValue }): string => {
   const consensusRegex = `^(${chainConfig.prefix.consensus})`;
   let selectedAddress = address;
   if (new RegExp(consensusRegex).test(address)) {
@@ -142,7 +142,7 @@ export const readProfiles = selectorFamily({
 
 export const readDelegatorAddress = selectorFamily({
   key: 'profile.read.delegatorAddress',
-  get: (address:string) => ({ get }): string => {
+  get: (address: string) => ({ get }): string => {
     return getDelegatorAddress({
       address, get,
     });
@@ -151,7 +151,7 @@ export const readDelegatorAddress = selectorFamily({
 
 export const readDelegatorAddresses = selectorFamily({
   key: 'profile.read.delegatorAddresses',
-  get: (addresses:string[]) => ({ get }): string[] => {
+  get: (addresses: string[]) => ({ get }): string[] => {
     return addresses.map((x) => {
       return getDelegatorAddress({
         address: x, get,

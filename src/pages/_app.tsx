@@ -1,4 +1,4 @@
-import Layout from "@src/components/layout/layout";
+import Layout from "@/components/layout/layout";
 import { ThemeProvider } from "next-themes"
 import { AppProps } from "next/app"
 import { ChakraProvider, defaultSystem } from "@chakra-ui/react"
@@ -6,9 +6,9 @@ import React from 'react';
 import { RecoilRoot } from 'recoil';
 import { DefaultSeo } from 'next-seo';
 import { ApolloProvider } from '@apollo/client';
-import { useApollo } from '@src/graphql/client';
-import { chainConfig } from '@configs';
-import { useWindowOrigin } from '@hooks';
+import { useApollo } from '@/graphql/client';
+import { chainConfig } from '@/configs';
+import { useWindowOrigin } from '@/hooks';
 import {
     OPEN_GRAPH_SEO,
     TWITTER_SEO,

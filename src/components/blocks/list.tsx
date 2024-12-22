@@ -2,11 +2,11 @@ import { Box, Center, Text, Table, Link as ChakraLink, For } from "@chakra-ui/re
 import { useBlocks } from "./hooks";
 import Link from "next/link";
 import Proposer from "../helper/proposer";
-import { getMiddleEllipsis } from "@src/utils/get_middle_ellipsis";
+import { getMiddleEllipsis } from "@/utils/get_middle_ellipsis";
 import numeral from "numeral";
-import dayjs from "@src/utils/dayjs";
+import dayjs from "@/utils/dayjs";
 import { Skeleton } from "../ui/skeleton";
-import { useProfilesRecoil } from "@src/recoil/profiles";
+import { useProfilesRecoil } from "@/recoil/profiles";
 import { Button } from "../ui/button";
 
 const BlockItem = ({ item, rowIndex, isItemLoaded }) => {

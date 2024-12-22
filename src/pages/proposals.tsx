@@ -22,7 +22,7 @@ import {
 import { Doughnut } from "react-chartjs-2";
 import { Chart as ChartJS, ArcElement, Tooltip, Legend } from "chart.js";
 import { TfiReload } from "react-icons/tfi";
-import { ProgressBar, ProgressRoot } from "@src/components/ui/progress";
+import { ProgressBar, ProgressRoot } from "@/components/ui/progress";
 
 ChartJS.register(ArcElement, Tooltip, Legend);
 
@@ -165,9 +165,9 @@ export default function Dashboard() {
               <Flex justify="center" align="center" mb={4}>
                 <Box w="350px" h="350px">
                   <Doughnut
-                     data={chartData} 
-                     options={options}
-                     />
+                    data={chartData}
+                    options={options}
+                  />
                 </Box>
               </Flex>
             </VStack>
@@ -178,36 +178,36 @@ export default function Dashboard() {
                 <Text fontWeight="bold">$3.55</Text>
               </HStack>
               <ProgressRoot shape={"full"} size='lg' w="100%" value={58.7}>
-                    <ProgressBar/>
-                </ProgressRoot>
+                <ProgressBar />
+              </ProgressRoot>
               <HStack justify="space-between">
                 <Text>RIO</Text>
                 <Text fontWeight="bold">$1.55</Text>
               </HStack>
               <ProgressRoot shape={"full"} size='lg' w="100%" value={30}>
-                    <ProgressBar/>
-                </ProgressRoot>
+                <ProgressBar />
+              </ProgressRoot>
               <HStack justify="space-between">
                 <Text>XLM</Text>
                 <Text fontWeight="bold">$0.55</Text>
               </HStack>
               <ProgressRoot shape={"full"} size='lg' w="100%" value={30}>
-                    <ProgressBar/>
-                </ProgressRoot>
+                <ProgressBar />
+              </ProgressRoot>
               <HStack justify="space-between">
                 <Text>USDC</Text>
                 <Text fontWeight="bold">$0.25</Text>
               </HStack>
               <ProgressRoot shape={"full"} size='lg' w="100%" value={30}>
-                    <ProgressBar/>
-                </ProgressRoot>
+                <ProgressBar />
+              </ProgressRoot>
               <HStack justify="space-between">
                 <Text>LMX</Text>
                 <Text fontWeight="bold">$0.15</Text>
               </HStack>
-              <ProgressRoot colorPalette = "blue" variant="outline" bg shape={"full"} size='lg' w="100%" value={30}>
-                    <ProgressBar/>
-                </ProgressRoot>
+              <ProgressRoot colorPalette="blue" variant="outline" bg shape={"full"} size='lg' w="100%" value={30}>
+                <ProgressBar />
+              </ProgressRoot>
             </VStack>
           </Flex>
         </Box>

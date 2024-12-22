@@ -1,4 +1,4 @@
-import type { AtomState } from '@src/recoil/market/types';
+import type { AtomState } from '@/recoil/market/types';
 import { formatNumber } from './format_token';
 import numeral from 'numeral';
 

@@ -4,7 +4,7 @@ import {
   formatToken,
 } from './format_token';
 
-jest.mock('@configs', () => ({
+jest.mock('@/configs', () => ({
   chainConfig: {
     primaryTokenUnit: 'udaric',
     tokenUnits: {

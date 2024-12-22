@@ -11,7 +11,7 @@ import {
   TableColumnHeader,
   Flex,
 } from "@chakra-ui/react";
-import { ProgressBar, ProgressRoot } from "@src/components/ui/progress";
+import { ProgressBar, ProgressRoot } from "@/components/ui/progress";
 
 const ValidatorTable = () => {
   const validators = Array(50).fill({

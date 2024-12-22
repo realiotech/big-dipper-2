@@ -1,9 +1,9 @@
 import { Box, Center, Text, Table, Link as ChakraLink, For } from "@chakra-ui/react";
 import { useTransactions } from "./hooks";
 import Link from "next/link";
-import { getMiddleEllipsis } from "@src/utils/get_middle_ellipsis";
+import { getMiddleEllipsis } from "@/utils/get_middle_ellipsis";
 import numeral from "numeral";
-import dayjs from "@src/utils/dayjs";
+import dayjs from "@/utils/dayjs";
 import { Button } from "../ui/button";
 import { Status } from "../ui/status";
 

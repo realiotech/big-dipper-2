@@ -1,12 +1,12 @@
 import { Flex, GridItem, Link as ChakraLink, Text, Table, For } from "@chakra-ui/react"
 import { useBlocks } from "./hooks"
 import Link from "next/link"
-import { Skeleton } from "@src/components/ui/skeleton"
+import { Skeleton } from "@/components/ui/skeleton"
 import numeral from "numeral"
-import { getMiddleEllipsis } from "@src/utils/get_middle_ellipsis"
-import dayjs from '@utils/dayjs';
-import Proposer from "@src/components/helper/proposer"
-import { useProfilesRecoil } from "@src/recoil/profiles"
+import { getMiddleEllipsis } from "@/utils/get_middle_ellipsis"
+import dayjs from '@/utils/dayjs';
+import Proposer from "@/components/helper/proposer"
+import { useProfilesRecoil } from "@/recoil/profiles"
 
 const Blocks = () => {
     const { state } = useBlocks()
@@ -48,7 +48,7 @@ const Blocks = () => {
                     </Table.Row>
                 </Table.Header>
                 <Table.Body>
-                    { state.items.length ? (
+                    {state.items.length ? (
                         <For each={mergedDataWithProfiles}>
                             {(item, index) => (
                                 <Table.Row key={`block-${index}`}>
@@ -57,14 +57,14 @@ const Blocks = () => {
                                             <Link href={`/blocks/${item.height}`}>{numeral(item.height).format('0,0')}</Link>
                                         </ChakraLink>
                                     </Table.Cell>
-                                    <Table.Cell><Proposer address={item.proposer.address} image={item.proposer.imageUrl} name={item.proposer.name}/></Table.Cell>
-                                    <Table.Cell>{getMiddleEllipsis(item.hash, {beginning: 6, ending: 5})}</Table.Cell>
+                                    <Table.Cell><Proposer address={item.proposer.address} image={item.proposer.imageUrl} name={item.proposer.name} /></Table.Cell>
+                                    <Table.Cell>{getMiddleEllipsis(item.hash, { beginning: 6, ending: 5 })}</Table.Cell>
                                     <Table.Cell>{numeral(item.txs).format('0,0')}</Table.Cell>
                                     <Table.Cell>{dayjs.utc(item.timestamp).fromNow()}</Table.Cell>
                                 </Table.Row>
                             )}
                         </For>
-                    ) : <Skeleton h={'200px'}/> }
+                    ) : <Skeleton h={'200px'} />}
                 </Table.Body>
             </Table.Root>
         </GridItem>

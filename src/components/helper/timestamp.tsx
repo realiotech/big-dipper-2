@@ -1,5 +1,5 @@
 import { Tooltip } from '@chakra-ui/react';
-import dayjs from '@src/utils/dayjs';
+import dayjs from '@/utils/dayjs';
 import { FC, useEffect, useRef, useState } from 'react';
 import * as timeago from 'timeago.js';
 
@@ -29,7 +29,7 @@ const Timestamp: FC<TimestampProps> = ({ timestamp, isUnix }) => {
 
     return (
         <Tooltip>
-            {}
+            { }
         </Tooltip>
     );
 };

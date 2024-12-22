@@ -1,11 +1,11 @@
 import { Flex, GridItem, Link as ChakraLink, Text, Table, For } from "@chakra-ui/react"
 import { useTransactions } from "./hooks"
 import Link from "next/link"
-import { Skeleton } from "@src/components/ui/skeleton"
+import { Skeleton } from "@/components/ui/skeleton"
 import numeral from "numeral"
-import { getMiddleEllipsis } from "@src/utils/get_middle_ellipsis"
-import dayjs from '@utils/dayjs';
-import { Status } from "@src/components/ui/status"
+import { getMiddleEllipsis } from "@/utils/get_middle_ellipsis"
+import dayjs from '@/utils/dayjs';
+import { Status } from "@/components/ui/status"
 
 const Transactions = () => {
     const { state } = useTransactions();

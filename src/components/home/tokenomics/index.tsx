@@ -10,7 +10,7 @@ import { useTokenomics } from './hooks'
 import {
     Box, For, Text, GridItem
 } from '@chakra-ui/react';
-import CustomToolTip from '@src/components/helper/tooltip';
+import CustomToolTip from '@/components/helper/tooltip';
 import useTranslation from 'next-translate/useTranslation';
 
 const Tokenomics = () => {

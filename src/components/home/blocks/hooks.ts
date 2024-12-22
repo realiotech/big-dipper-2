@@ -3,8 +3,8 @@ import { useCallback, useState } from 'react';
 import {
   BlocksListenerSubscription,
   useBlocksListenerSubscription,
-} from '@src/graphql/types/general_types';
-import type { BlocksState } from '@src/components/home/blocks/types';
+} from '@/graphql/types/general_types';
+import type { BlocksState } from '@/components/home/blocks/types';
 
 const formatBlocks = (data: BlocksListenerSubscription) =>
   data.blocks.map((x) => {

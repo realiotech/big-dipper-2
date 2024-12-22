@@ -4,7 +4,7 @@ import {
   useRecoilValue,
   useRecoilCallback,
 } from 'recoil';
-import { chainConfig } from '@configs';
+import { chainConfig } from '@/configs';
 import {
   writeProfile,
   readProfilesExist,
@@ -13,8 +13,8 @@ import {
   readProfiles,
   readDelegatorAddress,
   readDelegatorAddresses,
-} from '@recoil/profiles';
-import { AtomState as ProfileAtomState } from '@recoil/profiles/types';
+} from '@/recoil/profiles';
+import { AtomState as ProfileAtomState } from '@/recoil/profiles/types';
 import { getProfile } from './utils';
 
 /**
