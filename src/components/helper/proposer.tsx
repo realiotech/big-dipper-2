@@ -1,23 +1,26 @@
-import Avatar from '@/components/avatar';
-import useStyles from '@/components/avatar_name/styles';
-import AddressEllipsis from '@/components/AddressEllipsis';
-import { ADDRESS_DETAILS } from '@/utils/go_to_page';
-import Tooltip from '@mui/material/Tooltip';
-import Zoom from '@mui/material/Zoom';
-import Link from 'next/link';
-import { FC } from 'react';
+import NextLink from 'next/link';
+import { Avatar } from '../ui/avatar';
+import { Tooltip } from '../ui/tooltip';
+import { Flex, Link, Text } from '@chakra-ui/react';
+import { shortenString } from '@srcutils/shorten';
 
 const Proposer = ({
     address,
     name,
-    image,
-   ...props
+    image
 }) => {
     return (
-        <Tooltip title={name}>
-            <Avatar src={image} alt={name} />
-            
-        </Tooltip>
+        <Link asChild colorPalette='blue'>
+            <NextLink href={`/validators/${address}`}>
+                <Tooltip title={address}>
+                    <Flex align={'center'} gap='2'>
+                        <Avatar src={image} alt={name} size='xs' />
+                        <Text>{shortenString(name, 20)}</Text>
+                    </Flex> 
+                </Tooltip>
+            </NextLink>
+        </Link>
+
     );
 };
 

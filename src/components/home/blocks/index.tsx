@@ -3,23 +3,33 @@ import { useBlocks } from "./hooks"
 import Link from "next/link"
 import { Skeleton } from "@src/components/ui/skeleton"
 import numeral from "numeral"
+import { getMiddleEllipsis } from "@src/utils/get_middle_ellipsis"
+import dayjs from '@utils/dayjs';
+import Proposer from "@srccomponents/helper/proposer"
+import { useProfilesRecoil } from "@srcrecoil/profiles"
 
 const Blocks = () => {
     const { state } = useBlocks()
-
+    const proposerProfiles = useProfilesRecoil(state.items.map((x) => x.proposer));
+    const mergedDataWithProfiles = state.items.map((x, i) => {
+        return ({
+            ...x,
+            proposer: proposerProfiles[i],
+        });
+    });
     return (
         <GridItem borderRadius='20px' bgColor='#F6F7F8' py='5' px='8' colSpan={2}>
-            <Flex w='full' justifyContent={'space-between'}>
-                <Text fontSize='24px' pb='6' fontWeight={400}>
+            <Flex w='full' justifyContent={'space-between'} pb='4'>
+                <Text fontSize='24px' fontWeight={400}>
                     Latest Blocks
                 </Text>
-                <ChakraLink asChild>
+                <ChakraLink asChild colorPalette={'blue'}>
                     <Link href='/blocks'>See more</Link>
                 </ChakraLink>
             </Flex>
-            <Table.Root variant={'line'} bgColor='inherit' color={'black'}>
+            <Table.Root bgColor='inherit' size='sm' showColumnBorder={false}>
                 <Table.Header>
-                    <Table.Row bgColor='inherit' color={'black'}>
+                    <Table.Row bgColor='inherit'>
                         <Table.ColumnHeader>
                             Height
                         </Table.ColumnHeader>
@@ -39,18 +49,18 @@ const Blocks = () => {
                 </Table.Header>
                 <Table.Body>
                     { state.items.length ? (
-                        <For each={state.items}>
+                        <For each={mergedDataWithProfiles}>
                             {(item, index) => (
                                 <Table.Row key={`block-${index}`}>
                                     <Table.Cell>
-                                        <ChakraLink asChild>
-                                            <Link href={`/blocks/${item.height}`} color={'#1D86FF'}>{numeral(item.height).format('0,0')}</Link>
+                                        <ChakraLink asChild colorPalette='blue'>
+                                            <Link href={`/blocks/${item.height}`}>{numeral(item.height).format('0,0')}</Link>
                                         </ChakraLink>
                                     </Table.Cell>
-                                    <Table.Cell></Table.Cell>
-                                    <Table.Cell></Table.Cell>
+                                    <Table.Cell><Proposer address={item.proposer.address} image={item.proposer.imageUrl} name={item.proposer.name}/></Table.Cell>
+                                    <Table.Cell>{getMiddleEllipsis(item.hash, {beginning: 6, ending: 5})}</Table.Cell>
                                     <Table.Cell>{numeral(item.txs).format('0,0')}</Table.Cell>
-                                    <Table.Cell></Table.Cell>
+                                    <Table.Cell>{dayjs.utc(item.timestamp).fromNow()}</Table.Cell>
                                 </Table.Row>
                             )}
                         </For>
