@@ -1,21 +1,25 @@
-import { Categories } from './types';
+import * as R from 'ramda';
+import type { Categories } from '@/models/msg/types';
 
 class MsgUnknown {
   public category: Categories;
-  public type: string;
-  public json: JSON;
 
-  constructor(payload: any) {
+  public type: string;
+
+  public json: object;
+
+  constructor(payload: object) {
     this.category = 'others';
-    this.type = payload.type;
-    this.json = payload.json;
+    this.type = R.pathOr('', ['type'], payload);
+    this.json = R.pathOr({}, ['json'], payload);
   }
 
-  static fromJson(json: any) {
-    return new MsgUnknown({
-      type: json['@type'] ?? '',
+  static fromJson(json: object): MsgUnknown {
+    return {
+      category: 'others',
+      type: R.pathOr('', ['@type'], json),
       json,
-    });
+    };
   }
 }
 

@@ -1,30 +1,37 @@
-import { Categories } from '../types';
+import * as R from 'ramda';
+import type { Categories } from '@/models/msg/types';
 
 class MsgDtagAcceptTransfer {
   public category: Categories;
+
   public type: string;
-  public json: any;
+
+  public json: object;
+
   public sender: string;
+
   public receiver: string;
+
   public newDtag: string;
 
-  constructor(payload: any) {
+  constructor(payload: object) {
     this.category = 'profiles';
-    this.type = payload.type;
-    this.json = payload.json;
-    this.sender = payload.sender;
-    this.receiver = payload.receiver;
-    this.newDtag = payload.newDtag;
+    this.type = R.pathOr('', ['type'], payload);
+    this.json = R.pathOr({}, ['json'], payload);
+    this.sender = R.pathOr('', ['sender'], payload);
+    this.receiver = R.pathOr('', ['receiver'], payload);
+    this.newDtag = R.pathOr('', ['newDtag'], payload);
   }
 
-  static fromJson(json: any) {
-    return new MsgDtagAcceptTransfer({
+  static fromJson(json: object): MsgDtagAcceptTransfer {
+    return {
+      category: 'profiles',
       json,
-      type: json['@type'],
-      sender: json.sender,
-      receiver: json.receiver,
-      newDtag: json.new_dtag,
-    });
+      type: R.pathOr('', ['@type'], json),
+      sender: R.pathOr('', ['sender'], json),
+      receiver: R.pathOr('', ['receiver'], json),
+      newDtag: R.pathOr('', ['new_dtag'], json),
+    };
   }
 }
 

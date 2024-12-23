@@ -1,31 +1,39 @@
-import { Categories } from '../types';
+import * as R from 'ramda';
+import type { Categories } from '@/models/msg/types';
 
 class MsgUnblockUser {
   public category: Categories;
+
   public type: string;
-  public json: any;
-  public reason: string;
+
+  public json: object;
+
+  public reason?: string;
+
   public blocked: string;
+
   public blocker: string;
+
   public subspace: string;
 
-  constructor(payload: any) {
+  constructor(payload: object) {
     this.category = 'profiles';
-    this.type = payload.type;
-    this.json = payload.json;
-    this.blocked = payload.blocked;
-    this.blocker = payload.blocker;
-    this.subspace = payload.subspace;
+    this.type = R.pathOr('', ['type'], payload);
+    this.json = R.pathOr({}, ['json'], payload);
+    this.blocked = R.pathOr('', ['blocked'], payload);
+    this.blocker = R.pathOr('', ['blocker'], payload);
+    this.subspace = R.pathOr('', ['subspace'], payload);
   }
 
-  static fromJson(json: any) {
-    return new MsgUnblockUser({
+  static fromJson(json: object): MsgUnblockUser {
+    return {
+      category: 'profiles',
       json,
-      type: json['@type'],
-      blocked: json.blocked,
-      blocker: json.blocker,
-      subspace: json.subspace,
-    });
+      type: R.pathOr('', ['@type'], json),
+      blocked: R.pathOr('', ['blocked'], json),
+      blocker: R.pathOr('', ['blocker'], json),
+      subspace: R.pathOr('', ['subspace'], json),
+    };
   }
 }
 

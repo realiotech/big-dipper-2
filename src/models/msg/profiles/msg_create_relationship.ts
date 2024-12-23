@@ -1,30 +1,37 @@
-import { Categories } from '../types';
+import * as R from 'ramda';
+import type { Categories } from '@/models/msg/types';
 
 class MsgCreateRelationship {
   public category: Categories;
+
   public type: string;
-  public json: any;
+
+  public json: object;
+
   public sender: string;
+
   public receiver: string;
+
   public subspace: string;
 
-  constructor(payload: any) {
+  constructor(payload: object) {
     this.category = 'profiles';
-    this.type = payload.type;
-    this.json = payload.json;
-    this.sender = payload.sender;
-    this.receiver = payload.receiver;
-    this.subspace = payload.subspace;
+    this.type = R.pathOr('', ['type'], payload);
+    this.json = R.pathOr({}, ['json'], payload);
+    this.sender = R.pathOr('', ['sender'], payload);
+    this.receiver = R.pathOr('', ['receiver'], payload);
+    this.subspace = R.pathOr('', ['subspace'], payload);
   }
 
-  static fromJson(json: any) {
-    return new MsgCreateRelationship({
+  static fromJson(json: object): MsgCreateRelationship {
+    return {
+      category: 'profiles',
       json,
-      type: json['@type'],
-      sender: json.sender,
-      receiver: json.receiver,
-      subspace: json.subspace,
-    });
+      type: R.pathOr('', ['@type'], json),
+      sender: R.pathOr('', ['sender'], json),
+      receiver: R.pathOr('', ['receiver'], json),
+      subspace: R.pathOr('', ['subspace'], json),
+    };
   }
 }
 

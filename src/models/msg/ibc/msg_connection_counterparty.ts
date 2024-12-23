@@ -1,25 +1,30 @@
-import { Categories } from '../types';
+import * as R from 'ramda';
+import type { Categories } from '@/models/msg/types';
 
 class MsgCounterpartyConnection {
-    public category: Categories;
-    public type: string;
-    public signer: string;
-    public json: any;
+  public category: Categories;
 
-    constructor(payload: any) {
-      this.category = 'ibc';
-      this.type = payload.type;
-      this.signer = payload.signer;
-      this.json = payload.json;
-    }
+  public type: string;
 
-    static fromJson(json: any) {
-      return new MsgCounterpartyConnection({
-        json,
-        type: json['@type'],
-        signer: json.signer,
-      });
-    }
+  public signer: string;
+
+  public json: object;
+
+  constructor(payload: object) {
+    this.category = 'ibc';
+    this.type = R.pathOr('', ['type'], payload);
+    this.signer = R.pathOr('', ['signer'], payload);
+    this.json = R.pathOr({}, ['json'], payload);
+  }
+
+  static fromJson(json: object): MsgCounterpartyConnection {
+    return {
+      category: 'ibc',
+      json,
+      type: R.pathOr('', ['@type'], json),
+      signer: R.pathOr('', ['signer'], json),
+    };
+  }
 }
 
 export default MsgCounterpartyConnection;

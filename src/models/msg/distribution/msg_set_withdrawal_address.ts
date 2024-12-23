@@ -1,27 +1,33 @@
-import { Categories } from '../types';
+import * as R from 'ramda';
+import type { Categories } from '@/models/msg/types';
 
 class MsgSetWithdrawAddress {
   public category: Categories;
-  public type: string;
-  public delegatorAddress: string;
-  public withdrawalAddress: string;
-  public json: any;
 
-  constructor(payload: any) {
-    this.json = payload.json;
+  public type: string;
+
+  public delegatorAddress: string;
+
+  public withdrawalAddress: string;
+
+  public json: object;
+
+  constructor(payload: object) {
+    this.json = R.pathOr({}, ['json'], payload);
     this.category = 'distribution';
-    this.type = payload.type;
-    this.delegatorAddress = payload.delegatorAddress;
-    this.withdrawalAddress = payload.withdrawalAddress;
+    this.type = R.pathOr('', ['type'], payload);
+    this.delegatorAddress = R.pathOr('', ['delegatorAddress'], payload);
+    this.withdrawalAddress = R.pathOr('', ['withdrawalAddress'], payload);
   }
 
-  static fromJson(json: any) {
-    return new MsgSetWithdrawAddress({
+  static fromJson(json: object): MsgSetWithdrawAddress {
+    return {
+      category: 'distribution',
       json,
-      type: json['@type'],
-      delegatorAddress: json.delegator_address,
-      withdrawalAddress: json.withdraw_address,
-    });
+      type: R.pathOr('', ['@type'], json),
+      delegatorAddress: R.pathOr('', ['delegator_address'], json),
+      withdrawalAddress: R.pathOr('', ['withdraw_address'], json),
+    };
   }
 }
 

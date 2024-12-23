@@ -1,21 +1,31 @@
 import numeral from 'numeral';
-import { Categories } from '../types';
+import * as R from 'ramda';
+import type { Categories } from '@/models/msg/types';
 
 class MsgVote {
   public category: Categories;
-  public type: string;
-  public proposalId: number | string;
-  public voter: string;
-  public option: 'VOTE_OPTION_YES' | 'VOTE_OPTION_ABSTAIN' | 'VOTE_OPTION_NO' | 'VOTE_OPTION_NO_WITH_VETO';
-  public json: any;
 
-  constructor(payload: any) {
+  public type: string;
+
+  public proposalId: number | string;
+
+  public voter: string;
+
+  public option:
+    | 'VOTE_OPTION_YES'
+    | 'VOTE_OPTION_ABSTAIN'
+    | 'VOTE_OPTION_NO'
+    | 'VOTE_OPTION_NO_WITH_VETO';
+
+  public json: object;
+
+  constructor(payload: object) {
     this.category = 'governance';
-    this.type = payload.type;
-    this.proposalId = payload.proposalId;
-    this.voter = payload.voter;
-    this.option = payload.option;
-    this.json = payload.json;
+    this.type = R.pathOr('', ['type'], payload);
+    this.proposalId = R.pathOr('', ['proposalId'], payload);
+    this.voter = R.pathOr('', ['voter'], payload);
+    this.option = R.pathOr('VOTE_OPTION_YES', ['option'], payload);
+    this.json = R.pathOr({}, ['json'], payload);
   }
 
   public getOptionTranslationKey() {
@@ -34,14 +44,30 @@ class MsgVote {
     return null;
   }
 
-  static fromJson(json: any) {
-    return new MsgVote({
+  static fromJson(json: object): MsgVote {
+    return {
+      category: 'governance',
       json,
-      type: json['@type'],
-      proposalId: numeral(json?.proposal_id).value(),
-      voter: json.voter,
-      option: json.option,
-    });
+      type: R.pathOr('', ['@type'], json),
+      proposalId: numeral(R.pathOr('', ['proposal_id'], json)).value() ?? '',
+      voter: R.pathOr('', ['voter'], json),
+      option: R.pathOr('VOTE_OPTION_YES', ['option'], json),
+      getOptionTranslationKey() {
+        if (R.pathOr<MsgVote['option'] | ''>('', ['option'], json) === 'VOTE_OPTION_ABSTAIN') {
+          return 'abstain';
+        }
+        if (R.pathOr<MsgVote['option'] | ''>('', ['option'], json) === 'VOTE_OPTION_NO') {
+          return 'no';
+        }
+        if (R.pathOr<MsgVote['option'] | ''>('', ['option'], json) === 'VOTE_OPTION_NO_WITH_VETO') {
+          return 'noWithVeto';
+        }
+        if (R.pathOr<MsgVote['option'] | ''>('', ['option'], json) === 'VOTE_OPTION_YES') {
+          return 'yes';
+        }
+        return null;
+      },
+    };
   }
 }
 

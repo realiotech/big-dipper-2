@@ -1,37 +1,46 @@
-import { Categories } from '../types';
+import * as R from 'ramda';
+import type { Categories } from '@/models/msg/types';
 
 class MsgChannelCloseInit {
-    public category: Categories;
-    public type: string;
-    public signer: string;
-    public channelId: string;
-    public portId: string;
-    public counterpartyChannelId: string;
-    public counterpartyVersion: string;
-    public json: any;
+  public category: Categories;
 
-    constructor(payload: any) {
-      this.category = 'ibc';
-      this.type = payload.type;
-      this.signer = payload.signer;
-      this.channelId = payload.channelId;
-      this.portId = payload.portId;
-      this.counterpartyChannelId = payload.counterpartyChannelId;
-      this.counterpartyVersion = payload.counterpartyVersion;
-      this.json = payload.json;
-    }
+  public type: string;
 
-    static fromJson(json: any) {
-      return new MsgChannelCloseInit({
-        json,
-        type: json['@type'],
-        signer: json.signer,
-        channelId: json.channel_id,
-        portId: json.port_id,
-        counterpartyChannelId: json.counterparty_channel_id,
-        counterpartyVersion: json.counterparty_version,
-      });
-    }
+  public signer: string;
+
+  public channelId: string;
+
+  public portId: string;
+
+  public counterpartyChannelId: string;
+
+  public counterpartyVersion: string;
+
+  public json: object;
+
+  constructor(payload: object) {
+    this.category = 'ibc';
+    this.type = R.pathOr('', ['type'], payload);
+    this.signer = R.pathOr('', ['signer'], payload);
+    this.channelId = R.pathOr('', ['channelId'], payload);
+    this.portId = R.pathOr('', ['portId'], payload);
+    this.counterpartyChannelId = R.pathOr('', ['counterpartyChannelId'], payload);
+    this.counterpartyVersion = R.pathOr('', ['counterpartyVersion'], payload);
+    this.json = R.pathOr({}, ['json'], payload);
+  }
+
+  static fromJson(json: object): MsgChannelCloseInit {
+    return {
+      category: 'ibc',
+      json,
+      type: R.pathOr('', ['@type'], json),
+      signer: R.pathOr('', ['signer'], json),
+      channelId: R.pathOr('', ['channel_id'], json),
+      portId: R.pathOr('', ['port_id'], json),
+      counterpartyChannelId: R.pathOr('', ['counterparty_channel_id'], json),
+      counterpartyVersion: R.pathOr('', ['counterparty_version'], json),
+    };
+  }
 }
 
 export default MsgChannelCloseInit;

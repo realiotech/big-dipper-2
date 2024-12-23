@@ -1,44 +1,53 @@
 import * as R from 'ramda';
-import { chainConfig } from '@/configs';
+import chainConfig from '@/chainConfig';
+import type { Categories, Log } from '@/models/msg/types';
 import { formatToken } from '@/utils/format_token';
-import { Categories } from '../types';
+
+const { primaryTokenUnit } = chainConfig();
 
 class MsgWithdrawValidatorCommission {
   public category: Categories;
-  public type: string;
-  public validatorAddress: string;
-  public amounts: TokenUnit[];
-  public json: any;
 
-  constructor(payload: any) {
+  public type: string;
+
+  public validatorAddress: string;
+
+  public amounts: TokenUnit[];
+
+  public json: object;
+
+  constructor(payload: object) {
     this.category = 'distribution';
-    this.type = payload.type;
-    this.validatorAddress = payload.validatorAddress;
-    this.amounts = payload.amounts;
-    this.json = payload.json;
+    this.type = R.pathOr('', ['type'], payload);
+    this.validatorAddress = R.pathOr('', ['validatorAddress'], payload);
+    this.amounts = R.pathOr([], ['amounts'], payload);
+    this.json = R.pathOr({}, ['json'], payload);
   }
 
-  static getWithdrawalAmount(log: any) {
-    const withdrawEvents = R.pathOr([], ['events'], log).filter((x) => x.type === 'withdraw_commission');
-    const withdrawAmounts = R.pathOr([], [0, 'attributes'], withdrawEvents).filter((x) => x.key === 'amount');
+  static getWithdrawalAmount(log?: Log) {
+    const withdrawEvents =
+      log?.events ?? [].filter((x: { type: string }) => x.type === 'withdraw_commission');
+    const withdrawAmounts =
+      withdrawEvents?.[0]?.attributes?.filter((x: { key?: string }) => x.key === 'amount') ?? [];
 
-    const amounts = R.pathOr('0', [0, 'value'], withdrawAmounts).split(',').map((x) => {
-      const [amount, denom = chainConfig.primaryTokenUnit] = x.match(/[a-z]+|[^a-z]+/gi);
+    const amounts = (withdrawAmounts?.[0]?.value ?? '0').split(',').map((x) => {
+      const [amount, denom = primaryTokenUnit] = x.match(/[a-z]+|[^a-z]+/gi) ?? [];
       return formatToken(amount, denom);
     });
 
     return amounts;
   }
 
-  static fromJson(json: any, log?: any) {
+  static fromJson(json: object, log?: Log): MsgWithdrawValidatorCommission {
     const amounts = this.getWithdrawalAmount(log);
 
-    return new MsgWithdrawValidatorCommission({
+    return {
+      category: 'distribution',
       json,
-      type: json['@type'],
-      validatorAddress: json.validator_address,
+      type: R.pathOr('', ['@type'], json),
+      validatorAddress: R.pathOr('', ['validator_address'], json),
       amounts,
-    });
+    };
   }
 }
 

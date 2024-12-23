@@ -1,28 +1,34 @@
-import { Categories } from '../types';
+import * as R from 'ramda';
+import type { Categories } from '@/models/msg/types';
 
 class MsgCreateClient {
-    public category: Categories;
-    public type: string;
-    public signer: string;
-    public chainId: string;
-    public json: any;
+  public category: Categories;
 
-    constructor(payload: any) {
-      this.category = 'ibc';
-      this.type = payload.type;
-      this.signer = payload.signer;
-      this.chainId = payload.chainId;
-      this.json = payload.json;
-    }
+  public type: string;
 
-    static fromJson(json: any) {
-      return new MsgCreateClient({
-        json,
-        type: json['@type'],
-        signer: json.signer,
-        chainId: json.client_state?.chain_id,
-      });
-    }
+  public signer: string;
+
+  public chainId: string;
+
+  public json: object;
+
+  constructor(payload: object) {
+    this.category = 'ibc';
+    this.type = R.pathOr('', ['type'], payload);
+    this.signer = R.pathOr('', ['signer'], payload);
+    this.chainId = R.pathOr('', ['chainId'], payload);
+    this.json = R.pathOr({}, ['json'], payload);
+  }
+
+  static fromJson(json: object): MsgCreateClient {
+    return {
+      category: 'ibc',
+      json,
+      type: R.pathOr('', ['@type'], json),
+      signer: R.pathOr('', ['signer'], json),
+      chainId: R.pathOr('', ['client_state', 'chain_id'], json),
+    };
+  }
 }
 
 export default MsgCreateClient;

@@ -1,33 +1,36 @@
 import * as R from 'ramda';
-import { Categories } from '../types';
+import type { Categories } from '@/models/msg/types';
 
 class MsgFundCommunityPool {
   public category: Categories;
-  public type: string;
-  public depositor: string;
-  public amount: MsgCoin[];
-  public json: any;
 
-  constructor(payload: any) {
+  public type: string;
+
+  public depositor: string;
+
+  public amount: MsgCoin[];
+
+  public json: object;
+
+  constructor(payload: object) {
     this.category = 'distribution';
-    this.type = payload.type;
-    this.depositor = payload.depositor;
-    this.amount = payload.amount;
-    this.json = payload.json;
+    this.type = R.pathOr('', ['type'], payload);
+    this.depositor = R.pathOr('', ['depositor'], payload);
+    this.amount = R.pathOr([], ['amount'], payload);
+    this.json = R.pathOr({}, ['json'], payload);
   }
 
-  static fromJson(json: any) {
-    return new MsgFundCommunityPool({
+  static fromJson(json: object): MsgFundCommunityPool {
+    return {
+      category: 'distribution',
       json,
-      type: json['@type'],
-      depositor: json.depositor,
-      amount: json?.amount.map((x) => {
-        return ({
-          denom: x?.denom,
-          amount: R.pathOr('0', ['amount'], x),
-        });
-      }),
-    });
+      type: R.pathOr('', ['@type'], json),
+      depositor: R.pathOr('', ['depositor'], json),
+      amount: R.pathOr([], ['amount'], json).map((x) => ({
+        denom: R.pathOr('', ['denom'], x),
+        amount: R.pathOr('0', ['amount'], x),
+      })),
+    };
   }
 }
 
