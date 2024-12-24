@@ -1,7 +1,7 @@
 import * as R from 'ramda';
-import chainConfig from '@/chainConfig';
+import { chainConfig } from '@/configs';
 
-const { primaryTokenUnit } = chainConfig();
+const { primaryTokenUnit } = chainConfig;
 
 class StakingParams {
   public bondDenom: string;

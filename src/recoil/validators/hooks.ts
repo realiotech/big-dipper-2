@@ -9,7 +9,7 @@ import {
   ValidatorAddressesQuery,
 } from '@/graphql/types/general_types';
 import { chainConfig } from '@/configs';
-import { useDesmosProfile } from '@/hooks';
+import { useDesmosProfile } from '@/hooks/use_desmos_profile';
 import {
   atomFamilyState as validatorAtomState,
 } from '@/recoil/validators';

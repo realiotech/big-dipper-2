@@ -1,5 +1,5 @@
 import * as COMPONENTS from '@/components/msg';
-import Tag from '@/components/tag';
+import HelpTag from '@/components/helper/tag';
 import * as MODELS from '@/models';
 import type { Log } from '@/models/msg/types';
 import isKeyOf from '@/utils/isKeyOf';
@@ -130,29 +130,11 @@ const defaultTypeToModel = {
   // ========================
   // ibc client
   // ========================
-  '/ibc.core.client.v1.MsgCreateClient': {
-    model: MODELS.MsgCreateClient,
-    content: COMPONENTS.CreateClient,
-    tagTheme: 'nine',
-    tagDisplay: 'txCreateClientLabel',
-  },
   '/ibc.core.client.v1.MsgUpdateClient': {
     model: MODELS.MsgUpdateClient,
     content: COMPONENTS.UpdateClient,
     tagTheme: 'nine',
     tagDisplay: 'txUpdateClientLabel',
-  },
-  '/ibc.core.client.v1.MsgUpgradeClient': {
-    model: MODELS.MsgUpgradeClient,
-    content: COMPONENTS.UpgradeClient,
-    tagTheme: 'nine',
-    tagDisplay: 'txUpgradeClientLabel',
-  },
-  '/ibc.core.client.v1.MsgSubmitMisbehaviour': {
-    model: MODELS.MsgSubmitMisbehaviour,
-    content: COMPONENTS.SubmitMisbehaviour,
-    tagTheme: 'nine',
-    tagDisplay: 'txSubmitMisbehaviourLabel',
   },
   '/ibc.core.client.v1.Height': {
     model: MODELS.MsgHeight,
@@ -163,12 +145,6 @@ const defaultTypeToModel = {
   // ========================
   // ibc channel
   // ========================
-  '/ibc.core.channel.v1.MsgRecvPacket': {
-    model: MODELS.MsgReceivePacket,
-    content: COMPONENTS.ReceivePacket,
-    tagTheme: 'nine',
-    tagDisplay: 'txRecvPacketLabel',
-  },
   '/ibc.core.channel.v1.Channel': {
     model: MODELS.MsgChannel,
     content: COMPONENTS.Channel,
@@ -217,29 +193,11 @@ const defaultTypeToModel = {
     tagTheme: 'nine',
     tagDisplay: 'txChannelOpenConfirmLabel',
   },
-  '/ibc.core.channel.v1.MsgChannelOpenInit': {
-    model: MODELS.MsgChannelOpenInit,
-    content: COMPONENTS.ChannelOpenInit,
-    tagTheme: 'nine',
-    tagDisplay: 'txChannelOpenInitLabel',
-  },
-  '/ibc.core.channel.v1.MsgChannelOpenTry': {
-    model: MODELS.MsgChannelOpenTry,
-    content: COMPONENTS.ChannelOpenTry,
-    tagTheme: 'nine',
-    tagDisplay: 'txChannelOpenTryLabel',
-  },
   '/ibc.core.channel.v1.MsgTimeout': {
     model: MODELS.MsgTimeout,
     content: COMPONENTS.Timeout,
     tagTheme: 'nine',
     tagDisplay: 'txTimeoutLabel',
-  },
-  '/ibc.core.channel.v1.MsgTimeoutOnClose': {
-    model: MODELS.MsgTimeoutOnClose,
-    content: COMPONENTS.TimeoutOnClose,
-    tagTheme: 'nine',
-    tagDisplay: 'txTimeoutOnCloseLabel',
   },
   // ========================
   // ibc connection
@@ -250,29 +208,11 @@ const defaultTypeToModel = {
     tagTheme: 'nine',
     tagDisplay: 'txConnectionOpenAckLabel',
   },
-  '/ibc.core.connection.v1.MsgConnectionOpenConfirm': {
-    model: MODELS.MsgConnectionOpenConfirm,
-    content: COMPONENTS.ConnectionOpenConfirm,
-    tagTheme: 'nine',
-    tagDisplay: 'txConnectionOpenConfirmLabel',
-  },
   '/ibc.core.connection.v1.MsgConnectionOpenInit': {
     model: MODELS.MsgConnectionOpenInit,
     content: COMPONENTS.ConnectionOpenInit,
     tagTheme: 'nine',
     tagDisplay: 'txConnectionOpenInitLabel',
-  },
-  '/ibc.core.connection.v1.MsgConnectionOpenTry': {
-    model: MODELS.MsgConnectionOpenTry,
-    content: COMPONENTS.ConnectionOpenTry,
-    tagTheme: 'nine',
-    tagDisplay: 'txConnectionOpenTryLabel',
-  },
-  '/ibc.core.connection.v1.ConnectionEnd': {
-    model: MODELS.MsgConnectionEnd,
-    content: COMPONENTS.ConnectionEnd,
-    tagTheme: 'nine',
-    tagDisplay: 'txConnectionEndLabel',
   },
   '/ibc.core.connection.v1.Counterparty': {
     model: MODELS.MsgCounterpartyConnection,
@@ -349,71 +289,8 @@ const defaultTypeToModel = {
 };
 type DefaultTypeToModel = typeof defaultTypeToModel;
 
-// =====================================
-// Update your chain's message types here
-// =====================================
-const customTypeToModel = {
-  // ========================
-  // profiles
-  // ========================
-  '/desmos.profiles.v3.MsgSaveProfile': {
-    model: MODELS.MsgSaveProfile,
-    content: COMPONENTS.SaveProfile,
-    tagTheme: 'four',
-    tagDisplay: 'txSaveProfileLabel',
-  },
-  '/desmos.profiles.v3.MsgDeleteProfile': {
-    model: MODELS.MsgDeleteProfile,
-    content: COMPONENTS.DeleteProfile,
-    tagTheme: 'four',
-    tagDisplay: 'txDeleteProfileLabel',
-  },
-  '/desmos.profiles.v3.MsgCreateRelationship': {
-    model: MODELS.MsgCreateRelationship,
-    content: COMPONENTS.CreateRelationship,
-    tagTheme: 'four',
-    tagDisplay: 'txCreateRelationshipLabel',
-  },
-  '/desmos.profiles.v3.MsgRequestDTagTransfer': {
-    model: MODELS.MsgDtagTransferRequest,
-    content: COMPONENTS.DtagTransferRequest,
-    tagTheme: 'four',
-    tagDisplay: 'txRequestDTagTransferLabel',
-  },
-  '/desmos.profiles.v3.MsgAcceptDTagTransfer': {
-    model: MODELS.MsgDtagAcceptTransfer,
-    content: COMPONENTS.DtagAcceptTransfer,
-    tagTheme: 'four',
-    tagDisplay: 'txAcceptDTagTransferLabel',
-  },
-  '/desmos.profiles.v3.MsgCancelDTagTransfer': {
-    model: MODELS.MsgDtagCancelTransfer,
-    content: COMPONENTS.DtagCancelTransfer,
-    tagTheme: 'four',
-    tagDisplay: 'txCancelDTagTransferLabel',
-  },
-  '/desmos.profiles.v3.MsgRefuseDTagTransfer': {
-    model: MODELS.MsgDtagRefuseTransfer,
-    content: COMPONENTS.DtagRefuseTransfer,
-    tagTheme: 'four',
-    tagDisplay: 'txRefuseDTagTransferLabel',
-  },
-  '/desmos.profiles.v3.MsgBlockUser': {
-    model: MODELS.MsgBlockUser,
-    content: COMPONENTS.BlockUser,
-    tagTheme: 'four',
-    tagDisplay: 'txBlockUserLabel',
-  },
-  '/desmos.profiles.v3.MsgUnblockUser': {
-    model: MODELS.MsgUnblockUser,
-    content: COMPONENTS.UnBlockUser,
-    tagTheme: 'four',
-    tagDisplay: 'txUnblockUserLabel',
-  },
-};
-type CustomTypeToModel = typeof customTypeToModel;
 
-type TypeToModel = DefaultTypeToModel & CustomTypeToModel extends infer R1
+type TypeToModel = DefaultTypeToModel extends infer R1
   ? { [K in keyof R1]: R1[K] }
   : never;
 
@@ -422,8 +299,6 @@ type Data = TypeToModel[keyof TypeToModel];
 const getDataByType = (type: string): Data | null => {
   if (isKeyOf(type, defaultTypeToModel) && defaultTypeToModel[type])
     return defaultTypeToModel[type];
-
-  if (isKeyOf(type, customTypeToModel) && customTypeToModel[type]) return customTypeToModel[type];
 
   return null;
 };
@@ -477,7 +352,7 @@ export const getMessageByType = <TMessage,>(message: TMessage, viewRaw: boolean,
 
   const Content = results.content;
   return {
-    type: <Tag value={t(`message_labels:${results.tagDisplay}`)} theme={results.tagTheme} />,
+    type: <HelpTag value={t(`message_labels:${results.tagDisplay}`)} />,
     message: <Content message={message as unknown as ComponentProps<typeof Content>['message']} />,
   };
 };
