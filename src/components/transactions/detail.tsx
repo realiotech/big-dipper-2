@@ -6,6 +6,7 @@ import { BLOCK_DETAILS, formatNumber } from "@/utils";
 import NextLink from "next/link"
 import dayjs, { formatDayJs } from "@/utils/dayjs";
 import { Status } from "../ui/status";
+import Messages from "./messages";
 
 export default function TransactionDetails() {
     const { state, onMessageFilterCallback, toggleMessageDisplay, filterMessages } =
@@ -66,7 +67,7 @@ export default function TransactionDetails() {
                     </Table.Body>
                 </Table.Root>
             </Box>
-
+            <Messages messages={messages} />
 
             <Box bg="gray.50" p={6} mb={8} borderRadius="md" boxShadow="sm">
                 <Text fontSize="lg" fontWeight="bold" mb={4}>
