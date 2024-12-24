@@ -13,21 +13,21 @@ export default function TransactionDetails() {
           <Table.Body>
             <Table.Row>
               <Table.Cell fontWeight="semibold">Hash</Table.Cell>
-              <Table.Cell textAlign="end">
-                8F21BD0CBE9...
-              </Table.Cell>
+              <Table.Cell textAlign="end">8F21BD0CBE9...</Table.Cell>
             </Table.Row>
             <Table.Row>
               <Table.Cell fontWeight="semibold">Height</Table.Cell>
               <Table.Cell textAlign="end">
-                <Link color="blue.500" href="#" >
+                <Link color="blue.500" href="#">
                   9,665,201
                 </Link>
               </Table.Cell>
             </Table.Row>
             <Table.Row>
               <Table.Cell fontWeight="semibold">Time</Table.Cell>
-              <Table.Cell textAlign="end">Nov 12, 2024 11:05:28 AM (GMT+7)</Table.Cell>
+              <Table.Cell textAlign="end">
+                Nov 12, 2024 11:05:28 AM (GMT+7)
+              </Table.Cell>
             </Table.Row>
             <Table.Row>
               <Table.Cell fontWeight="semibold">Fee</Table.Cell>
@@ -52,7 +52,14 @@ export default function TransactionDetails() {
       </Box>
 
       {/* Messages Section */}
-      <Box bg="gray.50" p={6} borderRadius="md" boxShadow="sm" mb={8} border="1px solid #3182CE">
+      <Box
+        bg="gray.50"
+        p={6}
+        borderRadius="md"
+        boxShadow="sm"
+        mb={8}
+        border="1px solid #3182CE"
+      >
         <Flex justify="space-between" align="center" mb={4}>
           <Text fontSize="lg" fontWeight="bold">
             Messages
@@ -74,7 +81,7 @@ export default function TransactionDetails() {
             <Table.Row>
               <Table.Cell fontWeight="semibold">From Address:</Table.Cell>
               <Table.Cell textAlign="end" color="blue.500">
-                <Link href="#" >
+                <Link href="#">
                   reallio147fluvqhgr65mj63r2wvts58qmmhrs79j4juw
                 </Link>
               </Table.Cell>
@@ -82,7 +89,7 @@ export default function TransactionDetails() {
             <Table.Row>
               <Table.Cell fontWeight="semibold">To Address:</Table.Cell>
               <Table.Cell textAlign="end" color="blue.500">
-                <Link href="#" >
+                <Link href="#">
                   reallio15es4lw9hcvf4na3v2a2lnntdqhvqtae5p57
                 </Link>
               </Table.Cell>
@@ -110,10 +117,9 @@ export default function TransactionDetails() {
           fontSize={15}
           fontFamily="monospace"
           maxHeight={300}
-          whiteSpace='pre-wrap'
+          whiteSpace="pre-wrap"
         >
-
-            {`[
+          {`[
   {
     "events": [
       {
