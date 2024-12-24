@@ -1,46 +1,64 @@
 import numeral from 'numeral';
-import { Categories } from '../types';
+import * as R from 'ramda';
+import type { Categories } from '@/models/msg/types';
 
 class MsgEditValidator {
   public category: Categories;
+
   public type: string;
+
   public description: {
     moniker: string;
     identity: string;
     website: string;
     securityContact: string;
     details: string;
-  }
+  };
+
   public validatorAddress: string;
-  public commissionRate: string | number;
-  public minSelfDelegation: string | number;
-  public json: any;
 
-  constructor(payload: any) {
+  public commissionRate: string | number;
+
+  public minSelfDelegation: string | number;
+
+  public json: object;
+
+  constructor(payload: object) {
     this.category = 'staking';
-    this.type = payload.type;
-    this.description = payload.description;
-    this.validatorAddress = payload.validatorAddress;
-    this.commissionRate = payload.commissionRate;
-    this.minSelfDelegation = payload.minSelfDelegation;
-    this.json = payload.json;
+    this.type = R.pathOr('', ['type'], payload);
+    this.description = R.pathOr(
+      {
+        moniker: '',
+        identity: '',
+        website: '',
+        securityContact: '',
+        details: '',
+      },
+      ['description'],
+      payload
+    );
+    this.validatorAddress = R.pathOr('', ['validatorAddress'], payload);
+    this.commissionRate = R.pathOr('', ['commissionRate'], payload);
+    this.minSelfDelegation = R.pathOr('', ['minSelfDelegation'], payload);
+    this.json = R.pathOr({}, ['json'], payload);
   }
 
-  static fromJson(json: any) {
-    return new MsgEditValidator({
+  static fromJson(json: object): MsgEditValidator {
+    return {
+      category: 'staking',
       json,
-      type: json['@type'],
+      type: R.pathOr('', ['@type'], json),
       description: {
-        moniker: json?.description?.moniker,
-        identity: json?.description?.identity,
-        website: json?.description?.website,
-        securityContact: json?.description?.security_contact,
-        details: json?.description?.details,
+        moniker: R.pathOr('', ['description', 'moniker'], json),
+        identity: R.pathOr('', ['description', 'identity'], json),
+        website: R.pathOr('', ['description', 'website'], json),
+        securityContact: R.pathOr('', ['description', 'security_contact'], json),
+        details: R.pathOr('', ['description', 'details'], json),
       },
-      validatorAddress: json.validator_address,
-      commissionRate: numeral(json.commission_rate ?? 0).value(),
-      minSelfDelegation: numeral(json?.min_self_delegation ?? 0).value(),
-    });
+      validatorAddress: R.pathOr('', ['validator_address'], json),
+      commissionRate: numeral(R.pathOr('0', ['commission_rate'], json)).value() ?? 0,
+      minSelfDelegation: numeral(R.pathOr('0', ['min_self_delegation'], json)).value() ?? 0,
+    };
   }
 }
 

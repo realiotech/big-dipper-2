@@ -1,27 +1,33 @@
-import { Categories } from '../types';
+import * as R from 'ramda';
+import type { Categories } from '@/models/msg/types';
 
 class MsgRevokeAllowance {
   public category: Categories;
+
   public type: string;
-  public json: any;
+
+  public json: object;
+
   public granter: string;
+
   public grantee: string;
 
-  constructor(payload: any) {
+  constructor(payload: object) {
     this.category = 'feegrant';
-    this.type = payload.type;
-    this.json = payload.json;
-    this.granter = payload.granter;
-    this.grantee = payload.grantee;
+    this.type = R.pathOr('', ['type'], payload);
+    this.json = R.pathOr({}, ['json'], payload);
+    this.granter = R.pathOr('', ['granter'], payload);
+    this.grantee = R.pathOr('', ['grantee'], payload);
   }
 
-  static fromJson(json: any) {
-    return new MsgRevokeAllowance({
+  static fromJson(json: object): MsgRevokeAllowance {
+    return {
+      category: 'feegrant',
       json,
-      type: json['@type'],
-      granter: json.granter,
-      grantee: json.grantee,
-    });
+      type: R.pathOr('', ['@type'], json),
+      granter: R.pathOr('', ['granter'], json),
+      grantee: R.pathOr('', ['grantee'], json),
+    };
   }
 }
 

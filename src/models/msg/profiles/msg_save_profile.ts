@@ -1,24 +1,29 @@
-import { Categories } from '../types';
+import * as R from 'ramda';
+import type { Categories } from '@/models/msg/types';
 
 class MsgSaveProfile {
   public category: Categories;
+
   public type: string;
-  public json: any;
+
+  public json: object;
+
   public creator: string;
 
-  constructor(payload: any) {
+  constructor(payload: object) {
     this.category = 'profiles';
-    this.type = payload.type;
-    this.creator = payload.creator;
-    this.json = payload.json;
+    this.type = R.pathOr('', ['type'], payload);
+    this.creator = R.pathOr('', ['creator'], payload);
+    this.json = R.pathOr({}, ['json'], payload);
   }
 
-  static fromJson(json: any) {
-    return new MsgSaveProfile({
-      type: json['@type'],
-      creator: json.creator,
+  static fromJson(json: object): MsgSaveProfile {
+    return {
+      category: 'profiles',
+      type: R.pathOr('', ['@type'], json),
+      creator: R.pathOr('', ['creator'], json),
       json,
-    });
+    };
   }
 }
 

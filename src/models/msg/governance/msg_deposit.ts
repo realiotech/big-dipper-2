@@ -1,37 +1,41 @@
 import numeral from 'numeral';
 import * as R from 'ramda';
-import { Categories } from '../types';
+import type { Categories } from '@/models/msg/types';
 
 class MsgDeposit {
   public category: Categories;
-  public type: string;
-  public proposalId: number | string;
-  public depositor: string;
-  public amount: MsgCoin[];
-  public json: any;
 
-  constructor(payload: any) {
+  public type: string;
+
+  public proposalId: number | string;
+
+  public depositor: string;
+
+  public amount: MsgCoin[];
+
+  public json: object;
+
+  constructor(payload: object) {
     this.category = 'governance';
-    this.type = payload.type;
-    this.proposalId = payload.proposalId;
-    this.depositor = payload.depositor;
-    this.amount = payload.amount;
-    this.json = payload.json;
+    this.type = R.pathOr('', ['type'], payload);
+    this.proposalId = R.pathOr('', ['proposalId'], payload);
+    this.depositor = R.pathOr('', ['depositor'], payload);
+    this.amount = R.pathOr([], ['amount'], payload);
+    this.json = R.pathOr({}, ['json'], payload);
   }
 
-  static fromJson(json: any) {
-    return new MsgDeposit({
+  static fromJson(json: object): MsgDeposit {
+    return {
+      category: 'governance',
       json,
-      type: json['@type'],
-      proposalId: numeral(json.proposal_id).value(),
-      depositor: json.depositor,
-      amount: json?.amount.map((x) => {
-        return ({
-          denom: x?.denom,
-          amount: R.pathOr('0', ['amount'], x),
-        });
-      }),
-    });
+      type: R.pathOr('', ['@type'], json),
+      proposalId: numeral(R.pathOr('0', ['proposal_id'], json)).value() ?? '0',
+      depositor: R.pathOr('', ['depositor'], json),
+      amount: R.pathOr([], ['amount'], json).map((x?: MsgCoin) => ({
+        denom: x?.denom ?? '',
+        amount: x?.amount ?? '0',
+      })),
+    };
   }
 }
 

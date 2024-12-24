@@ -2,7 +2,7 @@ import React from "react";
 import { Box, Text, Flex, Table, Image } from "@chakra-ui/react";
 import BlockLogo from "../assets/realio-logo-white.svg"; // Import your SVG logo
 
-export default function Blocks() {
+export default function BlockDetail() {
   const validators: string[] = Array(10).fill("Reallionaires Club | RST");
 
   return (
