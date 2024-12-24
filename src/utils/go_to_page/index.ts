@@ -1,6 +1,6 @@
-import chainConfig from '@/chainConfig';
+import { chainConfig } from '@/configs';
 
-const { prefix } = chainConfig();
+const { prefix } = chainConfig
 
 export const HOME = '/';
 export const BLOCKS = '/blocks';

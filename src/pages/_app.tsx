@@ -8,7 +8,7 @@ import { DefaultSeo } from 'next-seo';
 import { ApolloProvider } from '@apollo/client';
 import { useApollo } from '@/graphql/client';
 import { chainConfig } from '@/configs';
-import { useWindowOrigin } from '@/hooks';
+import { useWindowOrigin } from '@/hooks/use_window';
 import {
     OPEN_GRAPH_SEO,
     TWITTER_SEO,

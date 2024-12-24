@@ -3,7 +3,7 @@ import * as R from 'ramda';
 import { useCallback, useEffect, useState } from 'react';
 import { chainConfig } from '@/configs';
 import { hexToBech32 } from '@/utils/hex_to_bech32';
-import { useShallowMemo } from '@/hooks';
+import useShallowMemo from '@/hooks/useShallowMemo';
 const { prefix } = chainConfig;
 
 /* Checking if the code is running on the server or the client. */

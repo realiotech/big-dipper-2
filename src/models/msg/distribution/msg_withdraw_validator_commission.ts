@@ -1,9 +1,9 @@
 import * as R from 'ramda';
-import chainConfig from '@/chainConfig';
+import { chainConfig } from '@/configs';
 import type { Categories, Log } from '@/models/msg/types';
 import { formatToken } from '@/utils/format_token';
 
-const { primaryTokenUnit } = chainConfig();
+const { primaryTokenUnit } = chainConfig;
 
 class MsgWithdrawValidatorCommission {
   public category: Categories;

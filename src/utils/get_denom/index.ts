@@ -1,6 +1,6 @@
-import chainConfig from '@/chainConfig';
+import { chainConfig } from '@/configs';
 
-const { primaryTokenUnit } = chainConfig();
+const { primaryTokenUnit } = chainConfig;
 
 /**
  * Helper Function to get Denom from a list

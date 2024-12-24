@@ -1,7 +1,7 @@
 import { bech32 } from 'bech32';
-import chainConfig from '@/chainConfig';
+import { chainConfig } from '@/configs';
 
-const { prefix } = chainConfig();
+const { prefix } = chainConfig;
 
 export const toValidatorAddress = (address: string) => {
   if (!address) {

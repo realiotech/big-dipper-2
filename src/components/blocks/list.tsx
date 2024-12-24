@@ -8,6 +8,7 @@ import dayjs from "@/utils/dayjs";
 import { Skeleton } from "../ui/skeleton";
 import { useProfilesRecoil } from "@/recoil/profiles";
 import { Button } from "../ui/button";
+import HelpLink from "../helper/help_link";
 
 const BlockItem = ({ item, rowIndex, isItemLoaded }) => {
     if (!isItemLoaded(rowIndex)) {
@@ -20,9 +21,7 @@ const BlockItem = ({ item, rowIndex, isItemLoaded }) => {
         return (
             <Table.Row key={`block-${rowIndex}`}>
                 <Table.Cell>
-                    <ChakraLink asChild colorPalette="blue">
-                        <Link href={`/blocks/${item.height}`}>{numeral(item.height).format("0,0")}</Link>
-                    </ChakraLink>
+                    <HelpLink href={`/blocks/${item.height}`} value={numeral(item.height).format("0,0")} />
                 </Table.Cell>
                 <Table.Cell>
                     <Proposer address={item.proposer.address} image={item.proposer.imageUrl} name={item.proposer.name} />

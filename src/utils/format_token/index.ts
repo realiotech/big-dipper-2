@@ -1,8 +1,8 @@
 import Big from 'big.js';
 import numeral from 'numeral';
-import chainConfig from '@/chainConfig';
+import { chainConfig } from '@/configs';
 
-const { tokenUnits } = chainConfig();
+const { tokenUnits } = chainConfig;
 
 /**
  * Util to help me correctly transform a base denom amount
