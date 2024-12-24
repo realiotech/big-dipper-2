@@ -1,57 +1,100 @@
 import React from "react";
-import { Box, Text, Grid, VStack, Flex, GridItem } from "@chakra-ui/react";
+import { Box, Text, Grid, Flex, GridItem, Stack, StackSeparator } from "@chakra-ui/react";
+import { useParams } from "@/components/params/hooks";
+import {
+  formatDistribution,
+  formatGov,
+  formatMinting,
+  formatSlashing,
+  formatStaking,
+} from '@/components/params/utils';
+import useAppTranslation from '@/hooks/useAppTranslation';
 
 const ParamsInfo = () => {
+  const { t } = useAppTranslation('params');
+
+  const { state } = useParams();
+  const staking = state.staking
+    ? {
+      title: t('staking') ?? undefined,
+      details: formatStaking(state.staking, t),
+    }
+    : null;
+
+  const slashing = state.slashing
+    ? {
+      title: t('slashing') ?? undefined,
+      details: formatSlashing(state.slashing, t),
+    }
+    : null;
+
+  const minting = state.minting
+    ? {
+      title: t('minting') ?? undefined,
+      details: formatMinting(state.minting, t),
+    }
+    : null;
+
+  const distribution = state.distribution
+    ? {
+      title: t('distribution') ?? undefined,
+      details: formatDistribution(state.distribution, t),
+    }
+    : null;
+
+  const gov = state.gov
+    ? {
+      title: t('gov') ?? undefined,
+      details: formatGov(state.gov, t),
+    }
+    : null;
+
   return (
     <Box bg="white" p={6} minHeight="100vh">
       <Grid templateColumns="repeat(2, 1fr)" gap={6}>
         <GridItem bg="#f9f9f9" p={6} borderRadius="md" boxShadow="sm">
           <Text fontSize="lg" fontWeight="bold" mb={4}>
-            Staking
+            {staking?.title}
           </Text>
-          <VStack align="stretch">
-            <FlexRow label="Bond Denom" value="Stake" />
-            <FlexRow label="Unbonding Time" value="7 day (s)" />
-            <FlexRow label="Max Entries" value="7" />
-            <FlexRow label="Historical Entries" value="10,000" />
-            <FlexRow label="Max Validators" value="100" />
-          </VStack>
+          <Stack separator={<StackSeparator />}>
+            {staking?.details.length && staking?.details.map((item, index) =>
+              <FlexRow key={`staking-${index}`} label={item.label} value={item.detail} />
+            )
+            }
+          </Stack>
         </GridItem>
         <GridItem bg="#f9f9f9" p={6} borderRadius="md" boxShadow="sm">
           <Text fontSize="lg" fontWeight="bold" mb={4}>
-            Slashing
+            {slashing?.title}
           </Text>
-          <VStack align="stretch">
-            <FlexRow label="Downtime Jail Duration" value="1,800 second (s)" />
-            <FlexRow label="Min Signed Per Window" value="50%" />
-            <FlexRow label="Signed Block Window" value="10,000" />
-            <FlexRow label="Slash Fraction Double Sign" value="5 / 100" />
-            <FlexRow label="Slash Fraction Downtime" value="1 / 10,000" />
-          </VStack>
+          <Stack separator={<StackSeparator />}>
+            {slashing?.details.length && slashing?.details.map((item, index) =>
+              <FlexRow key={`slashing-${index}`} label={item.label} value={item.detail} />
+            )
+            }
+          </Stack>
         </GridItem>
         <GridItem bg="#f9f9f9" p={6} borderRadius="md" boxShadow="sm">
           <Text fontSize="lg" fontWeight="bold" mb={4}>
-            Minting
+            {minting?.title}
           </Text>
-          <VStack align="stretch">
-            <FlexRow label="Blocks Per Year" value="6,311,520" />
-            <FlexRow label="Goal Bonded" value="0%" />
-            <FlexRow label="Inflation Max" value="0%" />
-            <FlexRow label="Inflation Min" value="0%" />
-            <FlexRow label="Inflation Rate Change" value="0%" />
-            <FlexRow label="Mint Denom" value="ario" />
-          </VStack>
+          <Stack separator={<StackSeparator />}>
+            {minting?.details.length && minting?.details.map((item, index) =>
+              <FlexRow key={`minting-${index}`} label={item.label} value={item.detail} />
+            )
+            }
+          </Stack>
         </GridItem>
         <GridItem bg="#f9f9f9" p={6} borderRadius="md" boxShadow="sm">
           <Text fontSize="lg" fontWeight="bold" mb={4}>
-            Distribution
+            {distribution?.title}
           </Text>
-          <VStack align="stretch">
-            <FlexRow label="Base Proposer Reward" value="1%" />
-            <FlexRow label="Bonus Proposer Reward" value="4%" />
-            <FlexRow label="Community Tax" value="2%" />
-            <FlexRow label="Withdraw Address Enabled" value="True" />
-          </VStack>
+          <Stack separator={<StackSeparator />}>
+            {distribution?.details.length && distribution?.details.map((item, index) =>
+              <FlexRow key={`distribution-${index}`} label={item.label} value={item.detail} />
+            )
+            }
+          </Stack>
         </GridItem>
         <GridItem
           bg="#f9f9f9"
@@ -61,16 +104,14 @@ const ParamsInfo = () => {
           gap={0}
         >
           <Text fontSize="lg" fontWeight="bold" mb={4}>
-            Gov
+            {gov?.title}
           </Text>
-          <VStack align="stretch">
-            <FlexRow label="Min Deposit" value="1000 RIO" />
-            <FlexRow label="Max Deposit Period" value="3 day (s)" />
-            <FlexRow label="Quorum" value="33%" />
-            <FlexRow label="Threshold" value="50%" />
-            <FlexRow label="Veto Threshold" value="33%" />
-            <FlexRow label="Voting Period" value="3 day (s)" />
-          </VStack>
+          <Stack separator={<StackSeparator />}>
+            {gov?.details.length && gov?.details.map((item, index) =>
+              <FlexRow key={`gov-${index}`} label={item.label} value={item.detail} />
+            )
+            }
+          </Stack>
         </GridItem>
       </Grid>
     </Box>
@@ -78,8 +119,8 @@ const ParamsInfo = () => {
 };
 
 const FlexRow = ({ label, value }: { label: string; value: string }) => (
-  <Flex p={2} borderTop={'1px solid #aba5a5'} justify="space-between" align="center">
-    <Text fontWeight="semibold">{label}</Text>
+  <Flex py={2} justify="space-between" align="center">
+    <Text>{label}</Text>
     <Text>{value}</Text>
   </Flex>
 );
