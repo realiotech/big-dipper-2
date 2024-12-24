@@ -322,7 +322,6 @@ export const getMessageModelByType = (type: string): Data['model'] => {
  */
 export const getMessageByType = <TMessage,>(message: TMessage, viewRaw: boolean, t: TFunction) => {
   const { type } = (message as { type: string }) ?? {};
-
   type ResultType = {
     content: FC<{ message: TMessage }>;
     tagDisplay: Data['tagDisplay'];
@@ -336,7 +335,6 @@ export const getMessageByType = <TMessage,>(message: TMessage, viewRaw: boolean,
   };
 
   const data = getDataByType(type);
-
   if (data) {
     results = {
       content: data?.content as unknown as FC<{ message: TMessage }>,
@@ -349,8 +347,8 @@ export const getMessageByType = <TMessage,>(message: TMessage, viewRaw: boolean,
   if (viewRaw || !results.content) {
     results.content = COMPONENTS.Unknown as unknown as FC<{ message: TMessage }>;
   }
-
   const Content = results.content;
+  console.log(t(`message_labels:${results.tagDisplay}`))
   return {
     type: <HelpTag value={t(`message_labels:${results.tagDisplay}`)} />,
     message: <Content message={message as unknown as ComponentProps<typeof Content>['message']} />,

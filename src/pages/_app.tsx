@@ -17,8 +17,10 @@ import {
     SEO_TITLE,
     SEO_DESCRIPTION,
 } from './utils';
+import { appWithTranslation } from 'next-i18next';
+import nextI18NextConfig from '../../next-i18next.config';
 
-export default function App({ Component, pageProps }: AppProps) {
+function App({ Component, pageProps }: AppProps) {
     const apolloClient = useApollo(pageProps.initialApolloState);
     const { location } = useWindowOrigin();
 
@@ -54,3 +56,5 @@ export default function App({ Component, pageProps }: AppProps) {
         </>
     )
 }
+
+export default appWithTranslation(App, nextI18NextConfig);

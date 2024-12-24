@@ -8,6 +8,7 @@ const AppTrans = (props: ComponentProps<typeof Trans>) => {
   const appName = process.env.NEXT_PUBLIC_APP_NAME ?? '';
   const { i18nKey, ...propsRest } = props;
 
+
   // convert `i18nKey` to array of strings as store in `i18nKeys` variable.
   const i18nKeys = useMemo(() => {
     if (Array.isArray(i18nKey)) {
@@ -18,7 +19,6 @@ const AppTrans = (props: ComponentProps<typeof Trans>) => {
     }
     return [];
   }, [i18nKey]);
-
   // convert `i18nKey` to array of strings as store in `i18nKeysForApp` variable.
   const i18nKeysForApp = useMemo(
     () =>
