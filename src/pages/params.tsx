@@ -8,11 +8,11 @@ import {
   formatSlashing,
   formatStaking,
 } from '@/components/params/utils';
-import useAppTranslation from '@/hooks/useAppTranslation';
+import useTranslation from "next-translate/useTranslation";
 
 const ParamsInfo = () => {
-  const { t } = useAppTranslation('params');
-
+  const { t } = useTranslation('params');
+  console.log(t('staking'))
   const { state } = useParams();
   const staking = state.staking
     ? {

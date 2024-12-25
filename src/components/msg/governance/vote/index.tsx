@@ -4,12 +4,12 @@ import { useProfileRecoil } from '@/recoil/profiles/hooks';
 import { PROPOSAL_DETAILS } from '@/utils/go_to_page';
 import { Text } from '@chakra-ui/react';
 import AppTrans from '@/components/AppTrans';
-import useAppTranslation from '@/hooks/useAppTranslation';
+import useTranslation from 'next-translate/useTranslation';
 import Link from 'next/link';
 import { FC, useMemo } from 'react';
 
 const Vote: FC<{ message: MsgVote }> = (props) => {
-  const { t } = useAppTranslation('transactions');
+  const { t } = useTranslation('transactions');
   const { message } = props;
   const vote = t(message.getOptionTranslationKey() ?? '');
 
