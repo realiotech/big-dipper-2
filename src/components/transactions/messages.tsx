@@ -5,10 +5,10 @@ import useAppTranslation from "@/hooks/useAppTranslation";
 import { getMessageByType } from "../msg/utils";
 
 const MessageItem = ({ message, raw }) => {
-    const { t } = useAppTranslation('transactions');
+    const { t } = useTranslation('transactions');
     const formattedItem = getMessageByType(message, raw, t);
     return (
-        <Flex w='full' gap ='10'>
+        <Flex w='full' gap='10'>
             <Box w='30%'>{formattedItem.type}</Box>
             <Box>{formattedItem.message}</Box>
         </Flex>

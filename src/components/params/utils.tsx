@@ -3,7 +3,7 @@ import { nanoToSeconds, secondsToDays } from '@/utils/time';
 import type { TFunction } from '@/hooks/useAppTranslation';
 import numeral from 'numeral';
 
-const convertBySeconds = (seconds: number, t: TFunction) => {
+const convertBySeconds = (seconds: number, t: any) => {
   const SECONDS_IN_DAY = 86400;
   return seconds >= SECONDS_IN_DAY
     ? t('days', {
@@ -14,7 +14,7 @@ const convertBySeconds = (seconds: number, t: TFunction) => {
       });
 };
 
-export const formatStaking = (data: Staking, t: TFunction) => [
+export const formatStaking = (data: Staking, t: any) => [
   {
     key: 'bondDenom',
     label: t('bondDenom'),
@@ -42,7 +42,7 @@ export const formatStaking = (data: Staking, t: TFunction) => [
   },
 ];
 
-export const formatSlashing = (data: Slashing, t: TFunction) => [
+export const formatSlashing = (data: Slashing, t: any) => [
   {
     key: 'downtimeJailDuration',
     label: t('downtimeJailDuration'),
@@ -72,7 +72,7 @@ export const formatSlashing = (data: Slashing, t: TFunction) => [
   },
 ];
 
-export const formatMinting = (data: Minting, t: TFunction) => [
+export const formatMinting = (data: Minting, t: any) => [
   {
     key: 'blocksPerYear',
     label: t('blocksPerYear'),
@@ -105,7 +105,7 @@ export const formatMinting = (data: Minting, t: TFunction) => [
   },
 ];
 
-export const formatDistribution = (data: Distribution, t: TFunction) => [
+export const formatDistribution = (data: Distribution, t: any) => [
   {
     key: 'baseProposerReward',
     label: t('baseProposerReward'),
@@ -128,7 +128,7 @@ export const formatDistribution = (data: Distribution, t: TFunction) => [
   },
 ];
 
-export const formatGov = (data: Gov, t: TFunction) => [
+export const formatGov = (data: Gov, t: any) => [
   {
     key: 'minDeposit',
     label: t('minDeposit'),

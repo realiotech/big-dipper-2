@@ -5,7 +5,7 @@ import { formatNumber, formatToken } from '@/utils/format_token';
 import { PROPOSAL_DETAILS } from '@/utils/go_to_page';
 import { Text } from '@chakra-ui/react';
 import AppTrans from '@/components/AppTrans';
-import useAppTranslation from '@/hooks/useAppTranslation';
+import useTranslation from 'next-translate/useTranslation';
 import Link, { LinkProps } from 'next/link';
 import { FC, PropsWithChildren } from 'react';
 
@@ -19,7 +19,7 @@ const LinkText: FC<PropsWithChildren<{ href: LinkProps['href'] }>> = (props) => 
 };
 
 const DepositProposal: FC<{ message: MsgDeposit }> = (props) => {
-  const { t } = useAppTranslation('transactions');
+  const { t } = useTranslation('transactions');
   const { message } = props;
 
   const parsedAmount = message?.amount

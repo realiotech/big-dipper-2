@@ -4,11 +4,11 @@ import { useProfileRecoil } from '@/recoil/profiles/hooks';
 import { formatNumber, formatToken } from '@/utils/format_token';
 import { Text } from '@chakra-ui/react';
 import AppTrans from '@/components/AppTrans';
-import useAppTranslation from '@/hooks/useAppTranslation';
+import useTranslation from 'next-translate/useTranslation';
 import { FC } from 'react';
 
 const Fund: FC<{ message: MsgFundCommunityPool }> = (props) => {
-  const { t } = useAppTranslation('transactions');
+  const { t } = useTranslation('transactions');
   const { message } = props;
 
   const parsedAmount = message?.amount

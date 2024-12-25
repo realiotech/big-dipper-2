@@ -5,6 +5,7 @@ import PriceChart from "@/components/home/price_chart";
 import Tokenomics from "@/components/home/tokenomics";
 import Blocks from "@/components/home/blocks";
 import Transactions from "@/components/home/transactions";
+
 export default function Home() {
   return (
     <SimpleGrid columns={{ base: 2, lg: 4 }} gap='10'>

@@ -5,12 +5,12 @@ import { useProfileRecoil } from '@/recoil/profiles/hooks';
 import { formatNumber, formatToken } from '@/utils/format_token';
 import { Text } from '@chakra-ui/react';
 import AppTrans from '@/components/AppTrans';
-import useAppTranslation from '@/hooks/useAppTranslation';
+import useTranslation from 'next-translate/useTranslation';
 import { FC } from 'react';
 
 const RecieverName: FC<{ address: string; coins: MsgCoin[] }> = (props) => {
   const { address: theAddress, coins } = props;
-  const { t } = useAppTranslation('transactions');
+  const { t } = useTranslation('transactions');
   const { address, name } = useProfileRecoil(theAddress);
   const recieverMoniker = name || theAddress;
   const parsedAmount = coins
@@ -35,7 +35,7 @@ const RecieverName: FC<{ address: string; coins: MsgCoin[] }> = (props) => {
 };
 
 const Multisend: FC<{ message: MsgMultiSend }> = (props) => {
-  const { t } = useAppTranslation('transactions');
+  const { t } = useTranslation('transactions');
   const { classes } = useStyles();
 
   const { message } = props;
@@ -55,15 +55,13 @@ const Multisend: FC<{ message: MsgMultiSend }> = (props) => {
 
   return (
     <div>
-      <Typography>
-        <AppTrans
-          i18nKey="message_contents:txMultisendContentOne"
-          components={[<Name address={address} name={validatorMoniker} />, <b />]}
-          values={{
-            amount: senderAmount,
-          }}
-        />
-      </Typography>
+      <AppTrans
+        i18nKey="message_contents:txMultisendContentOne"
+        components={[<Name address={address} name={validatorMoniker} />, <b />]}
+        values={{
+          amount: senderAmount,
+        }}
+      />
       <div className={classes.multisend}>
         {message?.outputs
           ?.filter((x) => x)
