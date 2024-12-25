@@ -1,7 +1,7 @@
 import { Box, Flex, Text, Table, Link, Stack, StackSeparator, For } from "@chakra-ui/react"
 import { useState } from "react"
 import { Switch } from "../ui/switch"
-import useAppTranslation from "@/hooks/useAppTranslation";
+import useTranslation from "next-translate/useTranslation";
 import { getMessageByType } from "../msg/utils";
 
 const MessageItem = ({ message, raw }) => {
