@@ -1,4 +1,4 @@
-import { Trans } from 'next-i18next';
+import Trans from 'next-translate/Trans';
 import { ComponentProps, useMemo } from 'react';
 
 /**
@@ -41,7 +41,7 @@ const AppTrans = (props: ComponentProps<typeof Trans>) => {
   }
 
   // return `Trans` component with `i18nKeysMerged` as `i18nKey` prop.
-  return <Trans {...propsRest} i18nKey={i18nKeysMerged} />;
+  return <Trans {...propsRest} i18nKey={[...i18nKeysMerged]} />;
 };
 
 export default AppTrans;
