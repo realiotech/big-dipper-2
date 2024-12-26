@@ -23,6 +23,7 @@
     }
   },
   "extra": {
-    "profile": false
+    "profile": false,
+    "votingPowerExponent": 18
   }
 }

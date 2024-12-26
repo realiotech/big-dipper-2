@@ -6,7 +6,7 @@ import numeral from "numeral"
 import { getMiddleEllipsis } from "@/utils/get_middle_ellipsis"
 import dayjs from '@/utils/dayjs';
 import Proposer from "@/components/helper/proposer"
-import { useProfilesRecoil } from "@/recoil/profiles"
+import { useProfilesRecoil } from "@/recoil/profiles/hooks"
 
 const Blocks = () => {
     const { state } = useBlocks()

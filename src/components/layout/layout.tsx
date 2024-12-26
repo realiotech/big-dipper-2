@@ -3,12 +3,12 @@ import { Box, Flex, VStack } from "@chakra-ui/react"
 import Sidebar from "./sidebar";
 import Header from "./header";
 import Footer from "./footer";
-import { useMarketRecoil } from '@/recoil/market';
-import { useValidatorRecoil } from "@/recoil/validators";
 import { Skeleton } from "../ui/skeleton";
+import { useMarketRecoil } from "@/recoil/market";
+import { useValidatorRecoil } from "@/recoil/validators/hooks";
 
 export default function Layout({ children }) {
-    useMarketRecoil();
+    useMarketRecoil
     const { loading } = useValidatorRecoil()
     return (
         <Flex

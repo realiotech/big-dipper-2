@@ -56,7 +56,7 @@ export default function VotesTable() {
                 <Text fontSize="lg" fontWeight="bold" mb={4}>
                     Votes
                 </Text>
-                <Tabs.Root value={state.tab} variant="enclosed" onValueChange={(e) => handleTabChange(e, e.value)}>
+                <Tabs.Root value={state?.tab} variant="enclosed" onValueChange={(e) => handleTabChange(e, e.value)}>
                     <Tabs.List>
                         <Tabs.Trigger value={0}>
                             All
