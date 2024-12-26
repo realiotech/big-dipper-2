@@ -1,33 +1,12 @@
-import {
-  atomFamilyState,
-} from './atom';
-
-import {
-  useProfileRecoil,
-  useProfilesRecoil,
-} from './hooks';
-
-import {
-  readProfile,
-  readProfiles,
-  writeProfile,
-  readDelegatorAddress,
-  readDelegatorAddresses,
-  readProfileExist,
-  readProfilesExist,
-  validatorToDelegatorAddress,
-} from './selectors';
-
+export { atomFamilyState } from '@/recoil/profiles/atom';
+export { useProfileRecoil, useProfilesRecoil } from '@/recoil/profiles/hooks';
 export {
-  validatorToDelegatorAddress,
-  atomFamilyState,
-  useProfileRecoil,
-  useProfilesRecoil,
-  readProfile,
-  readProfiles,
-  writeProfile,
   readDelegatorAddress,
   readDelegatorAddresses,
+  readProfile,
   readProfileExist,
+  readProfiles,
   readProfilesExist,
-};
+  validatorToDelegatorAddress,
+  writeProfile,
+} from '@/recoil/profiles/selectors';

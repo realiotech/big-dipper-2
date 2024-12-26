@@ -6,17 +6,29 @@ import numeral from "numeral"
 import { getMiddleEllipsis } from "@/utils/get_middle_ellipsis"
 import dayjs from '@/utils/dayjs';
 import Proposer from "@/components/helper/proposer"
-import { useProfilesRecoil } from "@/recoil/profiles/hooks"
+import { useProfileRecoil } from "@/recoil/profiles/hooks"
+
+const BlockItem = ({item}) => {
+    const { name, address, imageUrl } = useProfileRecoil(item.proposer);
+
+    return (
+        <Table.Row>
+            <Table.Cell>
+                <ChakraLink asChild colorPalette='blue'>
+                    <Link href={`/blocks/${item.height}`}>{numeral(item.height).format('0,0')}</Link>
+                </ChakraLink>
+            </Table.Cell>
+            <Table.Cell><Proposer address={address} image={imageUrl} name={name} /></Table.Cell>    
+            <Table.Cell>{getMiddleEllipsis(item.hash, { beginning: 6, ending: 5 })}</Table.Cell>
+            <Table.Cell>{numeral(item.txs).format('0,0')}</Table.Cell>
+            <Table.Cell>{dayjs.utc(item.timestamp).fromNow()}</Table.Cell>
+        </Table.Row>
+    )
+}
 
 const Blocks = () => {
     const { state } = useBlocks()
-    const proposerProfiles = useProfilesRecoil(state.items.map((x) => x.proposer));
-    const mergedDataWithProfiles = state.items.map((x, i) => {
-        return ({
-            ...x,
-            proposer: proposerProfiles[i],
-        });
-    });
+
     return (
         <GridItem borderRadius='20px' bgColor='#F6F7F8' py='5' px='8' colSpan={2}>
             <Flex w='full' justifyContent={'space-between'} pb='4'>
@@ -49,19 +61,9 @@ const Blocks = () => {
                 </Table.Header>
                 <Table.Body>
                     {state.items.length ? (
-                        <For each={mergedDataWithProfiles}>
+                        <For each={state.items}>
                             {(item, index) => (
-                                <Table.Row key={`block-${index}`}>
-                                    <Table.Cell>
-                                        <ChakraLink asChild colorPalette='blue'>
-                                            <Link href={`/blocks/${item.height}`}>{numeral(item.height).format('0,0')}</Link>
-                                        </ChakraLink>
-                                    </Table.Cell>
-                                    <Table.Cell><Proposer address={item.proposer.address} image={item.proposer.imageUrl} name={item.proposer.name} /></Table.Cell>
-                                    <Table.Cell>{getMiddleEllipsis(item.hash, { beginning: 6, ending: 5 })}</Table.Cell>
-                                    <Table.Cell>{numeral(item.txs).format('0,0')}</Table.Cell>
-                                    <Table.Cell>{dayjs.utc(item.timestamp).fromNow()}</Table.Cell>
-                                </Table.Row>
+                                <BlockItem key={`block-${index}`} item={item} />
                             )}
                         </For>
                     ) : <Skeleton h={'200px'} />}

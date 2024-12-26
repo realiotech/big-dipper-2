@@ -3,15 +3,23 @@ import React from "react";
 import { Box, Text, Flex, Table, Image, For, Center, Stack, StackSeparator } from "@chakra-ui/react";
 import numeral from "numeral";
 import Proposer from "../helper/proposer";
-import { useProfileRecoil, useProfilesRecoil } from '@/recoil/profiles/hooks';
+import { useProfileRecoil } from '@/recoil/profiles/hooks';
 import dayjs, { formatDayJs } from '@/utils/dayjs';
 import TxItem from "../transactions/item";
+
+const ProposerItem = ({ proposer }) => {
+    const { name, address, imageUrl } = useProfileRecoil(proposer);
+
+    return (
+        <Proposer address={address} image={imageUrl} name={name} />
+    );
+};
+
 
 export default function BlockDetails() {
     const { state } = useBlockDetails();
     const { overview, transactions, signatures } = state;
     const { address, imageUrl, name } = useProfileRecoil(overview.proposer);
-    const formattedSignatures = useProfilesRecoil(signatures);
 
     return (
         <Box p={4} minHeight="100vh">
@@ -59,9 +67,9 @@ export default function BlockDetails() {
                 {signatures?.length ?
                     <Box bg='white' borderRadius='md' padding='3' overflowY="auto" maxH="200px">
                         <Stack separator={<StackSeparator />} gap={2}>
-                            {formattedSignatures.map(
+                            {signatures.map(
                                 (item, index) => (
-                                    <Proposer key={`proposer-${index}`} name={item.name} address={item.address} image={item.imageUrl} />
+                                    <ProposerItem key={`proposer-${index}`} proposer={item} />
                                 )
 
                             )}
