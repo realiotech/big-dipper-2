@@ -23,6 +23,8 @@ import { Status } from "../ui/status";
 import useTranslation from "next-translate/useTranslation";
 import NextLink from "next/link"
 import SearchValidator from "./search";
+import { fetchColumns } from "./utils";
+import ColumnHeader from "./header";
 
 const ValidatorItem = ({ item, idx }) => {
     const { t } = useTranslation("validators")
@@ -38,7 +40,7 @@ const ValidatorItem = ({ item, idx }) => {
             <Table.Cell w={"30%"}>
                 <Box>
                     <Flex justify={"space-between"}>
-                        <Text>{votingPower}</Text>      
+                        <Text>{votingPower}</Text>
                         <Text>{percentDisplay}%</Text>
                     </Flex>
                     <ProgressRoot
@@ -71,13 +73,16 @@ const ValidatorItem = ({ item, idx }) => {
 }
 
 const ValidatorList = () => {
-    const { state, handleTabChange, handleSearch, handleSort, sortItems, search } = useValidators();
+    const { t } = useTranslation('validators');
+    const { state, handleTabChange, handleSearch, handleSort, sortItems } = useValidators();
     const validatorsMemo = useShallowMemo(state.items.map((x) => x.validator));
     const { profiles: dataProfiles, loading } = useProfilesRecoil(validatorsMemo);
     const items = useMemo(
         () => sortItems(state.items.map((x, i) => ({ ...x, validator: dataProfiles?.[i] }))),
         [state.items, dataProfiles, sortItems]
     );
+    const columns = fetchColumns(t);
+
     return (
         <Box p={6} bg="" minHeight="100vh">
             <Flex justify={"space-between"} mb={4}>
@@ -97,17 +102,13 @@ const ValidatorList = () => {
                 </Tabs.Root>
                 <SearchValidator callback={handleSearch} />
             </Flex>
-
             <Table.Root bg="black" borderRadius="md" boxShadow="sm">
                 <Table.Header>
                     <Table.Row>
-                        <TableColumnHeader>Idx</TableColumnHeader>
-                        <TableColumnHeader>Validator</TableColumnHeader>
-                        <TableColumnHeader>Voting Power</TableColumnHeader>
-                        <TableColumnHeader textAlign={"right"}>
-                            Commission
-                        </TableColumnHeader>
-                        <TableColumnHeader textAlign={"left"} pl={6}>Status</TableColumnHeader>
+                        {columns.map((item, index) =>
+                            <ColumnHeader key={`column-${index}`} column={item} sortKey={state?.sortKey} sortDirection={state?.sortDirection} handleSort={handleSort} />
+                        )
+                        }
                         <TableColumnHeader />
                     </Table.Row>
                 </Table.Header>
