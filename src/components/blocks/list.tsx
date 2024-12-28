@@ -6,11 +6,13 @@ import { getMiddleEllipsis } from "@/utils/get_middle_ellipsis";
 import numeral from "numeral";
 import dayjs from "@/utils/dayjs";
 import { Skeleton } from "../ui/skeleton";
-import { useProfilesRecoil } from "@/recoil/profiles";
+import { useProfileRecoil } from "@/recoil/profiles/hooks";
 import { Button } from "../ui/button";
 import HelpLink from "../helper/help_link";
 
 const BlockItem = ({ item, rowIndex, isItemLoaded }) => {
+    const { name, address, imageUrl } = useProfileRecoil(item.proposer);
+
     if (!isItemLoaded(rowIndex)) {
         return (
             <Table.Row key={`block-${rowIndex}`}>
@@ -23,9 +25,7 @@ const BlockItem = ({ item, rowIndex, isItemLoaded }) => {
                 <Table.Cell>
                     <HelpLink href={`/blocks/${item.height}`} value={numeral(item.height).format("0,0")} />
                 </Table.Cell>
-                <Table.Cell>
-                    <Proposer address={item.proposer.address} image={item.proposer.imageUrl} name={item.proposer.name} />
-                </Table.Cell>
+                <Table.Cell><Proposer address={address} image={imageUrl} name={name} /></Table.Cell>
                 <Table.Cell>{getMiddleEllipsis(item.hash, { beginning: 6, ending: 5 })}</Table.Cell>
                 <Table.Cell>{numeral(item.txs).format("0,0")}</Table.Cell>
                 <Table.Cell>{dayjs.utc(item.timestamp).fromNow()}</Table.Cell>
@@ -36,14 +36,8 @@ const BlockItem = ({ item, rowIndex, isItemLoaded }) => {
 
 export function BlockList() {
     const { state, isItemLoaded, loadMoreItems } = useBlocks();
-    const proposerProfiles = useProfilesRecoil(state.items.map((x) => x.proposer));
-    const mergedDataWithProfiles = state.items.map((x, i) => {
-        return ({
-            ...x,
-            proposer: proposerProfiles[i],
-        });
-    });
-    if (!mergedDataWithProfiles.length) {
+
+    if (!state?.items?.length) {
         return (
             <Center borderRadius="20px" bgColor="#F6F7F8" py="5" px="8" minH="65vh" w="full">
                 <Text>Nothing to show</Text>
@@ -64,7 +58,7 @@ export function BlockList() {
                     </Table.Row>
                 </Table.Header>
                 <Table.Body >
-                    <For each={mergedDataWithProfiles}>
+                    <For each={state.items}>
                         {(item, index) => (
                             <BlockItem item={item} rowIndex={index} isItemLoaded={isItemLoaded} />
                         )}

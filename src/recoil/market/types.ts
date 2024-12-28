@@ -1,4 +1,4 @@
-export type AtomState = {
+export interface AtomState {
   price: number | null;
   supply: TokenUnit;
   marketCap: number | null;

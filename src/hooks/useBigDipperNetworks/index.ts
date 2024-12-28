@@ -1,11 +1,11 @@
-import { chainConfig } from '@/configs';
+import chainConfig from '@/chainConfig';
 import { ChainIdQuery, useChainIdQuery } from '@/graphql/types/general_types';
 import { BigDipperNetwork, zBigDipperNetwork } from '@/models/bigDipperNetwork';
 import { gql, makeVar, useQuery, useReactiveVar } from '@apollo/client';
 import { useCallback, useEffect } from 'react';
 import z from 'zod';
 
-const { network } = chainConfig;
+const { network } = chainConfig();
 
 // Define a GraphQL query to fetch the networks data
 export const query = gql`

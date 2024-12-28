@@ -5,6 +5,7 @@ export {
   formatNumber,
   formatToken,
   formatTokenByExponent,
+  formatTokenByDecimal,
   removeEndingZeros,
 } from '@/utils/format_token';
 export { getDenom } from '@/utils/get_denom';

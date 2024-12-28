@@ -1,53 +1,31 @@
-/* eslint-disable max-len */
-import { useEffect } from 'react';
-import {
-  useRecoilValue,
-  useRecoilCallback,
-} from 'recoil';
+import { useRecoilValue } from 'recoil';
 import { chainConfig } from '@/configs';
+import useShallowMemo from '@/hooks/useShallowMemo';
+import { useDesmosProfile } from '@/hooks/use_desmos_profile';
 import {
-  writeProfile,
-  readProfilesExist,
-  readProfileExist,
-  readProfile,
-  readProfiles,
   readDelegatorAddress,
   readDelegatorAddresses,
-} from '@/recoil/profiles';
-import { AtomState as ProfileAtomState } from '@/recoil/profiles/types';
-import { getProfile } from './utils';
+  readProfile,
+  readProfiles,
+} from '@/recoil/profiles/selectors';
+
+const { extra } = chainConfig;
 
 /**
  * Accepts a delegator address and returns the appropriate profile
  * @param address
  */
-export const useProfileRecoil = (address: string): AvatarName | null => {
-  const delegatorAddress = useRecoilValue(readDelegatorAddress(address));
-  const rawProfile = useRecoilValue(readProfileExist(address));
+export const useProfileRecoil = (address: string): AvatarName => {
   const profile = useRecoilValue(readProfile(address));
+  const delegatorAddress = useRecoilValue(readDelegatorAddress(address));
 
-  const fetchProfile = useRecoilCallback(({ set }) => async () => {
-    const fetchedProfile = await getProfile(delegatorAddress);
-
-    if (fetchedProfile === null) {
-      set(writeProfile(delegatorAddress), null);
-    } else {
-      set(writeProfile(delegatorAddress), {
-        address: delegatorAddress,
-        // name: fetchedProfile.nickname || address,
-        name: `@${fetchedProfile.dtag}` || address,
-        imageUrl: fetchedProfile.imageUrl,
-      });
-    }
+  // ==========================
+  // Desmos Profile
+  // ==========================
+  useDesmosProfile({
+    addresses: delegatorAddress ? [delegatorAddress] : [],
+    skip: !extra.profile || !delegatorAddress,
   });
-
-  useEffect(() => {
-    if (chainConfig.extra.profile
-      && delegatorAddress
-      && rawProfile === null) {
-      fetchProfile();
-    }
-  }, [address]);
 
   return profile;
 };
@@ -56,37 +34,20 @@ export const useProfileRecoil = (address: string): AvatarName | null => {
  * Accepts a list of addresses and returns the appropriate profiles
  * @param address
  */
-export const useProfilesRecoil = (addresses: string[]): AvatarName[] => {
-  const delegatorAddresses = useRecoilValue(readDelegatorAddresses(addresses));
-  const rawProfiles: ProfileAtomState[] = useRecoilValue(readProfilesExist(addresses));
+export const useProfilesRecoil = (
+  addresses: string[]
+): { profiles: AvatarName[]; loading: boolean; error: unknown } => {
   const profiles = useRecoilValue(readProfiles(addresses));
+  const delegatorAddresses = useRecoilValue(readDelegatorAddresses(addresses));
+  const delegatorAddressMemo = useShallowMemo(delegatorAddresses);
 
-  const fetchProfiles = useRecoilCallback(({ set }) => async () => {
-    const fetchedProfiles = await Promise.all(rawProfiles.map(async (x, i) => {
-      const delegatorAddress = delegatorAddresses[i];
-      if (delegatorAddress && x === null) {
-        const fetchedProfile = await getProfile(delegatorAddress);
-        if (fetchedProfile === null) {
-          set(writeProfile(delegatorAddress), null);
-        } else {
-          set(writeProfile(delegatorAddress), {
-            address: delegatorAddress,
-            // name: fetchedProfile.nickname || addresses[i],
-            name: `@${fetchedProfile.dtag}` || addresses[i],
-            imageUrl: fetchedProfile.imageUrl,
-          });
-        }
-      }
-    }));
-
-    return fetchedProfiles;
+  // ==========================
+  // Desmos Profile
+  // ==========================
+  const { loading, error } = useDesmosProfile({
+    addresses: delegatorAddressMemo,
+    skip: !extra.profile || !delegatorAddressMemo.length,
   });
 
-  useEffect(() => {
-    if (chainConfig.extra.profile) {
-      fetchProfiles();
-    }
-  }, [delegatorAddresses]);
-
-  return profiles;
+  return { profiles, loading, error };
 };

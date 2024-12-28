@@ -1,104 +1,59 @@
-/* eslint-disable max-len */
-import { useState } from 'react';
-import {
-  useRecoilCallback,
-} from 'recoil';
-import * as R from 'ramda';
-import {
-  useValidatorAddressesQuery,
-  ValidatorAddressesQuery,
-} from '@/graphql/types/general_types';
-import { chainConfig } from '@/configs';
-import { useDesmosProfile } from '@/hooks/use_desmos_profile';
-import {
-  atomFamilyState as validatorAtomState,
-} from '@/recoil/validators';
-import {
-  atomFamilyState as profileAtomFamilyState,
-} from '@/recoil/profiles';
+import { useEffect } from 'react';
+import { useRecoilCallback } from 'recoil';
+import { AtomState as ValidatorAtomState } from '@/recoil/validators';
+import { useValidatorAddressesQuery } from '@/graphql/types/general_types';
+import { atomFamilyState as profileAtomFamilyState } from '@/recoil/profiles/atom';
+import type { AtomState as ProfileAtomState } from '@/recoil/profiles/types';
+import { atomFamilyState as validatorAtomState } from '@/recoil/validators/atom';
 
 export const useValidatorRecoil = () => {
-  const [loading, setLoading] = useState(true);
-
-  const {
-    fetchDesmosProfile,
-    formatDesmosProfile,
-  } = useDesmosProfile({
-    onComplete: (data) => {
-      return formatDesmosProfile(data);
-    },
-  });
-
-  useValidatorAddressesQuery({
-    onError: (error) => {
-      console.error(error.message);
-      setLoading(false);
-    },
-    onCompleted: async (data) => {
-      // Not very optimized but better than before.
-      // We save the very basic validator info first
-      // Set loading to be false
-      // Set profiles and update if needed.
-      // Will come back to this in the future
-      setLoading(false);
-      formatAndSetValidatorsAddressList(data);
-      setProfiles(data);
-    },
-  });
-
-  const formatAndSetValidatorsAddressList = useRecoilCallback(({ set }) => async (data: ValidatorAddressesQuery) => {
-    data?.validator?.filter((x) => x.validatorInfo).forEach((x) => {
-      const validatorAddress = x.validatorInfo.operatorAddress;
-      const delegatorAddress = x.validatorInfo.selfDelegateAddress;
-      const { consensusAddress } = x.validatorInfo;
-      const imageUrl = R.pathOr('', ['validatorDescriptions', 0, 'avatarUrl'], x);
-      const moniker = R.pathOr('', ['validatorDescriptions', 0, 'moniker'], x);
-
-      set(validatorAtomState(consensusAddress), {
-        delegator: delegatorAddress,
-        validator: validatorAddress,
-      });
-
-      set(profileAtomFamilyState(delegatorAddress), {
-        moniker,
-        imageUrl,
+  const { loading: loadingValidator, data } = useValidatorAddressesQuery();
+  const setValidatorAtomState = useRecoilCallback(
+    ({ set }) =>
+      (consensusAddress: string, newState: ValidatorAtomState) =>
+        set(validatorAtomState(consensusAddress), newState),
+    []
+  );
+  useEffect(() => {
+    if (!data?.validator) return;
+    const map = new Map(
+      data.validator
+        .filter((x) => x.validatorInfo?.consensusAddress)
+        .map((x) => [x.validatorInfo?.consensusAddress ?? '', x])
+    );
+    map.forEach((x, consensusAddress) => {
+      setValidatorAtomState(consensusAddress, {
+        delegator: x.validatorInfo?.selfDelegateAddress ?? '',
+        validator: x.validatorInfo?.consensusAddress ?? '',
       });
     });
-  });
+  }, [data, setValidatorAtomState]);
 
-  const setProfiles = useRecoilCallback(({ set }) => async (data: ValidatorAddressesQuery) => {
-    if (chainConfig.extra.profile) {
-      let profiles = [];
-      data?.validator?.filter((x) => x.validatorInfo).forEach((x) => {
-        const delegatorAddress = x.validatorInfo.selfDelegateAddress;
-        profiles.push(fetchDesmosProfile(delegatorAddress));
+  const setProfileAtomFamilyState = useRecoilCallback(
+    ({ set }) =>
+      (delegatorAddress: string, newState: ProfileAtomState) =>
+        set(
+          profileAtomFamilyState(delegatorAddress),
+          (prevState: ProfileAtomState): ProfileAtomState => {
+            if (!prevState || prevState === true) return newState;
+            return prevState.moniker ? prevState : newState;
+          }
+        ),
+    []
+  );
+
+  useEffect(() => {
+    data?.validator?.forEach((validator) => {
+      if (!validator.validatorInfo?.selfDelegateAddress) return;
+
+      setProfileAtomFamilyState(validator.validatorInfo?.selfDelegateAddress, {
+        moniker: validator.validatorDescriptions?.[0]?.moniker || '',
+        imageUrl: validator.validatorDescriptions?.[0]?.avatarUrl || '',
       });
-
-      profiles = await Promise.allSettled(profiles);
-      data?.validator?.filter((x) => x.validatorInfo).forEach((x, i) => {
-        const delegatorAddress = x.validatorInfo.selfDelegateAddress;
-        const profile = R.pathOr(undefined, [i, 'value'], profiles);
-
-        // ignore if profile doesnt exist
-        if (profile) {
-          // sets profile priority
-          const moniker = R.pathOr(undefined, ['nickname'], profile)
-            || R.pathOr('', ['validatorDescriptions', 0, 'moniker'], x);
-          const imageUrl = (
-            R.pathOr('', ['imageUrl'], profile)
-            || R.pathOr('', ['validatorDescriptions', 0, 'avatarUrl'], x)
-          );
-
-          set(profileAtomFamilyState(delegatorAddress), {
-            moniker,
-            imageUrl,
-          });
-        }
-      });
-    }
-  });
+    });
+  }, [data?.validator, setProfileAtomFamilyState]);
 
   return {
-    loading,
+    loading: loadingValidator,
   };
 };
