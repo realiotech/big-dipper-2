@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useMemo } from "react";
 import {
     Box,
     Text,
@@ -10,41 +10,92 @@ import {
     Tabs,
     TableColumnHeader,
     Flex,
+    Link,
 } from "@chakra-ui/react";
 import { ProgressBar, ProgressRoot } from "@/components/ui/progress";
 import { useValidators } from "./hooks";
 import useShallowMemo from "@/hooks/useShallowMemo";
 import { useProfilesRecoil } from "@/recoil/profiles";
+import Proposer from "../helper/proposer";
+import { ADDRESS_DETAILS, getValidatorStatus } from "@/utils";
+import numeral from "numeral";
+import { Status } from "../ui/status";
+import useTranslation from "next-translate/useTranslation";
+import NextLink from "next/link"
+import SearchValidator from "./search";
+
+const ValidatorItem = ({ item, idx }) => {
+    const { t } = useTranslation("validators")
+    const status = getValidatorStatus(item.status, item.jailed, item.tombstoned);
+    const percentDisplay = item.status === 3 ? `${numeral(item.votingPowerPercent.toFixed(6)).format('0.[00]')}` : "0"
+    const votingPower = numeral(item.votingPower).format('0,0');
+    return (
+        <Table.Row>
+            <Table.Cell>#{idx + 1}</Table.Cell>
+            <Table.Cell>
+                <Proposer name={item.validator.name} address={item.validator.address} image={item.validator.imageUrl} />
+            </Table.Cell>
+            <Table.Cell w={"30%"}>
+                <Box>
+                    <Flex justify={"space-between"}>
+                        <Text>{votingPower}</Text>      
+                        <Text>{percentDisplay}%</Text>
+                    </Flex>
+                    <ProgressRoot
+                        shape={"full"}
+                        h="50%"
+                        size="sm"
+                        w="100%"
+                        variant={"subtle"}
+                        value={item.votingPowerPercent * 2}
+                    >
+                        <ProgressBar />
+                    </ProgressRoot>
+                </Box>
+            </Table.Cell>
+            <Table.Cell textAlign={"right"}>{numeral(item.commission).format('0.[00]')}%</Table.Cell>
+            <Table.Cell textAlign={"left"} pl={6}>
+                <Status colorPalette={status.theme} color={status.theme}>{t(status.status)}</Status>
+            </Table.Cell>
+            <Table.Cell textAlign="right">
+                <Link asChild>
+                    <NextLink href={ADDRESS_DETAILS(item?.validator.address)}>
+                        <Button colorPalette="purple" size="sm" disabled={item.status !== 3}>
+                            Delegate
+                        </Button>
+                    </NextLink>
+                </Link>
+            </Table.Cell>
+        </Table.Row>
+    )
+}
 
 const ValidatorList = () => {
     const { state, handleTabChange, handleSearch, handleSort, sortItems, search } = useValidators();
     const validatorsMemo = useShallowMemo(state.items.map((x) => x.validator));
     const { profiles: dataProfiles, loading } = useProfilesRecoil(validatorsMemo);
-
-    const validators = Array(50).fill({
-        validator: "Reallionaires Club | RST",
-        votingPower: 542735,
-        votingPowerPercentage: "58.7%",
-        commission: "5%",
-        status: "Active",
-    });
-
+    const items = useMemo(
+        () => sortItems(state.items.map((x, i) => ({ ...x, validator: dataProfiles?.[i] }))),
+        [state.items, dataProfiles, sortItems]
+    );
     return (
         <Box p={6} bg="" minHeight="100vh">
             <Flex justify={"space-between"} mb={4}>
-                <Tabs.Root colorScheme="blue">
-                    <Tabs.List>
-                        <Tabs.Trigger>Active</Tabs.Trigger>
-                        <Tabs.Trigger>Inactive</Tabs.Trigger>
-                        <Tabs.Trigger>All Validators</Tabs.Trigger>
+                <Tabs.Root value={state?.tab + 1} variant="plain" onValueChange={(e) => handleTabChange(e, e.value - 1)}>
+                    <Tabs.List bg="bg.muted" rounded="l3" p="1">
+                        <Tabs.Trigger value={1}>
+                            Active
+                        </Tabs.Trigger>
+                        <Tabs.Trigger value={2}>
+                            Inactive
+                        </Tabs.Trigger>
+                        <Tabs.Trigger value={3}>
+                            All Validators
+                        </Tabs.Trigger>
+                        <Tabs.Indicator rounded="l2" />
                     </Tabs.List>
                 </Tabs.Root>
-                <Input
-                    placeholder="Search Validator"
-                    maxW="300px"
-                    bg="white"
-                    borderRadius="md"
-                />
+                <SearchValidator callback={handleSearch} />
             </Flex>
 
             <Table.Root bg="black" borderRadius="md" boxShadow="sm">
@@ -53,59 +104,16 @@ const ValidatorList = () => {
                         <TableColumnHeader>Idx</TableColumnHeader>
                         <TableColumnHeader>Validator</TableColumnHeader>
                         <TableColumnHeader>Voting Power</TableColumnHeader>
-                        <TableColumnHeader textAlign={"center"}>
+                        <TableColumnHeader textAlign={"right"}>
                             Commission
                         </TableColumnHeader>
-                        <TableColumnHeader textAlign={"center"}>Status</TableColumnHeader>
-                        <TableColumnHeader></TableColumnHeader>
+                        <TableColumnHeader textAlign={"left"} pl={6}>Status</TableColumnHeader>
+                        <TableColumnHeader />
                     </Table.Row>
                 </Table.Header>
                 <Table.Body overflowY="auto">
-                    {validators.map((val, idx) => (
-                        <Table.Row key={idx}>
-                            <Table.Cell>#{idx + 1}</Table.Cell>
-                            <Table.Cell>
-                                <HStack>
-                                    <Box
-                                        boxSize="20px"
-                                        bg="gray.100"
-                                        borderRadius="full"
-                                        overflow="hidden"
-                                    >
-                                        {/* Replace with actual image */}
-                                        <Box bg="gray.300" w="full" h="full" />
-                                    </Box>
-                                    <Text>{val.validator}</Text>
-                                </HStack>
-                            </Table.Cell>
-                            <Table.Cell w={"30%"}>
-                                <Box>
-                                    <Flex justify={"space-between"}>
-                                        <Text>{val.votingPower}</Text>
-                                        <Text>{val.votingPowerPercentage}</Text>
-                                    </Flex>
-                                    <ProgressRoot
-                                        shape={"full"}
-                                        h="50%"
-                                        size="sm"
-                                        w="100%"
-                                        variant={"subtle"}
-                                        value={58.7}
-                                    >
-                                        <ProgressBar />
-                                    </ProgressRoot>
-                                </Box>
-                            </Table.Cell>
-                            <Table.Cell textAlign={"center"}> {val.commission}</Table.Cell>
-                            <Table.Cell textAlign={"center"}>
-                                <Badge colorScheme="green" color="green"> ● {val.status}</Badge>
-                            </Table.Cell>
-                            <Table.Cell textAlign="right">
-                                <Button colorScheme="blue" size="sm">
-                                    Delegate
-                                </Button>
-                            </Table.Cell>
-                        </Table.Row>
+                    {!loading && items.map((val, idx) => (
+                        <ValidatorItem item={val} key={`$validator-${idx}`} idx={idx} />
                     ))}
                 </Table.Body>
             </Table.Root>

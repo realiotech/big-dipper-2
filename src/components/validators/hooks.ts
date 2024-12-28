@@ -1,7 +1,7 @@
 import Big from 'big.js';
 import numeral from 'numeral';
 import * as R from 'ramda';
-import { SyntheticEvent, useCallback, useState } from 'react';
+import { SyntheticEvent, useCallback, ChangeEventHandler, KeyboardEventHandler, useState } from 'react';
 import { chainConfig } from '@/configs';
 import { useValidatorsQuery, ValidatorsQuery } from '@/graphql/types/general_types';
 import { SlashingParams } from '@/models';
@@ -26,12 +26,11 @@ const formatValidators = (data: ValidatorsQuery): Partial<ValidatorsState> => {
     ).value() ?? 0;
 
   const { signedBlockWindow } = slashingParams;
-
   let formattedItems: ValidatorType[] = data.validator
     .filter((x) => x.validatorInfo)
     .map((x) => {
       const votingPower =
-        (x?.validatorVotingPowers?.[0]?.votingPower ?? 0) / 10 ** (extra.votingPowerExponent ?? 0);
+        (x?.validatorVotingPowers?.[0]?.votingPower ?? 0);
       const votingPowerPercent = votingPowerOverall
         ? numeral((votingPower / votingPowerOverall) * 100).value()
         : 0;
@@ -207,5 +206,37 @@ export const useValidators = () => {
     handleSearch,
     sortItems,
     search,
+  };
+};
+
+export const useSearch = (callback: (value: string, clear?: () => void) => void) => {
+  const [value, setValue] = useState('');
+  const handleOnChange: ChangeEventHandler<HTMLInputElement> = (e) => {
+    const newValue = e?.target?.value ?? '';
+    setValue(newValue);
+  };
+
+  const handleOnSubmit = () => {
+    callback(value, clear);
+  };
+
+  const handleKeyDown: KeyboardEventHandler<HTMLInputElement> = (e) => {
+    const shift = e?.shiftKey;
+    const isEnter = e?.keyCode === 13 || e?.key === 'Enter';
+    if (isEnter && !shift) {
+      e.preventDefault();
+      callback(value, clear);
+    }
+  };
+
+  const clear = () => {
+    setValue('');
+  };
+
+  return {
+    handleOnChange,
+    handleOnSubmit,
+    value,
+    handleKeyDown,
   };
 };

@@ -23,7 +23,7 @@ import {
 import { useProfileRecoil } from "@/recoil/profiles";
 import Proposer from "../helper/proposer";
 
-const VoteItem = ({vote}) => {
+const VoteItem = ({ vote }) => {
     const { name, address, imageUrl } = useProfileRecoil(vote.user);
     return (
         <Table.Row>
@@ -56,27 +56,27 @@ export default function VotesTable() {
                 <Text fontSize="lg" fontWeight="bold" mb={4}>
                     Votes
                 </Text>
-                <Tabs.Root value={state?.tab} variant="enclosed" onValueChange={(e) => handleTabChange(e, e.value)}>
-                    <Tabs.List>
-                        <Tabs.Trigger value={0}>
+                <Tabs.Root value={state?.tab + 1} variant="plain" onValueChange={(e) => handleTabChange(e, e.value - 1)}>
+                    <Tabs.List bg="bg.muted" rounded="l3" p="1">
+                        <Tabs.Trigger value={1}>
                             All
                         </Tabs.Trigger>
-                        <Tabs.Trigger value={1}>
+                        <Tabs.Trigger value={2}>
                             Yes
                         </Tabs.Trigger>
-                        <Tabs.Trigger value={2}>
+                        <Tabs.Trigger value={3}>
                             No
                         </Tabs.Trigger>
-                        <Tabs.Trigger value={3}>
+                        <Tabs.Trigger value={4}>
                             Veto
                         </Tabs.Trigger>
-                        <Tabs.Trigger value={4}>
+                        <Tabs.Trigger value={5}>
                             Abstain
                         </Tabs.Trigger>
-                        <Tabs.Trigger value={5}>
+                        <Tabs.Trigger value={6}>
                             Did not vote
                         </Tabs.Trigger>
-                        <Tabs.Indicator />
+                        <Tabs.Indicator rounded="l2" />
                     </Tabs.List>
                 </Tabs.Root>
             </Flex>
@@ -94,7 +94,7 @@ export default function VotesTable() {
                     ))}
                 </Table.Body>
             </Table.Root>
-            <PaginationRoot count={state.data.length} pageSize={10} page={page+1} onPageChange={(e) => handlePageChange(e, e.page -1)}>
+            <PaginationRoot count={state.data.length} pageSize={10} page={page + 1} onPageChange={(e) => handlePageChange(e, e.page - 1)}>
                 <HStack wrap="wrap">
                     <PaginationPrevTrigger />
                     <PaginationItems />

@@ -8,7 +8,7 @@ import { useMarketRecoil } from "@/recoil/market";
 import { useValidatorRecoil } from "@/recoil/validators/hooks";
 
 export default function Layout({ children }) {
-    useMarketRecoil
+    useMarketRecoil()
     const { loading } = useValidatorRecoil()
     return (
         <Flex

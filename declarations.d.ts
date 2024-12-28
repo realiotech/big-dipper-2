@@ -62,27 +62,17 @@ type ValidatorProfile = {
   lastSeen: string;
 }
 
-type TagTheme = 'zero' |
-'one' |
-'two' |
-'three' |
-'four' |
-'five' |
-'six' |
-'seven' |
-'eight' |
-'nine' |
-'ten' |
-'eleven' |
-'twelve' |
-'thirteen' |
-'fourteen' |
-'fifteen' |
-'sixteen' |
-'seventeen' |
-'eighteen' |
-'nineteen' |
-'twenty'
+type TagTheme = 'gray' |
+'red' |
+'orange' |
+'yellow' |
+'green' |
+'teal' |
+'blue' |
+'cyan' |
+'purple' |
+'pink' |
+'accent'
 
 type MsgCoin = {
   denom: string;
