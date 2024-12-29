@@ -5,7 +5,7 @@ import numeral from "numeral";
 import Proposer from "../helper/proposer";
 import { useProfileRecoil } from '@/recoil/profiles/hooks';
 import dayjs, { formatDayJs } from '@/utils/dayjs';
-import TxItem from "../transactions/item";
+import TxTable from "../transactions/table";
 
 const ProposerItem = ({ proposer }) => {
     const { name, address, imageUrl } = useProfileRecoil(proposer);
@@ -14,7 +14,6 @@ const ProposerItem = ({ proposer }) => {
         <Proposer address={address} image={imageUrl} name={name} />
     );
 };
-
 
 export default function BlockDetails() {
     const { state } = useBlockDetails();
@@ -82,46 +81,7 @@ export default function BlockDetails() {
                 <Text fontSize="lg" fontWeight="bold" mb={4}>
                     Transactions
                 </Text>
-                {transactions?.length ?
-                    <Box bg='white' borderRadius='md' padding='3' overflowY="auto" maxH="200px">
-                        <Table.Root bgColor="inherit" showColumnBorder={false} h="full" w='full'>
-                            <Table.Header>
-                                <Table.Row bgColor='inherit'>
-                                    <Table.ColumnHeader>
-                                        Block
-                                    </Table.ColumnHeader>
-                                    <Table.ColumnHeader>
-                                        Hash
-                                    </Table.ColumnHeader>
-                                    <Table.ColumnHeader>
-                                        Messages
-                                    </Table.ColumnHeader>
-                                    <Table.ColumnHeader>
-                                        Result
-                                    </Table.ColumnHeader>
-                                    <Table.ColumnHeader>
-                                        Time
-                                    </Table.ColumnHeader>
-                                </Table.Row>
-                            </Table.Header>
-                            <Table.Body >
-                                <For each={transactions}>
-                                    {(item, index) => (
-                                        <TxItem item={item} rowIndex={index} />
-                                    )}
-                                </For>
-                            </Table.Body>
-                        </Table.Root>
-                    </Box> :
-                    <Flex justify="center" align="center" h="100px">
-                        <Box textAlign="center" color="gray.400">
-                            <Box alignItems='center' boxSize="100px" >
-                                <Image src='/images/logo.svg' h={100} width={100} alt="test" />
-                            </Box>
-                            <Text mt={2}>Nothing to show</Text>
-                        </Box>
-                    </Flex>
-                }
+                <TxTable transactions={transactions} />
             </Box>
         </Box>
     )
