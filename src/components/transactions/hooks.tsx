@@ -15,14 +15,21 @@ export const useTransactions = () => {
   const [state, setState] = useState<TransactionsState>({
     loading: true,
     exists: true,
-    hasNextPage: false,
+    hasNextPage: true,
     isNextPageLoading: false,
     items: [],
+    oldestHeight: null,
   });
 
-  const handleSetState = (stateChange: any) => {
-    setState((prevState) => R.mergeDeepLeft(stateChange, prevState));
-  };
+  const handleSetState = useCallback((stateChange: any) => {
+    setState((prevState) => {
+      const newState = stateChange(prevState);
+      if (R.equals(prevState, newState)) {
+        return prevState;
+      }
+      return newState;
+    });
+  }, []);
 
   // This is a bandaid as it can get extremely
   // expensive if there is too much data
@@ -44,68 +51,68 @@ export const useTransactions = () => {
       offset: 0,
     },
     onSubscriptionData: (data) => {
-      const newItems = uniqueAndSort([
-        ...formatTransactions(data.subscriptionData.data),
-        ...state.items,
-      ]);
-      handleSetState({
+      const newTransactions = formatTransactions(data.subscriptionData.data);
+      handleSetState((prevState) => ({
+        ...prevState,
         loading: false,
-        items: newItems,
-      });
+        items: uniqueAndSort([...newTransactions, ...prevState.items]),
+      }));
     },
   });
 
   // ================================
   // tx query
   // ================================
-  const LIMIT = 51;
+  const LIMIT = 500;
   const transactionQuery = useTransactionsQuery({
     variables: {
       limit: LIMIT,
-      offset: 1,
+      offset: 0,
     },
     onError: () => {
-      handleSetState({
-        loading: false,
-      });
+      handleSetState((prevState) => ({ ...prevState, loading: false }));
     },
     onCompleted: (data) => {
-      const itemsLength = data.transactions.length;
-      const newItems = uniqueAndSort([
-        ...state.items,
-        ...formatTransactions(data),
-      ]);
-      handleSetState({
+      const transactions = formatTransactions(data);
+      const oldestTx = transactions[transactions.length - 1];
+
+      handleSetState((prevState) => ({
+        ...prevState,
         loading: false,
-        items: newItems,
-        hasNextPage: itemsLength === 51,
+        items: uniqueAndSort([...prevState.items, ...transactions]),
+        hasNextPage: transactions.length === LIMIT,
         isNextPageLoading: false,
-      });
+        oldestHeight: oldestTx?.height ?? null,
+      }));
     },
   });
 
   const loadNextPage = async () => {
-    handleSetState({
+    if (!state.oldestHeight) return;
+
+    handleSetState((prevState) => ({
+      ...prevState,
       isNextPageLoading: true,
-    });
+    }));
+
     // refetch query
     await transactionQuery.fetchMore({
       variables: {
-        offset: state.items.length,
+        offset: state.oldestHeight - 1,
         limit: LIMIT,
       },
     }).then(({ data }) => {
-      const itemsLength = data.transactions.length;
-      const newItems = uniqueAndSort([
-        ...state.items,
-        ...formatTransactions(data),
-      ]);
+      const transactions = formatTransactions(data);
+      const oldestTx = transactions[transactions.length - 1];
+
       // set new state
-      handleSetState({
-        items: newItems,
+      handleSetState((prevState) => ({
+        ...prevState,
+        items: uniqueAndSort([...prevState.items, ...transactions]),
         isNextPageLoading: false,
-        hasNextPage: itemsLength === 51,
-      });
+        hasNextPage: transactions.length === LIMIT,
+        oldestHeight: oldestTx?.height ?? null,
+      }));
     });
   };
 
@@ -284,13 +291,12 @@ export const useTransactionDetails = () => {
   );
 
   const filterMessages = useCallback(
-    (messages: unknown[]) =>
-      messages.filter((x) => {
-        if (state.messages.filterBy !== 'none') {
-          return (x as { category: string }).category === state.messages.filterBy;
-        }
-        return true;
-      }),
+    (messages: unknown[]) => messages.filter((x) => {
+      if (state.messages.filterBy !== 'none') {
+        return (x as { category: string }).category === state.messages.filterBy;
+      }
+      return true;
+    }),
     [state.messages.filterBy]
   );
 

@@ -12,6 +12,7 @@ export interface BlocksState {
   hasNextPage: boolean;
   isNextPageLoading: boolean;
   items: BlockType[];
+  oldestHeight: number | null;
 }
 
 export type ItemType = BlockType;

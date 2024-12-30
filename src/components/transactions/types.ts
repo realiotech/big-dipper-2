@@ -4,6 +4,7 @@ export type TransactionsState = {
   hasNextPage: boolean;
   isNextPageLoading: boolean;
   items: Transactions[];
+  oldestHeight: number | null;
 }
 
 export interface OverviewType {
