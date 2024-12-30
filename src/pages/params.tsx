@@ -50,7 +50,7 @@ const ParamsInfo = () => {
     : null;
 
   return (
-    <Box bg="white" p={6} minHeight="100vh">
+    <Box bg="white" minHeight="100vh">
       <Grid templateColumns="repeat(2, 1fr)" gap={6}>
         <GridItem bg="#f9f9f9" p={6} borderRadius="md" boxShadow="sm">
           <Text fontSize="lg" fontWeight="bold" mb={4}>

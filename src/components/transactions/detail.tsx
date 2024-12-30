@@ -20,15 +20,15 @@ export default function TransactionDetails() {
                     Overview
                 </Text>
                 <Table.Root>
-                    <Table.Body>
-                        <Table.Row>
-                            <Table.Cell fontWeight="semibold">Hash</Table.Cell>
+                    <Table.Body  >
+                        <Table.Row bg="gray.50">
+                            <Table.Cell px={'0'} fontWeight="semibold">Hash</Table.Cell>
                             <Table.Cell textAlign="end">
                                 {overview.hash}
                             </Table.Cell>
                         </Table.Row>
-                        <Table.Row>
-                            <Table.Cell fontWeight="semibold">Height</Table.Cell>
+                        <Table.Row bg="gray.50">
+                            <Table.Cell px={'0'} fontWeight="semibold">Height</Table.Cell>
                             <Table.Cell textAlign="end">
                                 <Link colorPalette={'blue'} asChild >
                                     <NextLink href={BLOCK_DETAILS(overview.height)}>
@@ -37,31 +37,31 @@ export default function TransactionDetails() {
                                 </Link>
                             </Table.Cell>
                         </Table.Row>
-                        <Table.Row>
-                            <Table.Cell fontWeight="semibold">Time</Table.Cell>
+                        <Table.Row bg="gray.50">
+                            <Table.Cell px={'0'} fontWeight="semibold">Time</Table.Cell>
                             <Table.Cell textAlign="end">{formatDayJs(dayjs.utc(overview.timestamp), "locale", "12-hour")}</Table.Cell>
                         </Table.Row>
-                        <Table.Row>
-                            <Table.Cell fontWeight="semibold">Fee</Table.Cell>
+                        <Table.Row bg="gray.50">
+                            <Table.Cell px={'0'}fontWeight="semibold">Fee</Table.Cell>
                             <Table.Cell textAlign="end">{formatNumber(
                                 overview.fee.value,
                                 overview.fee.exponent
                             )} {overview?.fee?.displayDenom?.toUpperCase()}</Table.Cell>
                         </Table.Row>
-                        <Table.Row>
-                            <Table.Cell fontWeight="semibold">Gas (used / wanted)</Table.Cell>
+                        <Table.Row bg="gray.50">
+                            <Table.Cell px={'0'} fontWeight="semibold">Gas (used / wanted)</Table.Cell>
                             <Table.Cell textAlign="end">{numeral(overview.gasUsed).format('0,0.[00]')} / {numeral(overview.gasWanted).format(
                                 '0,0.[00]'
                             )}</Table.Cell>
                         </Table.Row>
-                        <Table.Row>
-                            <Table.Cell fontWeight="semibold">Result</Table.Cell>
+                        <Table.Row bg="gray.50">
+                            <Table.Cell px={'0'} fontWeight="semibold">Result</Table.Cell>
                             <Table.Cell textAlign="end">
                                 <Status value={overview.success ? "success" : "error"}>{overview.success ? "Success" : "Failed"}</Status>
                             </Table.Cell>
                         </Table.Row>
-                        <Table.Row>
-                            <Table.Cell fontWeight="semibold">Memo</Table.Cell>
+                        <Table.Row bg="gray.50">
+                            <Table.Cell px={'0'} fontWeight="semibold">Memo</Table.Cell>
                             <Table.Cell textAlign="end">{overview.memo}</Table.Cell>
                         </Table.Row>
                     </Table.Body>

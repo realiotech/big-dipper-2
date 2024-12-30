@@ -21,26 +21,26 @@ export default function BlockDetails() {
     const { address, imageUrl, name } = useProfileRecoil(overview.proposer);
 
     return (
-        <Box p={4} minHeight="100vh">
+        <Box minHeight="100vh">
             <Box bg="#F6F7F8" p={6} borderRadius="md" boxShadow="sm" mb={8}>
                 <Text fontSize="lg" fontWeight="bold" mb={4}>
                     Overview
                 </Text>
                 <Table.Root>
                     <Table.Body>
-                        <Table.Row>
+                        <Table.Row bg="#f9f9f9">
                             <Table.Cell fontWeight="semibold" width="30%">
                                 Height
                             </Table.Cell>
                             <Table.Cell textAlign="end" >{numeral(overview.height).format('0,0')}</Table.Cell>
                         </Table.Row>
-                        <Table.Row>
+                        <Table.Row bg="#f9f9f9">
                             <Table.Cell fontWeight="semibold">Hash</Table.Cell>
                             <Table.Cell textAlign="end">
                                 {overview.hash}
                             </Table.Cell>
                         </Table.Row>
-                        <Table.Row>
+                        <Table.Row bg="#f9f9f9">
                             <Table.Cell fontWeight="semibold">Proposer</Table.Cell>
                             <Table.Cell>
                                 <Flex justify='end' w='full'>
@@ -48,11 +48,11 @@ export default function BlockDetails() {
                                 </Flex>
                             </Table.Cell>
                         </Table.Row>
-                        <Table.Row>
+                        <Table.Row bg="#f9f9f9">
                             <Table.Cell fontWeight="semibold">Time</Table.Cell>
                             <Table.Cell textAlign="end" >{formatDayJs(dayjs.utc(overview.timestamp), 'locale')}</Table.Cell>
                         </Table.Row>
-                        <Table.Row>
+                        <Table.Row bg="#f9f9f9">
                             <Table.Cell fontWeight="semibold">Txs</Table.Cell>
                             <Table.Cell textAlign="end">{overview.txs}</Table.Cell>
                         </Table.Row>
@@ -81,7 +81,11 @@ export default function BlockDetails() {
                 <Text fontSize="lg" fontWeight="bold" mb={4}>
                     Transactions
                 </Text>
-                <TxTable transactions={transactions} />
+                {
+                    transactions?.length ?
+                <TxTable transactions={transactions} /> :
+                <Center borderRadius='md' padding='3' overflowY="auto" maxH="150px">Nothing to show</Center>
+                }
             </Box>
         </Box>
     )

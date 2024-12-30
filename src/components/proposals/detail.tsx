@@ -42,8 +42,8 @@ export default function ProposalDetail() {
     const statusInfo = getStatusInfo(overview.status, t);
 
     return (
-        <Box p={6} bg="white" minHeight="100vh">
-            <Flex justify="space-between" align="center" mb={4}>
+        <Box bg="white" minHeight="100vh">
+            <Flex gap={'10'} align="center" mb={4}>
                 <Text fontSize="xl" fontWeight="bold">
                     #{overview.id} {overview.title}
                 </Text>
@@ -107,7 +107,7 @@ export default function ProposalDetail() {
                         <Text fontWeight="bold" w="150px">
                             Description:
                         </Text>
-                        <Text w='full'>{overview.description}</Text>
+                        <Text>{overview.description}</Text>
                     </HStack>
                 </VStack>
             </Box>

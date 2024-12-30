@@ -13,11 +13,11 @@ export default function TxTable({ transactions }) {
         </Box>
     </Flex>
     return (
-        <Box bg='white' borderRadius='md' padding='3' overflowY="auto" maxH="200px">
-            <Table.Root bgColor="inherit" showColumnBorder={false} h="full" w='full'>
+        <Box bg='white' borderRadius='md' overflowY="auto" maxH="auto">
+            <Table.Root  showColumnBorder={false} h="full" w='full'>
                 <Table.Header>
-                    <Table.Row bgColor='inherit'>
-                        <Table.ColumnHeader>
+                    <Table.Row  bg="#F6F7F8">
+                        <Table.ColumnHeader >
                             Block
                         </Table.ColumnHeader>
                         <Table.ColumnHeader>

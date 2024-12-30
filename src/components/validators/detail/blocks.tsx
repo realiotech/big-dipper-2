@@ -43,7 +43,7 @@ const BlockBox = ({i, item, originAddr}) => {
                 h="20px"
                 bg={item.signed ? 'green' : 'red'}
                 borderRadius="sm"
-            >{originAddr === item.proposer && <FaCheck />}</Center>
+            >{originAddr === item.proposer && <FaCheck color="white"/>}</Center>
         </Tooltip>
     )
 }

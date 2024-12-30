@@ -48,7 +48,7 @@ const ProposalList = () => {
     const { state } = useProposals();
     console.log(state.items)
     return (
-        <Box bg="#f9f9f9" p={6} overflowY='auto' overflowX='hidden' maxH="100vh" borderRadius="md">
+        <Box bg="#f9f9f9" py={5} px={8} overflowY='hidden' overflowX='hidden' maxH="auto" borderRadius="md">
             <Text fontSize="lg" fontWeight="bold" mb={4}>
                 A total of {state?.items?.length} proposals found
             </Text>
