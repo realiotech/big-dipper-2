@@ -13,7 +13,7 @@ export default function Footer() {
             px='10'
             py='10'
             divideY={{ base: '2px', lg: '0px'}}
-            boxShadow={{ lg: '0px 0px 10px 2px #0000001A'}}
+            boxShadow={{base: '0px 0px 10px 2px #0000001A' , lg: '0px 0px 10px 2px #0000001A'}}
             borderRadius={'20px'}
             >
             <GridItem colSpan={{ base: 1, lg: 3 }} pb='15px'>

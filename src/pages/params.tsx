@@ -51,7 +51,7 @@ const ParamsInfo = () => {
 
   return (
     <Box bg="white" minHeight="100vh">
-      <Grid templateColumns="repeat(2, 1fr)" gap={6}>
+      <Grid templateColumns={{ base: "repeat(1, 1fr)", md: "repeat(2, 1fr)" }} gap={6}>
         <GridItem bg="#f9f9f9" p={6} borderRadius="md" boxShadow="sm">
           <Text fontSize="lg" fontWeight="bold" mb={4}>
             {staking?.title}
