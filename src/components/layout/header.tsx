@@ -28,31 +28,10 @@ export default function Header() {
     base: true, md: false,
   });
 
-  const menuItems = [
-    {
-      label: 'Dashboard', href: '/',
-    },
-    {
-      label: 'Validators', href: '/validators',
-    },
-    {
-      label: 'Transactions', href: '/transactions',
-    },
-    {
-      label: 'Proposals', href: '/proposals',
-    },
-    {
-      label: 'Params', href: '/params',
-    },
-  ];
-
   return !isMobile ? (
     <Flex w="full" gap="20px" align="center" pb="10" direction="column">
-      <PageHeader />
-      <HStack divideX="2px">
-        <Text fontSize="32px" fontWeight={600} flex="1">
-          Dashboard
-        </Text>
+      <HStack>
+        <PageHeader />
         <HStack divideX="2px">
           <Text fontSize="16px">
             Supply:
