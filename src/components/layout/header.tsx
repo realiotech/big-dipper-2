@@ -17,22 +17,13 @@ import { useRecoilValue } from "recoil";
 import { readMarket } from "@/recoil/market";
 import { chainConfig } from "@/configs";
 import { formatMarket } from "@/utils/format_market";
-import { MdOutlineMenu } from "react-icons/md";
 import MenuDrawer from "./menudrawer";
+import SearchBar from "./search";
 
 export default function Header() {
   const marketState = useRecoilValue(readMarket);
   const market = formatMarket(marketState);
   const isCompact = useBreakpointValue({ base: true, sm: false });
-
-
-  const menuItems = [
-    { label: "Dashboard", href: "/" },
-    { label: "Validators", href: "/validators" },
-    { label: "Transactions", href: "/transactions" },
-    { label: "Proposals", href: "/proposals" },
-    { label: "Params", href: "/params" },
-  ];
 
   return !isCompact ? (
     <Flex w="full" gap="20px" align={"center"} pb="10">
@@ -53,15 +44,7 @@ export default function Header() {
           </Link>{" "}
         </Text>
       </HStack>
-      <InputGroup startElement={<Search />}>
-        <Input
-          h="60px"
-          borderRadius="60px"
-          fontSize={"16px"}
-          w={{ base: "full", lg: "550px" }}
-          placeholder="Search for validator / tx hash / block height / address"
-        />
-      </InputGroup>
+      <SearchBar />
       <Center
         w="250px"
         h="60px"

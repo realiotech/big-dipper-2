@@ -30,7 +30,6 @@ export default function Layout({ children }) {
             )}
             <Footer />
           </VStack>
-          )
         </>
       ) : (
         <VStack w="full">
