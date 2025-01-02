@@ -1,13 +1,14 @@
 import {
-  Text, Flex,
+  Text
 } from '@chakra-ui/react';
 import { useRouter } from 'next/router';
+import { useMemo } from 'react';
 
 export default function PageHeader() {
   const { pathname } = useRouter();
 
   // Map routes to titles
-  const getTitle = () => {
+  const getTitle = useMemo(() => {
     switch (pathname) {
       case '/':
         return 'Dashboard';
@@ -28,13 +29,11 @@ export default function PageHeader() {
         if (pathname.startsWith('/proposals/')) return 'Proposal Details';
         return 'Dashboard';
     }
-  };
+  }, [pathname]);
 
   return (
-    <Flex w="full" align="center" pb="10">
-      <Text fontSize="32px" fontWeight={600}>
-        {getTitle()}
-      </Text>
-    </Flex>
+    <Text fontSize="32px" fontWeight={600} flex="1">
+      {getTitle}
+    </Text>
   );
 }
