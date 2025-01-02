@@ -13,8 +13,8 @@ const Custom404 = () => {
             <VStack align={'center'} gap={10}>
                 <Image src='/images/logo-white.png' w='100px' />
                 <HStack separator={<StackSeparator />}>
-                    <Text color={'#9DA7B0'} fontSize={'24px'}>404</Text>
-                    <Text color={'#9DA7B0'} fontSize={'22px'}>Not Found</Text>
+                    <Text color={'gray'} fontSize={'24px'}>404</Text>
+                    <Text color={'gray'} fontSize={'22px'}>Not Found</Text>
                 </HStack> 
             </VStack>
         </Center>
