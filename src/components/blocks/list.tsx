@@ -17,6 +17,7 @@ import numeral from "numeral";
 import dayjs from "@/utils/dayjs";
 import { useProfileRecoil } from "@/recoil/profiles/hooks";
 import HelpLink from "../helper/help_link";
+import { Skeleton } from "@chakra-ui/react";
 
 const BlockItemMobile = ({ item, isItemLoaded, rowIndex }) => {
   const { name, address, imageUrl } = useProfileRecoil(item.proposer);
@@ -88,7 +89,7 @@ const BlockItemWindow = ({ item, isItemLoaded, rowIndex }) => {
 };
 
 export function BlockList() {
-  const { state, isItemLoaded, loadMoreItems } = useBlocks();
+  const { state, isItemLoaded } = useBlocks();
   const isMobile = useBreakpointValue({ base: true, md: false });
 
   if (!state?.items?.length) {
@@ -165,7 +166,7 @@ export function BlockList() {
           </Table.Root>
         ))}
       <Center w="full" py="4">
-        <Button variant="solid" onClick={() => loadMoreItems()}>
+        <Button variant="solid" >
           Load More
         </Button>
       </Center>
