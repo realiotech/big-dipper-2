@@ -4,6 +4,7 @@ import { useTransactions } from "./hooks";
 import { Button } from "@/components/ui/button";
 import TxItem from "./item";
 import TxTable from "./table";
+import NoData from "../helper/nodata";
 
 export function TransactionList() {
     const { state } = useTransactions();
@@ -11,7 +12,7 @@ export function TransactionList() {
     if (!state?.items?.length) {
         return (
             <Center borderRadius="20px" bgColor="#F6F7F8" py="5" px="8" minH="65vh" w="full">
-                <Text>Nothing to show</Text>
+                <NoData />
             </Center>
         );
     }

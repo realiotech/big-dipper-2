@@ -4,11 +4,10 @@ import {
   Tabs,
   TabsList,
   TabsTrigger,
-  TabsContent,
-  Flex,
-  Text,
+  TabsContent
 } from "@chakra-ui/react";
 import { useStaking } from "./hooks";
+import NoData from "@/components/helper/nodata";
 
 export default function Staking({ address }) {
   const [delegationsPage, setDelegationsPage] = useState(0);
@@ -37,16 +36,7 @@ export default function Staking({ address }) {
           <TabsContent value={3}></TabsContent>
         </Box>
       ) : (
-        <Box
-          bg="#F6F7F8"
-          p={6}
-          borderRadius="md"
-          textAlign={"center"}
-          boxShadow="sm"
-          mb={8}
-        >
-          <Text>Nothing to show</Text>
-        </Box>
+        <NoData />
       )}
     </Tabs.Root>
   );
