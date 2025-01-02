@@ -1,0 +1,25 @@
+import { Image, Text, VStack, Center, HStack, StackSeparator } from "@chakra-ui/react";
+
+const Custom404 = () => {
+    return (
+        <Center
+            borderRadius="20px"
+            bgColor="#F6F7F8"
+            py="5"
+            px="8"
+            h="60vh"
+            w="full"
+        >
+            <VStack align={'center'} gap={10}>
+                <Image src='/images/logo-white.png' w='100px' />
+                <HStack separator={<StackSeparator />}>
+                    <Text color={'#9DA7B0'} fontSize={'24px'}>404</Text>
+                    <Text color={'#9DA7B0'} fontSize={'22px'}>Not Found</Text>
+                </HStack> 
+            </VStack>
+        </Center>
+
+    )
+}
+
+export default Custom404;
