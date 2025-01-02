@@ -1,7 +1,20 @@
 import { BlockList } from "@/components/blocks/list";
+import { NextSeo } from "next-seo";
+import useTranslation from "next-translate/useTranslation";
 
-export default function Blocks() {
+const Blocks = () => {
+    const { t } = useTranslation("blocks")
     return (
-        <BlockList />
+        <>
+            <NextSeo
+                title={t('blocks') ?? undefined}
+                openGraph={{
+                    title: t('blocks') ?? undefined,
+                }}
+            />
+            <BlockList />
+        </>
     );
-}
+};
+
+export default Blocks;

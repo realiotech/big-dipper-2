@@ -1,8 +1,20 @@
 import TransactionDetails from "@/components/transactions/detail";
-import React from "react";
+import { NextSeo } from "next-seo";
+import useTranslation from "next-translate/useTranslation";
 
-export default function TransactionPage() {
+const TransactionPage = () => {
+  const { t } = useTranslation("transactions")
   return (
-    <TransactionDetails />
+    <>
+      <NextSeo
+        title={t('transactionDetails') ?? undefined}
+        openGraph={{
+          title: t('transactionDetails') ?? undefined,
+        }}
+      />
+      <TransactionDetails />
+    </>
   );
-}
+};
+
+export default TransactionPage;
