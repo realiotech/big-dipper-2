@@ -49,6 +49,7 @@ export const useBlocks = () => {
     items: [],
     hasNextPage: false,
     isNextPageLoading: true,
+    oldestHeight: null,
   });
 
   const handleSetState = useCallback((stateChange: (prevState: BlocksState) => BlocksState) => {
@@ -67,10 +68,9 @@ export const useBlocks = () => {
       offset: 0,
     },
     onData: (data) => {
-      const newItems = uniqueAndSort([
-        ...(data.data.data ? formatBlocks(data.data.data) : []),
-        ...state.items,
-      ]);
+      const newBlocks = data.data.data ? formatBlocks(data.data.data) : [];
+      const newItems = uniqueAndSort([...newBlocks, ...state.items]);
+
       handleSetState((prevState) => ({
         ...prevState,
         loading: false,
@@ -82,21 +82,22 @@ export const useBlocks = () => {
   // ================================
   // block query
   // ================================
-  const LIMIT = 51;
+  const LIMIT = 500;
   const blockQuery = useBlocksQuery({
     variables: {
       limit: LIMIT,
       offset: 1,
     },
     onCompleted: (data) => {
-      const itemsLength = data.blocks.length;
-      const newItems = uniqueAndSort([...state.items, ...formatBlocks(data)]);
+      const blocks = formatBlocks(data);
+      const oldestBlock = blocks[blocks.length - 1];
       handleSetState((prevState) => ({
         ...prevState,
         loading: false,
-        items: newItems,
-        hasNextPage: itemsLength === 51,
+        items: uniqueAndSort([...state.items, ...blocks]),
+        hasNextPage: blocks.length === LIMIT,
         isNextPageLoading: false,
+        oldestHeight: oldestBlock?.height ?? null,
       }));
     },
     onError: () => {
@@ -105,39 +106,36 @@ export const useBlocks = () => {
   });
 
   const loadNextPage = async () => {
+    if (!state.oldestHeight) return;
     handleSetState((prevState) => ({ ...prevState, isNextPageLoading: true }));
     // refetch query
     await blockQuery
       .fetchMore({
         variables: {
-          offset: state.items.length,
           limit: LIMIT,
+          offset: state.oldestHeight - 1,
         },
       })
       .then(({ data }) => {
-        const itemsLength = data.blocks.length;
-        const newItems = uniqueAndSort([...state.items, ...formatBlocks(data)]);
+        const blocks = formatBlocks(data);
+        const oldestBlock = blocks[blocks.length - 1];
 
         // set new state
         handleSetState((prevState) => ({
           ...prevState,
-          items: newItems,
+          items: uniqueAndSort([...prevState.items, ...blocks]),
           isNextPageLoading: false,
-          hasNextPage: itemsLength === 51,
+          hasNextPage: blocks.length === LIMIT,
+          oldestHeight: oldestBlock?.height ?? null,
         }));
       });
   };
 
-  const itemCount = state.hasNextPage ? state.items.length + 1 : state.items.length;
-  const loadMoreItems = state.isNextPageLoading ? () => null : loadNextPage;
-  const isItemLoaded = (index: number) => !state.hasNextPage || index < state.items.length;
-
   return {
     state,
     loadNextPage,
-    itemCount,
-    loadMoreItems,
-    isItemLoaded,
+    isItemLoaded: (index: number) =>
+      !state.hasNextPage || index < state.items.length,
   };
 };
 

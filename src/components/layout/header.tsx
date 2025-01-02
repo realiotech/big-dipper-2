@@ -17,8 +17,8 @@ import { useRecoilValue } from "recoil";
 import { readMarket } from "@/recoil/market";
 import { chainConfig } from "@/configs";
 import { formatMarket } from "@/utils/format_market";
-import { MdOutlineMenu } from "react-icons/md";
 import MenuDrawer from "./menudrawer";
+import SearchBar from "./search";
 
 export default function Header() {
   const marketState = useRecoilValue(readMarket);
@@ -53,15 +53,7 @@ export default function Header() {
           </Link>{" "}
         </Text>
       </HStack>
-      <InputGroup startElement={<Search />}>
-        <Input
-          h="60px"
-          borderRadius="60px"
-          fontSize={"16px"}
-          w={{ base: "full", lg: "550px" }}
-          placeholder="Search for validator / tx hash / block height / address"
-        />
-      </InputGroup>
+      <SearchBar />
       <Center
         w="250px"
         h="60px"

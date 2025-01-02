@@ -11,12 +11,10 @@ import {
   useBreakpointValue,
 } from "@chakra-ui/react";
 import { useBlocks } from "./hooks";
-import Link from "next/link";
 import Proposer from "../helper/proposer";
 import { getMiddleEllipsis } from "@/utils/get_middle_ellipsis";
 import numeral from "numeral";
 import dayjs from "@/utils/dayjs";
-import { Skeleton } from "../ui/skeleton";
 import { useProfileRecoil } from "@/recoil/profiles/hooks";
 import HelpLink from "../helper/help_link";
 
