@@ -3,6 +3,7 @@ import { Box, Text, Flex, Table, Image, For, HStack } from "@chakra-ui/react";
 import { PaginationRoot, PaginationItems, PaginationPrevTrigger, PaginationNextTrigger } from "@/components/ui/pagination";
 import TxItem from "@/components/transactions/item";
 import { usePagination } from "@/hooks/use_pagination";
+import NoData from "../helper/nodata";
 
 export default function TxTable({ transactions }) {
     const {
@@ -16,14 +17,7 @@ export default function TxTable({ transactions }) {
     
     if (!transactions?.length) {
         return (
-            <Flex justify="center" align="center" h="100px">
-                <Box textAlign="center" color="gray.400">
-                    <Box alignItems='center' boxSize="100px">
-                        <Image src='/images/logo.svg' h={100} width={100} alt="test" />
-                    </Box>
-                    <Text mt={2}>Nothing to show</Text>
-                </Box>
-            </Flex>
+            <NoData />
         );
     }
 

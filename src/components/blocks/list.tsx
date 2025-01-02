@@ -8,6 +8,8 @@ import dayjs from "@/utils/dayjs";
 import { useProfileRecoil } from "@/recoil/profiles/hooks";
 import { usePagination } from "@/hooks/use_pagination";
 import HelpLink from "../helper/help_link";
+import NoData from "../helper/nodata";
+import { Skeleton } from "../ui/skeleton";
 const BlockItem = ({ item, rowIndex, isItemLoaded }) => {
     const { name, address, imageUrl } = useProfileRecoil(item.proposer);
 
@@ -39,15 +41,12 @@ export function BlockList() {
         rowsPerPage,
         handlePageChange,
         sliceItems,
-    } = usePagination({
-        initialRowsPerPage: 10,
-        initialPage: 0,
-    });
+    } = usePagination();
 
     if (!state?.items?.length) {
         return (
             <Center borderRadius="20px" bgColor="#F6F7F8" py="5" px="8" minH="65vh" w="full">
-                <Text>Nothing to show</Text>
+                <NoData />
             </Center>
         );
     }
@@ -86,7 +85,7 @@ export function BlockList() {
                     page={page + 1} 
                     onPageChange={(e) => handlePageChange(e, e.page - 1)}
                 >
-                    <HStack spacing={2}>
+                    <HStack gap={2}>
                         <PaginationPrevTrigger />
                         <PaginationItems />
                         <PaginationNextTrigger />

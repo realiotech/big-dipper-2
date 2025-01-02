@@ -6,6 +6,7 @@ import Proposer from "../helper/proposer";
 import { useProfileRecoil } from '@/recoil/profiles/hooks';
 import dayjs, { formatDayJs } from '@/utils/dayjs';
 import TxTable from "../transactions/table";
+import NoData from "../helper/nodata";
 
 const ProposerItem = ({ proposer }) => {
     const { name, address, imageUrl } = useProfileRecoil(proposer);
@@ -74,7 +75,7 @@ export default function BlockDetails() {
                             )}
                         </Stack>
                     </Box> :
-                    <Center bg='white' borderRadius='md' padding='3' overflowY="auto" maxH="150px">Nothing to show</Center>
+                    <NoData />
                 }
             </Box>
             <Box bg="#F6F7F8" p={6} borderRadius="md" boxShadow="sm">
@@ -83,8 +84,8 @@ export default function BlockDetails() {
                 </Text>
                 {
                     transactions?.length ?
-                <TxTable transactions={transactions} /> :
-                <Center borderRadius='md' padding='3' overflowY="auto" maxH="150px">Nothing to show</Center>
+                        <TxTable transactions={transactions} /> :
+                        <NoData />
                 }
             </Box>
         </Box>

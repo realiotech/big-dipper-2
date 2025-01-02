@@ -1,5 +1,5 @@
 import React from "react";
-import { Box, Flex, Text, Table, Link } from "@chakra-ui/react";
+import { Box, Text, Table, Link } from "@chakra-ui/react";
 import { useTransactionDetails } from './hooks';
 import numeral from "numeral";
 import { BLOCK_DETAILS, formatNumber } from "@/utils";

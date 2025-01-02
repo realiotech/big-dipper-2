@@ -1,14 +1,19 @@
 import { Flex, GridItem, Link as ChakraLink, Text, Table, For } from "@chakra-ui/react"
 import { useTransactions } from "./hooks"
 import Link from "next/link"
-import { Skeleton } from "@/components/ui/skeleton"
 import numeral from "numeral"
 import { getMiddleEllipsis } from "@/utils/get_middle_ellipsis"
 import dayjs from '@/utils/dayjs';
 import { Status } from "@/components/ui/status"
+import Loading from "@/components/helper/loading"
 
 const Transactions = () => {
     const { state } = useTransactions();
+    if (!state?.items?.length) return (
+        <GridItem borderRadius='20px' bgColor='#F6F7F8' py='5' px='8' colSpan={2}>
+            <Loading />
+        </GridItem>
+    )
 
     return (
         <GridItem borderRadius='20px' bgColor='#F6F7F8' py='5' px='8' colSpan={2}>
@@ -38,26 +43,24 @@ const Transactions = () => {
                     </Table.Row>
                 </Table.Header>
                 <Table.Body>
-                    {state.items.length ? (
-                        <For each={state.items}>
-                            {(item, index) => (
-                                <Table.Row key={`transaction-${index}`}>
-                                    <Table.Cell>
-                                        <ChakraLink asChild colorPalette='blue'>
-                                            <Link href={`/blocks/${item.height}`}>{numeral(item.height).format('0,0')}</Link>
-                                        </ChakraLink>
-                                    </Table.Cell>
-                                    <Table.Cell>
-                                        <ChakraLink asChild colorPalette='blue'>
-                                            <Link href={`/transactions/${item.hash}`}>{getMiddleEllipsis(item.hash, { beginning: 15, ending: 5 })}</Link>
-                                        </ChakraLink>
-                                    </Table.Cell>
-                                    <Table.Cell><Status value={item.success ? "success" : "error"}><Text>{item.success ? "Success" : "Failed"}</Text></Status></Table.Cell>
-                                    <Table.Cell>{dayjs.utc(item.timestamp).fromNow()}</Table.Cell>
-                                </Table.Row>
-                            )}
-                        </For>
-                    ) : <Skeleton h={'200px'} />}
+                    <For each={state.items}>
+                        {(item, index) => (
+                            <Table.Row key={`transaction-${index}`}>
+                                <Table.Cell>
+                                    <ChakraLink asChild colorPalette='blue'>
+                                        <Link href={`/blocks/${item.height}`}>{numeral(item.height).format('0,0')}</Link>
+                                    </ChakraLink>
+                                </Table.Cell>
+                                <Table.Cell>
+                                    <ChakraLink asChild colorPalette='blue'>
+                                        <Link href={`/transactions/${item.hash}`}>{getMiddleEllipsis(item.hash, { beginning: 15, ending: 5 })}</Link>
+                                    </ChakraLink>
+                                </Table.Cell>
+                                <Table.Cell><Status value={item.success ? "success" : "error"}><Text>{item.success ? "Success" : "Failed"}</Text></Status></Table.Cell>
+                                <Table.Cell>{dayjs.utc(item.timestamp).fromNow()}</Table.Cell>
+                            </Table.Row>
+                        )}
+                    </For>
                 </Table.Body>
             </Table.Root>
         </GridItem>
