@@ -1,11 +1,12 @@
 import { useBlockDetails } from "./hooks";
 import React from "react";
-import { Box, Text, Flex, Table, Image, For, Center, Stack, StackSeparator } from "@chakra-ui/react";
+import { Box, Text, Flex, Table, Center, Stack, StackSeparator, useBreakpointValue } from "@chakra-ui/react";
 import numeral from "numeral";
 import Proposer from "../helper/proposer";
 import { useProfileRecoil } from '@/recoil/profiles/hooks';
 import dayjs, { formatDayJs } from '@/utils/dayjs';
 import TxTable from "../transactions/table";
+import { getMiddleEllipsis } from "@/utils";
 
 const ProposerItem = ({ proposer }) => {
     const { name, address, imageUrl } = useProfileRecoil(proposer);
@@ -19,29 +20,31 @@ export default function BlockDetails() {
     const { state } = useBlockDetails();
     const { overview, transactions, signatures } = state;
     const { address, imageUrl, name } = useProfileRecoil(overview.proposer);
+    const isMobile = useBreakpointValue({ base: true, md: false });
+
 
     return (
         <Box minHeight="100vh">
-            <Box bg="#F6F7F8" p={6} borderRadius="md" boxShadow="sm" mb={8}>
+            <Box bg="#F6F7F8" w={'full'} p={6} borderRadius="md" boxShadow="sm" mb={8}>
                 <Text fontSize="lg" fontWeight="bold" mb={4}>
                     Overview
                 </Text>
                 <Table.Root>
-                    <Table.Body>
+                    <Table.Body >
                         <Table.Row bg="#f9f9f9">
-                            <Table.Cell fontWeight="semibold" width="30%">
+                            <Table.Cell px={0}  fontWeight="semibold" width="30%">
                                 Height
                             </Table.Cell>
                             <Table.Cell textAlign="end" >{numeral(overview.height).format('0,0')}</Table.Cell>
                         </Table.Row>
                         <Table.Row bg="#f9f9f9">
-                            <Table.Cell fontWeight="semibold">Hash</Table.Cell>
+                            <Table.Cell px={0}  fontWeight="semibold">Hash</Table.Cell>
                             <Table.Cell textAlign="end">
-                                {overview.hash}
+                                {isMobile ? getMiddleEllipsis(overview.hash, { beginning: 6, ending: 5 }) : overview.hash}
                             </Table.Cell>
                         </Table.Row>
                         <Table.Row bg="#f9f9f9">
-                            <Table.Cell fontWeight="semibold">Proposer</Table.Cell>
+                            <Table.Cell px={0}  fontWeight="semibold">Proposer</Table.Cell>
                             <Table.Cell>
                                 <Flex justify='end' w='full'>
                                     <Proposer address={address} name={name} image={imageUrl} />
@@ -49,11 +52,11 @@ export default function BlockDetails() {
                             </Table.Cell>
                         </Table.Row>
                         <Table.Row bg="#f9f9f9">
-                            <Table.Cell fontWeight="semibold">Time</Table.Cell>
+                            <Table.Cell px={0}  fontWeight="semibold">Time</Table.Cell>
                             <Table.Cell textAlign="end" >{formatDayJs(dayjs.utc(overview.timestamp), 'locale')}</Table.Cell>
                         </Table.Row>
                         <Table.Row bg="#f9f9f9">
-                            <Table.Cell fontWeight="semibold">Txs</Table.Cell>
+                            <Table.Cell px={0}  fontWeight="semibold">Txs</Table.Cell>
                             <Table.Cell textAlign="end">{overview.txs}</Table.Cell>
                         </Table.Row>
                     </Table.Body>

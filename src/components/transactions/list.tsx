@@ -17,7 +17,10 @@ export function TransactionList() {
     }
 
     return (
-        <Box borderRadius="20px" bgColor="#F6F7F8" py="5" px="8" minH="85vh" w="full">
+        <Box borderRadius="20px" bgColor="#F6F7F8" py="5" px="8" h="100vh" overflow={'auto'} w="full">
+            <Text fontSize="2xl" fontWeight="bold" mb="4">
+                Transactions
+            </Text>
             <TxTable transactions={state.items} />
             <Center w='full' py='4'><Button variant={'plain'}>Load more</Button></Center>
         </Box>

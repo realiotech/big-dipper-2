@@ -9,7 +9,7 @@ import { useValidatorRecoil } from "@/recoil/validators/hooks";
 export default function Layout({ children }) {
   useMarketRecoil();
   const { loading } = useValidatorRecoil();
-  const isCompact = useBreakpointValue({ base: true, sm: false });
+  const isMobile = useBreakpointValue({ base: true, md: false });
   return (
     <Flex
       bgColor="white"
@@ -18,7 +18,7 @@ export default function Layout({ children }) {
       pt={{ base: "15px", md: "50px" }}
       px={{ base: "15px", md: "50px" }}
     >
-      {!isCompact ? (
+      {!isMobile ? (
         <>
           <Sidebar />
           <VStack w="full">
@@ -30,7 +30,6 @@ export default function Layout({ children }) {
             )}
             <Footer />
           </VStack>
-          )
         </>
       ) : (
         <VStack w="full">

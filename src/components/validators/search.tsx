@@ -5,12 +5,12 @@ export default function SearchValidator({ callback }) {
     const { handleOnSubmit, handleOnChange, handleKeyDown, value } = useSearch(callback);
 
     return (
-        <form onSubmit={handleOnSubmit}>
+        <form style={{width:'100%', textAlign:'right'}} onSubmit={handleOnSubmit}>
             <Input
                 placeholder="Search Validator"
-                maxW="300px"
+                w={{ base: "full", lg: '300px' }}
                 bg="white"
-                borderRadius="md"
+                borderRadius="full"
                 onChange={handleOnChange}
                 onKeyDown={handleKeyDown}
                 value={value}

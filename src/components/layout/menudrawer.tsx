@@ -31,15 +31,14 @@ export default function MenuDrawer() {
 
   return (
     <DrawerRoot>
-      {/* Trigger for Opening the Drawer */}
       <DrawerTrigger>
         <MdOutlineMenu size={35} />
       </DrawerTrigger>
-
-      {/* Backdrop and Drawer Content */}
       <DrawerBackdrop />
-      <DrawerContent>
-        {/* Header Section */}
+      <DrawerContent
+        width="100vw" /* Makes the drawer full width */
+        maxWidth="100vw" /* Ensures it doesn't exceed the viewport width */
+      >
         <DrawerHeader>
           <Flex justify="space-between" align="center">
             <DrawerTitle>realio.</DrawerTitle>
@@ -48,8 +47,6 @@ export default function MenuDrawer() {
             </DrawerTrigger>
           </Flex>
         </DrawerHeader>
-
-        {/* Body Section */}
         <DrawerBody>
           <VStack align="flex-start" gap={6} mt={4}>
             {menuItems.map((item, index) => (
@@ -61,24 +58,21 @@ export default function MenuDrawer() {
               >
                 <Flex
                   align="center"
-                  gap={4}
+                  gap={8}
                   py={2}
                   borderRadius="md"
                   _hover={{ bg: "gray.100" }}
                 >
                   <Center fontSize="25px">{item.image}</Center>
 
-                  <Text fontSize="lg" >
-                    {item.label}
-                  </Text>
+                  <Text fontSize="lg">{item.label}</Text>
                 </Flex>
               </Link>
             ))}
           </VStack>
         </DrawerBody>
 
-        {/* Footer Section */}
-        <DrawerFooter>{/* Add Footer content if necessary */}</DrawerFooter>
+        <DrawerFooter></DrawerFooter>
       </DrawerContent>
     </DrawerRoot>
   );

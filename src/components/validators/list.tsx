@@ -5,9 +5,14 @@ import {
   Table,
   Button,
   Tabs,
-  TableColumnHeader,
-  Flex,
+  VStack,
+  HStack,
   Link,
+  useBreakpointValue,
+  Flex,
+  Center,
+  Grid,
+  StackSeparator,
 } from "@chakra-ui/react";
 import { ProgressBar, ProgressRoot } from "@/components/ui/progress";
 import { useValidators } from "./hooks";
@@ -22,6 +27,77 @@ import NextLink from "next/link";
 import SearchValidator from "./search";
 import { fetchColumns } from "./utils";
 import ColumnHeader from "./header";
+
+const ValidatorItemMobile = ({ item }) => {
+  const { t } = useTranslation("validators");
+  const status = getValidatorStatus(item.status, item.jailed, item.tombstoned);
+  const percentDisplay =
+    item.status === 3
+      ? `${numeral(item.votingPowerPercent.toFixed(6)).format("0.[00]")}`
+      : "0";
+  const votingPower = numeral(item.votingPower).format("0,0");
+
+  return (
+    <Box
+      bg="white"
+      p={4}
+      //   boxShadow="sm"
+      w="full"
+      mb={4}
+      //   border="1px solid"
+      //   borderColor="gray.200"
+    >
+      <VStack align="stretch">
+        <Flex direction={"column"} justify="space-between" gap={1} mb={2}>
+          <Text>Validator</Text>
+          <Proposer
+            name={item.validator.name}
+            address={item.validator.address}
+            image={item.validator.imageUrl}
+          />
+        </Flex>
+        <Flex direction={"column"} justify="space-between" gap={1} mb={2}>
+          <Text>Voting Power</Text>
+          <Flex justify="space-between">
+            <Text>{votingPower}</Text>
+            <Text>{percentDisplay}%</Text>
+          </Flex>
+          <ProgressRoot
+            shape={"full"}
+            size="xs"
+            w="100%"
+            variant={"outline"}
+            value={item.votingPowerPercent * 2}
+            colorPalette={"purple.100"}
+          >
+            <ProgressBar />
+          </ProgressRoot>
+        </Flex>
+        <Flex justify="space-between" mb={2}>
+          <Flex direction={"column"} justify="space-between">
+            <Text>Status</Text>
+            <Status colorPalette={status.theme} color={status.theme}>
+              {t(status.status)}
+            </Status>
+          </Flex>
+          <Flex direction={"column"} justify="space-between">
+            <Text>Commission</Text>
+            <Text>{numeral(item.commission).format("0.[00]")}%</Text>
+          </Flex>
+        </Flex>
+        <Button
+          bg={"#707D8A"}
+          size="sm"
+          disabled={item.status !== 3}
+          as={NextLink}
+          href={ADDRESS_DETAILS(item.validator.address)}
+        >
+          Delegate
+        </Button>
+      </VStack>
+    </Box>
+  );
+};
 
 const ValidatorItem = ({ item, idx }) => {
   const { t } = useTranslation("validators");
@@ -70,11 +146,7 @@ const ValidatorItem = ({ item, idx }) => {
       <Table.Cell textAlign="left">
         <Link asChild>
           <NextLink href={ADDRESS_DETAILS(item?.validator.address)}>
-            <Button
-              colorPalette="purple"
-              size="sm"
-              disabled={item.status !== 3}
-            >
+            <Button bg={"#707D8A"} size="sm" disabled={item.status !== 3}>
               Delegate
             </Button>
           </NextLink>
@@ -98,53 +170,120 @@ const ValidatorList = () => {
     [state.items, dataProfiles, sortItems]
   );
   const columns = fetchColumns(t);
+  const isMobile = useBreakpointValue({ base: true, md: false });
 
   return (
     <Box minHeight="100vh">
-      <Flex justify={"space-between"} mb={4}>
+      <Flex
+        direction={{ base: "column", lg: "row" }}
+        gap={3}
+        justify={"space-between"}
+        mb={4}
+      >
         <Tabs.Root
           value={state?.tab + 1}
           variant="subtle"
           onValueChange={(e) => handleTabChange(e, e.value - 1)}
+          size="lg"
         >
-          <Tabs.List  bg="white" >
-            <Tabs.Trigger value={1}>Active</Tabs.Trigger>
-            <Tabs.Trigger value={2}>Inactive</Tabs.Trigger>
-            <Tabs.Trigger value={3}>All Validators</Tabs.Trigger>
-            <Tabs.Indicator/>
+          <Tabs.List alignItems="center" justifyContent="center" gap={10}>
+            <Grid gridTemplateColumns={"repeat(3, 1fr)"}>
+              <Tabs.Trigger
+                value={1}
+                _selected={{
+                  bg: "#707D8A",
+                  color: "white",
+                  borderRadius: "100px",
+                }}
+                p={4}
+                w={{ base: "full", lg: '150px' }}
+              >
+                <Center w={"full"}>Active</Center>
+              </Tabs.Trigger>
+              <Tabs.Trigger
+                value={2}
+                _selected={{
+                  bg: "#707D8A",
+                  color: "white",
+                  borderRadius: "100px",
+                }}
+                p={4}
+                w={{ base: "full", lg: '150px' }}
+              >
+                <Center w={"full"}>Inactive</Center>
+              </Tabs.Trigger>
+              <Tabs.Trigger
+                value={3}
+                _selected={{
+                  bg: "#707D8A",
+                  color: "white",
+                  borderRadius: "100px",
+                }}
+                p={4}
+                w={{ base: "full", lg: '150px' }}
+              >
+                <Center w={"full"}>All Validators</Center>
+              </Tabs.Trigger>
+              <Tabs.Indicator bg="#707D8A" borderRadius="100px" />
+            </Grid>
           </Tabs.List>
         </Tabs.Root>
-        <SearchValidator callback={handleSearch} />
+        <Center w={"full"}>
+          <SearchValidator callback={handleSearch} />
+        </Center>
       </Flex>
-      <Box bg="#f9f9f9" py={'5'} px={'8'} rounded={"2xl"}>
-        <Table.Root borderRadius="3xl">
-          <Table.Header>
-            <Table.Row bg="#f9f9f9">
-              {columns.map((item, index) => (
-                <ColumnHeader
-                  key={`column-${index}`}
-                  column={item}
-                  sortKey={state?.sortKey}
-                  sortDirection={state?.sortDirection}
-                  handleSort={handleSort}
-                />
-              ))}
-              <TableColumnHeader />
-            </Table.Row>
-          </Table.Header>
-
-          <Table.Body
-            overflowY="auto"
-            style={{
-              borderRadius: "xl",
-            }}
+      <Box
+        bg="#f9f9f9"
+        py={"5"}
+        px={"8"}
+        h={"100vh"}
+        overflowY={"auto"}
+        rounded={"2xl"}
+      >
+        {isMobile ? (
+          <VStack
+            bg={"white"}
+            borderRadius="10px"
+            px={"3"}
+            separator={<StackSeparator />}
           >
-            {!loading &&
-              items.map((val, idx) => (
-                <ValidatorItem item={val} key={`$validator-${idx}`} idx={idx} />
-              ))}
-          </Table.Body>
-        </Table.Root>
+            {items.map((val, idx) => (
+              <ValidatorItemMobile key={`validator-${idx}`} item={val} />
+            ))}
+          </VStack>
+        ) : (
+          <Table.Root borderRadius="3xl">
+            <Table.Header>
+              <Table.Row bg="#f9f9f9">
+                {columns.map((item, index) => (
+                  <ColumnHeader
+                    key={`column-${index}`}
+                    column={item}
+                    sortKey={state?.sortKey}
+                    sortDirection={state?.sortDirection}
+                    handleSort={handleSort}
+                  />
+                ))}
+              </Table.Row>
+            </Table.Header>
+
+            <Table.Body
+              overflowY="auto"
+              style={{
+                borderRadius: "xl",
+              }}
+            >
+              {!loading &&
+                items.map((val, idx) => (
+                  <ValidatorItem
+                    item={val}
+                    key={`$validator-${idx}`}
+                    idx={idx}
+                  />
+                ))}
+            </Table.Body>
+          </Table.Root>
+        )}
       </Box>
     </Box>
   );

@@ -23,7 +23,7 @@ import MenuDrawer from "./menudrawer";
 export default function Header() {
   const marketState = useRecoilValue(readMarket);
   const market = formatMarket(marketState);
-  const isCompact = useBreakpointValue({ base: true, sm: false });
+  const isMobile = useBreakpointValue({ base: true, md: false });
 
 
   const menuItems = [
@@ -34,7 +34,7 @@ export default function Header() {
     { label: "Params", href: "/params" },
   ];
 
-  return !isCompact ? (
+  return !isMobile ? (
     <Flex w="full" gap="20px" align={"center"} pb="10">
       <Text fontSize={"32px"} fontWeight={600} flex="1">
         Dashboard

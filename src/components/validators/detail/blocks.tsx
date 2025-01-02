@@ -39,8 +39,8 @@ const BlockBox = ({i, item, originAddr}) => {
         <Tooltip content={<BlockTooltip item={item}/>}>
             <Center
                 key={i}
-                w="20px"
-                h="20px"
+                w="18px"
+                h="18px"
                 bg={item.signed ? 'green' : 'red'}
                 borderRadius="sm"
             >{originAddr === item.proposer && <FaCheck color="white"/>}</Center>

@@ -25,4 +25,5 @@ const TxItem = ({ item, rowIndex }) => {
     );
 };
 
+
 export default TxItem;
