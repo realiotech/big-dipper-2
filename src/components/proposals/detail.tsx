@@ -9,6 +9,8 @@ import {
     Table,
     Grid,
     Badge,
+    Stack,
+    useBreakpointValue
 } from "@chakra-ui/react";
 import { useProposalDetails } from "./hooks";
 import { useProfileRecoil } from "@/recoil/profiles";
@@ -18,13 +20,13 @@ import { getStatusInfo } from "./utils";
 import dayjs, { formatDayJs } from "@/utils/dayjs";
 import VotesGraph from "./votes_graph";
 import VotesTable from "./votes";
+import { getMiddleEllipsis } from "@/utils";
 
 const dateFormat = 'locale'
 const timeFormat = '12-hour'
 
 export default function ProposalDetail() {
     const { t } = useTranslation('proposals');
-
     const { state } = useProposalDetails();
     const { overview } = state;
     const { address: proposerAddress, name: proposerName } = useProfileRecoil(overview?.proposer);
@@ -40,7 +42,7 @@ export default function ProposalDetail() {
         )} ${amountRequested.displayDenom.toUpperCase()}`
         : '';
     const statusInfo = getStatusInfo(overview.status, t);
-
+    const isMobile = useBreakpointValue({base: true, md: false})
     return (
         <Box bg="white" minHeight="100vh">
             <Flex gap={'10'} align="center" mb={4}>
@@ -63,52 +65,52 @@ export default function ProposalDetail() {
             </Flex>
 
             {/* Proposal Details */}
-            <Box bg="#f9f9f9" p={6} borderRadius="md" boxShadow="sm" mb={8}>
+            <Box bg="#f9f9f9" py={6} px={3} borderRadius="md" boxShadow="sm" mb={8}>
                 <VStack align="stretch" w='full'>
-                    <HStack>
+                    <Stack direction={{base: 'column', md:'row'}}>
                         <Text fontWeight="bold" w="150px">
                             Type:
                         </Text>
                         <Text>{overview.proposalType}</Text>
-                    </HStack>
-                    <HStack>
+                    </Stack>
+                    <Stack direction={{base: 'column', md:'row'}}>
                         <Text fontWeight="bold" w="150px">
                             Proposer:
                         </Text>
                         <Text color="blue.500" cursor="pointer">
-                            {overview.proposer}
+                            {isMobile? getMiddleEllipsis(overview.proposer, {beginning: 9, ending: 5}): overview.proposer}
                         </Text>
-                    </HStack>
-                    <HStack>
+                    </Stack>
+                    <Stack direction={{base: 'column', md:'row'}}>
                         <Text fontWeight="bold" w="150px">
                             Submit Time:
                         </Text>
                         <Text>{formatDayJs(dayjs.utc(overview.submitTime), dateFormat, timeFormat)}</Text>
-                    </HStack>
-                    <HStack>
+                    </Stack>
+                    <Stack direction={{base: 'column', md:'row'}}>
                         <Text fontWeight="bold" w="150px">
                             Deposit End Time:
                         </Text>
                         <Text>{formatDayJs(dayjs.utc(overview.depositEndTime), dateFormat, timeFormat)}</Text>
-                    </HStack>
-                    <HStack>
+                    </Stack>
+                    <Stack direction={{base: 'column', md:'row'}}>
                         <Text fontWeight="bold" w="150px">
                             Voting Start Time:
                         </Text>
                         <Text>{formatDayJs(dayjs.utc(overview.votingStartTime), dateFormat, timeFormat)}</Text>
-                    </HStack>
-                    <HStack>
+                    </Stack>
+                    <Stack direction={{base: 'column', md:'row'}}>
                         <Text fontWeight="bold" w="150px">
                             Voting End Time:
                         </Text>
                         <Text>{formatDayJs(dayjs.utc(overview.votingEndTime), dateFormat, timeFormat)}</Text>
-                    </HStack>
-                    <HStack align={'start'} w={'full'}>
+                    </Stack>
+                    <Stack  direction={{base: 'column', md:'row'}} align={'start'} w={'full'}>
                         <Text fontWeight="bold" w="150px">
                             Description:
                         </Text>
-                        <Text>{overview.description}</Text>
-                    </HStack>
+                        <Text  w={{base: 'full', md:'80%'}}>{overview.description}</Text>
+                    </Stack>
                 </VStack>
             </Box>
 

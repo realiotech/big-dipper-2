@@ -41,19 +41,19 @@ export default function VotesGraph({ statusInfo }) {
   }, "yes");
 
   return (
-    <Box bg="#f9f9f9" p={6} borderRadius="md" boxShadow="sm" mb={8}>
-      <Flex align="center" gap={10}>
-        <Box>
-          <Text fontSize="lg" fontWeight="bold">
+    <Box bg="#f9f9f9" py={6} px = {3} borderRadius="md" boxShadow="sm" >
+      <Flex direction={{base: 'column', md:'row'}} align={{base: 'left', md:'center'}} mb={4} gap={10}>
+        <Box >
+          <Text fontSize="lg">
             Proposal Result
           </Text>
           <Text fontWeight="bold" fontSize="2xl" color={statusInfo?.tag}>
             {statusInfo.value}
           </Text>
         </Box>
-        <Box w={"2px"} bgColor={"black"} h={50}></Box>
+        <Box display={{base: 'none', md:'block'}} w={"2px"} bgColor={"black"} h={50}></Box>
         <Box>
-          <Text fontSize="lg" fontWeight="bold">
+          <Text fontSize="lg" >
             Voted / Total ({totalVotedPercent})
           </Text>
           <Text fontWeight="bold" fontSize="2xl">
@@ -61,9 +61,9 @@ export default function VotesGraph({ statusInfo }) {
           </Text>
         </Box>
       </Flex>
-      <Grid templateColumns="repeat(4, 1fr)" gap={4}>
+      <Grid templateColumns={{base: "repeat(1, 1fr)", md:"repeat(4, 1fr)"}} gap={4}>
         <Box
-          p={'10px 5px'}
+          p={'10px 16px'}
           bgColor={"white"}
           textAlign="center"
           borderRadius={"l3"}
@@ -81,7 +81,7 @@ export default function VotesGraph({ statusInfo }) {
           </Flex>
         </Box>
         <Box
-          p={'10px 5px'}
+          p={'10px 16px'}
           bgColor={"white"}
           textAlign="center"
           borderRadius={"l3"}
@@ -99,7 +99,7 @@ export default function VotesGraph({ statusInfo }) {
           </Flex>
         </Box>
         <Box
-          p={'10px 5px'}
+          p={'10px 16px'}
           bgColor={"white"}
           textAlign="center"
           borderRadius={"l3"}
@@ -117,7 +117,7 @@ export default function VotesGraph({ statusInfo }) {
           </Flex>
         </Box>
         <Box
-          p={'10px 5px'}
+          p={'10px 16px'}
           bgColor={"white"}
           textAlign="center"
           borderRadius={"l3"}
