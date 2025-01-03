@@ -31,3 +31,9 @@ query Blocks($limit: Int = 7, $offset: Int = 0) {
     }
   }
 }
+
+query OldestBlocks($limit: Int = 7) {
+  blocks: block(limit: $limit, order_by: {height: asc}) {
+    height
+  }
+}

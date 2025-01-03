@@ -1,7 +1,7 @@
-import { Tag } from "../ui/tag"
-const HelpTag = ({ value }) => {
+import { Button } from "@/components/ui/button"
+const HelpTag = ({ value, theme }) => {
     return (
-        <Tag>{value}</Tag>
+        <Button colorPalette={theme} variant='surface' fontWeight={600}>{value}</Button>
     );
 };
 

@@ -16,7 +16,7 @@ import {
     useValidatorDelegationsQuery,
     useValidatorRedelegationsQuery,
     useValidatorUndelegationsQuery,
-    OnlineVotingPowerQuery, 
+    OnlineVotingPowerQuery,
     useOnlineVotingPowerQuery
 } from '@/graphql/types/general_types';
 import { useDesmosProfile } from '@/hooks/use_desmos_profile';
