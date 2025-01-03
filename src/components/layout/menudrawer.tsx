@@ -1,5 +1,5 @@
 import React from "react";
-import { Flex, VStack, Text, Link, Center } from "@chakra-ui/react";
+import { Flex, VStack, Text, Link, Center, Image } from "@chakra-ui/react";
 import {
   DrawerRoot,
   DrawerBackdrop,
@@ -41,7 +41,12 @@ export default function MenuDrawer() {
       >
         <DrawerHeader>
           <Flex justify="space-between" align="center">
-            <DrawerTitle>realio.</DrawerTitle>
+            <DrawerTitle>
+              <Flex gap={'1.5'} align={'center'}>
+                <Image w="35px" src="/images/logo.svg" />
+                <Text>Realio.</Text>{" "}
+              </Flex>
+            </DrawerTitle>
             <DrawerTrigger>
               <IoCloseOutline size={30} />
             </DrawerTrigger>
