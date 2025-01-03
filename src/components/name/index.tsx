@@ -12,7 +12,7 @@ type NameProps = {
 
 const Name: FC<NameProps> = ({ address, name, href = ADDRESS_DETAILS }) => {
   return (
-    <Link asChild>
+    <Link asChild colorPalette={'blue'}>
       <NextLink shallow href={href(address)}>
         {name}
       </NextLink>

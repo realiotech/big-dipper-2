@@ -3,7 +3,7 @@
   "averageBlockTime": "Average Block Time",
   "price": "Price",
   "activeValidators": "Active Validators",
-  "outOfValidators": "out of {{count}} validators",
+  "outOfValidators": "out of {{num}} validators",
   "onlineVotingPower": "Online Voting Power",
   "today": "Today",
   "lastMonth": "Last Month",
@@ -30,5 +30,7 @@
   "lastVotingPowerChange": "Last Voting Power Change",
   "powerChange": "<0>{{change}}</0> at block ",
   "validators": "Validators",
-  "priceHistory": "Price (~24h)"
+  "priceHistory": "Price (~24h)",
+  "dataFrom": "Data from",
+  "notAvailable": "Not available"
 }
