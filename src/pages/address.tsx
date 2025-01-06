@@ -49,19 +49,11 @@ export default function Dashboard() {
     ],
   };
 
-  const options = {
+  const assetOptions = {
     plugins: {
-      legend: {
-        display: true,
-        position: "bottom", // Moves legend under the chart
-      },
-      tooltip: {
-        enabled: false,
-      },
+      legend: { display: false },
     },
-    maintainAspectRatio: false, // Allows custom height
   };
-
 
   return (
     <Box minH="100vh">
@@ -79,18 +71,22 @@ export default function Dashboard() {
             <Text fontSize="lg" fontWeight="bold" mb={4}>
               Portfolio Balance
             </Text>
-            <Flex direction={{base: 'column', md: 'row'}} justify="space-between" gap={4}>
+            <Flex
+              direction={{ base: "column", md: "row" }}
+              justify="space-between"
+              gap={4}
+            >
               <Stat.Root bg="white" padding={2}>
                 <StatLabel>Total</StatLabel>
-                <StatValueText >$4.24</StatValueText>
+                <StatValueText>$4.24</StatValueText>
               </Stat.Root>
               <Stat.Root bg="white" padding={2}>
                 <StatLabel>Available to Invest</StatLabel>
-                <StatValueText >$4.24</StatValueText>
+                <StatValueText>$4.24</StatValueText>
               </Stat.Root>
               <Stat.Root bg="white" padding={2}>
                 <StatLabel>Current Investment Holdings</StatLabel>
-                <StatValueText >$0.00</StatValueText>
+                <StatValueText>$0.00</StatValueText>
               </Stat.Root>
             </Flex>
           </Box>
@@ -167,7 +163,7 @@ export default function Dashboard() {
             <VStack align="stretch">
               <Flex justify="center" align="center" mb={4}>
                 <Box w="350px" h="350px">
-                  <Doughnut data={chartData} options={options} />
+                  <Doughnut data={chartData} options={assetOptions} />
                 </Box>
               </Flex>
             </VStack>
@@ -232,7 +228,7 @@ export default function Dashboard() {
       </Flex>
 
       {/* Transactions Section */}
-                <Transactions/>
+      <Transactions />
     </Box>
   );
 }
