@@ -12,7 +12,6 @@ import useTranslation from "next-translate/useTranslation";
 
 const ParamsInfo = () => {
   const { t } = useTranslation('params');
-  console.log(t('staking'))
   const { state } = useParams();
   const staking = state.staking
     ? {
