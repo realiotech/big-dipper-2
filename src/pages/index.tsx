@@ -6,10 +6,12 @@ import Tokenomics from "@/components/home/tokenomics";
 import Blocks from "@/components/home/blocks";
 import Transactions from "@/components/home/transactions";
 import StakingChart from "@/components/home/stake_chart";
+import FeaturedBlockchains from "@/components/home/assets";
 
 export default function Home() {
   return (
     <SimpleGrid columns={{ base: 2, lg: 4 }} gap='10'>
+      <FeaturedBlockchains/>
       <DataBlocks />
       <PriceChart />
       {/* <Tokenomics />

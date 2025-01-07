@@ -196,7 +196,7 @@ const ValidatorList = () => {
                   borderRadius: "100px",
                 }}
                 p={4}
-                w={{ base: "full", lg: '150px' }}
+                w={{ base: "full", lg: "150px" }}
               >
                 <Center w={"full"}>Active</Center>
               </Tabs.Trigger>
@@ -208,7 +208,7 @@ const ValidatorList = () => {
                   borderRadius: "100px",
                 }}
                 p={4}
-                w={{ base: "full", lg: '150px' }}
+                w={{ base: "full", lg: "150px" }}
               >
                 <Center w={"full"}>Inactive</Center>
               </Tabs.Trigger>
@@ -220,7 +220,7 @@ const ValidatorList = () => {
                   borderRadius: "100px",
                 }}
                 p={4}
-                w={{ base: "full", lg: '150px' }}
+                w={{ base: "full", lg: "150px" }}
               >
                 <Center w={"full"}>All Validators</Center>
               </Tabs.Trigger>
@@ -232,14 +232,7 @@ const ValidatorList = () => {
           <SearchValidator callback={handleSearch} />
         </Center>
       </Flex>
-      <Box
-        bg="#f9f9f9"
-        py={"5"}
-        px={"8"}
-        h={"100vh"}
-        overflowY={"auto"}
-        rounded={"2xl"}
-      >
+      <Box bg="#f9f9f9" py={"5"} px={"8"} h={"100vh"} rounded={"2xl"}>
         {isMobile ? (
           <VStack
             bg={"white"}
@@ -252,37 +245,42 @@ const ValidatorList = () => {
             ))}
           </VStack>
         ) : (
-          <Table.Root borderRadius="3xl">
-            <Table.Header>
-              <Table.Row bg="#f9f9f9">
-                {columns.map((item, index) => (
-                  <ColumnHeader
-                    key={`column-${index}`}
-                    column={item}
-                    sortKey={state?.sortKey}
-                    sortDirection={state?.sortDirection}
-                    handleSort={handleSort}
-                  />
-                ))}
-              </Table.Row>
-            </Table.Header>
-
-            <Table.Body
-              overflowY="auto"
-              style={{
-                borderRadius: "xl",
-              }}
-            >
-              {!loading &&
-                items.map((val, idx) => (
-                  <ValidatorItem
-                    item={val}
-                    key={`$validator-${idx}`}
-                    idx={idx}
-                  />
-                ))}
-            </Table.Body>
-          </Table.Root>
+          <Table.ScrollArea maxH={"100vh"} h={"95vh"} rounded="lg">
+            <Table.Root borderRadius="3xl" stickyHeader>
+              <Table.Header>
+                <Table.Row bg="#f9f9f9">
+                  {columns.map((item, index) => (
+                    <ColumnHeader
+                      key={`column-${index}`}
+                      column={item}
+                      sortKey={state?.sortKey}
+                      sortDirection={state?.sortDirection}
+                      handleSort={handleSort}
+                    />
+                  ))}
+                  {Array.from({ length: Math.max(0, 6 - columns.length) }).map(
+                    (_, idx) => (
+                      <Table.ColumnHeader key={`placeholder-${idx}`} />
+                    )
+                  )}
+                </Table.Row>
+              </Table.Header>
+              <Table.Body
+                style={{
+                  borderRadius: "xl",
+                }}
+              >
+                {!loading &&
+                  items.map((val, idx) => (
+                    <ValidatorItem
+                      item={val}
+                      key={`$validator-${idx}`}
+                      idx={idx}
+                    />
+                  ))}
+              </Table.Body>
+            </Table.Root>
+          </Table.ScrollArea>
         )}
       </Box>
     </Box>

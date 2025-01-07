@@ -4,10 +4,9 @@ import {
   Text,
   Table,
   HStack,
-  Button,
-  Badge,
   VStack,
   TableColumnHeader,
+  GridItem,
 } from "@chakra-ui/react";
 
 const FeaturedBlockchains = () => {
@@ -42,19 +41,20 @@ const FeaturedBlockchains = () => {
   ];
 
   return (
-    <Box minH={"100vh"}>
-      <Box bg="#f9f9f9" p={6} borderRadius="md" boxShadow="sm">
+    <GridItem colSpan={2} h={'full'}>
+      <Box bg="#f9f9f9" p={6} borderRadius="20px" h={'full'}>
         <Text fontSize="lg" fontWeight="bold" mb={4}>
           Featured Blockchains
         </Text>
-        <Table.Root bg="white" borderRadius="md">
+        <Table.ScrollArea border={'none'}  rounded="lg" >
+        <Table.Root bg="white" borderRadius="md" >
           <Table.Header>
             <Table.Row bg="#f9f9f9">
               <TableColumnHeader>Token</TableColumnHeader>
               <TableColumnHeader>Price</TableColumnHeader>
-              <TableColumnHeader>Total Supply</TableColumnHeader>
-              <TableColumnHeader>Holders</TableColumnHeader>
-              <TableColumnHeader></TableColumnHeader>
+              <TableColumnHeader textAlign={'right'}>Total Supply</TableColumnHeader>
+              {/* <TableColumnHeader>Holders</TableColumnHeader>
+              <TableColumnHeader></TableColumnHeader> */}
             </Table.Row>
           </Table.Header>
           <Table.Body>
@@ -83,14 +83,14 @@ const FeaturedBlockchains = () => {
                   </VStack>
                 </Table.Cell>
                 <Table.Cell>
-                  <VStack align="flex-start">
+                  <VStack align="flex-end">
                     <Text fontWeight="bold">{blockchain.totalSupply}</Text>
                     <Text fontSize="sm" color="gray.500">
                       {blockchain.circulatingSupply}
                     </Text>
                   </VStack>
                 </Table.Cell>
-                <Table.Cell>
+                {/* <Table.Cell>
                   <VStack align="flex-start">
                     <Text fontWeight="bold">{blockchain.holders}</Text>
                     <Text fontSize="sm" color="green.500">
@@ -102,13 +102,14 @@ const FeaturedBlockchains = () => {
                   <Button colorScheme="blue" size="sm">
                     Stake
                   </Button>
-                </Table.Cell>
+                </Table.Cell> */}
               </Table.Row>
             ))}
           </Table.Body>
         </Table.Root>
+        </Table.ScrollArea>
       </Box>
-    </Box>
+    </GridItem>
   );
 };
 
