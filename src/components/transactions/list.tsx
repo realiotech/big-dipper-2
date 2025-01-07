@@ -1,13 +1,11 @@
-import { Box, Center, Text, Table, For } from "@chakra-ui/react";
+import { Box, Center, Text } from "@chakra-ui/react";
 import { useTransactions } from "./hooks";
-
-import { Button } from "@/components/ui/button";
-import TxItem from "./item";
+import Pagination from "../layout/pagination";
 import TxTable from "./table";
 import NoData from "../helper/nodata";
 
 export function TransactionList() {
-    const { state } = useTransactions();
+    const { state, pageInfo, handlePageChange } = useTransactions();
 
     if (!state?.items?.length) {
         return (
@@ -22,8 +20,14 @@ export function TransactionList() {
             <Text fontSize="2xl" fontWeight="bold" mb="4">
                 Transactions
             </Text>
-            <TxTable transactions={state.items} />
-            <Center w='full' py='4'><Button variant={'plain'}>Load more</Button></Center>
+            <TxTable transactions={state.items} isLoading={state.loading} />
+            <Center w='full' py='4'>
+                <Pagination
+                    pageInfo={pageInfo}
+                    pageChangeFunc={handlePageChange}
+                    pageSizeChangeFunc={() => { }}
+                />
+            </Center>
         </Box>
     );
 }
