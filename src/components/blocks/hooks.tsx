@@ -4,13 +4,17 @@ import {
   BlocksListenerSubscription,
   useBlocksListenerSubscription,
   useBlocksQuery,
-  BlockDetailsQuery, useBlockDetailsQuery
+  BlockDetailsQuery, useBlockDetailsQuery,
 } from '@/graphql/types/general_types';
 import { useRouter } from 'next/router';
 import type { BlocksState, BlockType, BlockDetailState } from './types';
 import numeral from 'numeral';
 import { convertMsgsToModels } from '@/components/msg/utils';
 import { convertMsgType } from '@/utils/convert_msg_type';
+import { PageInfo } from "../layout/pagination";
+
+const MAX_BLOCKS = 500 * 20
+const PAGE_SIZE = 20
 
 // This is a bandaid as it can get extremely
 // expensive if there is too much data
@@ -51,6 +55,19 @@ export const useBlocks = () => {
     isNextPageLoading: true,
     oldestHeight: null,
   });
+  const [pageInfo, SetPageInfo] = useState<PageInfo>({
+    count: MAX_BLOCKS,
+    pageSize: 20,
+    currentPage: 1,
+  })
+
+  const handlePageChange = (e) => {
+    loadPage(e.page);
+    SetPageInfo({
+      ...pageInfo,
+      currentPage: e.page,
+    });
+  }
 
   const handleSetState = useCallback((stateChange: (prevState: BlocksState) => BlocksState) => {
     setState((prevState) => {
@@ -68,25 +85,26 @@ export const useBlocks = () => {
       offset: 0,
     },
     onData: (data) => {
-      const newBlocks = data.data.data ? formatBlocks(data.data.data) : [];
-      const newItems = uniqueAndSort([...newBlocks, ...state.items]);
-
-      handleSetState((prevState) => ({
-        ...prevState,
-        loading: false,
-        items: newItems,
-      }));
+      if (pageInfo.currentPage === 1) {
+        const newBlocks = data.data.data ? formatBlocks(data.data.data) : [];
+        const newItems = uniqueAndSort([...newBlocks, ...state.items]);
+  
+        handleSetState((prevState) => ({
+          ...prevState,
+          loading: false,
+          items: newItems.slice(0, PAGE_SIZE),
+        }));
+      }
     },
   });
 
   // ================================
   // block query
   // ================================
-  const LIMIT = 500;
-  const blockQuery = useBlocksQuery({
+  let blockQuery = useBlocksQuery({
     variables: {
-      limit: LIMIT,
-      offset: 1,
+      limit: PAGE_SIZE,
+      offset: 0,
     },
     onCompleted: (data) => {
       const blocks = formatBlocks(data);
@@ -94,8 +112,8 @@ export const useBlocks = () => {
       handleSetState((prevState) => ({
         ...prevState,
         loading: false,
-        items: uniqueAndSort([...state.items, ...blocks]),
-        hasNextPage: blocks.length === LIMIT,
+        items: uniqueAndSort([...blocks]),
+        hasNextPage: blocks.length === PAGE_SIZE,
         isNextPageLoading: false,
         oldestHeight: oldestBlock?.height ?? null,
       }));
@@ -105,35 +123,31 @@ export const useBlocks = () => {
     },
   });
 
-  const loadNextPage = async () => {
-    if (!state.oldestHeight) return;
-    handleSetState((prevState) => ({ ...prevState, isNextPageLoading: true }));
-    // refetch query
-    await blockQuery
-      .fetchMore({
-        variables: {
-          limit: LIMIT,
-          offset: state.oldestHeight - 1,
-        },
-      })
-      .then(({ data }) => {
-        const blocks = formatBlocks(data);
-        const oldestBlock = blocks[blocks.length - 1];
+  const loadPage = (page: number) => {
+    handleSetState((prevState) => ({ ...prevState, loading: true, isNextPageLoading: true }));
 
-        // set new state
-        handleSetState((prevState) => ({
-          ...prevState,
-          items: uniqueAndSort([...prevState.items, ...blocks]),
-          isNextPageLoading: false,
-          hasNextPage: blocks.length === LIMIT,
-          oldestHeight: oldestBlock?.height ?? null,
-        }));
-      });
+    blockQuery.refetch({
+      limit: PAGE_SIZE,
+      offset: page * PAGE_SIZE,
+    }).then(({ data }) => {
+      const blocks = formatBlocks(data);
+      const oldestBlock = blocks[blocks.length - 1];
+      handleSetState((prevState) => ({
+        ...prevState,
+        loading: false,
+        items: uniqueAndSort([...blocks]),
+        hasNextPage: blocks.length === PAGE_SIZE,
+        isNextPageLoading: false,
+        oldestHeight: oldestBlock?.height ?? null,
+      }));
+    });
   };
 
   return {
     state,
-    loadNextPage,
+    loadPage,
+    pageInfo,
+    handlePageChange,
     isItemLoaded: (index: number) =>
       !state.hasNextPage || index < state.items.length,
   };

@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import {
   Box,
   Center,
@@ -7,8 +7,8 @@ import {
   Link as ChakraLink,
   VStack,
   Flex,
-  Button,
   useBreakpointValue,
+  Skeleton,
 } from "@chakra-ui/react";
 import { useBlocks } from "./hooks";
 import Proposer from "../helper/proposer";
@@ -17,7 +17,7 @@ import numeral from "numeral";
 import dayjs from "@/utils/dayjs";
 import { useProfileRecoil } from "@/recoil/profiles/hooks";
 import HelpLink from "../helper/help_link";
-import { Skeleton } from "@chakra-ui/react";
+import Pagination from "../layout/pagination";
 
 const BlockItemMobile = ({ item, isItemLoaded, rowIndex }) => {
   const { name, address, imageUrl } = useProfileRecoil(item.proposer);
@@ -88,8 +88,30 @@ const BlockItemWindow = ({ item, isItemLoaded, rowIndex }) => {
   );
 };
 
+const SkeletonBlockItem = ({ index }) => {
+  return (
+    <Table.Row key={`block-${index}`}>
+      <Table.Cell>
+        <Skeleton key={`block-${index}`} h={"20px"} w="full" mb="4" />
+      </Table.Cell>
+      <Table.Cell>
+        <Skeleton key={`block-${index}`} h={"20px"} w="full" mb="4" />
+      </Table.Cell>
+      <Table.Cell>
+        <Skeleton key={`block-${index}`} h={"20px"} w="full" mb="4" />
+      </Table.Cell>
+      <Table.Cell>
+        <Skeleton key={`block-${index}`} h={"20px"} w="full" mb="4" />
+      </Table.Cell>
+      <Table.Cell>
+        <Skeleton key={`block-${index}`} h={"20px"} w="full" mb="4" />
+      </Table.Cell>
+    </Table.Row>
+  )
+}
+
 export function BlockList() {
-  const { state, isItemLoaded } = useBlocks();
+  const { state, isItemLoaded, pageInfo, handlePageChange } = useBlocks();
   const isMobile = useBreakpointValue({ base: true, md: false });
 
   if (!state?.items?.length) {
@@ -128,7 +150,7 @@ export function BlockList() {
             bg={"white"}
             gap={0}
           >
-            {state.items.map((item, index) => (
+            { state.items.map((item, index) => (
               <BlockItemMobile
                 key={`block-${index}`}
                 item={item}
@@ -154,21 +176,30 @@ export function BlockList() {
               </Table.Row>
             </Table.Header>
             <Table.Body>
-              {state.items.map((item, index) => (
+              {!state.loading ? state.items.map((item, index) => (
                 <BlockItemWindow
                   key={`block-${index}`}
                   item={item}
                   rowIndex={index}
                   isItemLoaded={isItemLoaded}
                 />
-              ))}
+              )) : (
+                Array.from({ length: 20 }).map((_, index) => (
+                  <SkeletonBlockItem
+                    index={index}
+                  />
+                ))
+              )
+              }
             </Table.Body>
           </Table.Root>
         ))}
       <Center w="full" py="4">
-        <Button variant="solid" >
-          Load More
-        </Button>
+        <Pagination
+          pageInfo={pageInfo}
+          pageChangeFunc={handlePageChange}
+          pageSizeChangeFunc={() => { }}
+        />
       </Center>
     </Box>
   );

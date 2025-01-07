@@ -1,11 +1,10 @@
-import { Text, Table, Link as ChakraLink } from "@chakra-ui/react";
+import { Text, Table, Link as ChakraLink, Skeleton } from "@chakra-ui/react";
 import Link from "next/link";
-import { getMiddleEllipsis } from "@/utils/get_middle_ellipsis";
 import numeral from "numeral";
 import dayjs from "@/utils/dayjs";
 import { Status } from "../ui/status";
 
-const TxItem = ({ item, rowIndex }) => {
+export const TxItem = ({ item, rowIndex }) => {
     return (
         <Table.Row key={`transaction-${rowIndex}`}>
             <Table.Cell>
@@ -25,5 +24,24 @@ const TxItem = ({ item, rowIndex }) => {
     );
 };
 
-
-export default TxItem;
+export const SkeletonTxItem = ({ index }) => {
+    return (
+      <Table.Row key={`transaction-${index}`}>
+        <Table.Cell>
+          <Skeleton h={"10px"} w="full" mb="3" />
+        </Table.Cell>
+        <Table.Cell>
+          <Skeleton h={"10px"} w="full" mb="3" />
+        </Table.Cell>
+        <Table.Cell>
+          <Skeleton h={"10px"} w="full" mb="3" />
+        </Table.Cell>
+        <Table.Cell>
+          <Skeleton h={"10px"} w="full" mb="3" />
+        </Table.Cell>
+        <Table.Cell>
+          <Skeleton h={"10px"} w="full" mb="3" />
+        </Table.Cell>
+      </Table.Row>
+    )
+  }

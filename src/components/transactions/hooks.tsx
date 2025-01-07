@@ -10,6 +10,11 @@ import { useRouter } from 'next/router';
 import { SyntheticEvent, useCallback, useEffect, useState } from 'react';
 import { TransactionDetailsQuery, useTransactionDetailsQuery } from '@/graphql/types/general_types';
 import { formatToken } from '@/utils/format_token';
+import { PageInfo } from "../layout/pagination";
+import { load } from 'js-yaml';
+
+const MAX_TXS = 500 * 20
+const PAGE_SIZE = 20
 
 export const useTransactions = () => {
   const [state, setState] = useState<TransactionsState>({
@@ -20,6 +25,20 @@ export const useTransactions = () => {
     items: [],
     oldestHeight: null,
   });
+  const [pageInfo, SetPageInfo] = useState<PageInfo>({
+    count: MAX_TXS,
+    pageSize: 20,
+    currentPage: 1,
+  })
+
+  const handlePageChange = (e) => {
+    loadPage(e.page);
+    SetPageInfo({
+      ...pageInfo,
+      currentPage: e.page,
+    });
+  }
+
 
   const handleSetState = useCallback((stateChange: any) => {
     setState((prevState) => {
@@ -51,22 +70,23 @@ export const useTransactions = () => {
       offset: 0,
     },
     onSubscriptionData: (data) => {
-      const newTransactions = formatTransactions(data.subscriptionData.data);
-      handleSetState((prevState) => ({
-        ...prevState,
-        loading: false,
-        items: uniqueAndSort([...newTransactions, ...prevState.items]),
-      }));
+      if (pageInfo.currentPage === 1) {
+        const newTransactions = formatTransactions(data.subscriptionData.data);
+        handleSetState((prevState) => ({
+          ...prevState,
+          loading: false,
+          items: uniqueAndSort([...newTransactions, ...prevState.items]).slice(0, PAGE_SIZE),
+        }));
+      }
     },
   });
 
   // ================================
   // tx query
   // ================================
-  const LIMIT = 500;
   const transactionQuery = useTransactionsQuery({
     variables: {
-      limit: LIMIT,
+      limit: PAGE_SIZE,
       offset: 0,
     },
     onError: () => {
@@ -79,28 +99,27 @@ export const useTransactions = () => {
       handleSetState((prevState) => ({
         ...prevState,
         loading: false,
-        items: uniqueAndSort([...prevState.items, ...transactions]),
-        hasNextPage: transactions.length === LIMIT,
+        items: uniqueAndSort([...transactions]),
+        hasNextPage: transactions.length === PAGE_SIZE,
         isNextPageLoading: false,
         oldestHeight: oldestTx?.height ?? null,
       }));
     },
   });
 
-  const loadNextPage = async () => {
+  const loadPage = (page: number) => {
     if (!state.oldestHeight) return;
 
     handleSetState((prevState) => ({
       ...prevState,
       isNextPageLoading: true,
+      loading: true,
     }));
 
     // refetch query
-    await transactionQuery.fetchMore({
-      variables: {
-        offset: state.oldestHeight - 1,
-        limit: LIMIT,
-      },
+    transactionQuery.refetch({
+      limit: PAGE_SIZE,
+      offset: page * PAGE_SIZE,
     }).then(({ data }) => {
       const transactions = formatTransactions(data);
       const oldestTx = transactions[transactions.length - 1];
@@ -108,9 +127,10 @@ export const useTransactions = () => {
       // set new state
       handleSetState((prevState) => ({
         ...prevState,
-        items: uniqueAndSort([...prevState.items, ...transactions]),
+        items: uniqueAndSort([...transactions]),
         isNextPageLoading: false,
-        hasNextPage: transactions.length === LIMIT,
+        loading: false,
+        hasNextPage: transactions.length === MAX_TXS,
         oldestHeight: oldestTx?.height ?? null,
       }));
     });
@@ -139,7 +159,8 @@ export const useTransactions = () => {
 
   return {
     state,
-    loadNextPage,
+    pageInfo,
+    handlePageChange,
   };
 };
 
