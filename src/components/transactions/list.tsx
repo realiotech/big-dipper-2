@@ -16,7 +16,7 @@ export function TransactionList() {
     }
 
     return (
-        <Box borderRadius="20px" bgColor="#F6F7F8" py="5" px="8" h="100vh" overflow={'auto'} w="full">
+        <Box borderRadius="20px" bgColor="#F6F7F8" py="5" px="8" overflow={'auto'} w="full">
             <Text fontSize="2xl" fontWeight="bold" mb="4">
                 Transactions
             </Text>
