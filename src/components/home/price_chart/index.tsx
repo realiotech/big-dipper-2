@@ -1,92 +1,116 @@
-import React from 'react';
-import { AreaChart, Area, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer } from 'recharts';
-import dayjs, { formatDayJs } from '@/utils/dayjs';
-import { useHero, usePrice } from './hooks';
-import { Box, GridItem, Text } from '@chakra-ui/react';
-import { TokenPriceType } from './types';
-import numeral from 'numeral';
-import CustomToolTip from '../../helper/tooltip';
+import React from "react";
+import { Box, GridItem, Text, Flex } from "@chakra-ui/react";
+import { Line } from "react-chartjs-2";
+import {
+  Chart as ChartJS,
+  CategoryScale,
+  LinearScale,
+  LineElement,
+  PointElement,
+  Tooltip,
+  Legend,
+  Filler,
+} from "chart.js";
+import dayjs, { formatDayJs } from "@/utils/dayjs";
+import { useHero, usePrice } from "./hooks";
+import numeral from "numeral";
+// import CustomToolTip from "../../helper/tooltip";
 
-const TokenPrice: React.FC<{ items: TokenPriceType[] } & ComponentDefault> = (props) => {
-  const {
-    tickPriceFormatter,
-    formatTime,
-  } = usePrice();
-  const formatItems = props.items.map((x) => {
-    return ({
-      time: formatTime(dayjs.utc(x.time), "locale"),
-      fullTime: formatDayJs(dayjs.utc(x.time), "locale"),
-      value: x.value,
-    })
-  })
-  return (
-    <ResponsiveContainer width="99%" maxHeight={300}>
-      <AreaChart
-        data={formatItems}
-        margin={{
-          top: 20,
-          right: 30,
-          left: 0,
-          bottom: 0,
-        }}
-      >
-        <defs>
-          <linearGradient id="colorUv" x1="0" y1="0" x2="0" y2="1">
-            <stop
-              offset="5%"
-              stopColor={"#C64155"}
-              stopOpacity={0.5}
-            />
-            <stop
-              offset="95%"
-              stopColor={"#C64155"}
-              stopOpacity={0.1}
-            />
-          </linearGradient>
-        </defs>
-        <CartesianGrid stroke={"#E8E8E8"} />
-        <XAxis
-          dataKey="time"
-          tickLine={false}
-        />
-        <YAxis
-          tickLine={false}
-          tickFormatter={tickPriceFormatter}
-        />
-        <Tooltip cursor={false} content={(
-          <CustomToolTip>
-            {(x) => {
-              return (
-                <>
-                  <Text >
-                    {x.fullTime}
-                  </Text>
-                  <Text>
-                    $
-                    {numeral(x.value).format('0,0.00')}
-                  </Text>
-                </>
-              );
-            }}
-          </CustomToolTip>
-        )} />
-        <Area type="monotone" dataKey="value" stroke="#C64155" fill="#C64155" fillOpacity={0.3} />
-      </AreaChart>
-    </ResponsiveContainer>
-  )
-}
+ChartJS.register(
+  CategoryScale,
+  LinearScale,
+  LineElement,
+  PointElement,
+  Tooltip,
+  Legend,
+  Filler
+);
 
 const PriceChart = () => {
   const { state } = useHero();
+  const { tickPriceFormatter, formatTime } = usePrice();
+
+  // Format the price history data
+  const formatItems = state.tokenPriceHistory.map((item) => ({
+    time: formatTime(dayjs.utc(item.time), "locale"),
+    fullTime: formatDayJs(dayjs.utc(item.time), "locale"),
+    value: item.value,
+  }));
+
+  const priceData = {
+    labels: formatItems.map((item) => item.time), // X-axis labels
+    datasets: [
+      {
+        label: "Price",
+        data: formatItems.map((item) => item.value), // Price values
+        borderColor: "rgba(57, 63, 70, 0.5)",
+        backgroundColor: (context) => {
+          const chart = context.chart;
+          const { ctx, chartArea } = chart;
+
+          if (!chartArea) return null;
+
+          const gradient = ctx.createLinearGradient(
+            0,
+            chartArea.top,
+            0,
+            chartArea.bottom
+          );
+          gradient.addColorStop(0, "rgba(57, 63, 70, 0.5)");
+          gradient.addColorStop(1, "rgba(57, 63, 70, 0.1)");
+          return gradient;
+        },
+        borderWidth: 3,
+        tension: 0.4,
+        pointBackgroundColor: "rgba(57, 63, 70, 1)",
+        pointBorderColor: "rgba(57, 63, 70, 0.5)",
+        pointRadius: 5,
+        pointHoverRadius: 7,
+        fill: true,
+      },
+    ],
+  };
+
+  const priceOptions = {
+    plugins: {
+      legend: { display: false },
+      tooltip: {
+        enabled: true,
+        callbacks: {
+          label: (tooltipItem) =>
+            `$${numeral(tooltipItem.raw).format("0,0.00")}`,
+        },
+      },
+    },
+    responsive: true,
+    maintainAspectRatio: false,
+    scales: {
+      x: {
+        grid: { display: false },
+        ticks: { color: "balck" }, // X-axis label color
+      },
+      y: {
+        grid: { color: "#E2E8F0", lineWidth: 1, borderDash: [4, 4] }, // Dashed grid lines
+        ticks: {
+          color: "black",
+          callback: tickPriceFormatter, // Format Y-axis ticks
+        },
+      },
+    },
+  };
+
   return (
-    <GridItem borderRadius='20px' bgColor='#F6F7F8' py='5' px='8' colSpan={2}>
-      <Text fontSize='24px' pb='6'>
+    <GridItem borderRadius="20px" bgColor="#F6F7F8" py="5" px="8" colSpan={2}>
+      <Text fontSize="24px" fontWeight="bold" pb="6">
         Price (~24h)
       </Text>
-      <TokenPrice items={state.loading ? [] : state.tokenPriceHistory} />
+      <Flex justify="center" align="center" h="300px">
+        <Box w="100%" h="100%">
+          <Line data={priceData} options={priceOptions} />
+        </Box>
+      </Flex>
     </GridItem>
-  )
-}
-
+  );
+};
 
 export default PriceChart;
