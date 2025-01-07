@@ -10,8 +10,9 @@ import {
   Link as ChakraLink,
   VStack,
   StackSeparator,
+  Skeleton,
 } from "@chakra-ui/react";
-import TxItem from "@/components/transactions/item";
+import {TxItem, SkeletonTxItem} from "@/components/transactions/item";
 import Link from "next/link";
 import { getMiddleEllipsis } from "@/utils/get_middle_ellipsis";
 import numeral from "numeral";
@@ -57,7 +58,7 @@ const TxItemMobile = ({ item, rowIndex }) => {
   );
 };
 
-export default function TxTable({ transactions }) {
+export default function TxTable({ transactions, isLoading }) {
   const isMobile = useBreakpointValue({ base: true, md: false });
   if (!transactions?.length) return;
   <Flex justify="center" align="center" h="100px">
@@ -81,9 +82,19 @@ export default function TxTable({ transactions }) {
           </Table.Row>
         </Table.Header>
         <Table.Body>
-          <For each={transactions}>
-            {(item, index) => <TxItem item={item} rowIndex={index} />}
-          </For>
+          {
+            !isLoading ? (
+              <For each={transactions}>
+                {(item, index) => <TxItem item={item} rowIndex={index} />}
+              </For>
+            ) : (
+              Array.from({ length: 20 }).map((_, index) => (
+                <SkeletonTxItem
+                  index={index}
+                />
+              ))
+            )
+          }
         </Table.Body>
       </Table.Root>
     </Box>
