@@ -6,7 +6,7 @@ import {
   Button,
   Tabs,
   VStack,
-  HStack,
+  Skeleton,
   Link,
   useBreakpointValue,
   Flex,
@@ -44,8 +44,8 @@ const ValidatorItemMobile = ({ item }) => {
       //   boxShadow="sm"
       w="full"
       mb={4}
-      //   border="1px solid"
-      //   borderColor="gray.200"
+    //   border="1px solid"
+    //   borderColor="gray.200"
     >
       <VStack align="stretch">
         <Flex direction={"column"} justify="space-between" gap={1} mb={2}>
@@ -98,6 +98,31 @@ const ValidatorItemMobile = ({ item }) => {
     </Box>
   );
 };
+
+const SkeletonItem = () => {
+  return (
+    <Table.Row>
+      <Table.Cell>
+        <Skeleton h={"20px"} w="full" mb="4" />
+      </Table.Cell>
+      <Table.Cell>
+        <Skeleton h={"20px"} w="full" mb="4" />
+      </Table.Cell>
+      <Table.Cell w={"30%"}>
+        <Skeleton h={"20px"} w="full" mb="4" />
+      </Table.Cell>
+      <Table.Cell textAlign={"right"}>
+        <Skeleton h={"20px"} w="full" mb="4" />
+      </Table.Cell>
+      <Table.Cell textAlign={"left"} pl={6}>
+        <Skeleton h={"20px"} w="full" mb="4" />
+      </Table.Cell>
+      <Table.Cell textAlign="left">
+        <Skeleton h={"20px"} w="full" mb="4" />
+      </Table.Cell>
+    </Table.Row>
+  )
+}
 
 const ValidatorItem = ({ item, idx }) => {
   const { t } = useTranslation("validators");
@@ -161,7 +186,7 @@ const ValidatorList = () => {
   const { state, handleTabChange, handleSearch, handleSort, sortItems } =
     useValidators();
   const validatorsMemo = useShallowMemo(state.items.map((x) => x.validator));
-  const { profiles: dataProfiles, loading } = useProfilesRecoil(validatorsMemo);
+  const { profiles: dataProfiles } = useProfilesRecoil(validatorsMemo);
   const items = useMemo(
     () =>
       sortItems(
@@ -270,14 +295,18 @@ const ValidatorList = () => {
                   borderRadius: "xl",
                 }}
               >
-                {!loading &&
-                  items.map((val, idx) => (
-                    <ValidatorItem
-                      item={val}
-                      key={`$validator-${idx}`}
-                      idx={idx}
-                    />
-                  ))}
+                {!state.loading ? items.map((val, idx) => (
+                  <ValidatorItem
+                    item={val}
+                    key={`$validator-${idx}`}
+                    idx={idx}
+                  />
+                )) : (
+                  Array.from({ length: 20 }).map(() => (
+                    <SkeletonItem/>
+                  )
+                  ))
+                }
               </Table.Body>
             </Table.Root>
           </Table.ScrollArea>
