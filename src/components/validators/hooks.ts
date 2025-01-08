@@ -86,7 +86,7 @@ export const useValidators = () => {
     items: [],
     votingPowerOverall: 0,
     tab: 0,
-    sortKey: 'validator.name',
+    sortKey: '',
     sortDirection: 'asc',
   });
 
