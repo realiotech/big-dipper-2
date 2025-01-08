@@ -5,6 +5,9 @@ import {
   Text,
   Table,
   For,
+  Box,
+  VStack,
+  useBreakpointValue,
 } from "@chakra-ui/react";
 import { useBlocks } from "./hooks";
 import Link from "next/link";
@@ -16,6 +19,45 @@ import Proposer from "@/components/helper/proposer";
 import { useProfileRecoil } from "@/recoil/profiles/hooks";
 import NoData from "@/components/helper/nodata";
 import Loading from "@/components/helper/loading";
+import HelpLink from "@/components/helper/help_link";
+
+const BlockItemMobile = ({ item, rowIndex }) => {
+  const { name, address, imageUrl } = useProfileRecoil(item.proposer);
+
+  return (
+    <Box p="5" w="full">
+      <VStack align="stretch">
+        <Flex gap={1} direction="column">
+          <Text>Height</Text>
+          <HelpLink
+            href={`/blocks/${item.height}`}
+            value={numeral(item.height).format("0,0")}
+          />
+        </Flex>
+        <Flex gap={1} direction="column">
+          <Text>Proposer</Text>
+          <Proposer address={address} image={imageUrl} name={name} />
+        </Flex>
+        <Flex gap={1} direction="column">
+          <Text>Hash</Text>
+          <Text>
+            {getMiddleEllipsis(item.hash, { beginning: 6, ending: 5 })}
+          </Text>
+        </Flex>
+        <Flex justify="space-between">
+          <Flex gap={1} direction="column">
+            <Text>Txs</Text>
+            <Text>{numeral(item.txs).format("0,0")}</Text>
+          </Flex>
+          <Flex gap={1} direction="column">
+            <Text>Time</Text>
+            <Text>{dayjs.utc(item.timestamp).fromNow()}</Text>
+          </Flex>
+        </Flex>
+      </VStack>
+    </Box>
+  );
+};
 
 const BlockItem = ({ item }) => {
   const { name, address, imageUrl } = useProfileRecoil(item.proposer);
@@ -43,6 +85,7 @@ const BlockItem = ({ item }) => {
 
 const Blocks = () => {
   const { state } = useBlocks();
+  const isMobile = useBreakpointValue({ base: true, md: false });
 
   if (state.loading)
     return (
@@ -62,24 +105,42 @@ const Blocks = () => {
         </ChakraLink>
       </Flex>
       {state.items.length ? (
-        <Table.Root bgColor="inherit" size="sm" showColumnBorder={false}>
-          <Table.Header>
-            <Table.Row bgColor="inherit">
-              <Table.ColumnHeader>Height</Table.ColumnHeader>
-              <Table.ColumnHeader>Proposer</Table.ColumnHeader>
-              <Table.ColumnHeader>Hash</Table.ColumnHeader>
-              <Table.ColumnHeader>Txs</Table.ColumnHeader>
-              <Table.ColumnHeader>Time</Table.ColumnHeader>
-            </Table.Row>
-          </Table.Header>
-          <Table.Body>
-            <For each={state.items}>
-              {(item, index) => (
-                <BlockItem key={`block-${index}`} item={item} />
-              )}
-            </For>
-          </Table.Body>
-        </Table.Root>
+        isMobile ? (
+          <VStack
+            divideY={"1px"}
+            divideStyle={"ridge"}
+            borderRadius="10px"
+            bg={"white"}
+            gap={0}
+          >
+            {state.items.map((item, index) => (
+              <BlockItemMobile
+                key={`block-${index}`}
+                item={item}
+                rowIndex={index}
+              />
+            ))}
+          </VStack>
+        ) : (
+          <Table.Root bgColor="inherit" size="sm" showColumnBorder={false}>
+            <Table.Header>
+              <Table.Row bgColor="inherit">
+                <Table.ColumnHeader>Height</Table.ColumnHeader>
+                <Table.ColumnHeader>Proposer</Table.ColumnHeader>
+                <Table.ColumnHeader>Hash</Table.ColumnHeader>
+                <Table.ColumnHeader>Txs</Table.ColumnHeader>
+                <Table.ColumnHeader>Time</Table.ColumnHeader>
+              </Table.Row>
+            </Table.Header>
+            <Table.Body>
+              <For each={state.items}>
+                {(item, index) => (
+                  <BlockItem key={`block-${index}`} item={item} />
+                )}
+              </For>
+            </Table.Body>
+          </Table.Root>
+        )
       ) : (
         <NoData />
       )}
