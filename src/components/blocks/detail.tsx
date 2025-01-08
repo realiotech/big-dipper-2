@@ -87,7 +87,7 @@ export default function BlockDetails() {
                 </Text>
                 {
                     transactions?.length ?
-                        <TxTable transactions={transactions} /> :
+                        <TxTable transactions={transactions} isLoading={state.loading}/> :
                         <NoData />
                 }
             </Box>

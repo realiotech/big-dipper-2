@@ -8,7 +8,7 @@ import {
   Stack,
   StackSeparator,
   useBreakpointValue,
-  VStack,
+  Skeleton,
 } from "@chakra-ui/react";
 import { useProposals } from "./hooks";
 import useTranslation from "next-translate/useTranslation";
@@ -21,33 +21,33 @@ const ProposalItem = ({ proposal }) => {
   return isMobile ? (
     <Box bg="white" p={4}>
       <Flex justify="space-between" direction="column" align="center" gap={4} w={"full"}>
-        <Flex   justify="space-between" w="full">
+        <Flex justify="space-between" w="full">
           <Link
-          w={'60%'}
-          fontSize={'sm'}
+            w={'60%'}
+            fontSize={'sm'}
             href={`/proposals/${proposal.id}`}
             fontWeight="bold"
             color="gray.700"
           >
             #{proposal.id} {proposal.title}
           </Link>
-        <Badge
-          colorPalette={statusInfo.tag}
-          px={2}
-          py={1}
-          w={"80px"}
-          height={"30px"}
-          textAlign={"center"}
-          justifyContent={"center"}
-          fontSize={"sm"}
-          borderRadius="md"
-        >
-          {statusInfo.value}
-        </Badge>
+          <Badge
+            colorPalette={statusInfo.tag}
+            px={2}
+            py={1}
+            w={"80px"}
+            height={"30px"}
+            textAlign={"center"}
+            justifyContent={"center"}
+            fontSize={"sm"}
+            borderRadius="md"
+          >
+            {statusInfo.value}
+          </Badge>
         </Flex>
-          <Text color="gray.500" fontSize="sm">
-            {proposal.description}
-          </Text>
+        <Text color="gray.500" fontSize="sm">
+          {proposal.description}
+        </Text>
       </Flex>
     </Box>
   ) : (
@@ -83,9 +83,31 @@ const ProposalItem = ({ proposal }) => {
   );
 };
 
+const SkeletonItem = () => {
+  const isMobile = useBreakpointValue({ base: true, md: false });
+  return isMobile ? (
+    <Box bg="white" p={4}>
+      <Flex justify="space-between" direction="column" align="center" gap={4} w={"full"}>
+        <Flex justify="space-between" w="full">
+          <Skeleton h={"20px"} w="full" mb="4" />
+        </Flex>
+        <Skeleton h={"20px"} w="full" mb="4" />
+      </Flex>
+    </Box>
+  ) : (
+    <Box bg="white" p={4}>
+      <Flex justify="space-between" align="center" mb={2} w={"full"}>
+        <Flex direction={"column"} w="80%">
+          <Skeleton h={"20px"} w="full" mb="4" />
+        </Flex>
+        <Skeleton h={"20px"} w="full" mb="4" />
+      </Flex>
+    </Box>
+  )
+}
+
 const ProposalList = () => {
   const { state } = useProposals();
-  console.log(state.items);
   return (
     <Box
       bg="#f9f9f9"
@@ -94,6 +116,7 @@ const ProposalList = () => {
       overflowY="hidden"
       overflowX="hidden"
       maxH="auto"
+      minH={"85vh"}
       borderRadius="md"
     >
       <Text fontSize="lg" fontWeight="bold" mb={4}>
@@ -109,10 +132,13 @@ const ProposalList = () => {
         separator={<StackSeparator />}
         px={3}
       >
-        {state?.items?.length &&
+        {!state.loading ? state?.items?.length &&
           state?.items.map((proposal, index) => (
             <ProposalItem proposal={proposal} key={`proposal-${index}`} />
-          ))}
+          )) : Array.from({ length: 10 }).map((_, index) => (
+            <SkeletonItem key={`proposal-${index}`} />
+          ))
+        }
       </Stack>
     </Box>
   );

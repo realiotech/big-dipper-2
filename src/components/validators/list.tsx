@@ -6,14 +6,13 @@ import {
   Button,
   Tabs,
   VStack,
-  HStack,
+  Skeleton,
   Link,
   useBreakpointValue,
   Flex,
   Center,
   Grid,
   StackSeparator,
-  Skeleton
 } from "@chakra-ui/react";
 import { ProgressBar, ProgressRoot } from "@/components/ui/progress";
 import { useValidators } from "./hooks";
@@ -29,17 +28,11 @@ import SearchValidator from "./search";
 import { fetchColumns } from "./utils";
 import ColumnHeader from "./header";
 
-const SkeletonValidatorItems = ({ rowCount = 30, columnCount = 6 }) => {
+const SkeletonValidatorItems = ({ rowCount = 30 }) => {
     return (
       <>
         {Array.from({ length: rowCount }).map((_, rowIndex) => (
-          <Table.Row key={`skeleton-row-${rowIndex}`}>
-            {Array.from({ length: columnCount }).map((_, colIndex) => (
-              <Table.Cell key={`skeleton-cell-${rowIndex}-${colIndex}`}>
-                <Skeleton height="20px" />
-              </Table.Cell>
-            ))}
-          </Table.Row>
+          <SkeletonItem key={`skeleton-item-${rowIndex}`} />
         ))}
       </>
     );
@@ -61,8 +54,8 @@ const ValidatorItemMobile = ({ item }) => {
       //   boxShadow="sm"
       w="full"
       mb={4}
-      //   border="1px solid"
-      //   borderColor="gray.200"
+    //   border="1px solid"
+    //   borderColor="gray.200"
     >
       <VStack align="stretch">
         <Flex direction={"column"} justify="space-between" gap={1} mb={2}>
@@ -115,6 +108,31 @@ const ValidatorItemMobile = ({ item }) => {
     </Box>
   );
 };
+
+const SkeletonItem = () => {
+  return (
+    <Table.Row>
+      <Table.Cell>
+        <Skeleton h={"20px"} w="full" mb="4" />
+      </Table.Cell>
+      <Table.Cell>
+        <Skeleton h={"20px"} w="full" mb="4" />
+      </Table.Cell>
+      <Table.Cell w={"30%"}>
+        <Skeleton h={"20px"} w="full" mb="4" />
+      </Table.Cell>
+      <Table.Cell textAlign={"right"}>
+        <Skeleton h={"20px"} w="full" mb="4" />
+      </Table.Cell>
+      <Table.Cell textAlign={"left"} pl={6}>
+        <Skeleton h={"20px"} w="full" mb="4" />
+      </Table.Cell>
+      <Table.Cell textAlign="left">
+        <Skeleton h={"20px"} w="full" mb="4" />
+      </Table.Cell>
+    </Table.Row>
+  )
+}
 
 const ValidatorItem = ({ item, idx }) => {
   const { t } = useTranslation("validators");
@@ -178,7 +196,7 @@ const ValidatorList = () => {
   const { state, handleTabChange, handleSearch, handleSort, sortItems } =
     useValidators();
   const validatorsMemo = useShallowMemo(state.items.map((x) => x.validator));
-  const { profiles: dataProfiles, loading } = useProfilesRecoil(validatorsMemo);
+  const { profiles: dataProfiles } = useProfilesRecoil(validatorsMemo);
   const items = useMemo(
     () =>
       sortItems(

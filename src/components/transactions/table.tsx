@@ -10,14 +10,15 @@ import {
   Link as ChakraLink,
   VStack,
   StackSeparator,
-  Skeleton,
+  Center,
 } from "@chakra-ui/react";
-import {TxItem, SkeletonTxItem} from "@/components/transactions/item";
+import { TxItem, SkeletonTxItem } from "@/components/transactions/item";
 import Link from "next/link";
 import { getMiddleEllipsis } from "@/utils/get_middle_ellipsis";
 import numeral from "numeral";
 import dayjs from "@/utils/dayjs";
 import { Status } from "../ui/status";
+import NoData from "../helper/nodata";
 
 const TxItemMobile = ({ item, rowIndex }) => {
   return (
@@ -60,15 +61,7 @@ const TxItemMobile = ({ item, rowIndex }) => {
 
 export default function TxTable({ transactions, isLoading }) {
   const isMobile = useBreakpointValue({ base: true, md: false });
-  if (!transactions?.length) return;
-  <Flex justify="center" align="center" h="100px">
-    <Box textAlign="center" color="gray.400">
-      <Box alignItems="center" boxSize="100px">
-        <Image src="/images/logo.svg" h={100} width={100} alt="test" />
-      </Box>
-      <Text mt={2}>Nothing to show</Text>
-    </Box>
-  </Flex>;
+  
   return !isMobile ? (
     <Box bg="white" borderRadius="md" overflowY="auto" maxH="auto">
       <Table.Root showColumnBorder={false} h="full" w="full">
@@ -83,7 +76,11 @@ export default function TxTable({ transactions, isLoading }) {
         </Table.Header>
         <Table.Body>
           {
-            !isLoading ? (
+            !isLoading ? transactions.length === 0 ? (
+              <Center borderRadius="20px" bgColor="#F6F7F8" py="5" px="8" minH="65vh" w="full">
+                <NoData />
+              </Center>
+            ) : (
               <For each={transactions}>
                 {(item, index) => <TxItem item={item} rowIndex={index} />}
               </For>

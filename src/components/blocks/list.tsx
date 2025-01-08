@@ -114,21 +114,6 @@ export function BlockList() {
   const { state, isItemLoaded, pageInfo, handlePageChange } = useBlocks();
   const isMobile = useBreakpointValue({ base: true, md: false });
 
-  if (!state?.items?.length) {
-    return (
-      <Center
-        borderRadius="20px"
-        bgColor="#F6F7F8"
-        py="5"
-        px="8"
-        minH="65vh"
-        w="full"
-      >
-        <Text>Nothing to show</Text>
-      </Center>
-    );
-  }
-
   return (
     <Box
       borderRadius="20px"
@@ -150,7 +135,7 @@ export function BlockList() {
             bg={"white"}
             gap={0}
           >
-            { state.items.map((item, index) => (
+            {state.items.map((item, index) => (
               <BlockItemMobile
                 key={`block-${index}`}
                 item={item}
@@ -176,7 +161,18 @@ export function BlockList() {
               </Table.Row>
             </Table.Header>
             <Table.Body>
-              {!state.loading ? state.items.map((item, index) => (
+              {!state.loading ? state.items.length === 0 ? (
+                <Center
+                  borderRadius="20px"
+                  bgColor="#F6F7F8"
+                  py="5"
+                  px="8"
+                  minH="65vh"
+                  w="full"
+                >
+                  <Text>Nothing to show</Text>
+                </Center>
+              ) : state.items.map((item, index) => (
                 <BlockItemWindow
                   key={`block-${index}`}
                   item={item}
