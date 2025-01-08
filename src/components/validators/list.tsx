@@ -13,6 +13,7 @@ import {
   Center,
   Grid,
   StackSeparator,
+  Skeleton
 } from "@chakra-ui/react";
 import { ProgressBar, ProgressRoot } from "@/components/ui/progress";
 import { useValidators } from "./hooks";
@@ -27,6 +28,22 @@ import NextLink from "next/link";
 import SearchValidator from "./search";
 import { fetchColumns } from "./utils";
 import ColumnHeader from "./header";
+
+const SkeletonValidatorItems = ({ rowCount = 30, columnCount = 6 }) => {
+    return (
+      <>
+        {Array.from({ length: rowCount }).map((_, rowIndex) => (
+          <Table.Row key={`skeleton-row-${rowIndex}`}>
+            {Array.from({ length: columnCount }).map((_, colIndex) => (
+              <Table.Cell key={`skeleton-cell-${rowIndex}-${colIndex}`}>
+                <Skeleton height="20px" />
+              </Table.Cell>
+            ))}
+          </Table.Row>
+        ))}
+      </>
+    );
+  };
 
 const ValidatorItemMobile = ({ item }) => {
   const { t } = useTranslation("validators");
@@ -239,6 +256,8 @@ const ValidatorList = () => {
             borderRadius="10px"
             px={"3"}
             separator={<StackSeparator />}
+            maxH={'90vh'}
+            overflow={'auto'}
           >
             {items.map((val, idx) => (
               <ValidatorItemMobile key={`validator-${idx}`} item={val} />
@@ -270,14 +289,19 @@ const ValidatorList = () => {
                   borderRadius: "xl",
                 }}
               >
-                {!loading &&
+                {state.loading ? (
+                  <>
+                    <SkeletonValidatorItems />
+                  </>
+                ) : (
                   items.map((val, idx) => (
                     <ValidatorItem
                       item={val}
                       key={`$validator-${idx}`}
                       idx={idx}
                     />
-                  ))}
+                  ))
+                )}
               </Table.Body>
             </Table.Root>
           </Table.ScrollArea>

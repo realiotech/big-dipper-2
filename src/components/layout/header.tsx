@@ -30,9 +30,9 @@ export default function Header() {
 
   return !isMobile ? (
     <Flex w="full" gap="20px" align="center" pb="10" direction="column">
-      <HStack>
+      <HStack w="full">
         <PageHeader />
-        <HStack divideX="2px">
+        {/* <HStack divideX="2px">
           <Text fontSize="16px">
             Supply:
             {' '}
@@ -49,7 +49,7 @@ export default function Header() {
             </Link>
             {' '}
           </Text>
-        </HStack>
+        </HStack> */}
         <SearchBar />
         <Center
           w="250px"
@@ -72,7 +72,7 @@ export default function Header() {
       </HStack>
     </Flex>
   ) : (
-    <Flex flexDirection="column" w="100%" gap="20px" align="center" pb="10">
+    <Flex flexDirection="column" w="full" gap="20px" align="center" pb="10">
       <Flex w="full" gap="10px" align="center" pb="2">
         <Link asChild outline="none">
           <NextLink href="/">
