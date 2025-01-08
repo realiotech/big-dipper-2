@@ -256,7 +256,7 @@ const ValidatorList = () => {
             borderRadius="10px"
             px={"3"}
             separator={<StackSeparator />}
-            maxH={'90vh'}
+            maxH={'95vh'}
             overflow={'auto'}
           >
             {items.map((val, idx) => (
