@@ -4,17 +4,11 @@ import { useTransactions } from "./hooks";
 import TxTable from "@/components/transactions/table";
 
 export default function Transactions() {
-  const { state, loadNextPage } = useTransactions();
+  const { state } = useTransactions();
 
-  const loadMoreItems = state.isNextPageLoading ? () => null : loadNextPage;
-  const isItemLoaded = (index: number) =>
-    !state.hasNextPage || index < state.data.length;
-  const itemCount = state.hasNextPage
-    ? state.data.length + 1
-    : state.data.length;
   return (
     <Box bg="#FAFBFC" py={6} px={2} borderRadius="md" boxShadow="sm" mb={8}>
-      <TxTable transactions={state.data} />
+      <TxTable transactions={state.data} isLoading={false} />
     </Box>
   );
 }

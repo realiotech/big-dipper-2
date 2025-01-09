@@ -21,7 +21,7 @@ function shortenText(text, maxLength = 40) {
 export default function Overview({ state }) {
   const { t } = useTranslation("validators");
   const { overview, status } = state;
-  const { imageUrl, name, address } = useProfileRecoil(overview.validator);
+  const { imageUrl, name, address } = useProfileRecoil(overview.selfDelegateAddress);
   const statusTheme = getValidatorStatus(
     status.status,
     status.jailed,
