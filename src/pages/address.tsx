@@ -15,12 +15,14 @@ import {
   TableRoot,
   StatValueText,
   Icon,
+  Center,
 } from "@chakra-ui/react";
 import { Doughnut } from "react-chartjs-2";
 import { Chart as ChartJS, ArcElement, Tooltip, Legend } from "chart.js";
 import { TfiReload } from "react-icons/tfi";
 import { ProgressBar, ProgressRoot } from "@/components/ui/progress";
 import Transactions from "./transactions";
+import { IoCopyOutline } from "react-icons/io5";
 
 ChartJS.register(ArcElement, Tooltip, Legend);
 
@@ -71,6 +73,24 @@ export default function Dashboard() {
             <Text fontSize="lg" fontWeight="bold" mb={4}>
               Portfolio Balance
             </Text>
+            <VStack gap={0} align={"left"}>
+              <Text>Cosmos address: </Text>
+              <Flex gap={2}>
+                <Text>realio13zz4mgwmppzlnve09zshqlf4r2x4uqtwf6ckzk</Text>
+                <Center>
+                  <IoCopyOutline />
+                </Center>
+              </Flex>
+            </VStack>
+            <VStack gap={0} align={"left"} mb={3}>
+              <Text>EVM address: </Text>
+              <Flex gap={2}>
+                <Text>0xB728E158dF70DbB2B3a140D125C5a45E54b64bDB</Text>
+                <Center>
+                  <IoCopyOutline />
+                </Center>
+              </Flex>
+            </VStack>
             <Flex
               direction={{ base: "column", md: "row" }}
               justify="space-between"
@@ -85,7 +105,7 @@ export default function Dashboard() {
                 <StatValueText>$4.24</StatValueText>
               </Stat.Root>
               <Stat.Root bg="white" padding={2}>
-                <StatLabel>Current Investment Holdings</StatLabel>
+                <StatLabel>Investment Holdings</StatLabel>
                 <StatValueText>$0.00</StatValueText>
               </Stat.Root>
             </Flex>
