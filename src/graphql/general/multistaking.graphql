@@ -1,0 +1,10 @@
+query Multistaking {
+  token_bonded {
+    amount
+    denom
+  }
+  token_unbonding {
+    amount
+    denom
+  }
+}
