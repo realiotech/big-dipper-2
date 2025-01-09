@@ -13,7 +13,7 @@ export default function Transactions() {
     ? state.data.length + 1
     : state.data.length;
   return (
-    <Box bg="#F6F7F8" py={6} px={2} borderRadius="md" boxShadow="sm" mb={8}>
+    <Box bg="#FAFBFC" py={6} px={2} borderRadius="md" boxShadow="sm" mb={8}>
       <TxTable transactions={state.data} />
     </Box>
   );

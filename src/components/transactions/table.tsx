@@ -66,7 +66,7 @@ export default function TxTable({ transactions, isLoading }) {
     <Box bg="white" borderRadius="md" overflowY="auto" maxH="auto">
       <Table.Root showColumnBorder={false} h="full" w="full">
         <Table.Header>
-          <Table.Row bg="#F6F7F8">
+          <Table.Row bg="#FAFBFC">
             <Table.ColumnHeader>Block</Table.ColumnHeader>
             <Table.ColumnHeader>Hash</Table.ColumnHeader>
             <Table.ColumnHeader>Messages</Table.ColumnHeader>
@@ -77,9 +77,13 @@ export default function TxTable({ transactions, isLoading }) {
         <Table.Body>
           {
             !isLoading ? transactions.length === 0 ? (
-              <Center borderRadius="20px" bgColor="#F6F7F8" py="5" px="8" minH="65vh" w="full">
-                <NoData />
-              </Center>
+                <Table.Row>
+                <Table.Cell colSpan={5} textAlign="center">
+                  <Center borderRadius="20px" bgColor="#FAFBFC" py="5" px="8" minH="65vh" w="full">
+                    <NoData />
+                  </Center>
+                </Table.Cell>
+              </Table.Row>
             ) : (
               <For each={transactions}>
                 {(item, index) => <TxItem item={item} rowIndex={index} />}

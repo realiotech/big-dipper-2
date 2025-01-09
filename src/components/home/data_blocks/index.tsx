@@ -9,7 +9,7 @@ export default function DataBlocks() {
 
     return (
         <GridItem colSpan={2}>
-            <GridItem borderRadius='20px' bgColor='#F6F7F8' py='5' px='8' mb={3}>
+            <GridItem borderRadius='20px' bgColor='#FAFBFC' py='5' px='8' mb={3}>
                 <Text fontSize='14px' pb='3'>
                     Latest Block
                 </Text>
@@ -17,7 +17,7 @@ export default function DataBlocks() {
                     {numeral(state.blockHeight).format('0,0')}
                 </Text>
             </GridItem>
-            <GridItem borderRadius='20px' bgColor='#F6F7F8' py='5' px='8' mb={3}>
+            <GridItem borderRadius='20px' bgColor='#FAFBFC' py='5' px='8' mb={3}>
                 <Text fontSize='14px' pb='3'>
                     Average Block Time
                 </Text>
@@ -25,7 +25,7 @@ export default function DataBlocks() {
                     {numeral(state.blockTime).format('0.00')} s
                 </Text>
             </GridItem>
-            {/* <GridItem borderRadius='20px' bgColor='#F6F7F8' py='5' px='8'>
+            {/* <GridItem borderRadius='20px' bgColor='#FAFBFC' py='5' px='8'>
                 <Text fontSize='14px' pb='3'>
                     Price
                 </Text>
@@ -33,7 +33,7 @@ export default function DataBlocks() {
                     {state.price !== null ? `$${numeral(state.price).format('0.00')}` : 'N/A'}
                 </Text>
             </GridItem> */}
-            <GridItem borderRadius='20px' bgColor='#F6F7F8' py='5' px='8'>
+            <GridItem borderRadius='20px' bgColor='#FAFBFC' py='5' px='8'>
                 <Text fontSize='14px' pb='3'>
                     Active Validators
                 </Text>

@@ -30,7 +30,7 @@ export default function Staking({ address }) {
         <TabsTrigger value={3}>Unbondings ({unbondings.count})</TabsTrigger>
       </TabsList>
       {delegations?.data ? (
-        <Box bg="#F6F7F8" p={6} borderRadius="md" boxShadow="sm" mb={8}>
+        <Box bg="#FAFBFC" p={6} borderRadius="md" boxShadow="sm" mb={8}>
           <TabsContent value={1}></TabsContent>
           <TabsContent value={2}></TabsContent>
           <TabsContent value={3}></TabsContent>

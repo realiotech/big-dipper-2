@@ -117,7 +117,7 @@ export function BlockList() {
   return (
     <Box
       borderRadius="20px"
-      bgColor="#F6F7F8"
+      bgColor="#FAFBFC"
       py="5"
       px="8"
       minH="85vh"
@@ -164,7 +164,7 @@ export function BlockList() {
               {!state.loading ? state.items.length === 0 ? (
                 <Center
                   borderRadius="20px"
-                  bgColor="#F6F7F8"
+                  bgColor="#FAFBFC"
                   py="5"
                   px="8"
                   minH="65vh"
