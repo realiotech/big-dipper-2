@@ -51,7 +51,7 @@ const ParamsInfo = () => {
   return (
     <Box bg="white" minHeight="100vh">
       <Grid templateColumns={{ base: "repeat(1, 1fr)", md: "repeat(2, 1fr)" }} gap={6}>
-        <GridItem bg="#f9f9f9" p={6} borderRadius="md" boxShadow="sm">
+        <GridItem bg="#FAFBFC" p={6} borderRadius="md" boxShadow="sm">
           <Text fontSize="lg" fontWeight="bold" mb={4}>
             {staking?.title}
           </Text>
@@ -62,7 +62,7 @@ const ParamsInfo = () => {
             }
           </Stack>
         </GridItem>
-        <GridItem bg="#f9f9f9" p={6} borderRadius="md" boxShadow="sm">
+        <GridItem bg="#FAFBFC" p={6} borderRadius="md" boxShadow="sm">
           <Text fontSize="lg" fontWeight="bold" mb={4}>
             {slashing?.title}
           </Text>
@@ -73,7 +73,7 @@ const ParamsInfo = () => {
             }
           </Stack>
         </GridItem>
-        <GridItem bg="#f9f9f9" p={6} borderRadius="md" boxShadow="sm">
+        <GridItem bg="#FAFBFC" p={6} borderRadius="md" boxShadow="sm">
           <Text fontSize="lg" fontWeight="bold" mb={4}>
             {minting?.title}
           </Text>
@@ -84,7 +84,7 @@ const ParamsInfo = () => {
             }
           </Stack>
         </GridItem>
-        <GridItem bg="#f9f9f9" p={6} borderRadius="md" boxShadow="sm">
+        <GridItem bg="#FAFBFC" p={6} borderRadius="md" boxShadow="sm">
           <Text fontSize="lg" fontWeight="bold" mb={4}>
             {distribution?.title}
           </Text>
@@ -96,7 +96,7 @@ const ParamsInfo = () => {
           </Stack>
         </GridItem>
         <GridItem
-          bg="#f9f9f9"
+          bg="#FAFBFC"
           p={6}
           borderRadius="md"
           boxShadow="sm"

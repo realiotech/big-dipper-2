@@ -26,25 +26,25 @@ export default function BlockDetails() {
 
     return (
         <Box minHeight="100vh">
-            <Box bg="#F6F7F8" w={'full'} p={6} borderRadius="md" boxShadow="sm" mb={8}>
+            <Box bg="#FAFBFC" w={'full'} p={6} borderRadius="md" boxShadow="sm" mb={8}>
                 <Text fontSize="lg" fontWeight="bold" mb={4}>
                     Overview
                 </Text>
                 <Table.Root>
                     <Table.Body >
-                        <Table.Row bg="#f9f9f9">
+                        <Table.Row bg="#FAFBFC">
                             <Table.Cell px={0}  fontWeight="semibold" width="30%">
                                 Height
                             </Table.Cell>
                             <Table.Cell textAlign="end" >{numeral(overview.height).format('0,0')}</Table.Cell>
                         </Table.Row>
-                        <Table.Row bg="#f9f9f9">
+                        <Table.Row bg="#FAFBFC">
                             <Table.Cell px={0}  fontWeight="semibold">Hash</Table.Cell>
                             <Table.Cell textAlign="end">
                                 {isMobile ? getMiddleEllipsis(overview.hash, { beginning: 6, ending: 5 }) : overview.hash}
                             </Table.Cell>
                         </Table.Row>
-                        <Table.Row bg="#f9f9f9">
+                        <Table.Row bg="#FAFBFC">
                             <Table.Cell px={0}  fontWeight="semibold">Proposer</Table.Cell>
                             <Table.Cell>
                                 <Flex justify='end' w='full'>
@@ -52,18 +52,18 @@ export default function BlockDetails() {
                                 </Flex>
                             </Table.Cell>
                         </Table.Row>
-                        <Table.Row bg="#f9f9f9">
+                        <Table.Row bg="#FAFBFC">
                             <Table.Cell px={0}  fontWeight="semibold">Time</Table.Cell>
                             <Table.Cell textAlign="end" >{formatDayJs(dayjs.utc(overview.timestamp), 'locale')}</Table.Cell>
                         </Table.Row>
-                        <Table.Row bg="#f9f9f9">
+                        <Table.Row bg="#FAFBFC">
                             <Table.Cell px={0}  fontWeight="semibold">Txs</Table.Cell>
                             <Table.Cell textAlign="end">{overview.txs}</Table.Cell>
                         </Table.Row>
                     </Table.Body>
                 </Table.Root>
             </Box>
-            <Box bg="#F6F7F8" p={6} borderRadius="md" boxShadow="sm" mb={8}>
+            <Box bg="#FAFBFC" p={6} borderRadius="md" boxShadow="sm" mb={8}>
                 <Text fontSize="lg" fontWeight="bold" mb={4}>
                     Validators
                 </Text>
@@ -81,7 +81,7 @@ export default function BlockDetails() {
                     <NoData />
                 }
             </Box>
-            <Box bg="#F6F7F8" p={6} borderRadius="md" boxShadow="sm">
+            <Box bg="#FAFBFC" p={6} borderRadius="md" boxShadow="sm">
                 <Text fontSize="lg" fontWeight="bold" mb={4}>
                     Transactions
                 </Text>

@@ -65,7 +65,7 @@ export default function ProposalDetail() {
             </Flex>
 
             {/* Proposal Details */}
-            <Box bg="#f9f9f9" py={6} px={3} borderRadius="md" boxShadow="sm" mb={8}>
+            <Box bg="#FAFBFC" py={6} px={3} borderRadius="md" boxShadow="sm" mb={8}>
                 <VStack align="stretch" w='full'>
                     <Stack direction={{base: 'column', md:'row'}}>
                         <Text fontWeight="bold" w="150px">

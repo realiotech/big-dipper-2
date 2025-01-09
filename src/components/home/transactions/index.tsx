@@ -63,13 +63,13 @@ const Transactions = () => {
   
   if (!state?.items?.length)
     return (
-      <GridItem borderRadius="20px" bgColor="#F6F7F8" py="5" px="8" colSpan={2}>
+      <GridItem borderRadius="20px" bgColor="#FAFBFC" py="5" px="8" colSpan={2}>
         <Loading />
       </GridItem>
     );
 
   return (
-    <GridItem borderRadius="20px" bgColor="#F6F7F8" py="5" px="8" colSpan={2}>
+    <GridItem borderRadius="20px" bgColor="#FAFBFC" py="5" px="8" colSpan={2}>
       <Flex w="full" justifyContent={"space-between"} pb="4">
         <Text fontSize="24px" fontWeight={400}>
           Latest Transactions

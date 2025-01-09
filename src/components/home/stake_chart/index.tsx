@@ -60,7 +60,7 @@ export default function StakingChart() {
   };
 
   return (
-    <GridItem borderRadius="20px" bgColor="#F6F7F8" py="5" px="8" colSpan={2}>
+    <GridItem borderRadius="20px" bgColor="#FAFBFC" py="5" px="8" colSpan={2}>
       <Flex h={"full"} direction={{ base: "column", md: "row" }}>
         <Box w={{ base: "full", md: "70%" }}>
           <Text fontSize="24px" fontWeight="bold" pb="6">

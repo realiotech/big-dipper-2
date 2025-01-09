@@ -42,14 +42,14 @@ const FeaturedBlockchains = () => {
 
   return (
     <GridItem colSpan={2} h={'full'}>
-      <Box bg="#f9f9f9" p={6} borderRadius="20px" h={'full'}>
+      <Box bg="#FAFBFC" p={6} borderRadius="20px" h={'full'}>
         <Text fontSize="lg" fontWeight="bold" mb={4}>
           Featured Blockchains
         </Text>
         <Table.ScrollArea border={'none'}  rounded="lg" >
         <Table.Root bg="white" borderRadius="md" >
           <Table.Header>
-            <Table.Row bg="#f9f9f9">
+            <Table.Row bg="#FAFBFC">
               <TableColumnHeader>Token</TableColumnHeader>
               <TableColumnHeader>Price</TableColumnHeader>
               <TableColumnHeader textAlign={'right'}>Total Supply</TableColumnHeader>

@@ -14,7 +14,7 @@ export default function VotingPower({ data, status }) {
       : numeral(0);
   return (
     <Box
-      bg="#F6F7F8"
+      bg="#FAFBFC"
       p={6}
       borderRadius="md"
       boxShadow="sm"

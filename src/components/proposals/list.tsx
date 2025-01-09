@@ -110,7 +110,7 @@ const ProposalList = () => {
   const { state } = useProposals();
   return (
     <Box
-      bg="#f9f9f9"
+      bg="#FAFBFC"
       py={5}
       px={8}
       overflowY="hidden"

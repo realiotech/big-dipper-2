@@ -61,7 +61,7 @@ export default function Dashboard() {
         {/* Portfolio Balance */}
         <Flex flex={1} gap={6} flexDirection="column">
           <Box
-            bg="#f9f9f9"
+            bg="#FAFBFC"
             p={6}
             borderRadius="md"
             boxShadow="sm"
@@ -91,7 +91,7 @@ export default function Dashboard() {
             </Flex>
           </Box>
           <Box
-            bg="#f9f9f9"
+            bg="#FAFBFC"
             p={6}
             borderRadius="md"
             boxShadow="sm"
@@ -144,7 +144,7 @@ export default function Dashboard() {
 
         {/* Donut Chart */}
         <Box
-          bg="#f9f9f9"
+          bg="#FAFBFC"
           p={6}
           borderRadius="md"
           boxShadow="sm"

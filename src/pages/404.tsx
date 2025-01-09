@@ -4,7 +4,7 @@ const Custom404 = () => {
     return (
         <Center
             borderRadius="20px"
-            bgColor="#F6F7F8"
+            bgColor="#FAFBFC"
             py="5"
             px="8"
             h="60vh"
