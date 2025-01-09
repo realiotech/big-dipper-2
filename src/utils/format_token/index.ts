@@ -56,7 +56,7 @@ export const formatTokenByExponent = (value: number | string | undefined, expone
   }
 
   const ratio = Big(10 ** exponent);
-  const results = !ratio.eq(0) ? Big(value).div(ratio).toFixed(exponent) : '';
+  const results = !ratio.eq(0) ? Big(value).div(ratio).toFixed(exponent) : '0';
   return results;
 };
 
