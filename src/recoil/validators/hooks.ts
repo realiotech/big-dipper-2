@@ -5,6 +5,7 @@ import { useValidatorAddressesQuery } from '@/graphql/types/general_types';
 import { atomFamilyState as profileAtomFamilyState } from '@/recoil/profiles/atom';
 import type { AtomState as ProfileAtomState } from '@/recoil/profiles/types';
 import { atomFamilyState as validatorAtomState } from '@/recoil/validators/atom';
+import { formatValAddress } from '@/utils/format_address';
 
 export const useValidatorRecoil = () => {
   const { loading: loadingValidator, data } = useValidatorAddressesQuery();
@@ -23,7 +24,7 @@ export const useValidatorRecoil = () => {
     );
     map.forEach((x, consensusAddress) => {
       setValidatorAtomState(consensusAddress, {
-        delegator: x.validatorInfo?.selfDelegateAddress ?? '',
+        delegator: formatValAddress(x.validatorInfo?.operatorAddress) ?? '',
         validator: x.validatorInfo?.consensusAddress ?? '',
       });
     });
@@ -46,7 +47,7 @@ export const useValidatorRecoil = () => {
     data?.validator?.forEach((validator) => {
       if (!validator.validatorInfo?.selfDelegateAddress) return;
 
-      setProfileAtomFamilyState(validator.validatorInfo?.selfDelegateAddress, {
+      setProfileAtomFamilyState(formatValAddress(validator.validatorInfo?.operatorAddress), {
         moniker: validator.validatorDescriptions?.[0]?.moniker || '',
         imageUrl: validator.validatorDescriptions?.[0]?.avatarUrl || '',
       });

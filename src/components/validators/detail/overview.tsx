@@ -13,6 +13,7 @@ import useTranslation from "next-translate/useTranslation";
 import HelpLink from "@/components/helper/help_link";
 import numeral from "numeral";
 import NextLink from "next/link";
+import { formatValAddress } from "@/utils/format_address";
 
 function shortenText(text, maxLength = 40) {
   return text?.length > maxLength ? `${text.slice(0, maxLength)}...` : text;
@@ -21,7 +22,7 @@ function shortenText(text, maxLength = 40) {
 export default function Overview({ state }) {
   const { t } = useTranslation("validators");
   const { overview, status } = state;
-  const { imageUrl, name, address } = useProfileRecoil(overview.selfDelegateAddress);
+  const { imageUrl, name, address } = useProfileRecoil(overview.validator);
   const statusTheme = getValidatorStatus(
     status.status,
     status.jailed,
@@ -75,8 +76,8 @@ export default function Overview({ state }) {
               value={overview.operatorAddress}
             />
             <HelpLink
-              href={ADDRESS_DETAILS(overview.selfDelegateAddress)}
-              value={overview.selfDelegateAddress}
+              href={ADDRESS_DETAILS(formatValAddress(overview?.operatorAddress))}
+              value={formatValAddress(overview?.operatorAddress)}
             />
 
             <Link asChild colorPalette={"blue"}>
