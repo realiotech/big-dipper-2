@@ -1,5 +1,5 @@
-import React from "react";
-import { Box, Center, Flex, GridItem, HStack, Text } from "@chakra-ui/react";
+import React, { useEffect, useState } from "react";
+import { Box, Center, Flex, For, GridItem, HStack, Text } from "@chakra-ui/react";
 import { Bar } from "react-chartjs-2";
 import {
   Chart as ChartJS,
@@ -11,6 +11,12 @@ import {
   Tooltip,
   Legend,
 } from "chart.js";
+import type { ChartData } from "chart.js";
+import { useRecoilValue } from "recoil";
+import { readAssets } from "@/recoil/asset";
+import { useHero } from "./hooks";
+import { formatStakingData } from "./utils";
+import numeral from "numeral";
 
 // Register ChartJS Components
 ChartJS.register(
@@ -24,23 +30,32 @@ ChartJS.register(
 );
 
 export default function StakingChart() {
-  const stakingData = {
-    labels: ["RIO", "RST", "LMX"],
+  const { state } = useHero()
+  const { assetArr } = useRecoilValue(readAssets)
+  const [stakingData, setStakingData] = useState({
+    labels: [],
     datasets: [
       {
         label: "Staked",
-        data: [1000000, 800000, 600000],
+        data: [],
         backgroundColor: "#38A169",
         borderRadius: 4,
       },
       {
         label: "Unbonding",
-        data: [50000, 40000, 30000],
+        data: [],
         backgroundColor: "#6C63FF",
         borderRadius: 4,
       },
     ],
-  };
+})
+
+  useEffect(() => {
+    if (!state.loading && assetArr.length > 0) {
+      setStakingData(formatStakingData(state.bonded, state.unbonding, assetArr))
+    }
+  }, [assetArr, state.loading])
+
 
   const stakingOptions = {
     plugins: {
@@ -50,17 +65,17 @@ export default function StakingChart() {
     scales: {
       x: {
         grid: { display: false },
-        ticks: { color: "balck" },
+        ticks: { color: "black" },
       },
       y: {
         grid: { display: false },
-        ticks: { color: "balck" },
+        ticks: { color: "black" },
       },
     },
   };
 
   return (
-    <GridItem borderRadius="20px" bgColor="#F6F7F8" py="5" px="8" colSpan={2}>
+    <GridItem borderRadius="20px" bgColor="#FAFBFC" py="5" px="8" colSpan={2}>
       <Flex h={"full"} direction={{ base: "column", md: "row" }}>
         <Box w={{ base: "full", md: "70%" }}>
           <Text fontSize="24px" fontWeight="bold" pb="6">
@@ -89,18 +104,14 @@ export default function StakingChart() {
                     </Center>
                   </Flex>
                 </Text>
-                <HStack>
-                  <Text>Rio:</Text>
-                  <Text>Value</Text>
-                </HStack>
-                <HStack>
-                  <Text>Rst:</Text>
-                  <Text>Value</Text>
-                </HStack>
-                <HStack>
-                  <Text>Lmx:</Text>
-                  <Text>Value</Text>
-                </HStack>
+                <For each={assetArr}>
+                  {(item) => 
+                    <HStack>
+                      <Text>{item.symbol}:</Text>
+                      <Text>{numeral(stakingData?.datasets[0].data[item.idx]).format("0,0")}</Text>
+                    </HStack>
+                  }
+                </For>
               </Box>
               <Box>
                 <Text fontSize="md" fontWeight="bold" w={"full"}>
@@ -115,18 +126,14 @@ export default function StakingChart() {
                     </Center>
                   </Flex>
                 </Text>
-                <HStack>
-                  <Text>Rio:</Text>
-                  <Text>Value</Text>
-                </HStack>
-                <HStack>
-                  <Text>Rst:</Text>
-                  <Text>Value</Text>
-                </HStack>
-                <HStack>
-                  <Text>Lmx:</Text>
-                  <Text>Value</Text>
-                </HStack>
+                <For each={assetArr}>
+                  {(item) =>
+                    <HStack>
+                      <Text>{item.symbol}:</Text>
+                      <Text>{numeral(stakingData?.datasets[1].data[item.idx]).format("0,0")}</Text>
+                    </HStack>
+                  }
+                </For>
               </Box>
             </Flex>
           </Center>

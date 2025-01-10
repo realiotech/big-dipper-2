@@ -235,18 +235,18 @@ const AssetPage = () => {
       >
         <Text>Other Info</Text>
 
-        <Flex direction={"column"} gap={5}>
+        <Flex direction={"column"} gap={2}>
           <Text fontSize="md" color="gray.500">
             Token Contract
           </Text>
 
-          <Flex align={"center"}>
+          <Flex  gap={2} align={"center"}>
             <Text fontSize="md" color="blue.500">
               realio13zz4mgwmppzlnve09zshqlf4r2x4uqtwf6ckzk
             </Text>
             <IoCopyOutline />
           </Flex>
-          <Flex align={"center"}>
+          <Flex  gap={2} align={"center"}>
             <Text fontSize="md" color="blue.500">
               realio13zz4mgwmppzlnve09zshqlf4r2x4uqtwf6ckzk
             </Text>

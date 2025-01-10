@@ -127,7 +127,7 @@ const SkeletonItem = () => {
       <Table.Cell textAlign={"left"} pl={6}>
         <Skeleton h={"20px"} w="full" mb="4" />
       </Table.Cell>
-      <Table.Cell textAlign="left">
+      <Table.Cell width={'10%'} textAlign="left">
         <Skeleton h={"20px"} w="full" mb="4" />
       </Table.Cell>
     </Table.Row>
@@ -267,7 +267,7 @@ const ValidatorList = () => {
           <SearchValidator callback={handleSearch} />
         </Center>
       </Flex>
-      <Box bg="#f9f9f9" py={"5"} px={"8"} h={"100vh"} rounded={"2xl"}>
+      <Box bg="#FAFBFC" py={"5"} px={"8"} h={"100vh"} rounded={"2xl"}>
         {isMobile ? (
           <VStack
             bg={"white"}
@@ -285,7 +285,7 @@ const ValidatorList = () => {
           <Table.ScrollArea maxH={"100vh"} h={"95vh"} rounded="lg">
             <Table.Root borderRadius="3xl" stickyHeader>
               <Table.Header>
-                <Table.Row bg="#f9f9f9">
+                <Table.Row bg="#FAFBFC">
                   {columns.map((item, index) => (
                     <ColumnHeader
                       key={`column-${index}`}

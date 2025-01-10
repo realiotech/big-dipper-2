@@ -4456,9 +4456,9 @@ export type MessageValueArgs = {
   path?: InputMaybe<Scalars['String']>;
 };
 
-/** columns and relationships of "message_46" */
-export type Message_46 = {
-  __typename?: 'message_46';
+/** columns and relationships of "message_105" */
+export type Message_105 = {
+  __typename?: 'message_105';
   height: Scalars['bigint'];
   index: Scalars['bigint'];
   involved_accounts_addresses: Array<Scalars['String']>;
@@ -4469,54 +4469,54 @@ export type Message_46 = {
 };
 
 
-/** columns and relationships of "message_46" */
-export type Message_46ValueArgs = {
+/** columns and relationships of "message_105" */
+export type Message_105ValueArgs = {
   path?: InputMaybe<Scalars['String']>;
 };
 
-/** aggregated selection of "message_46" */
-export type Message_46_Aggregate = {
-  __typename?: 'message_46_aggregate';
-  aggregate?: Maybe<Message_46_Aggregate_Fields>;
-  nodes: Array<Message_46>;
+/** aggregated selection of "message_105" */
+export type Message_105_Aggregate = {
+  __typename?: 'message_105_aggregate';
+  aggregate?: Maybe<Message_105_Aggregate_Fields>;
+  nodes: Array<Message_105>;
 };
 
-/** aggregate fields of "message_46" */
-export type Message_46_Aggregate_Fields = {
-  __typename?: 'message_46_aggregate_fields';
-  avg?: Maybe<Message_46_Avg_Fields>;
+/** aggregate fields of "message_105" */
+export type Message_105_Aggregate_Fields = {
+  __typename?: 'message_105_aggregate_fields';
+  avg?: Maybe<Message_105_Avg_Fields>;
   count: Scalars['Int'];
-  max?: Maybe<Message_46_Max_Fields>;
-  min?: Maybe<Message_46_Min_Fields>;
-  stddev?: Maybe<Message_46_Stddev_Fields>;
-  stddev_pop?: Maybe<Message_46_Stddev_Pop_Fields>;
-  stddev_samp?: Maybe<Message_46_Stddev_Samp_Fields>;
-  sum?: Maybe<Message_46_Sum_Fields>;
-  var_pop?: Maybe<Message_46_Var_Pop_Fields>;
-  var_samp?: Maybe<Message_46_Var_Samp_Fields>;
-  variance?: Maybe<Message_46_Variance_Fields>;
+  max?: Maybe<Message_105_Max_Fields>;
+  min?: Maybe<Message_105_Min_Fields>;
+  stddev?: Maybe<Message_105_Stddev_Fields>;
+  stddev_pop?: Maybe<Message_105_Stddev_Pop_Fields>;
+  stddev_samp?: Maybe<Message_105_Stddev_Samp_Fields>;
+  sum?: Maybe<Message_105_Sum_Fields>;
+  var_pop?: Maybe<Message_105_Var_Pop_Fields>;
+  var_samp?: Maybe<Message_105_Var_Samp_Fields>;
+  variance?: Maybe<Message_105_Variance_Fields>;
 };
 
 
-/** aggregate fields of "message_46" */
-export type Message_46_Aggregate_FieldsCountArgs = {
-  columns?: InputMaybe<Array<Message_46_Select_Column>>;
+/** aggregate fields of "message_105" */
+export type Message_105_Aggregate_FieldsCountArgs = {
+  columns?: InputMaybe<Array<Message_105_Select_Column>>;
   distinct?: InputMaybe<Scalars['Boolean']>;
 };
 
 /** aggregate avg on columns */
-export type Message_46_Avg_Fields = {
-  __typename?: 'message_46_avg_fields';
+export type Message_105_Avg_Fields = {
+  __typename?: 'message_105_avg_fields';
   height?: Maybe<Scalars['Float']>;
   index?: Maybe<Scalars['Float']>;
   partition_id?: Maybe<Scalars['Float']>;
 };
 
-/** Boolean expression to filter rows from the table "message_46". All fields are combined with a logical 'AND'. */
-export type Message_46_Bool_Exp = {
-  _and?: InputMaybe<Array<Message_46_Bool_Exp>>;
-  _not?: InputMaybe<Message_46_Bool_Exp>;
-  _or?: InputMaybe<Array<Message_46_Bool_Exp>>;
+/** Boolean expression to filter rows from the table "message_105". All fields are combined with a logical 'AND'. */
+export type Message_105_Bool_Exp = {
+  _and?: InputMaybe<Array<Message_105_Bool_Exp>>;
+  _not?: InputMaybe<Message_105_Bool_Exp>;
+  _or?: InputMaybe<Array<Message_105_Bool_Exp>>;
   height?: InputMaybe<Bigint_Comparison_Exp>;
   index?: InputMaybe<Bigint_Comparison_Exp>;
   involved_accounts_addresses?: InputMaybe<String_Array_Comparison_Exp>;
@@ -4526,21 +4526,21 @@ export type Message_46_Bool_Exp = {
   value?: InputMaybe<Json_Comparison_Exp>;
 };
 
-/** unique or primary key constraints on table "message_46" */
-export enum Message_46_Constraint {
+/** unique or primary key constraints on table "message_105" */
+export enum Message_105_Constraint {
   /** unique or primary key constraint on columns "index", "partition_id", "transaction_hash" */
-  Message_46TransactionHashIndexPartitionIdKey = 'message_46_transaction_hash_index_partition_id_key'
+  Message_105TransactionHashIndexPartitionIdKey = 'message_105_transaction_hash_index_partition_id_key'
 }
 
-/** input type for incrementing numeric columns in table "message_46" */
-export type Message_46_Inc_Input = {
+/** input type for incrementing numeric columns in table "message_105" */
+export type Message_105_Inc_Input = {
   height?: InputMaybe<Scalars['bigint']>;
   index?: InputMaybe<Scalars['bigint']>;
   partition_id?: InputMaybe<Scalars['bigint']>;
 };
 
-/** input type for inserting data into table "message_46" */
-export type Message_46_Insert_Input = {
+/** input type for inserting data into table "message_105" */
+export type Message_105_Insert_Input = {
   height?: InputMaybe<Scalars['bigint']>;
   index?: InputMaybe<Scalars['bigint']>;
   involved_accounts_addresses?: InputMaybe<Array<Scalars['String']>>;
@@ -4551,8 +4551,8 @@ export type Message_46_Insert_Input = {
 };
 
 /** aggregate max on columns */
-export type Message_46_Max_Fields = {
-  __typename?: 'message_46_max_fields';
+export type Message_105_Max_Fields = {
+  __typename?: 'message_105_max_fields';
   height?: Maybe<Scalars['bigint']>;
   index?: Maybe<Scalars['bigint']>;
   involved_accounts_addresses?: Maybe<Array<Scalars['String']>>;
@@ -4562,8 +4562,8 @@ export type Message_46_Max_Fields = {
 };
 
 /** aggregate min on columns */
-export type Message_46_Min_Fields = {
-  __typename?: 'message_46_min_fields';
+export type Message_105_Min_Fields = {
+  __typename?: 'message_105_min_fields';
   height?: Maybe<Scalars['bigint']>;
   index?: Maybe<Scalars['bigint']>;
   involved_accounts_addresses?: Maybe<Array<Scalars['String']>>;
@@ -4572,24 +4572,24 @@ export type Message_46_Min_Fields = {
   type?: Maybe<Scalars['String']>;
 };
 
-/** response of any mutation on the table "message_46" */
-export type Message_46_Mutation_Response = {
-  __typename?: 'message_46_mutation_response';
+/** response of any mutation on the table "message_105" */
+export type Message_105_Mutation_Response = {
+  __typename?: 'message_105_mutation_response';
   /** number of rows affected by the mutation */
   affected_rows: Scalars['Int'];
   /** data from the rows affected by the mutation */
-  returning: Array<Message_46>;
+  returning: Array<Message_105>;
 };
 
-/** on_conflict condition type for table "message_46" */
-export type Message_46_On_Conflict = {
-  constraint: Message_46_Constraint;
-  update_columns?: Array<Message_46_Update_Column>;
-  where?: InputMaybe<Message_46_Bool_Exp>;
+/** on_conflict condition type for table "message_105" */
+export type Message_105_On_Conflict = {
+  constraint: Message_105_Constraint;
+  update_columns?: Array<Message_105_Update_Column>;
+  where?: InputMaybe<Message_105_Bool_Exp>;
 };
 
-/** Ordering options when selecting data from "message_46". */
-export type Message_46_Order_By = {
+/** Ordering options when selecting data from "message_105". */
+export type Message_105_Order_By = {
   height?: InputMaybe<Order_By>;
   index?: InputMaybe<Order_By>;
   involved_accounts_addresses?: InputMaybe<Order_By>;
@@ -4599,8 +4599,8 @@ export type Message_46_Order_By = {
   value?: InputMaybe<Order_By>;
 };
 
-/** select columns of table "message_46" */
-export enum Message_46_Select_Column {
+/** select columns of table "message_105" */
+export enum Message_105_Select_Column {
   /** column name */
   Height = 'height',
   /** column name */
@@ -4617,8 +4617,8 @@ export enum Message_46_Select_Column {
   Value = 'value'
 }
 
-/** input type for updating data in table "message_46" */
-export type Message_46_Set_Input = {
+/** input type for updating data in table "message_105" */
+export type Message_105_Set_Input = {
   height?: InputMaybe<Scalars['bigint']>;
   index?: InputMaybe<Scalars['bigint']>;
   involved_accounts_addresses?: InputMaybe<Array<Scalars['String']>>;
@@ -4629,39 +4629,39 @@ export type Message_46_Set_Input = {
 };
 
 /** aggregate stddev on columns */
-export type Message_46_Stddev_Fields = {
-  __typename?: 'message_46_stddev_fields';
+export type Message_105_Stddev_Fields = {
+  __typename?: 'message_105_stddev_fields';
   height?: Maybe<Scalars['Float']>;
   index?: Maybe<Scalars['Float']>;
   partition_id?: Maybe<Scalars['Float']>;
 };
 
 /** aggregate stddev_pop on columns */
-export type Message_46_Stddev_Pop_Fields = {
-  __typename?: 'message_46_stddev_pop_fields';
+export type Message_105_Stddev_Pop_Fields = {
+  __typename?: 'message_105_stddev_pop_fields';
   height?: Maybe<Scalars['Float']>;
   index?: Maybe<Scalars['Float']>;
   partition_id?: Maybe<Scalars['Float']>;
 };
 
 /** aggregate stddev_samp on columns */
-export type Message_46_Stddev_Samp_Fields = {
-  __typename?: 'message_46_stddev_samp_fields';
+export type Message_105_Stddev_Samp_Fields = {
+  __typename?: 'message_105_stddev_samp_fields';
   height?: Maybe<Scalars['Float']>;
   index?: Maybe<Scalars['Float']>;
   partition_id?: Maybe<Scalars['Float']>;
 };
 
-/** Streaming cursor of the table "message_46" */
-export type Message_46_Stream_Cursor_Input = {
+/** Streaming cursor of the table "message_105" */
+export type Message_105_Stream_Cursor_Input = {
   /** Stream column input with initial value */
-  initial_value: Message_46_Stream_Cursor_Value_Input;
+  initial_value: Message_105_Stream_Cursor_Value_Input;
   /** cursor ordering */
   ordering?: InputMaybe<Cursor_Ordering>;
 };
 
 /** Initial value of the column from where the streaming should start */
-export type Message_46_Stream_Cursor_Value_Input = {
+export type Message_105_Stream_Cursor_Value_Input = {
   height?: InputMaybe<Scalars['bigint']>;
   index?: InputMaybe<Scalars['bigint']>;
   involved_accounts_addresses?: InputMaybe<Array<Scalars['String']>>;
@@ -4672,15 +4672,15 @@ export type Message_46_Stream_Cursor_Value_Input = {
 };
 
 /** aggregate sum on columns */
-export type Message_46_Sum_Fields = {
-  __typename?: 'message_46_sum_fields';
+export type Message_105_Sum_Fields = {
+  __typename?: 'message_105_sum_fields';
   height?: Maybe<Scalars['bigint']>;
   index?: Maybe<Scalars['bigint']>;
   partition_id?: Maybe<Scalars['bigint']>;
 };
 
-/** update columns of table "message_46" */
-export enum Message_46_Update_Column {
+/** update columns of table "message_105" */
+export enum Message_105_Update_Column {
   /** column name */
   Height = 'height',
   /** column name */
@@ -4697,1404 +4697,34 @@ export enum Message_46_Update_Column {
   Value = 'value'
 }
 
-export type Message_46_Updates = {
+export type Message_105_Updates = {
   /** increments the numeric columns with given value of the filtered values */
-  _inc?: InputMaybe<Message_46_Inc_Input>;
+  _inc?: InputMaybe<Message_105_Inc_Input>;
   /** sets the columns of the filtered rows to the given values */
-  _set?: InputMaybe<Message_46_Set_Input>;
+  _set?: InputMaybe<Message_105_Set_Input>;
   /** filter the rows which have to be updated */
-  where: Message_46_Bool_Exp;
+  where: Message_105_Bool_Exp;
 };
 
 /** aggregate var_pop on columns */
-export type Message_46_Var_Pop_Fields = {
-  __typename?: 'message_46_var_pop_fields';
+export type Message_105_Var_Pop_Fields = {
+  __typename?: 'message_105_var_pop_fields';
   height?: Maybe<Scalars['Float']>;
   index?: Maybe<Scalars['Float']>;
   partition_id?: Maybe<Scalars['Float']>;
 };
 
 /** aggregate var_samp on columns */
-export type Message_46_Var_Samp_Fields = {
-  __typename?: 'message_46_var_samp_fields';
+export type Message_105_Var_Samp_Fields = {
+  __typename?: 'message_105_var_samp_fields';
   height?: Maybe<Scalars['Float']>;
   index?: Maybe<Scalars['Float']>;
   partition_id?: Maybe<Scalars['Float']>;
 };
 
 /** aggregate variance on columns */
-export type Message_46_Variance_Fields = {
-  __typename?: 'message_46_variance_fields';
-  height?: Maybe<Scalars['Float']>;
-  index?: Maybe<Scalars['Float']>;
-  partition_id?: Maybe<Scalars['Float']>;
-};
-
-/** columns and relationships of "message_47" */
-export type Message_47 = {
-  __typename?: 'message_47';
-  height: Scalars['bigint'];
-  index: Scalars['bigint'];
-  involved_accounts_addresses: Array<Scalars['String']>;
-  partition_id: Scalars['bigint'];
-  transaction_hash: Scalars['String'];
-  type: Scalars['String'];
-  value: Scalars['json'];
-};
-
-
-/** columns and relationships of "message_47" */
-export type Message_47ValueArgs = {
-  path?: InputMaybe<Scalars['String']>;
-};
-
-/** aggregated selection of "message_47" */
-export type Message_47_Aggregate = {
-  __typename?: 'message_47_aggregate';
-  aggregate?: Maybe<Message_47_Aggregate_Fields>;
-  nodes: Array<Message_47>;
-};
-
-/** aggregate fields of "message_47" */
-export type Message_47_Aggregate_Fields = {
-  __typename?: 'message_47_aggregate_fields';
-  avg?: Maybe<Message_47_Avg_Fields>;
-  count: Scalars['Int'];
-  max?: Maybe<Message_47_Max_Fields>;
-  min?: Maybe<Message_47_Min_Fields>;
-  stddev?: Maybe<Message_47_Stddev_Fields>;
-  stddev_pop?: Maybe<Message_47_Stddev_Pop_Fields>;
-  stddev_samp?: Maybe<Message_47_Stddev_Samp_Fields>;
-  sum?: Maybe<Message_47_Sum_Fields>;
-  var_pop?: Maybe<Message_47_Var_Pop_Fields>;
-  var_samp?: Maybe<Message_47_Var_Samp_Fields>;
-  variance?: Maybe<Message_47_Variance_Fields>;
-};
-
-
-/** aggregate fields of "message_47" */
-export type Message_47_Aggregate_FieldsCountArgs = {
-  columns?: InputMaybe<Array<Message_47_Select_Column>>;
-  distinct?: InputMaybe<Scalars['Boolean']>;
-};
-
-/** aggregate avg on columns */
-export type Message_47_Avg_Fields = {
-  __typename?: 'message_47_avg_fields';
-  height?: Maybe<Scalars['Float']>;
-  index?: Maybe<Scalars['Float']>;
-  partition_id?: Maybe<Scalars['Float']>;
-};
-
-/** Boolean expression to filter rows from the table "message_47". All fields are combined with a logical 'AND'. */
-export type Message_47_Bool_Exp = {
-  _and?: InputMaybe<Array<Message_47_Bool_Exp>>;
-  _not?: InputMaybe<Message_47_Bool_Exp>;
-  _or?: InputMaybe<Array<Message_47_Bool_Exp>>;
-  height?: InputMaybe<Bigint_Comparison_Exp>;
-  index?: InputMaybe<Bigint_Comparison_Exp>;
-  involved_accounts_addresses?: InputMaybe<String_Array_Comparison_Exp>;
-  partition_id?: InputMaybe<Bigint_Comparison_Exp>;
-  transaction_hash?: InputMaybe<String_Comparison_Exp>;
-  type?: InputMaybe<String_Comparison_Exp>;
-  value?: InputMaybe<Json_Comparison_Exp>;
-};
-
-/** unique or primary key constraints on table "message_47" */
-export enum Message_47_Constraint {
-  /** unique or primary key constraint on columns "index", "partition_id", "transaction_hash" */
-  Message_47TransactionHashIndexPartitionIdKey = 'message_47_transaction_hash_index_partition_id_key'
-}
-
-/** input type for incrementing numeric columns in table "message_47" */
-export type Message_47_Inc_Input = {
-  height?: InputMaybe<Scalars['bigint']>;
-  index?: InputMaybe<Scalars['bigint']>;
-  partition_id?: InputMaybe<Scalars['bigint']>;
-};
-
-/** input type for inserting data into table "message_47" */
-export type Message_47_Insert_Input = {
-  height?: InputMaybe<Scalars['bigint']>;
-  index?: InputMaybe<Scalars['bigint']>;
-  involved_accounts_addresses?: InputMaybe<Array<Scalars['String']>>;
-  partition_id?: InputMaybe<Scalars['bigint']>;
-  transaction_hash?: InputMaybe<Scalars['String']>;
-  type?: InputMaybe<Scalars['String']>;
-  value?: InputMaybe<Scalars['json']>;
-};
-
-/** aggregate max on columns */
-export type Message_47_Max_Fields = {
-  __typename?: 'message_47_max_fields';
-  height?: Maybe<Scalars['bigint']>;
-  index?: Maybe<Scalars['bigint']>;
-  involved_accounts_addresses?: Maybe<Array<Scalars['String']>>;
-  partition_id?: Maybe<Scalars['bigint']>;
-  transaction_hash?: Maybe<Scalars['String']>;
-  type?: Maybe<Scalars['String']>;
-};
-
-/** aggregate min on columns */
-export type Message_47_Min_Fields = {
-  __typename?: 'message_47_min_fields';
-  height?: Maybe<Scalars['bigint']>;
-  index?: Maybe<Scalars['bigint']>;
-  involved_accounts_addresses?: Maybe<Array<Scalars['String']>>;
-  partition_id?: Maybe<Scalars['bigint']>;
-  transaction_hash?: Maybe<Scalars['String']>;
-  type?: Maybe<Scalars['String']>;
-};
-
-/** response of any mutation on the table "message_47" */
-export type Message_47_Mutation_Response = {
-  __typename?: 'message_47_mutation_response';
-  /** number of rows affected by the mutation */
-  affected_rows: Scalars['Int'];
-  /** data from the rows affected by the mutation */
-  returning: Array<Message_47>;
-};
-
-/** on_conflict condition type for table "message_47" */
-export type Message_47_On_Conflict = {
-  constraint: Message_47_Constraint;
-  update_columns?: Array<Message_47_Update_Column>;
-  where?: InputMaybe<Message_47_Bool_Exp>;
-};
-
-/** Ordering options when selecting data from "message_47". */
-export type Message_47_Order_By = {
-  height?: InputMaybe<Order_By>;
-  index?: InputMaybe<Order_By>;
-  involved_accounts_addresses?: InputMaybe<Order_By>;
-  partition_id?: InputMaybe<Order_By>;
-  transaction_hash?: InputMaybe<Order_By>;
-  type?: InputMaybe<Order_By>;
-  value?: InputMaybe<Order_By>;
-};
-
-/** select columns of table "message_47" */
-export enum Message_47_Select_Column {
-  /** column name */
-  Height = 'height',
-  /** column name */
-  Index = 'index',
-  /** column name */
-  InvolvedAccountsAddresses = 'involved_accounts_addresses',
-  /** column name */
-  PartitionId = 'partition_id',
-  /** column name */
-  TransactionHash = 'transaction_hash',
-  /** column name */
-  Type = 'type',
-  /** column name */
-  Value = 'value'
-}
-
-/** input type for updating data in table "message_47" */
-export type Message_47_Set_Input = {
-  height?: InputMaybe<Scalars['bigint']>;
-  index?: InputMaybe<Scalars['bigint']>;
-  involved_accounts_addresses?: InputMaybe<Array<Scalars['String']>>;
-  partition_id?: InputMaybe<Scalars['bigint']>;
-  transaction_hash?: InputMaybe<Scalars['String']>;
-  type?: InputMaybe<Scalars['String']>;
-  value?: InputMaybe<Scalars['json']>;
-};
-
-/** aggregate stddev on columns */
-export type Message_47_Stddev_Fields = {
-  __typename?: 'message_47_stddev_fields';
-  height?: Maybe<Scalars['Float']>;
-  index?: Maybe<Scalars['Float']>;
-  partition_id?: Maybe<Scalars['Float']>;
-};
-
-/** aggregate stddev_pop on columns */
-export type Message_47_Stddev_Pop_Fields = {
-  __typename?: 'message_47_stddev_pop_fields';
-  height?: Maybe<Scalars['Float']>;
-  index?: Maybe<Scalars['Float']>;
-  partition_id?: Maybe<Scalars['Float']>;
-};
-
-/** aggregate stddev_samp on columns */
-export type Message_47_Stddev_Samp_Fields = {
-  __typename?: 'message_47_stddev_samp_fields';
-  height?: Maybe<Scalars['Float']>;
-  index?: Maybe<Scalars['Float']>;
-  partition_id?: Maybe<Scalars['Float']>;
-};
-
-/** Streaming cursor of the table "message_47" */
-export type Message_47_Stream_Cursor_Input = {
-  /** Stream column input with initial value */
-  initial_value: Message_47_Stream_Cursor_Value_Input;
-  /** cursor ordering */
-  ordering?: InputMaybe<Cursor_Ordering>;
-};
-
-/** Initial value of the column from where the streaming should start */
-export type Message_47_Stream_Cursor_Value_Input = {
-  height?: InputMaybe<Scalars['bigint']>;
-  index?: InputMaybe<Scalars['bigint']>;
-  involved_accounts_addresses?: InputMaybe<Array<Scalars['String']>>;
-  partition_id?: InputMaybe<Scalars['bigint']>;
-  transaction_hash?: InputMaybe<Scalars['String']>;
-  type?: InputMaybe<Scalars['String']>;
-  value?: InputMaybe<Scalars['json']>;
-};
-
-/** aggregate sum on columns */
-export type Message_47_Sum_Fields = {
-  __typename?: 'message_47_sum_fields';
-  height?: Maybe<Scalars['bigint']>;
-  index?: Maybe<Scalars['bigint']>;
-  partition_id?: Maybe<Scalars['bigint']>;
-};
-
-/** update columns of table "message_47" */
-export enum Message_47_Update_Column {
-  /** column name */
-  Height = 'height',
-  /** column name */
-  Index = 'index',
-  /** column name */
-  InvolvedAccountsAddresses = 'involved_accounts_addresses',
-  /** column name */
-  PartitionId = 'partition_id',
-  /** column name */
-  TransactionHash = 'transaction_hash',
-  /** column name */
-  Type = 'type',
-  /** column name */
-  Value = 'value'
-}
-
-export type Message_47_Updates = {
-  /** increments the numeric columns with given value of the filtered values */
-  _inc?: InputMaybe<Message_47_Inc_Input>;
-  /** sets the columns of the filtered rows to the given values */
-  _set?: InputMaybe<Message_47_Set_Input>;
-  /** filter the rows which have to be updated */
-  where: Message_47_Bool_Exp;
-};
-
-/** aggregate var_pop on columns */
-export type Message_47_Var_Pop_Fields = {
-  __typename?: 'message_47_var_pop_fields';
-  height?: Maybe<Scalars['Float']>;
-  index?: Maybe<Scalars['Float']>;
-  partition_id?: Maybe<Scalars['Float']>;
-};
-
-/** aggregate var_samp on columns */
-export type Message_47_Var_Samp_Fields = {
-  __typename?: 'message_47_var_samp_fields';
-  height?: Maybe<Scalars['Float']>;
-  index?: Maybe<Scalars['Float']>;
-  partition_id?: Maybe<Scalars['Float']>;
-};
-
-/** aggregate variance on columns */
-export type Message_47_Variance_Fields = {
-  __typename?: 'message_47_variance_fields';
-  height?: Maybe<Scalars['Float']>;
-  index?: Maybe<Scalars['Float']>;
-  partition_id?: Maybe<Scalars['Float']>;
-};
-
-/** columns and relationships of "message_48" */
-export type Message_48 = {
-  __typename?: 'message_48';
-  height: Scalars['bigint'];
-  index: Scalars['bigint'];
-  involved_accounts_addresses: Array<Scalars['String']>;
-  partition_id: Scalars['bigint'];
-  transaction_hash: Scalars['String'];
-  type: Scalars['String'];
-  value: Scalars['json'];
-};
-
-
-/** columns and relationships of "message_48" */
-export type Message_48ValueArgs = {
-  path?: InputMaybe<Scalars['String']>;
-};
-
-/** aggregated selection of "message_48" */
-export type Message_48_Aggregate = {
-  __typename?: 'message_48_aggregate';
-  aggregate?: Maybe<Message_48_Aggregate_Fields>;
-  nodes: Array<Message_48>;
-};
-
-/** aggregate fields of "message_48" */
-export type Message_48_Aggregate_Fields = {
-  __typename?: 'message_48_aggregate_fields';
-  avg?: Maybe<Message_48_Avg_Fields>;
-  count: Scalars['Int'];
-  max?: Maybe<Message_48_Max_Fields>;
-  min?: Maybe<Message_48_Min_Fields>;
-  stddev?: Maybe<Message_48_Stddev_Fields>;
-  stddev_pop?: Maybe<Message_48_Stddev_Pop_Fields>;
-  stddev_samp?: Maybe<Message_48_Stddev_Samp_Fields>;
-  sum?: Maybe<Message_48_Sum_Fields>;
-  var_pop?: Maybe<Message_48_Var_Pop_Fields>;
-  var_samp?: Maybe<Message_48_Var_Samp_Fields>;
-  variance?: Maybe<Message_48_Variance_Fields>;
-};
-
-
-/** aggregate fields of "message_48" */
-export type Message_48_Aggregate_FieldsCountArgs = {
-  columns?: InputMaybe<Array<Message_48_Select_Column>>;
-  distinct?: InputMaybe<Scalars['Boolean']>;
-};
-
-/** aggregate avg on columns */
-export type Message_48_Avg_Fields = {
-  __typename?: 'message_48_avg_fields';
-  height?: Maybe<Scalars['Float']>;
-  index?: Maybe<Scalars['Float']>;
-  partition_id?: Maybe<Scalars['Float']>;
-};
-
-/** Boolean expression to filter rows from the table "message_48". All fields are combined with a logical 'AND'. */
-export type Message_48_Bool_Exp = {
-  _and?: InputMaybe<Array<Message_48_Bool_Exp>>;
-  _not?: InputMaybe<Message_48_Bool_Exp>;
-  _or?: InputMaybe<Array<Message_48_Bool_Exp>>;
-  height?: InputMaybe<Bigint_Comparison_Exp>;
-  index?: InputMaybe<Bigint_Comparison_Exp>;
-  involved_accounts_addresses?: InputMaybe<String_Array_Comparison_Exp>;
-  partition_id?: InputMaybe<Bigint_Comparison_Exp>;
-  transaction_hash?: InputMaybe<String_Comparison_Exp>;
-  type?: InputMaybe<String_Comparison_Exp>;
-  value?: InputMaybe<Json_Comparison_Exp>;
-};
-
-/** unique or primary key constraints on table "message_48" */
-export enum Message_48_Constraint {
-  /** unique or primary key constraint on columns "index", "partition_id", "transaction_hash" */
-  Message_48TransactionHashIndexPartitionIdKey = 'message_48_transaction_hash_index_partition_id_key'
-}
-
-/** input type for incrementing numeric columns in table "message_48" */
-export type Message_48_Inc_Input = {
-  height?: InputMaybe<Scalars['bigint']>;
-  index?: InputMaybe<Scalars['bigint']>;
-  partition_id?: InputMaybe<Scalars['bigint']>;
-};
-
-/** input type for inserting data into table "message_48" */
-export type Message_48_Insert_Input = {
-  height?: InputMaybe<Scalars['bigint']>;
-  index?: InputMaybe<Scalars['bigint']>;
-  involved_accounts_addresses?: InputMaybe<Array<Scalars['String']>>;
-  partition_id?: InputMaybe<Scalars['bigint']>;
-  transaction_hash?: InputMaybe<Scalars['String']>;
-  type?: InputMaybe<Scalars['String']>;
-  value?: InputMaybe<Scalars['json']>;
-};
-
-/** aggregate max on columns */
-export type Message_48_Max_Fields = {
-  __typename?: 'message_48_max_fields';
-  height?: Maybe<Scalars['bigint']>;
-  index?: Maybe<Scalars['bigint']>;
-  involved_accounts_addresses?: Maybe<Array<Scalars['String']>>;
-  partition_id?: Maybe<Scalars['bigint']>;
-  transaction_hash?: Maybe<Scalars['String']>;
-  type?: Maybe<Scalars['String']>;
-};
-
-/** aggregate min on columns */
-export type Message_48_Min_Fields = {
-  __typename?: 'message_48_min_fields';
-  height?: Maybe<Scalars['bigint']>;
-  index?: Maybe<Scalars['bigint']>;
-  involved_accounts_addresses?: Maybe<Array<Scalars['String']>>;
-  partition_id?: Maybe<Scalars['bigint']>;
-  transaction_hash?: Maybe<Scalars['String']>;
-  type?: Maybe<Scalars['String']>;
-};
-
-/** response of any mutation on the table "message_48" */
-export type Message_48_Mutation_Response = {
-  __typename?: 'message_48_mutation_response';
-  /** number of rows affected by the mutation */
-  affected_rows: Scalars['Int'];
-  /** data from the rows affected by the mutation */
-  returning: Array<Message_48>;
-};
-
-/** on_conflict condition type for table "message_48" */
-export type Message_48_On_Conflict = {
-  constraint: Message_48_Constraint;
-  update_columns?: Array<Message_48_Update_Column>;
-  where?: InputMaybe<Message_48_Bool_Exp>;
-};
-
-/** Ordering options when selecting data from "message_48". */
-export type Message_48_Order_By = {
-  height?: InputMaybe<Order_By>;
-  index?: InputMaybe<Order_By>;
-  involved_accounts_addresses?: InputMaybe<Order_By>;
-  partition_id?: InputMaybe<Order_By>;
-  transaction_hash?: InputMaybe<Order_By>;
-  type?: InputMaybe<Order_By>;
-  value?: InputMaybe<Order_By>;
-};
-
-/** select columns of table "message_48" */
-export enum Message_48_Select_Column {
-  /** column name */
-  Height = 'height',
-  /** column name */
-  Index = 'index',
-  /** column name */
-  InvolvedAccountsAddresses = 'involved_accounts_addresses',
-  /** column name */
-  PartitionId = 'partition_id',
-  /** column name */
-  TransactionHash = 'transaction_hash',
-  /** column name */
-  Type = 'type',
-  /** column name */
-  Value = 'value'
-}
-
-/** input type for updating data in table "message_48" */
-export type Message_48_Set_Input = {
-  height?: InputMaybe<Scalars['bigint']>;
-  index?: InputMaybe<Scalars['bigint']>;
-  involved_accounts_addresses?: InputMaybe<Array<Scalars['String']>>;
-  partition_id?: InputMaybe<Scalars['bigint']>;
-  transaction_hash?: InputMaybe<Scalars['String']>;
-  type?: InputMaybe<Scalars['String']>;
-  value?: InputMaybe<Scalars['json']>;
-};
-
-/** aggregate stddev on columns */
-export type Message_48_Stddev_Fields = {
-  __typename?: 'message_48_stddev_fields';
-  height?: Maybe<Scalars['Float']>;
-  index?: Maybe<Scalars['Float']>;
-  partition_id?: Maybe<Scalars['Float']>;
-};
-
-/** aggregate stddev_pop on columns */
-export type Message_48_Stddev_Pop_Fields = {
-  __typename?: 'message_48_stddev_pop_fields';
-  height?: Maybe<Scalars['Float']>;
-  index?: Maybe<Scalars['Float']>;
-  partition_id?: Maybe<Scalars['Float']>;
-};
-
-/** aggregate stddev_samp on columns */
-export type Message_48_Stddev_Samp_Fields = {
-  __typename?: 'message_48_stddev_samp_fields';
-  height?: Maybe<Scalars['Float']>;
-  index?: Maybe<Scalars['Float']>;
-  partition_id?: Maybe<Scalars['Float']>;
-};
-
-/** Streaming cursor of the table "message_48" */
-export type Message_48_Stream_Cursor_Input = {
-  /** Stream column input with initial value */
-  initial_value: Message_48_Stream_Cursor_Value_Input;
-  /** cursor ordering */
-  ordering?: InputMaybe<Cursor_Ordering>;
-};
-
-/** Initial value of the column from where the streaming should start */
-export type Message_48_Stream_Cursor_Value_Input = {
-  height?: InputMaybe<Scalars['bigint']>;
-  index?: InputMaybe<Scalars['bigint']>;
-  involved_accounts_addresses?: InputMaybe<Array<Scalars['String']>>;
-  partition_id?: InputMaybe<Scalars['bigint']>;
-  transaction_hash?: InputMaybe<Scalars['String']>;
-  type?: InputMaybe<Scalars['String']>;
-  value?: InputMaybe<Scalars['json']>;
-};
-
-/** aggregate sum on columns */
-export type Message_48_Sum_Fields = {
-  __typename?: 'message_48_sum_fields';
-  height?: Maybe<Scalars['bigint']>;
-  index?: Maybe<Scalars['bigint']>;
-  partition_id?: Maybe<Scalars['bigint']>;
-};
-
-/** update columns of table "message_48" */
-export enum Message_48_Update_Column {
-  /** column name */
-  Height = 'height',
-  /** column name */
-  Index = 'index',
-  /** column name */
-  InvolvedAccountsAddresses = 'involved_accounts_addresses',
-  /** column name */
-  PartitionId = 'partition_id',
-  /** column name */
-  TransactionHash = 'transaction_hash',
-  /** column name */
-  Type = 'type',
-  /** column name */
-  Value = 'value'
-}
-
-export type Message_48_Updates = {
-  /** increments the numeric columns with given value of the filtered values */
-  _inc?: InputMaybe<Message_48_Inc_Input>;
-  /** sets the columns of the filtered rows to the given values */
-  _set?: InputMaybe<Message_48_Set_Input>;
-  /** filter the rows which have to be updated */
-  where: Message_48_Bool_Exp;
-};
-
-/** aggregate var_pop on columns */
-export type Message_48_Var_Pop_Fields = {
-  __typename?: 'message_48_var_pop_fields';
-  height?: Maybe<Scalars['Float']>;
-  index?: Maybe<Scalars['Float']>;
-  partition_id?: Maybe<Scalars['Float']>;
-};
-
-/** aggregate var_samp on columns */
-export type Message_48_Var_Samp_Fields = {
-  __typename?: 'message_48_var_samp_fields';
-  height?: Maybe<Scalars['Float']>;
-  index?: Maybe<Scalars['Float']>;
-  partition_id?: Maybe<Scalars['Float']>;
-};
-
-/** aggregate variance on columns */
-export type Message_48_Variance_Fields = {
-  __typename?: 'message_48_variance_fields';
-  height?: Maybe<Scalars['Float']>;
-  index?: Maybe<Scalars['Float']>;
-  partition_id?: Maybe<Scalars['Float']>;
-};
-
-/** columns and relationships of "message_49" */
-export type Message_49 = {
-  __typename?: 'message_49';
-  height: Scalars['bigint'];
-  index: Scalars['bigint'];
-  involved_accounts_addresses: Array<Scalars['String']>;
-  partition_id: Scalars['bigint'];
-  transaction_hash: Scalars['String'];
-  type: Scalars['String'];
-  value: Scalars['json'];
-};
-
-
-/** columns and relationships of "message_49" */
-export type Message_49ValueArgs = {
-  path?: InputMaybe<Scalars['String']>;
-};
-
-/** aggregated selection of "message_49" */
-export type Message_49_Aggregate = {
-  __typename?: 'message_49_aggregate';
-  aggregate?: Maybe<Message_49_Aggregate_Fields>;
-  nodes: Array<Message_49>;
-};
-
-/** aggregate fields of "message_49" */
-export type Message_49_Aggregate_Fields = {
-  __typename?: 'message_49_aggregate_fields';
-  avg?: Maybe<Message_49_Avg_Fields>;
-  count: Scalars['Int'];
-  max?: Maybe<Message_49_Max_Fields>;
-  min?: Maybe<Message_49_Min_Fields>;
-  stddev?: Maybe<Message_49_Stddev_Fields>;
-  stddev_pop?: Maybe<Message_49_Stddev_Pop_Fields>;
-  stddev_samp?: Maybe<Message_49_Stddev_Samp_Fields>;
-  sum?: Maybe<Message_49_Sum_Fields>;
-  var_pop?: Maybe<Message_49_Var_Pop_Fields>;
-  var_samp?: Maybe<Message_49_Var_Samp_Fields>;
-  variance?: Maybe<Message_49_Variance_Fields>;
-};
-
-
-/** aggregate fields of "message_49" */
-export type Message_49_Aggregate_FieldsCountArgs = {
-  columns?: InputMaybe<Array<Message_49_Select_Column>>;
-  distinct?: InputMaybe<Scalars['Boolean']>;
-};
-
-/** aggregate avg on columns */
-export type Message_49_Avg_Fields = {
-  __typename?: 'message_49_avg_fields';
-  height?: Maybe<Scalars['Float']>;
-  index?: Maybe<Scalars['Float']>;
-  partition_id?: Maybe<Scalars['Float']>;
-};
-
-/** Boolean expression to filter rows from the table "message_49". All fields are combined with a logical 'AND'. */
-export type Message_49_Bool_Exp = {
-  _and?: InputMaybe<Array<Message_49_Bool_Exp>>;
-  _not?: InputMaybe<Message_49_Bool_Exp>;
-  _or?: InputMaybe<Array<Message_49_Bool_Exp>>;
-  height?: InputMaybe<Bigint_Comparison_Exp>;
-  index?: InputMaybe<Bigint_Comparison_Exp>;
-  involved_accounts_addresses?: InputMaybe<String_Array_Comparison_Exp>;
-  partition_id?: InputMaybe<Bigint_Comparison_Exp>;
-  transaction_hash?: InputMaybe<String_Comparison_Exp>;
-  type?: InputMaybe<String_Comparison_Exp>;
-  value?: InputMaybe<Json_Comparison_Exp>;
-};
-
-/** unique or primary key constraints on table "message_49" */
-export enum Message_49_Constraint {
-  /** unique or primary key constraint on columns "index", "partition_id", "transaction_hash" */
-  Message_49TransactionHashIndexPartitionIdKey = 'message_49_transaction_hash_index_partition_id_key'
-}
-
-/** input type for incrementing numeric columns in table "message_49" */
-export type Message_49_Inc_Input = {
-  height?: InputMaybe<Scalars['bigint']>;
-  index?: InputMaybe<Scalars['bigint']>;
-  partition_id?: InputMaybe<Scalars['bigint']>;
-};
-
-/** input type for inserting data into table "message_49" */
-export type Message_49_Insert_Input = {
-  height?: InputMaybe<Scalars['bigint']>;
-  index?: InputMaybe<Scalars['bigint']>;
-  involved_accounts_addresses?: InputMaybe<Array<Scalars['String']>>;
-  partition_id?: InputMaybe<Scalars['bigint']>;
-  transaction_hash?: InputMaybe<Scalars['String']>;
-  type?: InputMaybe<Scalars['String']>;
-  value?: InputMaybe<Scalars['json']>;
-};
-
-/** aggregate max on columns */
-export type Message_49_Max_Fields = {
-  __typename?: 'message_49_max_fields';
-  height?: Maybe<Scalars['bigint']>;
-  index?: Maybe<Scalars['bigint']>;
-  involved_accounts_addresses?: Maybe<Array<Scalars['String']>>;
-  partition_id?: Maybe<Scalars['bigint']>;
-  transaction_hash?: Maybe<Scalars['String']>;
-  type?: Maybe<Scalars['String']>;
-};
-
-/** aggregate min on columns */
-export type Message_49_Min_Fields = {
-  __typename?: 'message_49_min_fields';
-  height?: Maybe<Scalars['bigint']>;
-  index?: Maybe<Scalars['bigint']>;
-  involved_accounts_addresses?: Maybe<Array<Scalars['String']>>;
-  partition_id?: Maybe<Scalars['bigint']>;
-  transaction_hash?: Maybe<Scalars['String']>;
-  type?: Maybe<Scalars['String']>;
-};
-
-/** response of any mutation on the table "message_49" */
-export type Message_49_Mutation_Response = {
-  __typename?: 'message_49_mutation_response';
-  /** number of rows affected by the mutation */
-  affected_rows: Scalars['Int'];
-  /** data from the rows affected by the mutation */
-  returning: Array<Message_49>;
-};
-
-/** on_conflict condition type for table "message_49" */
-export type Message_49_On_Conflict = {
-  constraint: Message_49_Constraint;
-  update_columns?: Array<Message_49_Update_Column>;
-  where?: InputMaybe<Message_49_Bool_Exp>;
-};
-
-/** Ordering options when selecting data from "message_49". */
-export type Message_49_Order_By = {
-  height?: InputMaybe<Order_By>;
-  index?: InputMaybe<Order_By>;
-  involved_accounts_addresses?: InputMaybe<Order_By>;
-  partition_id?: InputMaybe<Order_By>;
-  transaction_hash?: InputMaybe<Order_By>;
-  type?: InputMaybe<Order_By>;
-  value?: InputMaybe<Order_By>;
-};
-
-/** select columns of table "message_49" */
-export enum Message_49_Select_Column {
-  /** column name */
-  Height = 'height',
-  /** column name */
-  Index = 'index',
-  /** column name */
-  InvolvedAccountsAddresses = 'involved_accounts_addresses',
-  /** column name */
-  PartitionId = 'partition_id',
-  /** column name */
-  TransactionHash = 'transaction_hash',
-  /** column name */
-  Type = 'type',
-  /** column name */
-  Value = 'value'
-}
-
-/** input type for updating data in table "message_49" */
-export type Message_49_Set_Input = {
-  height?: InputMaybe<Scalars['bigint']>;
-  index?: InputMaybe<Scalars['bigint']>;
-  involved_accounts_addresses?: InputMaybe<Array<Scalars['String']>>;
-  partition_id?: InputMaybe<Scalars['bigint']>;
-  transaction_hash?: InputMaybe<Scalars['String']>;
-  type?: InputMaybe<Scalars['String']>;
-  value?: InputMaybe<Scalars['json']>;
-};
-
-/** aggregate stddev on columns */
-export type Message_49_Stddev_Fields = {
-  __typename?: 'message_49_stddev_fields';
-  height?: Maybe<Scalars['Float']>;
-  index?: Maybe<Scalars['Float']>;
-  partition_id?: Maybe<Scalars['Float']>;
-};
-
-/** aggregate stddev_pop on columns */
-export type Message_49_Stddev_Pop_Fields = {
-  __typename?: 'message_49_stddev_pop_fields';
-  height?: Maybe<Scalars['Float']>;
-  index?: Maybe<Scalars['Float']>;
-  partition_id?: Maybe<Scalars['Float']>;
-};
-
-/** aggregate stddev_samp on columns */
-export type Message_49_Stddev_Samp_Fields = {
-  __typename?: 'message_49_stddev_samp_fields';
-  height?: Maybe<Scalars['Float']>;
-  index?: Maybe<Scalars['Float']>;
-  partition_id?: Maybe<Scalars['Float']>;
-};
-
-/** Streaming cursor of the table "message_49" */
-export type Message_49_Stream_Cursor_Input = {
-  /** Stream column input with initial value */
-  initial_value: Message_49_Stream_Cursor_Value_Input;
-  /** cursor ordering */
-  ordering?: InputMaybe<Cursor_Ordering>;
-};
-
-/** Initial value of the column from where the streaming should start */
-export type Message_49_Stream_Cursor_Value_Input = {
-  height?: InputMaybe<Scalars['bigint']>;
-  index?: InputMaybe<Scalars['bigint']>;
-  involved_accounts_addresses?: InputMaybe<Array<Scalars['String']>>;
-  partition_id?: InputMaybe<Scalars['bigint']>;
-  transaction_hash?: InputMaybe<Scalars['String']>;
-  type?: InputMaybe<Scalars['String']>;
-  value?: InputMaybe<Scalars['json']>;
-};
-
-/** aggregate sum on columns */
-export type Message_49_Sum_Fields = {
-  __typename?: 'message_49_sum_fields';
-  height?: Maybe<Scalars['bigint']>;
-  index?: Maybe<Scalars['bigint']>;
-  partition_id?: Maybe<Scalars['bigint']>;
-};
-
-/** update columns of table "message_49" */
-export enum Message_49_Update_Column {
-  /** column name */
-  Height = 'height',
-  /** column name */
-  Index = 'index',
-  /** column name */
-  InvolvedAccountsAddresses = 'involved_accounts_addresses',
-  /** column name */
-  PartitionId = 'partition_id',
-  /** column name */
-  TransactionHash = 'transaction_hash',
-  /** column name */
-  Type = 'type',
-  /** column name */
-  Value = 'value'
-}
-
-export type Message_49_Updates = {
-  /** increments the numeric columns with given value of the filtered values */
-  _inc?: InputMaybe<Message_49_Inc_Input>;
-  /** sets the columns of the filtered rows to the given values */
-  _set?: InputMaybe<Message_49_Set_Input>;
-  /** filter the rows which have to be updated */
-  where: Message_49_Bool_Exp;
-};
-
-/** aggregate var_pop on columns */
-export type Message_49_Var_Pop_Fields = {
-  __typename?: 'message_49_var_pop_fields';
-  height?: Maybe<Scalars['Float']>;
-  index?: Maybe<Scalars['Float']>;
-  partition_id?: Maybe<Scalars['Float']>;
-};
-
-/** aggregate var_samp on columns */
-export type Message_49_Var_Samp_Fields = {
-  __typename?: 'message_49_var_samp_fields';
-  height?: Maybe<Scalars['Float']>;
-  index?: Maybe<Scalars['Float']>;
-  partition_id?: Maybe<Scalars['Float']>;
-};
-
-/** aggregate variance on columns */
-export type Message_49_Variance_Fields = {
-  __typename?: 'message_49_variance_fields';
-  height?: Maybe<Scalars['Float']>;
-  index?: Maybe<Scalars['Float']>;
-  partition_id?: Maybe<Scalars['Float']>;
-};
-
-/** columns and relationships of "message_50" */
-export type Message_50 = {
-  __typename?: 'message_50';
-  height: Scalars['bigint'];
-  index: Scalars['bigint'];
-  involved_accounts_addresses: Array<Scalars['String']>;
-  partition_id: Scalars['bigint'];
-  transaction_hash: Scalars['String'];
-  type: Scalars['String'];
-  value: Scalars['json'];
-};
-
-
-/** columns and relationships of "message_50" */
-export type Message_50ValueArgs = {
-  path?: InputMaybe<Scalars['String']>;
-};
-
-/** aggregated selection of "message_50" */
-export type Message_50_Aggregate = {
-  __typename?: 'message_50_aggregate';
-  aggregate?: Maybe<Message_50_Aggregate_Fields>;
-  nodes: Array<Message_50>;
-};
-
-/** aggregate fields of "message_50" */
-export type Message_50_Aggregate_Fields = {
-  __typename?: 'message_50_aggregate_fields';
-  avg?: Maybe<Message_50_Avg_Fields>;
-  count: Scalars['Int'];
-  max?: Maybe<Message_50_Max_Fields>;
-  min?: Maybe<Message_50_Min_Fields>;
-  stddev?: Maybe<Message_50_Stddev_Fields>;
-  stddev_pop?: Maybe<Message_50_Stddev_Pop_Fields>;
-  stddev_samp?: Maybe<Message_50_Stddev_Samp_Fields>;
-  sum?: Maybe<Message_50_Sum_Fields>;
-  var_pop?: Maybe<Message_50_Var_Pop_Fields>;
-  var_samp?: Maybe<Message_50_Var_Samp_Fields>;
-  variance?: Maybe<Message_50_Variance_Fields>;
-};
-
-
-/** aggregate fields of "message_50" */
-export type Message_50_Aggregate_FieldsCountArgs = {
-  columns?: InputMaybe<Array<Message_50_Select_Column>>;
-  distinct?: InputMaybe<Scalars['Boolean']>;
-};
-
-/** aggregate avg on columns */
-export type Message_50_Avg_Fields = {
-  __typename?: 'message_50_avg_fields';
-  height?: Maybe<Scalars['Float']>;
-  index?: Maybe<Scalars['Float']>;
-  partition_id?: Maybe<Scalars['Float']>;
-};
-
-/** Boolean expression to filter rows from the table "message_50". All fields are combined with a logical 'AND'. */
-export type Message_50_Bool_Exp = {
-  _and?: InputMaybe<Array<Message_50_Bool_Exp>>;
-  _not?: InputMaybe<Message_50_Bool_Exp>;
-  _or?: InputMaybe<Array<Message_50_Bool_Exp>>;
-  height?: InputMaybe<Bigint_Comparison_Exp>;
-  index?: InputMaybe<Bigint_Comparison_Exp>;
-  involved_accounts_addresses?: InputMaybe<String_Array_Comparison_Exp>;
-  partition_id?: InputMaybe<Bigint_Comparison_Exp>;
-  transaction_hash?: InputMaybe<String_Comparison_Exp>;
-  type?: InputMaybe<String_Comparison_Exp>;
-  value?: InputMaybe<Json_Comparison_Exp>;
-};
-
-/** unique or primary key constraints on table "message_50" */
-export enum Message_50_Constraint {
-  /** unique or primary key constraint on columns "index", "partition_id", "transaction_hash" */
-  Message_50TransactionHashIndexPartitionIdKey = 'message_50_transaction_hash_index_partition_id_key'
-}
-
-/** input type for incrementing numeric columns in table "message_50" */
-export type Message_50_Inc_Input = {
-  height?: InputMaybe<Scalars['bigint']>;
-  index?: InputMaybe<Scalars['bigint']>;
-  partition_id?: InputMaybe<Scalars['bigint']>;
-};
-
-/** input type for inserting data into table "message_50" */
-export type Message_50_Insert_Input = {
-  height?: InputMaybe<Scalars['bigint']>;
-  index?: InputMaybe<Scalars['bigint']>;
-  involved_accounts_addresses?: InputMaybe<Array<Scalars['String']>>;
-  partition_id?: InputMaybe<Scalars['bigint']>;
-  transaction_hash?: InputMaybe<Scalars['String']>;
-  type?: InputMaybe<Scalars['String']>;
-  value?: InputMaybe<Scalars['json']>;
-};
-
-/** aggregate max on columns */
-export type Message_50_Max_Fields = {
-  __typename?: 'message_50_max_fields';
-  height?: Maybe<Scalars['bigint']>;
-  index?: Maybe<Scalars['bigint']>;
-  involved_accounts_addresses?: Maybe<Array<Scalars['String']>>;
-  partition_id?: Maybe<Scalars['bigint']>;
-  transaction_hash?: Maybe<Scalars['String']>;
-  type?: Maybe<Scalars['String']>;
-};
-
-/** aggregate min on columns */
-export type Message_50_Min_Fields = {
-  __typename?: 'message_50_min_fields';
-  height?: Maybe<Scalars['bigint']>;
-  index?: Maybe<Scalars['bigint']>;
-  involved_accounts_addresses?: Maybe<Array<Scalars['String']>>;
-  partition_id?: Maybe<Scalars['bigint']>;
-  transaction_hash?: Maybe<Scalars['String']>;
-  type?: Maybe<Scalars['String']>;
-};
-
-/** response of any mutation on the table "message_50" */
-export type Message_50_Mutation_Response = {
-  __typename?: 'message_50_mutation_response';
-  /** number of rows affected by the mutation */
-  affected_rows: Scalars['Int'];
-  /** data from the rows affected by the mutation */
-  returning: Array<Message_50>;
-};
-
-/** on_conflict condition type for table "message_50" */
-export type Message_50_On_Conflict = {
-  constraint: Message_50_Constraint;
-  update_columns?: Array<Message_50_Update_Column>;
-  where?: InputMaybe<Message_50_Bool_Exp>;
-};
-
-/** Ordering options when selecting data from "message_50". */
-export type Message_50_Order_By = {
-  height?: InputMaybe<Order_By>;
-  index?: InputMaybe<Order_By>;
-  involved_accounts_addresses?: InputMaybe<Order_By>;
-  partition_id?: InputMaybe<Order_By>;
-  transaction_hash?: InputMaybe<Order_By>;
-  type?: InputMaybe<Order_By>;
-  value?: InputMaybe<Order_By>;
-};
-
-/** select columns of table "message_50" */
-export enum Message_50_Select_Column {
-  /** column name */
-  Height = 'height',
-  /** column name */
-  Index = 'index',
-  /** column name */
-  InvolvedAccountsAddresses = 'involved_accounts_addresses',
-  /** column name */
-  PartitionId = 'partition_id',
-  /** column name */
-  TransactionHash = 'transaction_hash',
-  /** column name */
-  Type = 'type',
-  /** column name */
-  Value = 'value'
-}
-
-/** input type for updating data in table "message_50" */
-export type Message_50_Set_Input = {
-  height?: InputMaybe<Scalars['bigint']>;
-  index?: InputMaybe<Scalars['bigint']>;
-  involved_accounts_addresses?: InputMaybe<Array<Scalars['String']>>;
-  partition_id?: InputMaybe<Scalars['bigint']>;
-  transaction_hash?: InputMaybe<Scalars['String']>;
-  type?: InputMaybe<Scalars['String']>;
-  value?: InputMaybe<Scalars['json']>;
-};
-
-/** aggregate stddev on columns */
-export type Message_50_Stddev_Fields = {
-  __typename?: 'message_50_stddev_fields';
-  height?: Maybe<Scalars['Float']>;
-  index?: Maybe<Scalars['Float']>;
-  partition_id?: Maybe<Scalars['Float']>;
-};
-
-/** aggregate stddev_pop on columns */
-export type Message_50_Stddev_Pop_Fields = {
-  __typename?: 'message_50_stddev_pop_fields';
-  height?: Maybe<Scalars['Float']>;
-  index?: Maybe<Scalars['Float']>;
-  partition_id?: Maybe<Scalars['Float']>;
-};
-
-/** aggregate stddev_samp on columns */
-export type Message_50_Stddev_Samp_Fields = {
-  __typename?: 'message_50_stddev_samp_fields';
-  height?: Maybe<Scalars['Float']>;
-  index?: Maybe<Scalars['Float']>;
-  partition_id?: Maybe<Scalars['Float']>;
-};
-
-/** Streaming cursor of the table "message_50" */
-export type Message_50_Stream_Cursor_Input = {
-  /** Stream column input with initial value */
-  initial_value: Message_50_Stream_Cursor_Value_Input;
-  /** cursor ordering */
-  ordering?: InputMaybe<Cursor_Ordering>;
-};
-
-/** Initial value of the column from where the streaming should start */
-export type Message_50_Stream_Cursor_Value_Input = {
-  height?: InputMaybe<Scalars['bigint']>;
-  index?: InputMaybe<Scalars['bigint']>;
-  involved_accounts_addresses?: InputMaybe<Array<Scalars['String']>>;
-  partition_id?: InputMaybe<Scalars['bigint']>;
-  transaction_hash?: InputMaybe<Scalars['String']>;
-  type?: InputMaybe<Scalars['String']>;
-  value?: InputMaybe<Scalars['json']>;
-};
-
-/** aggregate sum on columns */
-export type Message_50_Sum_Fields = {
-  __typename?: 'message_50_sum_fields';
-  height?: Maybe<Scalars['bigint']>;
-  index?: Maybe<Scalars['bigint']>;
-  partition_id?: Maybe<Scalars['bigint']>;
-};
-
-/** update columns of table "message_50" */
-export enum Message_50_Update_Column {
-  /** column name */
-  Height = 'height',
-  /** column name */
-  Index = 'index',
-  /** column name */
-  InvolvedAccountsAddresses = 'involved_accounts_addresses',
-  /** column name */
-  PartitionId = 'partition_id',
-  /** column name */
-  TransactionHash = 'transaction_hash',
-  /** column name */
-  Type = 'type',
-  /** column name */
-  Value = 'value'
-}
-
-export type Message_50_Updates = {
-  /** increments the numeric columns with given value of the filtered values */
-  _inc?: InputMaybe<Message_50_Inc_Input>;
-  /** sets the columns of the filtered rows to the given values */
-  _set?: InputMaybe<Message_50_Set_Input>;
-  /** filter the rows which have to be updated */
-  where: Message_50_Bool_Exp;
-};
-
-/** aggregate var_pop on columns */
-export type Message_50_Var_Pop_Fields = {
-  __typename?: 'message_50_var_pop_fields';
-  height?: Maybe<Scalars['Float']>;
-  index?: Maybe<Scalars['Float']>;
-  partition_id?: Maybe<Scalars['Float']>;
-};
-
-/** aggregate var_samp on columns */
-export type Message_50_Var_Samp_Fields = {
-  __typename?: 'message_50_var_samp_fields';
-  height?: Maybe<Scalars['Float']>;
-  index?: Maybe<Scalars['Float']>;
-  partition_id?: Maybe<Scalars['Float']>;
-};
-
-/** aggregate variance on columns */
-export type Message_50_Variance_Fields = {
-  __typename?: 'message_50_variance_fields';
-  height?: Maybe<Scalars['Float']>;
-  index?: Maybe<Scalars['Float']>;
-  partition_id?: Maybe<Scalars['Float']>;
-};
-
-/** columns and relationships of "message_104" */
-export type Message_104 = {
-  __typename?: 'message_104';
-  height: Scalars['bigint'];
-  index: Scalars['bigint'];
-  involved_accounts_addresses: Array<Scalars['String']>;
-  partition_id: Scalars['bigint'];
-  transaction_hash: Scalars['String'];
-  type: Scalars['String'];
-  value: Scalars['json'];
-};
-
-
-/** columns and relationships of "message_104" */
-export type Message_104ValueArgs = {
-  path?: InputMaybe<Scalars['String']>;
-};
-
-/** aggregated selection of "message_104" */
-export type Message_104_Aggregate = {
-  __typename?: 'message_104_aggregate';
-  aggregate?: Maybe<Message_104_Aggregate_Fields>;
-  nodes: Array<Message_104>;
-};
-
-/** aggregate fields of "message_104" */
-export type Message_104_Aggregate_Fields = {
-  __typename?: 'message_104_aggregate_fields';
-  avg?: Maybe<Message_104_Avg_Fields>;
-  count: Scalars['Int'];
-  max?: Maybe<Message_104_Max_Fields>;
-  min?: Maybe<Message_104_Min_Fields>;
-  stddev?: Maybe<Message_104_Stddev_Fields>;
-  stddev_pop?: Maybe<Message_104_Stddev_Pop_Fields>;
-  stddev_samp?: Maybe<Message_104_Stddev_Samp_Fields>;
-  sum?: Maybe<Message_104_Sum_Fields>;
-  var_pop?: Maybe<Message_104_Var_Pop_Fields>;
-  var_samp?: Maybe<Message_104_Var_Samp_Fields>;
-  variance?: Maybe<Message_104_Variance_Fields>;
-};
-
-
-/** aggregate fields of "message_104" */
-export type Message_104_Aggregate_FieldsCountArgs = {
-  columns?: InputMaybe<Array<Message_104_Select_Column>>;
-  distinct?: InputMaybe<Scalars['Boolean']>;
-};
-
-/** aggregate avg on columns */
-export type Message_104_Avg_Fields = {
-  __typename?: 'message_104_avg_fields';
-  height?: Maybe<Scalars['Float']>;
-  index?: Maybe<Scalars['Float']>;
-  partition_id?: Maybe<Scalars['Float']>;
-};
-
-/** Boolean expression to filter rows from the table "message_104". All fields are combined with a logical 'AND'. */
-export type Message_104_Bool_Exp = {
-  _and?: InputMaybe<Array<Message_104_Bool_Exp>>;
-  _not?: InputMaybe<Message_104_Bool_Exp>;
-  _or?: InputMaybe<Array<Message_104_Bool_Exp>>;
-  height?: InputMaybe<Bigint_Comparison_Exp>;
-  index?: InputMaybe<Bigint_Comparison_Exp>;
-  involved_accounts_addresses?: InputMaybe<String_Array_Comparison_Exp>;
-  partition_id?: InputMaybe<Bigint_Comparison_Exp>;
-  transaction_hash?: InputMaybe<String_Comparison_Exp>;
-  type?: InputMaybe<String_Comparison_Exp>;
-  value?: InputMaybe<Json_Comparison_Exp>;
-};
-
-/** unique or primary key constraints on table "message_104" */
-export enum Message_104_Constraint {
-  /** unique or primary key constraint on columns "index", "partition_id", "transaction_hash" */
-  Message_104TransactionHashIndexPartitionIdKey = 'message_104_transaction_hash_index_partition_id_key'
-}
-
-/** input type for incrementing numeric columns in table "message_104" */
-export type Message_104_Inc_Input = {
-  height?: InputMaybe<Scalars['bigint']>;
-  index?: InputMaybe<Scalars['bigint']>;
-  partition_id?: InputMaybe<Scalars['bigint']>;
-};
-
-/** input type for inserting data into table "message_104" */
-export type Message_104_Insert_Input = {
-  height?: InputMaybe<Scalars['bigint']>;
-  index?: InputMaybe<Scalars['bigint']>;
-  involved_accounts_addresses?: InputMaybe<Array<Scalars['String']>>;
-  partition_id?: InputMaybe<Scalars['bigint']>;
-  transaction_hash?: InputMaybe<Scalars['String']>;
-  type?: InputMaybe<Scalars['String']>;
-  value?: InputMaybe<Scalars['json']>;
-};
-
-/** aggregate max on columns */
-export type Message_104_Max_Fields = {
-  __typename?: 'message_104_max_fields';
-  height?: Maybe<Scalars['bigint']>;
-  index?: Maybe<Scalars['bigint']>;
-  involved_accounts_addresses?: Maybe<Array<Scalars['String']>>;
-  partition_id?: Maybe<Scalars['bigint']>;
-  transaction_hash?: Maybe<Scalars['String']>;
-  type?: Maybe<Scalars['String']>;
-};
-
-/** aggregate min on columns */
-export type Message_104_Min_Fields = {
-  __typename?: 'message_104_min_fields';
-  height?: Maybe<Scalars['bigint']>;
-  index?: Maybe<Scalars['bigint']>;
-  involved_accounts_addresses?: Maybe<Array<Scalars['String']>>;
-  partition_id?: Maybe<Scalars['bigint']>;
-  transaction_hash?: Maybe<Scalars['String']>;
-  type?: Maybe<Scalars['String']>;
-};
-
-/** response of any mutation on the table "message_104" */
-export type Message_104_Mutation_Response = {
-  __typename?: 'message_104_mutation_response';
-  /** number of rows affected by the mutation */
-  affected_rows: Scalars['Int'];
-  /** data from the rows affected by the mutation */
-  returning: Array<Message_104>;
-};
-
-/** on_conflict condition type for table "message_104" */
-export type Message_104_On_Conflict = {
-  constraint: Message_104_Constraint;
-  update_columns?: Array<Message_104_Update_Column>;
-  where?: InputMaybe<Message_104_Bool_Exp>;
-};
-
-/** Ordering options when selecting data from "message_104". */
-export type Message_104_Order_By = {
-  height?: InputMaybe<Order_By>;
-  index?: InputMaybe<Order_By>;
-  involved_accounts_addresses?: InputMaybe<Order_By>;
-  partition_id?: InputMaybe<Order_By>;
-  transaction_hash?: InputMaybe<Order_By>;
-  type?: InputMaybe<Order_By>;
-  value?: InputMaybe<Order_By>;
-};
-
-/** select columns of table "message_104" */
-export enum Message_104_Select_Column {
-  /** column name */
-  Height = 'height',
-  /** column name */
-  Index = 'index',
-  /** column name */
-  InvolvedAccountsAddresses = 'involved_accounts_addresses',
-  /** column name */
-  PartitionId = 'partition_id',
-  /** column name */
-  TransactionHash = 'transaction_hash',
-  /** column name */
-  Type = 'type',
-  /** column name */
-  Value = 'value'
-}
-
-/** input type for updating data in table "message_104" */
-export type Message_104_Set_Input = {
-  height?: InputMaybe<Scalars['bigint']>;
-  index?: InputMaybe<Scalars['bigint']>;
-  involved_accounts_addresses?: InputMaybe<Array<Scalars['String']>>;
-  partition_id?: InputMaybe<Scalars['bigint']>;
-  transaction_hash?: InputMaybe<Scalars['String']>;
-  type?: InputMaybe<Scalars['String']>;
-  value?: InputMaybe<Scalars['json']>;
-};
-
-/** aggregate stddev on columns */
-export type Message_104_Stddev_Fields = {
-  __typename?: 'message_104_stddev_fields';
-  height?: Maybe<Scalars['Float']>;
-  index?: Maybe<Scalars['Float']>;
-  partition_id?: Maybe<Scalars['Float']>;
-};
-
-/** aggregate stddev_pop on columns */
-export type Message_104_Stddev_Pop_Fields = {
-  __typename?: 'message_104_stddev_pop_fields';
-  height?: Maybe<Scalars['Float']>;
-  index?: Maybe<Scalars['Float']>;
-  partition_id?: Maybe<Scalars['Float']>;
-};
-
-/** aggregate stddev_samp on columns */
-export type Message_104_Stddev_Samp_Fields = {
-  __typename?: 'message_104_stddev_samp_fields';
-  height?: Maybe<Scalars['Float']>;
-  index?: Maybe<Scalars['Float']>;
-  partition_id?: Maybe<Scalars['Float']>;
-};
-
-/** Streaming cursor of the table "message_104" */
-export type Message_104_Stream_Cursor_Input = {
-  /** Stream column input with initial value */
-  initial_value: Message_104_Stream_Cursor_Value_Input;
-  /** cursor ordering */
-  ordering?: InputMaybe<Cursor_Ordering>;
-};
-
-/** Initial value of the column from where the streaming should start */
-export type Message_104_Stream_Cursor_Value_Input = {
-  height?: InputMaybe<Scalars['bigint']>;
-  index?: InputMaybe<Scalars['bigint']>;
-  involved_accounts_addresses?: InputMaybe<Array<Scalars['String']>>;
-  partition_id?: InputMaybe<Scalars['bigint']>;
-  transaction_hash?: InputMaybe<Scalars['String']>;
-  type?: InputMaybe<Scalars['String']>;
-  value?: InputMaybe<Scalars['json']>;
-};
-
-/** aggregate sum on columns */
-export type Message_104_Sum_Fields = {
-  __typename?: 'message_104_sum_fields';
-  height?: Maybe<Scalars['bigint']>;
-  index?: Maybe<Scalars['bigint']>;
-  partition_id?: Maybe<Scalars['bigint']>;
-};
-
-/** update columns of table "message_104" */
-export enum Message_104_Update_Column {
-  /** column name */
-  Height = 'height',
-  /** column name */
-  Index = 'index',
-  /** column name */
-  InvolvedAccountsAddresses = 'involved_accounts_addresses',
-  /** column name */
-  PartitionId = 'partition_id',
-  /** column name */
-  TransactionHash = 'transaction_hash',
-  /** column name */
-  Type = 'type',
-  /** column name */
-  Value = 'value'
-}
-
-export type Message_104_Updates = {
-  /** increments the numeric columns with given value of the filtered values */
-  _inc?: InputMaybe<Message_104_Inc_Input>;
-  /** sets the columns of the filtered rows to the given values */
-  _set?: InputMaybe<Message_104_Set_Input>;
-  /** filter the rows which have to be updated */
-  where: Message_104_Bool_Exp;
-};
-
-/** aggregate var_pop on columns */
-export type Message_104_Var_Pop_Fields = {
-  __typename?: 'message_104_var_pop_fields';
-  height?: Maybe<Scalars['Float']>;
-  index?: Maybe<Scalars['Float']>;
-  partition_id?: Maybe<Scalars['Float']>;
-};
-
-/** aggregate var_samp on columns */
-export type Message_104_Var_Samp_Fields = {
-  __typename?: 'message_104_var_samp_fields';
-  height?: Maybe<Scalars['Float']>;
-  index?: Maybe<Scalars['Float']>;
-  partition_id?: Maybe<Scalars['Float']>;
-};
-
-/** aggregate variance on columns */
-export type Message_104_Variance_Fields = {
-  __typename?: 'message_104_variance_fields';
+export type Message_105_Variance_Fields = {
+  __typename?: 'message_105_variance_fields';
   height?: Maybe<Scalars['Float']>;
   index?: Maybe<Scalars['Float']>;
   partition_id?: Maybe<Scalars['Float']>;
@@ -7692,18 +6322,8 @@ export type Mutation_Root = {
   delete_inflation_by_pk?: Maybe<Inflation>;
   /** delete data from the table: "message" */
   delete_message?: Maybe<Message_Mutation_Response>;
-  /** delete data from the table: "message_46" */
-  delete_message_46?: Maybe<Message_46_Mutation_Response>;
-  /** delete data from the table: "message_47" */
-  delete_message_47?: Maybe<Message_47_Mutation_Response>;
-  /** delete data from the table: "message_48" */
-  delete_message_48?: Maybe<Message_48_Mutation_Response>;
-  /** delete data from the table: "message_49" */
-  delete_message_49?: Maybe<Message_49_Mutation_Response>;
-  /** delete data from the table: "message_50" */
-  delete_message_50?: Maybe<Message_50_Mutation_Response>;
-  /** delete data from the table: "message_104" */
-  delete_message_104?: Maybe<Message_104_Mutation_Response>;
+  /** delete data from the table: "message_105" */
+  delete_message_105?: Maybe<Message_105_Mutation_Response>;
   /** delete data from the table: "message_type" */
   delete_message_type?: Maybe<Message_Type_Mutation_Response>;
   /** delete data from the table: "mint_params" */
@@ -7768,6 +6388,10 @@ export type Mutation_Root = {
   delete_supply_by_pk?: Maybe<Supply>;
   /** delete data from the table: "token" */
   delete_token?: Maybe<Token_Mutation_Response>;
+  /** delete data from the table: "token_bonded" */
+  delete_token_bonded?: Maybe<Token_Bonded_Mutation_Response>;
+  /** delete single row from the table: "token_bonded" */
+  delete_token_bonded_by_pk?: Maybe<Token_Bonded>;
   /** delete data from the table: "token_holder" */
   delete_token_holder?: Maybe<Token_Holder_Mutation_Response>;
   /** delete single row from the table: "token_holder" */
@@ -7780,22 +6404,16 @@ export type Mutation_Root = {
   delete_token_price_history?: Maybe<Token_Price_History_Mutation_Response>;
   /** delete single row from the table: "token_price_history" */
   delete_token_price_history_by_pk?: Maybe<Token_Price_History>;
+  /** delete data from the table: "token_unbonding" */
+  delete_token_unbonding?: Maybe<Token_Unbonding_Mutation_Response>;
+  /** delete single row from the table: "token_unbonding" */
+  delete_token_unbonding_by_pk?: Maybe<Token_Unbonding>;
   /** delete data from the table: "token_unit" */
   delete_token_unit?: Maybe<Token_Unit_Mutation_Response>;
   /** delete data from the table: "transaction" */
   delete_transaction?: Maybe<Transaction_Mutation_Response>;
-  /** delete data from the table: "transaction_46" */
-  delete_transaction_46?: Maybe<Transaction_46_Mutation_Response>;
-  /** delete data from the table: "transaction_47" */
-  delete_transaction_47?: Maybe<Transaction_47_Mutation_Response>;
-  /** delete data from the table: "transaction_48" */
-  delete_transaction_48?: Maybe<Transaction_48_Mutation_Response>;
-  /** delete data from the table: "transaction_49" */
-  delete_transaction_49?: Maybe<Transaction_49_Mutation_Response>;
-  /** delete data from the table: "transaction_50" */
-  delete_transaction_50?: Maybe<Transaction_50_Mutation_Response>;
-  /** delete data from the table: "transaction_104" */
-  delete_transaction_104?: Maybe<Transaction_104_Mutation_Response>;
+  /** delete data from the table: "transaction_105" */
+  delete_transaction_105?: Maybe<Transaction_105_Mutation_Response>;
   /** delete data from the table: "validator" */
   delete_validator?: Maybe<Validator_Mutation_Response>;
   /** delete single row from the table: "validator" */
@@ -7896,30 +6514,10 @@ export type Mutation_Root = {
   insert_inflation_one?: Maybe<Inflation>;
   /** insert data into the table: "message" */
   insert_message?: Maybe<Message_Mutation_Response>;
-  /** insert data into the table: "message_46" */
-  insert_message_46?: Maybe<Message_46_Mutation_Response>;
-  /** insert a single row into the table: "message_46" */
-  insert_message_46_one?: Maybe<Message_46>;
-  /** insert data into the table: "message_47" */
-  insert_message_47?: Maybe<Message_47_Mutation_Response>;
-  /** insert a single row into the table: "message_47" */
-  insert_message_47_one?: Maybe<Message_47>;
-  /** insert data into the table: "message_48" */
-  insert_message_48?: Maybe<Message_48_Mutation_Response>;
-  /** insert a single row into the table: "message_48" */
-  insert_message_48_one?: Maybe<Message_48>;
-  /** insert data into the table: "message_49" */
-  insert_message_49?: Maybe<Message_49_Mutation_Response>;
-  /** insert a single row into the table: "message_49" */
-  insert_message_49_one?: Maybe<Message_49>;
-  /** insert data into the table: "message_50" */
-  insert_message_50?: Maybe<Message_50_Mutation_Response>;
-  /** insert a single row into the table: "message_50" */
-  insert_message_50_one?: Maybe<Message_50>;
-  /** insert data into the table: "message_104" */
-  insert_message_104?: Maybe<Message_104_Mutation_Response>;
-  /** insert a single row into the table: "message_104" */
-  insert_message_104_one?: Maybe<Message_104>;
+  /** insert data into the table: "message_105" */
+  insert_message_105?: Maybe<Message_105_Mutation_Response>;
+  /** insert a single row into the table: "message_105" */
+  insert_message_105_one?: Maybe<Message_105>;
   /** insert a single row into the table: "message" */
   insert_message_one?: Maybe<Message>;
   /** insert data into the table: "message_type" */
@@ -8000,6 +6598,10 @@ export type Mutation_Root = {
   insert_supply_one?: Maybe<Supply>;
   /** insert data into the table: "token" */
   insert_token?: Maybe<Token_Mutation_Response>;
+  /** insert data into the table: "token_bonded" */
+  insert_token_bonded?: Maybe<Token_Bonded_Mutation_Response>;
+  /** insert a single row into the table: "token_bonded" */
+  insert_token_bonded_one?: Maybe<Token_Bonded>;
   /** insert data into the table: "token_holder" */
   insert_token_holder?: Maybe<Token_Holder_Mutation_Response>;
   /** insert a single row into the table: "token_holder" */
@@ -8014,36 +6616,20 @@ export type Mutation_Root = {
   insert_token_price_history_one?: Maybe<Token_Price_History>;
   /** insert a single row into the table: "token_price" */
   insert_token_price_one?: Maybe<Token_Price>;
+  /** insert data into the table: "token_unbonding" */
+  insert_token_unbonding?: Maybe<Token_Unbonding_Mutation_Response>;
+  /** insert a single row into the table: "token_unbonding" */
+  insert_token_unbonding_one?: Maybe<Token_Unbonding>;
   /** insert data into the table: "token_unit" */
   insert_token_unit?: Maybe<Token_Unit_Mutation_Response>;
   /** insert a single row into the table: "token_unit" */
   insert_token_unit_one?: Maybe<Token_Unit>;
   /** insert data into the table: "transaction" */
   insert_transaction?: Maybe<Transaction_Mutation_Response>;
-  /** insert data into the table: "transaction_46" */
-  insert_transaction_46?: Maybe<Transaction_46_Mutation_Response>;
-  /** insert a single row into the table: "transaction_46" */
-  insert_transaction_46_one?: Maybe<Transaction_46>;
-  /** insert data into the table: "transaction_47" */
-  insert_transaction_47?: Maybe<Transaction_47_Mutation_Response>;
-  /** insert a single row into the table: "transaction_47" */
-  insert_transaction_47_one?: Maybe<Transaction_47>;
-  /** insert data into the table: "transaction_48" */
-  insert_transaction_48?: Maybe<Transaction_48_Mutation_Response>;
-  /** insert a single row into the table: "transaction_48" */
-  insert_transaction_48_one?: Maybe<Transaction_48>;
-  /** insert data into the table: "transaction_49" */
-  insert_transaction_49?: Maybe<Transaction_49_Mutation_Response>;
-  /** insert a single row into the table: "transaction_49" */
-  insert_transaction_49_one?: Maybe<Transaction_49>;
-  /** insert data into the table: "transaction_50" */
-  insert_transaction_50?: Maybe<Transaction_50_Mutation_Response>;
-  /** insert a single row into the table: "transaction_50" */
-  insert_transaction_50_one?: Maybe<Transaction_50>;
-  /** insert data into the table: "transaction_104" */
-  insert_transaction_104?: Maybe<Transaction_104_Mutation_Response>;
-  /** insert a single row into the table: "transaction_104" */
-  insert_transaction_104_one?: Maybe<Transaction_104>;
+  /** insert data into the table: "transaction_105" */
+  insert_transaction_105?: Maybe<Transaction_105_Mutation_Response>;
+  /** insert a single row into the table: "transaction_105" */
+  insert_transaction_105_one?: Maybe<Transaction_105>;
   /** insert a single row into the table: "transaction" */
   insert_transaction_one?: Maybe<Transaction>;
   /** insert data into the table: "validator" */
@@ -8176,30 +6762,10 @@ export type Mutation_Root = {
   update_inflation_many?: Maybe<Array<Maybe<Inflation_Mutation_Response>>>;
   /** update data of the table: "message" */
   update_message?: Maybe<Message_Mutation_Response>;
-  /** update data of the table: "message_46" */
-  update_message_46?: Maybe<Message_46_Mutation_Response>;
-  /** update multiples rows of table: "message_46" */
-  update_message_46_many?: Maybe<Array<Maybe<Message_46_Mutation_Response>>>;
-  /** update data of the table: "message_47" */
-  update_message_47?: Maybe<Message_47_Mutation_Response>;
-  /** update multiples rows of table: "message_47" */
-  update_message_47_many?: Maybe<Array<Maybe<Message_47_Mutation_Response>>>;
-  /** update data of the table: "message_48" */
-  update_message_48?: Maybe<Message_48_Mutation_Response>;
-  /** update multiples rows of table: "message_48" */
-  update_message_48_many?: Maybe<Array<Maybe<Message_48_Mutation_Response>>>;
-  /** update data of the table: "message_49" */
-  update_message_49?: Maybe<Message_49_Mutation_Response>;
-  /** update multiples rows of table: "message_49" */
-  update_message_49_many?: Maybe<Array<Maybe<Message_49_Mutation_Response>>>;
-  /** update data of the table: "message_50" */
-  update_message_50?: Maybe<Message_50_Mutation_Response>;
-  /** update multiples rows of table: "message_50" */
-  update_message_50_many?: Maybe<Array<Maybe<Message_50_Mutation_Response>>>;
-  /** update data of the table: "message_104" */
-  update_message_104?: Maybe<Message_104_Mutation_Response>;
-  /** update multiples rows of table: "message_104" */
-  update_message_104_many?: Maybe<Array<Maybe<Message_104_Mutation_Response>>>;
+  /** update data of the table: "message_105" */
+  update_message_105?: Maybe<Message_105_Mutation_Response>;
+  /** update multiples rows of table: "message_105" */
+  update_message_105_many?: Maybe<Array<Maybe<Message_105_Mutation_Response>>>;
   /** update multiples rows of table: "message" */
   update_message_many?: Maybe<Array<Maybe<Message_Mutation_Response>>>;
   /** update data of the table: "message_type" */
@@ -8304,6 +6870,12 @@ export type Mutation_Root = {
   update_supply_many?: Maybe<Array<Maybe<Supply_Mutation_Response>>>;
   /** update data of the table: "token" */
   update_token?: Maybe<Token_Mutation_Response>;
+  /** update data of the table: "token_bonded" */
+  update_token_bonded?: Maybe<Token_Bonded_Mutation_Response>;
+  /** update single row of the table: "token_bonded" */
+  update_token_bonded_by_pk?: Maybe<Token_Bonded>;
+  /** update multiples rows of table: "token_bonded" */
+  update_token_bonded_many?: Maybe<Array<Maybe<Token_Bonded_Mutation_Response>>>;
   /** update data of the table: "token_holder" */
   update_token_holder?: Maybe<Token_Holder_Mutation_Response>;
   /** update single row of the table: "token_holder" */
@@ -8324,36 +6896,22 @@ export type Mutation_Root = {
   update_token_price_history_many?: Maybe<Array<Maybe<Token_Price_History_Mutation_Response>>>;
   /** update multiples rows of table: "token_price" */
   update_token_price_many?: Maybe<Array<Maybe<Token_Price_Mutation_Response>>>;
+  /** update data of the table: "token_unbonding" */
+  update_token_unbonding?: Maybe<Token_Unbonding_Mutation_Response>;
+  /** update single row of the table: "token_unbonding" */
+  update_token_unbonding_by_pk?: Maybe<Token_Unbonding>;
+  /** update multiples rows of table: "token_unbonding" */
+  update_token_unbonding_many?: Maybe<Array<Maybe<Token_Unbonding_Mutation_Response>>>;
   /** update data of the table: "token_unit" */
   update_token_unit?: Maybe<Token_Unit_Mutation_Response>;
   /** update multiples rows of table: "token_unit" */
   update_token_unit_many?: Maybe<Array<Maybe<Token_Unit_Mutation_Response>>>;
   /** update data of the table: "transaction" */
   update_transaction?: Maybe<Transaction_Mutation_Response>;
-  /** update data of the table: "transaction_46" */
-  update_transaction_46?: Maybe<Transaction_46_Mutation_Response>;
-  /** update multiples rows of table: "transaction_46" */
-  update_transaction_46_many?: Maybe<Array<Maybe<Transaction_46_Mutation_Response>>>;
-  /** update data of the table: "transaction_47" */
-  update_transaction_47?: Maybe<Transaction_47_Mutation_Response>;
-  /** update multiples rows of table: "transaction_47" */
-  update_transaction_47_many?: Maybe<Array<Maybe<Transaction_47_Mutation_Response>>>;
-  /** update data of the table: "transaction_48" */
-  update_transaction_48?: Maybe<Transaction_48_Mutation_Response>;
-  /** update multiples rows of table: "transaction_48" */
-  update_transaction_48_many?: Maybe<Array<Maybe<Transaction_48_Mutation_Response>>>;
-  /** update data of the table: "transaction_49" */
-  update_transaction_49?: Maybe<Transaction_49_Mutation_Response>;
-  /** update multiples rows of table: "transaction_49" */
-  update_transaction_49_many?: Maybe<Array<Maybe<Transaction_49_Mutation_Response>>>;
-  /** update data of the table: "transaction_50" */
-  update_transaction_50?: Maybe<Transaction_50_Mutation_Response>;
-  /** update multiples rows of table: "transaction_50" */
-  update_transaction_50_many?: Maybe<Array<Maybe<Transaction_50_Mutation_Response>>>;
-  /** update data of the table: "transaction_104" */
-  update_transaction_104?: Maybe<Transaction_104_Mutation_Response>;
-  /** update multiples rows of table: "transaction_104" */
-  update_transaction_104_many?: Maybe<Array<Maybe<Transaction_104_Mutation_Response>>>;
+  /** update data of the table: "transaction_105" */
+  update_transaction_105?: Maybe<Transaction_105_Mutation_Response>;
+  /** update multiples rows of table: "transaction_105" */
+  update_transaction_105_many?: Maybe<Array<Maybe<Transaction_105_Mutation_Response>>>;
   /** update multiples rows of table: "transaction" */
   update_transaction_many?: Maybe<Array<Maybe<Transaction_Mutation_Response>>>;
   /** update data of the table: "validator" */
@@ -8598,38 +7156,8 @@ export type Mutation_RootDelete_MessageArgs = {
 
 
 /** mutation root */
-export type Mutation_RootDelete_Message_46Args = {
-  where: Message_46_Bool_Exp;
-};
-
-
-/** mutation root */
-export type Mutation_RootDelete_Message_47Args = {
-  where: Message_47_Bool_Exp;
-};
-
-
-/** mutation root */
-export type Mutation_RootDelete_Message_48Args = {
-  where: Message_48_Bool_Exp;
-};
-
-
-/** mutation root */
-export type Mutation_RootDelete_Message_49Args = {
-  where: Message_49_Bool_Exp;
-};
-
-
-/** mutation root */
-export type Mutation_RootDelete_Message_50Args = {
-  where: Message_50_Bool_Exp;
-};
-
-
-/** mutation root */
-export type Mutation_RootDelete_Message_104Args = {
-  where: Message_104_Bool_Exp;
+export type Mutation_RootDelete_Message_105Args = {
+  where: Message_105_Bool_Exp;
 };
 
 
@@ -8828,6 +7356,18 @@ export type Mutation_RootDelete_TokenArgs = {
 
 
 /** mutation root */
+export type Mutation_RootDelete_Token_BondedArgs = {
+  where: Token_Bonded_Bool_Exp;
+};
+
+
+/** mutation root */
+export type Mutation_RootDelete_Token_Bonded_By_PkArgs = {
+  denom: Scalars['String'];
+};
+
+
+/** mutation root */
 export type Mutation_RootDelete_Token_HolderArgs = {
   where: Token_Holder_Bool_Exp;
 };
@@ -8864,6 +7404,18 @@ export type Mutation_RootDelete_Token_Price_History_By_PkArgs = {
 
 
 /** mutation root */
+export type Mutation_RootDelete_Token_UnbondingArgs = {
+  where: Token_Unbonding_Bool_Exp;
+};
+
+
+/** mutation root */
+export type Mutation_RootDelete_Token_Unbonding_By_PkArgs = {
+  denom: Scalars['String'];
+};
+
+
+/** mutation root */
 export type Mutation_RootDelete_Token_UnitArgs = {
   where: Token_Unit_Bool_Exp;
 };
@@ -8876,38 +7428,8 @@ export type Mutation_RootDelete_TransactionArgs = {
 
 
 /** mutation root */
-export type Mutation_RootDelete_Transaction_46Args = {
-  where: Transaction_46_Bool_Exp;
-};
-
-
-/** mutation root */
-export type Mutation_RootDelete_Transaction_47Args = {
-  where: Transaction_47_Bool_Exp;
-};
-
-
-/** mutation root */
-export type Mutation_RootDelete_Transaction_48Args = {
-  where: Transaction_48_Bool_Exp;
-};
-
-
-/** mutation root */
-export type Mutation_RootDelete_Transaction_49Args = {
-  where: Transaction_49_Bool_Exp;
-};
-
-
-/** mutation root */
-export type Mutation_RootDelete_Transaction_50Args = {
-  where: Transaction_50_Bool_Exp;
-};
-
-
-/** mutation root */
-export type Mutation_RootDelete_Transaction_104Args = {
-  where: Transaction_104_Bool_Exp;
+export type Mutation_RootDelete_Transaction_105Args = {
+  where: Transaction_105_Bool_Exp;
 };
 
 
@@ -9241,86 +7763,16 @@ export type Mutation_RootInsert_MessageArgs = {
 
 
 /** mutation root */
-export type Mutation_RootInsert_Message_46Args = {
-  objects: Array<Message_46_Insert_Input>;
-  on_conflict?: InputMaybe<Message_46_On_Conflict>;
+export type Mutation_RootInsert_Message_105Args = {
+  objects: Array<Message_105_Insert_Input>;
+  on_conflict?: InputMaybe<Message_105_On_Conflict>;
 };
 
 
 /** mutation root */
-export type Mutation_RootInsert_Message_46_OneArgs = {
-  object: Message_46_Insert_Input;
-  on_conflict?: InputMaybe<Message_46_On_Conflict>;
-};
-
-
-/** mutation root */
-export type Mutation_RootInsert_Message_47Args = {
-  objects: Array<Message_47_Insert_Input>;
-  on_conflict?: InputMaybe<Message_47_On_Conflict>;
-};
-
-
-/** mutation root */
-export type Mutation_RootInsert_Message_47_OneArgs = {
-  object: Message_47_Insert_Input;
-  on_conflict?: InputMaybe<Message_47_On_Conflict>;
-};
-
-
-/** mutation root */
-export type Mutation_RootInsert_Message_48Args = {
-  objects: Array<Message_48_Insert_Input>;
-  on_conflict?: InputMaybe<Message_48_On_Conflict>;
-};
-
-
-/** mutation root */
-export type Mutation_RootInsert_Message_48_OneArgs = {
-  object: Message_48_Insert_Input;
-  on_conflict?: InputMaybe<Message_48_On_Conflict>;
-};
-
-
-/** mutation root */
-export type Mutation_RootInsert_Message_49Args = {
-  objects: Array<Message_49_Insert_Input>;
-  on_conflict?: InputMaybe<Message_49_On_Conflict>;
-};
-
-
-/** mutation root */
-export type Mutation_RootInsert_Message_49_OneArgs = {
-  object: Message_49_Insert_Input;
-  on_conflict?: InputMaybe<Message_49_On_Conflict>;
-};
-
-
-/** mutation root */
-export type Mutation_RootInsert_Message_50Args = {
-  objects: Array<Message_50_Insert_Input>;
-  on_conflict?: InputMaybe<Message_50_On_Conflict>;
-};
-
-
-/** mutation root */
-export type Mutation_RootInsert_Message_50_OneArgs = {
-  object: Message_50_Insert_Input;
-  on_conflict?: InputMaybe<Message_50_On_Conflict>;
-};
-
-
-/** mutation root */
-export type Mutation_RootInsert_Message_104Args = {
-  objects: Array<Message_104_Insert_Input>;
-  on_conflict?: InputMaybe<Message_104_On_Conflict>;
-};
-
-
-/** mutation root */
-export type Mutation_RootInsert_Message_104_OneArgs = {
-  object: Message_104_Insert_Input;
-  on_conflict?: InputMaybe<Message_104_On_Conflict>;
+export type Mutation_RootInsert_Message_105_OneArgs = {
+  object: Message_105_Insert_Input;
+  on_conflict?: InputMaybe<Message_105_On_Conflict>;
 };
 
 
@@ -9601,6 +8053,20 @@ export type Mutation_RootInsert_TokenArgs = {
 
 
 /** mutation root */
+export type Mutation_RootInsert_Token_BondedArgs = {
+  objects: Array<Token_Bonded_Insert_Input>;
+  on_conflict?: InputMaybe<Token_Bonded_On_Conflict>;
+};
+
+
+/** mutation root */
+export type Mutation_RootInsert_Token_Bonded_OneArgs = {
+  object: Token_Bonded_Insert_Input;
+  on_conflict?: InputMaybe<Token_Bonded_On_Conflict>;
+};
+
+
+/** mutation root */
 export type Mutation_RootInsert_Token_HolderArgs = {
   objects: Array<Token_Holder_Insert_Input>;
   on_conflict?: InputMaybe<Token_Holder_On_Conflict>;
@@ -9650,6 +8116,20 @@ export type Mutation_RootInsert_Token_Price_OneArgs = {
 
 
 /** mutation root */
+export type Mutation_RootInsert_Token_UnbondingArgs = {
+  objects: Array<Token_Unbonding_Insert_Input>;
+  on_conflict?: InputMaybe<Token_Unbonding_On_Conflict>;
+};
+
+
+/** mutation root */
+export type Mutation_RootInsert_Token_Unbonding_OneArgs = {
+  object: Token_Unbonding_Insert_Input;
+  on_conflict?: InputMaybe<Token_Unbonding_On_Conflict>;
+};
+
+
+/** mutation root */
 export type Mutation_RootInsert_Token_UnitArgs = {
   objects: Array<Token_Unit_Insert_Input>;
   on_conflict?: InputMaybe<Token_Unit_On_Conflict>;
@@ -9671,86 +8151,16 @@ export type Mutation_RootInsert_TransactionArgs = {
 
 
 /** mutation root */
-export type Mutation_RootInsert_Transaction_46Args = {
-  objects: Array<Transaction_46_Insert_Input>;
-  on_conflict?: InputMaybe<Transaction_46_On_Conflict>;
+export type Mutation_RootInsert_Transaction_105Args = {
+  objects: Array<Transaction_105_Insert_Input>;
+  on_conflict?: InputMaybe<Transaction_105_On_Conflict>;
 };
 
 
 /** mutation root */
-export type Mutation_RootInsert_Transaction_46_OneArgs = {
-  object: Transaction_46_Insert_Input;
-  on_conflict?: InputMaybe<Transaction_46_On_Conflict>;
-};
-
-
-/** mutation root */
-export type Mutation_RootInsert_Transaction_47Args = {
-  objects: Array<Transaction_47_Insert_Input>;
-  on_conflict?: InputMaybe<Transaction_47_On_Conflict>;
-};
-
-
-/** mutation root */
-export type Mutation_RootInsert_Transaction_47_OneArgs = {
-  object: Transaction_47_Insert_Input;
-  on_conflict?: InputMaybe<Transaction_47_On_Conflict>;
-};
-
-
-/** mutation root */
-export type Mutation_RootInsert_Transaction_48Args = {
-  objects: Array<Transaction_48_Insert_Input>;
-  on_conflict?: InputMaybe<Transaction_48_On_Conflict>;
-};
-
-
-/** mutation root */
-export type Mutation_RootInsert_Transaction_48_OneArgs = {
-  object: Transaction_48_Insert_Input;
-  on_conflict?: InputMaybe<Transaction_48_On_Conflict>;
-};
-
-
-/** mutation root */
-export type Mutation_RootInsert_Transaction_49Args = {
-  objects: Array<Transaction_49_Insert_Input>;
-  on_conflict?: InputMaybe<Transaction_49_On_Conflict>;
-};
-
-
-/** mutation root */
-export type Mutation_RootInsert_Transaction_49_OneArgs = {
-  object: Transaction_49_Insert_Input;
-  on_conflict?: InputMaybe<Transaction_49_On_Conflict>;
-};
-
-
-/** mutation root */
-export type Mutation_RootInsert_Transaction_50Args = {
-  objects: Array<Transaction_50_Insert_Input>;
-  on_conflict?: InputMaybe<Transaction_50_On_Conflict>;
-};
-
-
-/** mutation root */
-export type Mutation_RootInsert_Transaction_50_OneArgs = {
-  object: Transaction_50_Insert_Input;
-  on_conflict?: InputMaybe<Transaction_50_On_Conflict>;
-};
-
-
-/** mutation root */
-export type Mutation_RootInsert_Transaction_104Args = {
-  objects: Array<Transaction_104_Insert_Input>;
-  on_conflict?: InputMaybe<Transaction_104_On_Conflict>;
-};
-
-
-/** mutation root */
-export type Mutation_RootInsert_Transaction_104_OneArgs = {
-  object: Transaction_104_Insert_Input;
-  on_conflict?: InputMaybe<Transaction_104_On_Conflict>;
+export type Mutation_RootInsert_Transaction_105_OneArgs = {
+  object: Transaction_105_Insert_Input;
+  on_conflict?: InputMaybe<Transaction_105_On_Conflict>;
 };
 
 
@@ -10258,86 +8668,16 @@ export type Mutation_RootUpdate_MessageArgs = {
 
 
 /** mutation root */
-export type Mutation_RootUpdate_Message_46Args = {
-  _inc?: InputMaybe<Message_46_Inc_Input>;
-  _set?: InputMaybe<Message_46_Set_Input>;
-  where: Message_46_Bool_Exp;
+export type Mutation_RootUpdate_Message_105Args = {
+  _inc?: InputMaybe<Message_105_Inc_Input>;
+  _set?: InputMaybe<Message_105_Set_Input>;
+  where: Message_105_Bool_Exp;
 };
 
 
 /** mutation root */
-export type Mutation_RootUpdate_Message_46_ManyArgs = {
-  updates: Array<Message_46_Updates>;
-};
-
-
-/** mutation root */
-export type Mutation_RootUpdate_Message_47Args = {
-  _inc?: InputMaybe<Message_47_Inc_Input>;
-  _set?: InputMaybe<Message_47_Set_Input>;
-  where: Message_47_Bool_Exp;
-};
-
-
-/** mutation root */
-export type Mutation_RootUpdate_Message_47_ManyArgs = {
-  updates: Array<Message_47_Updates>;
-};
-
-
-/** mutation root */
-export type Mutation_RootUpdate_Message_48Args = {
-  _inc?: InputMaybe<Message_48_Inc_Input>;
-  _set?: InputMaybe<Message_48_Set_Input>;
-  where: Message_48_Bool_Exp;
-};
-
-
-/** mutation root */
-export type Mutation_RootUpdate_Message_48_ManyArgs = {
-  updates: Array<Message_48_Updates>;
-};
-
-
-/** mutation root */
-export type Mutation_RootUpdate_Message_49Args = {
-  _inc?: InputMaybe<Message_49_Inc_Input>;
-  _set?: InputMaybe<Message_49_Set_Input>;
-  where: Message_49_Bool_Exp;
-};
-
-
-/** mutation root */
-export type Mutation_RootUpdate_Message_49_ManyArgs = {
-  updates: Array<Message_49_Updates>;
-};
-
-
-/** mutation root */
-export type Mutation_RootUpdate_Message_50Args = {
-  _inc?: InputMaybe<Message_50_Inc_Input>;
-  _set?: InputMaybe<Message_50_Set_Input>;
-  where: Message_50_Bool_Exp;
-};
-
-
-/** mutation root */
-export type Mutation_RootUpdate_Message_50_ManyArgs = {
-  updates: Array<Message_50_Updates>;
-};
-
-
-/** mutation root */
-export type Mutation_RootUpdate_Message_104Args = {
-  _inc?: InputMaybe<Message_104_Inc_Input>;
-  _set?: InputMaybe<Message_104_Set_Input>;
-  where: Message_104_Bool_Exp;
-};
-
-
-/** mutation root */
-export type Mutation_RootUpdate_Message_104_ManyArgs = {
-  updates: Array<Message_104_Updates>;
+export type Mutation_RootUpdate_Message_105_ManyArgs = {
+  updates: Array<Message_105_Updates>;
 };
 
 
@@ -10755,6 +9095,28 @@ export type Mutation_RootUpdate_TokenArgs = {
 
 
 /** mutation root */
+export type Mutation_RootUpdate_Token_BondedArgs = {
+  _inc?: InputMaybe<Token_Bonded_Inc_Input>;
+  _set?: InputMaybe<Token_Bonded_Set_Input>;
+  where: Token_Bonded_Bool_Exp;
+};
+
+
+/** mutation root */
+export type Mutation_RootUpdate_Token_Bonded_By_PkArgs = {
+  _inc?: InputMaybe<Token_Bonded_Inc_Input>;
+  _set?: InputMaybe<Token_Bonded_Set_Input>;
+  pk_columns: Token_Bonded_Pk_Columns_Input;
+};
+
+
+/** mutation root */
+export type Mutation_RootUpdate_Token_Bonded_ManyArgs = {
+  updates: Array<Token_Bonded_Updates>;
+};
+
+
+/** mutation root */
 export type Mutation_RootUpdate_Token_HolderArgs = {
   _inc?: InputMaybe<Token_Holder_Inc_Input>;
   _set?: InputMaybe<Token_Holder_Set_Input>;
@@ -10827,6 +9189,28 @@ export type Mutation_RootUpdate_Token_Price_ManyArgs = {
 
 
 /** mutation root */
+export type Mutation_RootUpdate_Token_UnbondingArgs = {
+  _inc?: InputMaybe<Token_Unbonding_Inc_Input>;
+  _set?: InputMaybe<Token_Unbonding_Set_Input>;
+  where: Token_Unbonding_Bool_Exp;
+};
+
+
+/** mutation root */
+export type Mutation_RootUpdate_Token_Unbonding_By_PkArgs = {
+  _inc?: InputMaybe<Token_Unbonding_Inc_Input>;
+  _set?: InputMaybe<Token_Unbonding_Set_Input>;
+  pk_columns: Token_Unbonding_Pk_Columns_Input;
+};
+
+
+/** mutation root */
+export type Mutation_RootUpdate_Token_Unbonding_ManyArgs = {
+  updates: Array<Token_Unbonding_Updates>;
+};
+
+
+/** mutation root */
 export type Mutation_RootUpdate_Token_UnitArgs = {
   _inc?: InputMaybe<Token_Unit_Inc_Input>;
   _set?: InputMaybe<Token_Unit_Set_Input>;
@@ -10854,116 +9238,21 @@ export type Mutation_RootUpdate_TransactionArgs = {
 
 
 /** mutation root */
-export type Mutation_RootUpdate_Transaction_46Args = {
-  _append?: InputMaybe<Transaction_46_Append_Input>;
-  _delete_at_path?: InputMaybe<Transaction_46_Delete_At_Path_Input>;
-  _delete_elem?: InputMaybe<Transaction_46_Delete_Elem_Input>;
-  _delete_key?: InputMaybe<Transaction_46_Delete_Key_Input>;
-  _inc?: InputMaybe<Transaction_46_Inc_Input>;
-  _prepend?: InputMaybe<Transaction_46_Prepend_Input>;
-  _set?: InputMaybe<Transaction_46_Set_Input>;
-  where: Transaction_46_Bool_Exp;
+export type Mutation_RootUpdate_Transaction_105Args = {
+  _append?: InputMaybe<Transaction_105_Append_Input>;
+  _delete_at_path?: InputMaybe<Transaction_105_Delete_At_Path_Input>;
+  _delete_elem?: InputMaybe<Transaction_105_Delete_Elem_Input>;
+  _delete_key?: InputMaybe<Transaction_105_Delete_Key_Input>;
+  _inc?: InputMaybe<Transaction_105_Inc_Input>;
+  _prepend?: InputMaybe<Transaction_105_Prepend_Input>;
+  _set?: InputMaybe<Transaction_105_Set_Input>;
+  where: Transaction_105_Bool_Exp;
 };
 
 
 /** mutation root */
-export type Mutation_RootUpdate_Transaction_46_ManyArgs = {
-  updates: Array<Transaction_46_Updates>;
-};
-
-
-/** mutation root */
-export type Mutation_RootUpdate_Transaction_47Args = {
-  _append?: InputMaybe<Transaction_47_Append_Input>;
-  _delete_at_path?: InputMaybe<Transaction_47_Delete_At_Path_Input>;
-  _delete_elem?: InputMaybe<Transaction_47_Delete_Elem_Input>;
-  _delete_key?: InputMaybe<Transaction_47_Delete_Key_Input>;
-  _inc?: InputMaybe<Transaction_47_Inc_Input>;
-  _prepend?: InputMaybe<Transaction_47_Prepend_Input>;
-  _set?: InputMaybe<Transaction_47_Set_Input>;
-  where: Transaction_47_Bool_Exp;
-};
-
-
-/** mutation root */
-export type Mutation_RootUpdate_Transaction_47_ManyArgs = {
-  updates: Array<Transaction_47_Updates>;
-};
-
-
-/** mutation root */
-export type Mutation_RootUpdate_Transaction_48Args = {
-  _append?: InputMaybe<Transaction_48_Append_Input>;
-  _delete_at_path?: InputMaybe<Transaction_48_Delete_At_Path_Input>;
-  _delete_elem?: InputMaybe<Transaction_48_Delete_Elem_Input>;
-  _delete_key?: InputMaybe<Transaction_48_Delete_Key_Input>;
-  _inc?: InputMaybe<Transaction_48_Inc_Input>;
-  _prepend?: InputMaybe<Transaction_48_Prepend_Input>;
-  _set?: InputMaybe<Transaction_48_Set_Input>;
-  where: Transaction_48_Bool_Exp;
-};
-
-
-/** mutation root */
-export type Mutation_RootUpdate_Transaction_48_ManyArgs = {
-  updates: Array<Transaction_48_Updates>;
-};
-
-
-/** mutation root */
-export type Mutation_RootUpdate_Transaction_49Args = {
-  _append?: InputMaybe<Transaction_49_Append_Input>;
-  _delete_at_path?: InputMaybe<Transaction_49_Delete_At_Path_Input>;
-  _delete_elem?: InputMaybe<Transaction_49_Delete_Elem_Input>;
-  _delete_key?: InputMaybe<Transaction_49_Delete_Key_Input>;
-  _inc?: InputMaybe<Transaction_49_Inc_Input>;
-  _prepend?: InputMaybe<Transaction_49_Prepend_Input>;
-  _set?: InputMaybe<Transaction_49_Set_Input>;
-  where: Transaction_49_Bool_Exp;
-};
-
-
-/** mutation root */
-export type Mutation_RootUpdate_Transaction_49_ManyArgs = {
-  updates: Array<Transaction_49_Updates>;
-};
-
-
-/** mutation root */
-export type Mutation_RootUpdate_Transaction_50Args = {
-  _append?: InputMaybe<Transaction_50_Append_Input>;
-  _delete_at_path?: InputMaybe<Transaction_50_Delete_At_Path_Input>;
-  _delete_elem?: InputMaybe<Transaction_50_Delete_Elem_Input>;
-  _delete_key?: InputMaybe<Transaction_50_Delete_Key_Input>;
-  _inc?: InputMaybe<Transaction_50_Inc_Input>;
-  _prepend?: InputMaybe<Transaction_50_Prepend_Input>;
-  _set?: InputMaybe<Transaction_50_Set_Input>;
-  where: Transaction_50_Bool_Exp;
-};
-
-
-/** mutation root */
-export type Mutation_RootUpdate_Transaction_50_ManyArgs = {
-  updates: Array<Transaction_50_Updates>;
-};
-
-
-/** mutation root */
-export type Mutation_RootUpdate_Transaction_104Args = {
-  _append?: InputMaybe<Transaction_104_Append_Input>;
-  _delete_at_path?: InputMaybe<Transaction_104_Delete_At_Path_Input>;
-  _delete_elem?: InputMaybe<Transaction_104_Delete_Elem_Input>;
-  _delete_key?: InputMaybe<Transaction_104_Delete_Key_Input>;
-  _inc?: InputMaybe<Transaction_104_Inc_Input>;
-  _prepend?: InputMaybe<Transaction_104_Prepend_Input>;
-  _set?: InputMaybe<Transaction_104_Set_Input>;
-  where: Transaction_104_Bool_Exp;
-};
-
-
-/** mutation root */
-export type Mutation_RootUpdate_Transaction_104_ManyArgs = {
-  updates: Array<Transaction_104_Updates>;
+export type Mutation_RootUpdate_Transaction_105_ManyArgs = {
+  updates: Array<Transaction_105_Updates>;
 };
 
 
@@ -14219,30 +12508,10 @@ export type Query_Root = {
   inflation_by_pk?: Maybe<Inflation>;
   /** fetch data from the table: "message" */
   message: Array<Message>;
-  /** fetch data from the table: "message_46" */
-  message_46: Array<Message_46>;
-  /** fetch aggregated fields from the table: "message_46" */
-  message_46_aggregate: Message_46_Aggregate;
-  /** fetch data from the table: "message_47" */
-  message_47: Array<Message_47>;
-  /** fetch aggregated fields from the table: "message_47" */
-  message_47_aggregate: Message_47_Aggregate;
-  /** fetch data from the table: "message_48" */
-  message_48: Array<Message_48>;
-  /** fetch aggregated fields from the table: "message_48" */
-  message_48_aggregate: Message_48_Aggregate;
-  /** fetch data from the table: "message_49" */
-  message_49: Array<Message_49>;
-  /** fetch aggregated fields from the table: "message_49" */
-  message_49_aggregate: Message_49_Aggregate;
-  /** fetch data from the table: "message_50" */
-  message_50: Array<Message_50>;
-  /** fetch aggregated fields from the table: "message_50" */
-  message_50_aggregate: Message_50_Aggregate;
-  /** fetch data from the table: "message_104" */
-  message_104: Array<Message_104>;
-  /** fetch aggregated fields from the table: "message_104" */
-  message_104_aggregate: Message_104_Aggregate;
+  /** fetch data from the table: "message_105" */
+  message_105: Array<Message_105>;
+  /** fetch aggregated fields from the table: "message_105" */
+  message_105_aggregate: Message_105_Aggregate;
   /** fetch aggregated fields from the table: "message" */
   message_aggregate: Message_Aggregate;
   /** fetch data from the table: "message_type" */
@@ -14353,6 +12622,12 @@ export type Query_Root = {
   token: Array<Token>;
   /** fetch aggregated fields from the table: "token" */
   token_aggregate: Token_Aggregate;
+  /** fetch data from the table: "token_bonded" */
+  token_bonded: Array<Token_Bonded>;
+  /** fetch aggregated fields from the table: "token_bonded" */
+  token_bonded_aggregate: Token_Bonded_Aggregate;
+  /** fetch data from the table: "token_bonded" using primary key columns */
+  token_bonded_by_pk?: Maybe<Token_Bonded>;
   /** fetch data from the table: "token_holder" */
   token_holder: Array<Token_Holder>;
   /** fetch aggregated fields from the table: "token_holder" */
@@ -14371,36 +12646,22 @@ export type Query_Root = {
   token_price_history_aggregate: Token_Price_History_Aggregate;
   /** fetch data from the table: "token_price_history" using primary key columns */
   token_price_history_by_pk?: Maybe<Token_Price_History>;
+  /** fetch data from the table: "token_unbonding" */
+  token_unbonding: Array<Token_Unbonding>;
+  /** fetch aggregated fields from the table: "token_unbonding" */
+  token_unbonding_aggregate: Token_Unbonding_Aggregate;
+  /** fetch data from the table: "token_unbonding" using primary key columns */
+  token_unbonding_by_pk?: Maybe<Token_Unbonding>;
   /** fetch data from the table: "token_unit" */
   token_unit: Array<Token_Unit>;
   /** fetch aggregated fields from the table: "token_unit" */
   token_unit_aggregate: Token_Unit_Aggregate;
   /** fetch data from the table: "transaction" */
   transaction: Array<Transaction>;
-  /** fetch data from the table: "transaction_46" */
-  transaction_46: Array<Transaction_46>;
-  /** fetch aggregated fields from the table: "transaction_46" */
-  transaction_46_aggregate: Transaction_46_Aggregate;
-  /** fetch data from the table: "transaction_47" */
-  transaction_47: Array<Transaction_47>;
-  /** fetch aggregated fields from the table: "transaction_47" */
-  transaction_47_aggregate: Transaction_47_Aggregate;
-  /** fetch data from the table: "transaction_48" */
-  transaction_48: Array<Transaction_48>;
-  /** fetch aggregated fields from the table: "transaction_48" */
-  transaction_48_aggregate: Transaction_48_Aggregate;
-  /** fetch data from the table: "transaction_49" */
-  transaction_49: Array<Transaction_49>;
-  /** fetch aggregated fields from the table: "transaction_49" */
-  transaction_49_aggregate: Transaction_49_Aggregate;
-  /** fetch data from the table: "transaction_50" */
-  transaction_50: Array<Transaction_50>;
-  /** fetch aggregated fields from the table: "transaction_50" */
-  transaction_50_aggregate: Transaction_50_Aggregate;
-  /** fetch data from the table: "transaction_104" */
-  transaction_104: Array<Transaction_104>;
-  /** fetch aggregated fields from the table: "transaction_104" */
-  transaction_104_aggregate: Transaction_104_Aggregate;
+  /** fetch data from the table: "transaction_105" */
+  transaction_105: Array<Transaction_105>;
+  /** fetch aggregated fields from the table: "transaction_105" */
+  transaction_105_aggregate: Transaction_105_Aggregate;
   /** fetch aggregated fields from the table: "transaction" */
   transaction_aggregate: Transaction_Aggregate;
   /** fetch data from the table: "validator" */
@@ -14921,111 +13182,21 @@ export type Query_RootMessageArgs = {
 };
 
 
-export type Query_RootMessage_46Args = {
-  distinct_on?: InputMaybe<Array<Message_46_Select_Column>>;
+export type Query_RootMessage_105Args = {
+  distinct_on?: InputMaybe<Array<Message_105_Select_Column>>;
   limit?: InputMaybe<Scalars['Int']>;
   offset?: InputMaybe<Scalars['Int']>;
-  order_by?: InputMaybe<Array<Message_46_Order_By>>;
-  where?: InputMaybe<Message_46_Bool_Exp>;
+  order_by?: InputMaybe<Array<Message_105_Order_By>>;
+  where?: InputMaybe<Message_105_Bool_Exp>;
 };
 
 
-export type Query_RootMessage_46_AggregateArgs = {
-  distinct_on?: InputMaybe<Array<Message_46_Select_Column>>;
+export type Query_RootMessage_105_AggregateArgs = {
+  distinct_on?: InputMaybe<Array<Message_105_Select_Column>>;
   limit?: InputMaybe<Scalars['Int']>;
   offset?: InputMaybe<Scalars['Int']>;
-  order_by?: InputMaybe<Array<Message_46_Order_By>>;
-  where?: InputMaybe<Message_46_Bool_Exp>;
-};
-
-
-export type Query_RootMessage_47Args = {
-  distinct_on?: InputMaybe<Array<Message_47_Select_Column>>;
-  limit?: InputMaybe<Scalars['Int']>;
-  offset?: InputMaybe<Scalars['Int']>;
-  order_by?: InputMaybe<Array<Message_47_Order_By>>;
-  where?: InputMaybe<Message_47_Bool_Exp>;
-};
-
-
-export type Query_RootMessage_47_AggregateArgs = {
-  distinct_on?: InputMaybe<Array<Message_47_Select_Column>>;
-  limit?: InputMaybe<Scalars['Int']>;
-  offset?: InputMaybe<Scalars['Int']>;
-  order_by?: InputMaybe<Array<Message_47_Order_By>>;
-  where?: InputMaybe<Message_47_Bool_Exp>;
-};
-
-
-export type Query_RootMessage_48Args = {
-  distinct_on?: InputMaybe<Array<Message_48_Select_Column>>;
-  limit?: InputMaybe<Scalars['Int']>;
-  offset?: InputMaybe<Scalars['Int']>;
-  order_by?: InputMaybe<Array<Message_48_Order_By>>;
-  where?: InputMaybe<Message_48_Bool_Exp>;
-};
-
-
-export type Query_RootMessage_48_AggregateArgs = {
-  distinct_on?: InputMaybe<Array<Message_48_Select_Column>>;
-  limit?: InputMaybe<Scalars['Int']>;
-  offset?: InputMaybe<Scalars['Int']>;
-  order_by?: InputMaybe<Array<Message_48_Order_By>>;
-  where?: InputMaybe<Message_48_Bool_Exp>;
-};
-
-
-export type Query_RootMessage_49Args = {
-  distinct_on?: InputMaybe<Array<Message_49_Select_Column>>;
-  limit?: InputMaybe<Scalars['Int']>;
-  offset?: InputMaybe<Scalars['Int']>;
-  order_by?: InputMaybe<Array<Message_49_Order_By>>;
-  where?: InputMaybe<Message_49_Bool_Exp>;
-};
-
-
-export type Query_RootMessage_49_AggregateArgs = {
-  distinct_on?: InputMaybe<Array<Message_49_Select_Column>>;
-  limit?: InputMaybe<Scalars['Int']>;
-  offset?: InputMaybe<Scalars['Int']>;
-  order_by?: InputMaybe<Array<Message_49_Order_By>>;
-  where?: InputMaybe<Message_49_Bool_Exp>;
-};
-
-
-export type Query_RootMessage_50Args = {
-  distinct_on?: InputMaybe<Array<Message_50_Select_Column>>;
-  limit?: InputMaybe<Scalars['Int']>;
-  offset?: InputMaybe<Scalars['Int']>;
-  order_by?: InputMaybe<Array<Message_50_Order_By>>;
-  where?: InputMaybe<Message_50_Bool_Exp>;
-};
-
-
-export type Query_RootMessage_50_AggregateArgs = {
-  distinct_on?: InputMaybe<Array<Message_50_Select_Column>>;
-  limit?: InputMaybe<Scalars['Int']>;
-  offset?: InputMaybe<Scalars['Int']>;
-  order_by?: InputMaybe<Array<Message_50_Order_By>>;
-  where?: InputMaybe<Message_50_Bool_Exp>;
-};
-
-
-export type Query_RootMessage_104Args = {
-  distinct_on?: InputMaybe<Array<Message_104_Select_Column>>;
-  limit?: InputMaybe<Scalars['Int']>;
-  offset?: InputMaybe<Scalars['Int']>;
-  order_by?: InputMaybe<Array<Message_104_Order_By>>;
-  where?: InputMaybe<Message_104_Bool_Exp>;
-};
-
-
-export type Query_RootMessage_104_AggregateArgs = {
-  distinct_on?: InputMaybe<Array<Message_104_Select_Column>>;
-  limit?: InputMaybe<Scalars['Int']>;
-  offset?: InputMaybe<Scalars['Int']>;
-  order_by?: InputMaybe<Array<Message_104_Order_By>>;
-  where?: InputMaybe<Message_104_Bool_Exp>;
+  order_by?: InputMaybe<Array<Message_105_Order_By>>;
+  where?: InputMaybe<Message_105_Bool_Exp>;
 };
 
 
@@ -15480,6 +13651,29 @@ export type Query_RootToken_AggregateArgs = {
 };
 
 
+export type Query_RootToken_BondedArgs = {
+  distinct_on?: InputMaybe<Array<Token_Bonded_Select_Column>>;
+  limit?: InputMaybe<Scalars['Int']>;
+  offset?: InputMaybe<Scalars['Int']>;
+  order_by?: InputMaybe<Array<Token_Bonded_Order_By>>;
+  where?: InputMaybe<Token_Bonded_Bool_Exp>;
+};
+
+
+export type Query_RootToken_Bonded_AggregateArgs = {
+  distinct_on?: InputMaybe<Array<Token_Bonded_Select_Column>>;
+  limit?: InputMaybe<Scalars['Int']>;
+  offset?: InputMaybe<Scalars['Int']>;
+  order_by?: InputMaybe<Array<Token_Bonded_Order_By>>;
+  where?: InputMaybe<Token_Bonded_Bool_Exp>;
+};
+
+
+export type Query_RootToken_Bonded_By_PkArgs = {
+  denom: Scalars['String'];
+};
+
+
 export type Query_RootToken_HolderArgs = {
   distinct_on?: InputMaybe<Array<Token_Holder_Select_Column>>;
   limit?: InputMaybe<Scalars['Int']>;
@@ -15549,6 +13743,29 @@ export type Query_RootToken_Price_History_By_PkArgs = {
 };
 
 
+export type Query_RootToken_UnbondingArgs = {
+  distinct_on?: InputMaybe<Array<Token_Unbonding_Select_Column>>;
+  limit?: InputMaybe<Scalars['Int']>;
+  offset?: InputMaybe<Scalars['Int']>;
+  order_by?: InputMaybe<Array<Token_Unbonding_Order_By>>;
+  where?: InputMaybe<Token_Unbonding_Bool_Exp>;
+};
+
+
+export type Query_RootToken_Unbonding_AggregateArgs = {
+  distinct_on?: InputMaybe<Array<Token_Unbonding_Select_Column>>;
+  limit?: InputMaybe<Scalars['Int']>;
+  offset?: InputMaybe<Scalars['Int']>;
+  order_by?: InputMaybe<Array<Token_Unbonding_Order_By>>;
+  where?: InputMaybe<Token_Unbonding_Bool_Exp>;
+};
+
+
+export type Query_RootToken_Unbonding_By_PkArgs = {
+  denom: Scalars['String'];
+};
+
+
 export type Query_RootToken_UnitArgs = {
   distinct_on?: InputMaybe<Array<Token_Unit_Select_Column>>;
   limit?: InputMaybe<Scalars['Int']>;
@@ -15576,111 +13793,21 @@ export type Query_RootTransactionArgs = {
 };
 
 
-export type Query_RootTransaction_46Args = {
-  distinct_on?: InputMaybe<Array<Transaction_46_Select_Column>>;
+export type Query_RootTransaction_105Args = {
+  distinct_on?: InputMaybe<Array<Transaction_105_Select_Column>>;
   limit?: InputMaybe<Scalars['Int']>;
   offset?: InputMaybe<Scalars['Int']>;
-  order_by?: InputMaybe<Array<Transaction_46_Order_By>>;
-  where?: InputMaybe<Transaction_46_Bool_Exp>;
+  order_by?: InputMaybe<Array<Transaction_105_Order_By>>;
+  where?: InputMaybe<Transaction_105_Bool_Exp>;
 };
 
 
-export type Query_RootTransaction_46_AggregateArgs = {
-  distinct_on?: InputMaybe<Array<Transaction_46_Select_Column>>;
+export type Query_RootTransaction_105_AggregateArgs = {
+  distinct_on?: InputMaybe<Array<Transaction_105_Select_Column>>;
   limit?: InputMaybe<Scalars['Int']>;
   offset?: InputMaybe<Scalars['Int']>;
-  order_by?: InputMaybe<Array<Transaction_46_Order_By>>;
-  where?: InputMaybe<Transaction_46_Bool_Exp>;
-};
-
-
-export type Query_RootTransaction_47Args = {
-  distinct_on?: InputMaybe<Array<Transaction_47_Select_Column>>;
-  limit?: InputMaybe<Scalars['Int']>;
-  offset?: InputMaybe<Scalars['Int']>;
-  order_by?: InputMaybe<Array<Transaction_47_Order_By>>;
-  where?: InputMaybe<Transaction_47_Bool_Exp>;
-};
-
-
-export type Query_RootTransaction_47_AggregateArgs = {
-  distinct_on?: InputMaybe<Array<Transaction_47_Select_Column>>;
-  limit?: InputMaybe<Scalars['Int']>;
-  offset?: InputMaybe<Scalars['Int']>;
-  order_by?: InputMaybe<Array<Transaction_47_Order_By>>;
-  where?: InputMaybe<Transaction_47_Bool_Exp>;
-};
-
-
-export type Query_RootTransaction_48Args = {
-  distinct_on?: InputMaybe<Array<Transaction_48_Select_Column>>;
-  limit?: InputMaybe<Scalars['Int']>;
-  offset?: InputMaybe<Scalars['Int']>;
-  order_by?: InputMaybe<Array<Transaction_48_Order_By>>;
-  where?: InputMaybe<Transaction_48_Bool_Exp>;
-};
-
-
-export type Query_RootTransaction_48_AggregateArgs = {
-  distinct_on?: InputMaybe<Array<Transaction_48_Select_Column>>;
-  limit?: InputMaybe<Scalars['Int']>;
-  offset?: InputMaybe<Scalars['Int']>;
-  order_by?: InputMaybe<Array<Transaction_48_Order_By>>;
-  where?: InputMaybe<Transaction_48_Bool_Exp>;
-};
-
-
-export type Query_RootTransaction_49Args = {
-  distinct_on?: InputMaybe<Array<Transaction_49_Select_Column>>;
-  limit?: InputMaybe<Scalars['Int']>;
-  offset?: InputMaybe<Scalars['Int']>;
-  order_by?: InputMaybe<Array<Transaction_49_Order_By>>;
-  where?: InputMaybe<Transaction_49_Bool_Exp>;
-};
-
-
-export type Query_RootTransaction_49_AggregateArgs = {
-  distinct_on?: InputMaybe<Array<Transaction_49_Select_Column>>;
-  limit?: InputMaybe<Scalars['Int']>;
-  offset?: InputMaybe<Scalars['Int']>;
-  order_by?: InputMaybe<Array<Transaction_49_Order_By>>;
-  where?: InputMaybe<Transaction_49_Bool_Exp>;
-};
-
-
-export type Query_RootTransaction_50Args = {
-  distinct_on?: InputMaybe<Array<Transaction_50_Select_Column>>;
-  limit?: InputMaybe<Scalars['Int']>;
-  offset?: InputMaybe<Scalars['Int']>;
-  order_by?: InputMaybe<Array<Transaction_50_Order_By>>;
-  where?: InputMaybe<Transaction_50_Bool_Exp>;
-};
-
-
-export type Query_RootTransaction_50_AggregateArgs = {
-  distinct_on?: InputMaybe<Array<Transaction_50_Select_Column>>;
-  limit?: InputMaybe<Scalars['Int']>;
-  offset?: InputMaybe<Scalars['Int']>;
-  order_by?: InputMaybe<Array<Transaction_50_Order_By>>;
-  where?: InputMaybe<Transaction_50_Bool_Exp>;
-};
-
-
-export type Query_RootTransaction_104Args = {
-  distinct_on?: InputMaybe<Array<Transaction_104_Select_Column>>;
-  limit?: InputMaybe<Scalars['Int']>;
-  offset?: InputMaybe<Scalars['Int']>;
-  order_by?: InputMaybe<Array<Transaction_104_Order_By>>;
-  where?: InputMaybe<Transaction_104_Bool_Exp>;
-};
-
-
-export type Query_RootTransaction_104_AggregateArgs = {
-  distinct_on?: InputMaybe<Array<Transaction_104_Select_Column>>;
-  limit?: InputMaybe<Scalars['Int']>;
-  offset?: InputMaybe<Scalars['Int']>;
-  order_by?: InputMaybe<Array<Transaction_104_Order_By>>;
-  where?: InputMaybe<Transaction_104_Bool_Exp>;
+  order_by?: InputMaybe<Array<Transaction_105_Order_By>>;
+  where?: InputMaybe<Transaction_105_Bool_Exp>;
 };
 
 
@@ -17062,42 +15189,12 @@ export type Subscription_Root = {
   inflation_stream: Array<Inflation>;
   /** fetch data from the table: "message" */
   message: Array<Message>;
-  /** fetch data from the table: "message_46" */
-  message_46: Array<Message_46>;
-  /** fetch aggregated fields from the table: "message_46" */
-  message_46_aggregate: Message_46_Aggregate;
-  /** fetch data from the table in a streaming manner: "message_46" */
-  message_46_stream: Array<Message_46>;
-  /** fetch data from the table: "message_47" */
-  message_47: Array<Message_47>;
-  /** fetch aggregated fields from the table: "message_47" */
-  message_47_aggregate: Message_47_Aggregate;
-  /** fetch data from the table in a streaming manner: "message_47" */
-  message_47_stream: Array<Message_47>;
-  /** fetch data from the table: "message_48" */
-  message_48: Array<Message_48>;
-  /** fetch aggregated fields from the table: "message_48" */
-  message_48_aggregate: Message_48_Aggregate;
-  /** fetch data from the table in a streaming manner: "message_48" */
-  message_48_stream: Array<Message_48>;
-  /** fetch data from the table: "message_49" */
-  message_49: Array<Message_49>;
-  /** fetch aggregated fields from the table: "message_49" */
-  message_49_aggregate: Message_49_Aggregate;
-  /** fetch data from the table in a streaming manner: "message_49" */
-  message_49_stream: Array<Message_49>;
-  /** fetch data from the table: "message_50" */
-  message_50: Array<Message_50>;
-  /** fetch aggregated fields from the table: "message_50" */
-  message_50_aggregate: Message_50_Aggregate;
-  /** fetch data from the table in a streaming manner: "message_50" */
-  message_50_stream: Array<Message_50>;
-  /** fetch data from the table: "message_104" */
-  message_104: Array<Message_104>;
-  /** fetch aggregated fields from the table: "message_104" */
-  message_104_aggregate: Message_104_Aggregate;
-  /** fetch data from the table in a streaming manner: "message_104" */
-  message_104_stream: Array<Message_104>;
+  /** fetch data from the table: "message_105" */
+  message_105: Array<Message_105>;
+  /** fetch aggregated fields from the table: "message_105" */
+  message_105_aggregate: Message_105_Aggregate;
+  /** fetch data from the table in a streaming manner: "message_105" */
+  message_105_stream: Array<Message_105>;
   /** fetch aggregated fields from the table: "message" */
   message_aggregate: Message_Aggregate;
   /** fetch data from the table in a streaming manner: "message" */
@@ -17248,6 +15345,14 @@ export type Subscription_Root = {
   token: Array<Token>;
   /** fetch aggregated fields from the table: "token" */
   token_aggregate: Token_Aggregate;
+  /** fetch data from the table: "token_bonded" */
+  token_bonded: Array<Token_Bonded>;
+  /** fetch aggregated fields from the table: "token_bonded" */
+  token_bonded_aggregate: Token_Bonded_Aggregate;
+  /** fetch data from the table: "token_bonded" using primary key columns */
+  token_bonded_by_pk?: Maybe<Token_Bonded>;
+  /** fetch data from the table in a streaming manner: "token_bonded" */
+  token_bonded_stream: Array<Token_Bonded>;
   /** fetch data from the table: "token_holder" */
   token_holder: Array<Token_Holder>;
   /** fetch aggregated fields from the table: "token_holder" */
@@ -17274,6 +15379,14 @@ export type Subscription_Root = {
   token_price_stream: Array<Token_Price>;
   /** fetch data from the table in a streaming manner: "token" */
   token_stream: Array<Token>;
+  /** fetch data from the table: "token_unbonding" */
+  token_unbonding: Array<Token_Unbonding>;
+  /** fetch aggregated fields from the table: "token_unbonding" */
+  token_unbonding_aggregate: Token_Unbonding_Aggregate;
+  /** fetch data from the table: "token_unbonding" using primary key columns */
+  token_unbonding_by_pk?: Maybe<Token_Unbonding>;
+  /** fetch data from the table in a streaming manner: "token_unbonding" */
+  token_unbonding_stream: Array<Token_Unbonding>;
   /** fetch data from the table: "token_unit" */
   token_unit: Array<Token_Unit>;
   /** fetch aggregated fields from the table: "token_unit" */
@@ -17282,42 +15395,12 @@ export type Subscription_Root = {
   token_unit_stream: Array<Token_Unit>;
   /** fetch data from the table: "transaction" */
   transaction: Array<Transaction>;
-  /** fetch data from the table: "transaction_46" */
-  transaction_46: Array<Transaction_46>;
-  /** fetch aggregated fields from the table: "transaction_46" */
-  transaction_46_aggregate: Transaction_46_Aggregate;
-  /** fetch data from the table in a streaming manner: "transaction_46" */
-  transaction_46_stream: Array<Transaction_46>;
-  /** fetch data from the table: "transaction_47" */
-  transaction_47: Array<Transaction_47>;
-  /** fetch aggregated fields from the table: "transaction_47" */
-  transaction_47_aggregate: Transaction_47_Aggregate;
-  /** fetch data from the table in a streaming manner: "transaction_47" */
-  transaction_47_stream: Array<Transaction_47>;
-  /** fetch data from the table: "transaction_48" */
-  transaction_48: Array<Transaction_48>;
-  /** fetch aggregated fields from the table: "transaction_48" */
-  transaction_48_aggregate: Transaction_48_Aggregate;
-  /** fetch data from the table in a streaming manner: "transaction_48" */
-  transaction_48_stream: Array<Transaction_48>;
-  /** fetch data from the table: "transaction_49" */
-  transaction_49: Array<Transaction_49>;
-  /** fetch aggregated fields from the table: "transaction_49" */
-  transaction_49_aggregate: Transaction_49_Aggregate;
-  /** fetch data from the table in a streaming manner: "transaction_49" */
-  transaction_49_stream: Array<Transaction_49>;
-  /** fetch data from the table: "transaction_50" */
-  transaction_50: Array<Transaction_50>;
-  /** fetch aggregated fields from the table: "transaction_50" */
-  transaction_50_aggregate: Transaction_50_Aggregate;
-  /** fetch data from the table in a streaming manner: "transaction_50" */
-  transaction_50_stream: Array<Transaction_50>;
-  /** fetch data from the table: "transaction_104" */
-  transaction_104: Array<Transaction_104>;
-  /** fetch aggregated fields from the table: "transaction_104" */
-  transaction_104_aggregate: Transaction_104_Aggregate;
-  /** fetch data from the table in a streaming manner: "transaction_104" */
-  transaction_104_stream: Array<Transaction_104>;
+  /** fetch data from the table: "transaction_105" */
+  transaction_105: Array<Transaction_105>;
+  /** fetch aggregated fields from the table: "transaction_105" */
+  transaction_105_aggregate: Transaction_105_Aggregate;
+  /** fetch data from the table in a streaming manner: "transaction_105" */
+  transaction_105_stream: Array<Transaction_105>;
   /** fetch aggregated fields from the table: "transaction" */
   transaction_aggregate: Transaction_Aggregate;
   /** fetch data from the table in a streaming manner: "transaction" */
@@ -17888,153 +15971,28 @@ export type Subscription_RootMessageArgs = {
 };
 
 
-export type Subscription_RootMessage_46Args = {
-  distinct_on?: InputMaybe<Array<Message_46_Select_Column>>;
+export type Subscription_RootMessage_105Args = {
+  distinct_on?: InputMaybe<Array<Message_105_Select_Column>>;
   limit?: InputMaybe<Scalars['Int']>;
   offset?: InputMaybe<Scalars['Int']>;
-  order_by?: InputMaybe<Array<Message_46_Order_By>>;
-  where?: InputMaybe<Message_46_Bool_Exp>;
+  order_by?: InputMaybe<Array<Message_105_Order_By>>;
+  where?: InputMaybe<Message_105_Bool_Exp>;
 };
 
 
-export type Subscription_RootMessage_46_AggregateArgs = {
-  distinct_on?: InputMaybe<Array<Message_46_Select_Column>>;
+export type Subscription_RootMessage_105_AggregateArgs = {
+  distinct_on?: InputMaybe<Array<Message_105_Select_Column>>;
   limit?: InputMaybe<Scalars['Int']>;
   offset?: InputMaybe<Scalars['Int']>;
-  order_by?: InputMaybe<Array<Message_46_Order_By>>;
-  where?: InputMaybe<Message_46_Bool_Exp>;
+  order_by?: InputMaybe<Array<Message_105_Order_By>>;
+  where?: InputMaybe<Message_105_Bool_Exp>;
 };
 
 
-export type Subscription_RootMessage_46_StreamArgs = {
+export type Subscription_RootMessage_105_StreamArgs = {
   batch_size: Scalars['Int'];
-  cursor: Array<InputMaybe<Message_46_Stream_Cursor_Input>>;
-  where?: InputMaybe<Message_46_Bool_Exp>;
-};
-
-
-export type Subscription_RootMessage_47Args = {
-  distinct_on?: InputMaybe<Array<Message_47_Select_Column>>;
-  limit?: InputMaybe<Scalars['Int']>;
-  offset?: InputMaybe<Scalars['Int']>;
-  order_by?: InputMaybe<Array<Message_47_Order_By>>;
-  where?: InputMaybe<Message_47_Bool_Exp>;
-};
-
-
-export type Subscription_RootMessage_47_AggregateArgs = {
-  distinct_on?: InputMaybe<Array<Message_47_Select_Column>>;
-  limit?: InputMaybe<Scalars['Int']>;
-  offset?: InputMaybe<Scalars['Int']>;
-  order_by?: InputMaybe<Array<Message_47_Order_By>>;
-  where?: InputMaybe<Message_47_Bool_Exp>;
-};
-
-
-export type Subscription_RootMessage_47_StreamArgs = {
-  batch_size: Scalars['Int'];
-  cursor: Array<InputMaybe<Message_47_Stream_Cursor_Input>>;
-  where?: InputMaybe<Message_47_Bool_Exp>;
-};
-
-
-export type Subscription_RootMessage_48Args = {
-  distinct_on?: InputMaybe<Array<Message_48_Select_Column>>;
-  limit?: InputMaybe<Scalars['Int']>;
-  offset?: InputMaybe<Scalars['Int']>;
-  order_by?: InputMaybe<Array<Message_48_Order_By>>;
-  where?: InputMaybe<Message_48_Bool_Exp>;
-};
-
-
-export type Subscription_RootMessage_48_AggregateArgs = {
-  distinct_on?: InputMaybe<Array<Message_48_Select_Column>>;
-  limit?: InputMaybe<Scalars['Int']>;
-  offset?: InputMaybe<Scalars['Int']>;
-  order_by?: InputMaybe<Array<Message_48_Order_By>>;
-  where?: InputMaybe<Message_48_Bool_Exp>;
-};
-
-
-export type Subscription_RootMessage_48_StreamArgs = {
-  batch_size: Scalars['Int'];
-  cursor: Array<InputMaybe<Message_48_Stream_Cursor_Input>>;
-  where?: InputMaybe<Message_48_Bool_Exp>;
-};
-
-
-export type Subscription_RootMessage_49Args = {
-  distinct_on?: InputMaybe<Array<Message_49_Select_Column>>;
-  limit?: InputMaybe<Scalars['Int']>;
-  offset?: InputMaybe<Scalars['Int']>;
-  order_by?: InputMaybe<Array<Message_49_Order_By>>;
-  where?: InputMaybe<Message_49_Bool_Exp>;
-};
-
-
-export type Subscription_RootMessage_49_AggregateArgs = {
-  distinct_on?: InputMaybe<Array<Message_49_Select_Column>>;
-  limit?: InputMaybe<Scalars['Int']>;
-  offset?: InputMaybe<Scalars['Int']>;
-  order_by?: InputMaybe<Array<Message_49_Order_By>>;
-  where?: InputMaybe<Message_49_Bool_Exp>;
-};
-
-
-export type Subscription_RootMessage_49_StreamArgs = {
-  batch_size: Scalars['Int'];
-  cursor: Array<InputMaybe<Message_49_Stream_Cursor_Input>>;
-  where?: InputMaybe<Message_49_Bool_Exp>;
-};
-
-
-export type Subscription_RootMessage_50Args = {
-  distinct_on?: InputMaybe<Array<Message_50_Select_Column>>;
-  limit?: InputMaybe<Scalars['Int']>;
-  offset?: InputMaybe<Scalars['Int']>;
-  order_by?: InputMaybe<Array<Message_50_Order_By>>;
-  where?: InputMaybe<Message_50_Bool_Exp>;
-};
-
-
-export type Subscription_RootMessage_50_AggregateArgs = {
-  distinct_on?: InputMaybe<Array<Message_50_Select_Column>>;
-  limit?: InputMaybe<Scalars['Int']>;
-  offset?: InputMaybe<Scalars['Int']>;
-  order_by?: InputMaybe<Array<Message_50_Order_By>>;
-  where?: InputMaybe<Message_50_Bool_Exp>;
-};
-
-
-export type Subscription_RootMessage_50_StreamArgs = {
-  batch_size: Scalars['Int'];
-  cursor: Array<InputMaybe<Message_50_Stream_Cursor_Input>>;
-  where?: InputMaybe<Message_50_Bool_Exp>;
-};
-
-
-export type Subscription_RootMessage_104Args = {
-  distinct_on?: InputMaybe<Array<Message_104_Select_Column>>;
-  limit?: InputMaybe<Scalars['Int']>;
-  offset?: InputMaybe<Scalars['Int']>;
-  order_by?: InputMaybe<Array<Message_104_Order_By>>;
-  where?: InputMaybe<Message_104_Bool_Exp>;
-};
-
-
-export type Subscription_RootMessage_104_AggregateArgs = {
-  distinct_on?: InputMaybe<Array<Message_104_Select_Column>>;
-  limit?: InputMaybe<Scalars['Int']>;
-  offset?: InputMaybe<Scalars['Int']>;
-  order_by?: InputMaybe<Array<Message_104_Order_By>>;
-  where?: InputMaybe<Message_104_Bool_Exp>;
-};
-
-
-export type Subscription_RootMessage_104_StreamArgs = {
-  batch_size: Scalars['Int'];
-  cursor: Array<InputMaybe<Message_104_Stream_Cursor_Input>>;
-  where?: InputMaybe<Message_104_Bool_Exp>;
+  cursor: Array<InputMaybe<Message_105_Stream_Cursor_Input>>;
+  where?: InputMaybe<Message_105_Bool_Exp>;
 };
 
 
@@ -18629,6 +16587,36 @@ export type Subscription_RootToken_AggregateArgs = {
 };
 
 
+export type Subscription_RootToken_BondedArgs = {
+  distinct_on?: InputMaybe<Array<Token_Bonded_Select_Column>>;
+  limit?: InputMaybe<Scalars['Int']>;
+  offset?: InputMaybe<Scalars['Int']>;
+  order_by?: InputMaybe<Array<Token_Bonded_Order_By>>;
+  where?: InputMaybe<Token_Bonded_Bool_Exp>;
+};
+
+
+export type Subscription_RootToken_Bonded_AggregateArgs = {
+  distinct_on?: InputMaybe<Array<Token_Bonded_Select_Column>>;
+  limit?: InputMaybe<Scalars['Int']>;
+  offset?: InputMaybe<Scalars['Int']>;
+  order_by?: InputMaybe<Array<Token_Bonded_Order_By>>;
+  where?: InputMaybe<Token_Bonded_Bool_Exp>;
+};
+
+
+export type Subscription_RootToken_Bonded_By_PkArgs = {
+  denom: Scalars['String'];
+};
+
+
+export type Subscription_RootToken_Bonded_StreamArgs = {
+  batch_size: Scalars['Int'];
+  cursor: Array<InputMaybe<Token_Bonded_Stream_Cursor_Input>>;
+  where?: InputMaybe<Token_Bonded_Bool_Exp>;
+};
+
+
 export type Subscription_RootToken_HolderArgs = {
   distinct_on?: InputMaybe<Array<Token_Holder_Select_Column>>;
   limit?: InputMaybe<Scalars['Int']>;
@@ -18726,6 +16714,36 @@ export type Subscription_RootToken_StreamArgs = {
 };
 
 
+export type Subscription_RootToken_UnbondingArgs = {
+  distinct_on?: InputMaybe<Array<Token_Unbonding_Select_Column>>;
+  limit?: InputMaybe<Scalars['Int']>;
+  offset?: InputMaybe<Scalars['Int']>;
+  order_by?: InputMaybe<Array<Token_Unbonding_Order_By>>;
+  where?: InputMaybe<Token_Unbonding_Bool_Exp>;
+};
+
+
+export type Subscription_RootToken_Unbonding_AggregateArgs = {
+  distinct_on?: InputMaybe<Array<Token_Unbonding_Select_Column>>;
+  limit?: InputMaybe<Scalars['Int']>;
+  offset?: InputMaybe<Scalars['Int']>;
+  order_by?: InputMaybe<Array<Token_Unbonding_Order_By>>;
+  where?: InputMaybe<Token_Unbonding_Bool_Exp>;
+};
+
+
+export type Subscription_RootToken_Unbonding_By_PkArgs = {
+  denom: Scalars['String'];
+};
+
+
+export type Subscription_RootToken_Unbonding_StreamArgs = {
+  batch_size: Scalars['Int'];
+  cursor: Array<InputMaybe<Token_Unbonding_Stream_Cursor_Input>>;
+  where?: InputMaybe<Token_Unbonding_Bool_Exp>;
+};
+
+
 export type Subscription_RootToken_UnitArgs = {
   distinct_on?: InputMaybe<Array<Token_Unit_Select_Column>>;
   limit?: InputMaybe<Scalars['Int']>;
@@ -18760,153 +16778,28 @@ export type Subscription_RootTransactionArgs = {
 };
 
 
-export type Subscription_RootTransaction_46Args = {
-  distinct_on?: InputMaybe<Array<Transaction_46_Select_Column>>;
+export type Subscription_RootTransaction_105Args = {
+  distinct_on?: InputMaybe<Array<Transaction_105_Select_Column>>;
   limit?: InputMaybe<Scalars['Int']>;
   offset?: InputMaybe<Scalars['Int']>;
-  order_by?: InputMaybe<Array<Transaction_46_Order_By>>;
-  where?: InputMaybe<Transaction_46_Bool_Exp>;
+  order_by?: InputMaybe<Array<Transaction_105_Order_By>>;
+  where?: InputMaybe<Transaction_105_Bool_Exp>;
 };
 
 
-export type Subscription_RootTransaction_46_AggregateArgs = {
-  distinct_on?: InputMaybe<Array<Transaction_46_Select_Column>>;
+export type Subscription_RootTransaction_105_AggregateArgs = {
+  distinct_on?: InputMaybe<Array<Transaction_105_Select_Column>>;
   limit?: InputMaybe<Scalars['Int']>;
   offset?: InputMaybe<Scalars['Int']>;
-  order_by?: InputMaybe<Array<Transaction_46_Order_By>>;
-  where?: InputMaybe<Transaction_46_Bool_Exp>;
+  order_by?: InputMaybe<Array<Transaction_105_Order_By>>;
+  where?: InputMaybe<Transaction_105_Bool_Exp>;
 };
 
 
-export type Subscription_RootTransaction_46_StreamArgs = {
+export type Subscription_RootTransaction_105_StreamArgs = {
   batch_size: Scalars['Int'];
-  cursor: Array<InputMaybe<Transaction_46_Stream_Cursor_Input>>;
-  where?: InputMaybe<Transaction_46_Bool_Exp>;
-};
-
-
-export type Subscription_RootTransaction_47Args = {
-  distinct_on?: InputMaybe<Array<Transaction_47_Select_Column>>;
-  limit?: InputMaybe<Scalars['Int']>;
-  offset?: InputMaybe<Scalars['Int']>;
-  order_by?: InputMaybe<Array<Transaction_47_Order_By>>;
-  where?: InputMaybe<Transaction_47_Bool_Exp>;
-};
-
-
-export type Subscription_RootTransaction_47_AggregateArgs = {
-  distinct_on?: InputMaybe<Array<Transaction_47_Select_Column>>;
-  limit?: InputMaybe<Scalars['Int']>;
-  offset?: InputMaybe<Scalars['Int']>;
-  order_by?: InputMaybe<Array<Transaction_47_Order_By>>;
-  where?: InputMaybe<Transaction_47_Bool_Exp>;
-};
-
-
-export type Subscription_RootTransaction_47_StreamArgs = {
-  batch_size: Scalars['Int'];
-  cursor: Array<InputMaybe<Transaction_47_Stream_Cursor_Input>>;
-  where?: InputMaybe<Transaction_47_Bool_Exp>;
-};
-
-
-export type Subscription_RootTransaction_48Args = {
-  distinct_on?: InputMaybe<Array<Transaction_48_Select_Column>>;
-  limit?: InputMaybe<Scalars['Int']>;
-  offset?: InputMaybe<Scalars['Int']>;
-  order_by?: InputMaybe<Array<Transaction_48_Order_By>>;
-  where?: InputMaybe<Transaction_48_Bool_Exp>;
-};
-
-
-export type Subscription_RootTransaction_48_AggregateArgs = {
-  distinct_on?: InputMaybe<Array<Transaction_48_Select_Column>>;
-  limit?: InputMaybe<Scalars['Int']>;
-  offset?: InputMaybe<Scalars['Int']>;
-  order_by?: InputMaybe<Array<Transaction_48_Order_By>>;
-  where?: InputMaybe<Transaction_48_Bool_Exp>;
-};
-
-
-export type Subscription_RootTransaction_48_StreamArgs = {
-  batch_size: Scalars['Int'];
-  cursor: Array<InputMaybe<Transaction_48_Stream_Cursor_Input>>;
-  where?: InputMaybe<Transaction_48_Bool_Exp>;
-};
-
-
-export type Subscription_RootTransaction_49Args = {
-  distinct_on?: InputMaybe<Array<Transaction_49_Select_Column>>;
-  limit?: InputMaybe<Scalars['Int']>;
-  offset?: InputMaybe<Scalars['Int']>;
-  order_by?: InputMaybe<Array<Transaction_49_Order_By>>;
-  where?: InputMaybe<Transaction_49_Bool_Exp>;
-};
-
-
-export type Subscription_RootTransaction_49_AggregateArgs = {
-  distinct_on?: InputMaybe<Array<Transaction_49_Select_Column>>;
-  limit?: InputMaybe<Scalars['Int']>;
-  offset?: InputMaybe<Scalars['Int']>;
-  order_by?: InputMaybe<Array<Transaction_49_Order_By>>;
-  where?: InputMaybe<Transaction_49_Bool_Exp>;
-};
-
-
-export type Subscription_RootTransaction_49_StreamArgs = {
-  batch_size: Scalars['Int'];
-  cursor: Array<InputMaybe<Transaction_49_Stream_Cursor_Input>>;
-  where?: InputMaybe<Transaction_49_Bool_Exp>;
-};
-
-
-export type Subscription_RootTransaction_50Args = {
-  distinct_on?: InputMaybe<Array<Transaction_50_Select_Column>>;
-  limit?: InputMaybe<Scalars['Int']>;
-  offset?: InputMaybe<Scalars['Int']>;
-  order_by?: InputMaybe<Array<Transaction_50_Order_By>>;
-  where?: InputMaybe<Transaction_50_Bool_Exp>;
-};
-
-
-export type Subscription_RootTransaction_50_AggregateArgs = {
-  distinct_on?: InputMaybe<Array<Transaction_50_Select_Column>>;
-  limit?: InputMaybe<Scalars['Int']>;
-  offset?: InputMaybe<Scalars['Int']>;
-  order_by?: InputMaybe<Array<Transaction_50_Order_By>>;
-  where?: InputMaybe<Transaction_50_Bool_Exp>;
-};
-
-
-export type Subscription_RootTransaction_50_StreamArgs = {
-  batch_size: Scalars['Int'];
-  cursor: Array<InputMaybe<Transaction_50_Stream_Cursor_Input>>;
-  where?: InputMaybe<Transaction_50_Bool_Exp>;
-};
-
-
-export type Subscription_RootTransaction_104Args = {
-  distinct_on?: InputMaybe<Array<Transaction_104_Select_Column>>;
-  limit?: InputMaybe<Scalars['Int']>;
-  offset?: InputMaybe<Scalars['Int']>;
-  order_by?: InputMaybe<Array<Transaction_104_Order_By>>;
-  where?: InputMaybe<Transaction_104_Bool_Exp>;
-};
-
-
-export type Subscription_RootTransaction_104_AggregateArgs = {
-  distinct_on?: InputMaybe<Array<Transaction_104_Select_Column>>;
-  limit?: InputMaybe<Scalars['Int']>;
-  offset?: InputMaybe<Scalars['Int']>;
-  order_by?: InputMaybe<Array<Transaction_104_Order_By>>;
-  where?: InputMaybe<Transaction_104_Bool_Exp>;
-};
-
-
-export type Subscription_RootTransaction_104_StreamArgs = {
-  batch_size: Scalars['Int'];
-  cursor: Array<InputMaybe<Transaction_104_Stream_Cursor_Input>>;
-  where?: InputMaybe<Transaction_104_Bool_Exp>;
+  cursor: Array<InputMaybe<Transaction_105_Stream_Cursor_Input>>;
+  where?: InputMaybe<Transaction_105_Bool_Exp>;
 };
 
 
@@ -19515,6 +17408,215 @@ export type Token_Aggregate_Fields = {
 export type Token_Aggregate_FieldsCountArgs = {
   columns?: InputMaybe<Array<Token_Select_Column>>;
   distinct?: InputMaybe<Scalars['Boolean']>;
+};
+
+/** columns and relationships of "token_bonded" */
+export type Token_Bonded = {
+  __typename?: 'token_bonded';
+  amount: Scalars['String'];
+  denom: Scalars['String'];
+  height: Scalars['bigint'];
+};
+
+/** aggregated selection of "token_bonded" */
+export type Token_Bonded_Aggregate = {
+  __typename?: 'token_bonded_aggregate';
+  aggregate?: Maybe<Token_Bonded_Aggregate_Fields>;
+  nodes: Array<Token_Bonded>;
+};
+
+/** aggregate fields of "token_bonded" */
+export type Token_Bonded_Aggregate_Fields = {
+  __typename?: 'token_bonded_aggregate_fields';
+  avg?: Maybe<Token_Bonded_Avg_Fields>;
+  count: Scalars['Int'];
+  max?: Maybe<Token_Bonded_Max_Fields>;
+  min?: Maybe<Token_Bonded_Min_Fields>;
+  stddev?: Maybe<Token_Bonded_Stddev_Fields>;
+  stddev_pop?: Maybe<Token_Bonded_Stddev_Pop_Fields>;
+  stddev_samp?: Maybe<Token_Bonded_Stddev_Samp_Fields>;
+  sum?: Maybe<Token_Bonded_Sum_Fields>;
+  var_pop?: Maybe<Token_Bonded_Var_Pop_Fields>;
+  var_samp?: Maybe<Token_Bonded_Var_Samp_Fields>;
+  variance?: Maybe<Token_Bonded_Variance_Fields>;
+};
+
+
+/** aggregate fields of "token_bonded" */
+export type Token_Bonded_Aggregate_FieldsCountArgs = {
+  columns?: InputMaybe<Array<Token_Bonded_Select_Column>>;
+  distinct?: InputMaybe<Scalars['Boolean']>;
+};
+
+/** aggregate avg on columns */
+export type Token_Bonded_Avg_Fields = {
+  __typename?: 'token_bonded_avg_fields';
+  height?: Maybe<Scalars['Float']>;
+};
+
+/** Boolean expression to filter rows from the table "token_bonded". All fields are combined with a logical 'AND'. */
+export type Token_Bonded_Bool_Exp = {
+  _and?: InputMaybe<Array<Token_Bonded_Bool_Exp>>;
+  _not?: InputMaybe<Token_Bonded_Bool_Exp>;
+  _or?: InputMaybe<Array<Token_Bonded_Bool_Exp>>;
+  amount?: InputMaybe<String_Comparison_Exp>;
+  denom?: InputMaybe<String_Comparison_Exp>;
+  height?: InputMaybe<Bigint_Comparison_Exp>;
+};
+
+/** unique or primary key constraints on table "token_bonded" */
+export enum Token_Bonded_Constraint {
+  /** unique or primary key constraint on columns "denom" */
+  TokenBondedPkey = 'token_bonded_pkey'
+}
+
+/** input type for incrementing numeric columns in table "token_bonded" */
+export type Token_Bonded_Inc_Input = {
+  height?: InputMaybe<Scalars['bigint']>;
+};
+
+/** input type for inserting data into table "token_bonded" */
+export type Token_Bonded_Insert_Input = {
+  amount?: InputMaybe<Scalars['String']>;
+  denom?: InputMaybe<Scalars['String']>;
+  height?: InputMaybe<Scalars['bigint']>;
+};
+
+/** aggregate max on columns */
+export type Token_Bonded_Max_Fields = {
+  __typename?: 'token_bonded_max_fields';
+  amount?: Maybe<Scalars['String']>;
+  denom?: Maybe<Scalars['String']>;
+  height?: Maybe<Scalars['bigint']>;
+};
+
+/** aggregate min on columns */
+export type Token_Bonded_Min_Fields = {
+  __typename?: 'token_bonded_min_fields';
+  amount?: Maybe<Scalars['String']>;
+  denom?: Maybe<Scalars['String']>;
+  height?: Maybe<Scalars['bigint']>;
+};
+
+/** response of any mutation on the table "token_bonded" */
+export type Token_Bonded_Mutation_Response = {
+  __typename?: 'token_bonded_mutation_response';
+  /** number of rows affected by the mutation */
+  affected_rows: Scalars['Int'];
+  /** data from the rows affected by the mutation */
+  returning: Array<Token_Bonded>;
+};
+
+/** on_conflict condition type for table "token_bonded" */
+export type Token_Bonded_On_Conflict = {
+  constraint: Token_Bonded_Constraint;
+  update_columns?: Array<Token_Bonded_Update_Column>;
+  where?: InputMaybe<Token_Bonded_Bool_Exp>;
+};
+
+/** Ordering options when selecting data from "token_bonded". */
+export type Token_Bonded_Order_By = {
+  amount?: InputMaybe<Order_By>;
+  denom?: InputMaybe<Order_By>;
+  height?: InputMaybe<Order_By>;
+};
+
+/** primary key columns input for table: token_bonded */
+export type Token_Bonded_Pk_Columns_Input = {
+  denom: Scalars['String'];
+};
+
+/** select columns of table "token_bonded" */
+export enum Token_Bonded_Select_Column {
+  /** column name */
+  Amount = 'amount',
+  /** column name */
+  Denom = 'denom',
+  /** column name */
+  Height = 'height'
+}
+
+/** input type for updating data in table "token_bonded" */
+export type Token_Bonded_Set_Input = {
+  amount?: InputMaybe<Scalars['String']>;
+  denom?: InputMaybe<Scalars['String']>;
+  height?: InputMaybe<Scalars['bigint']>;
+};
+
+/** aggregate stddev on columns */
+export type Token_Bonded_Stddev_Fields = {
+  __typename?: 'token_bonded_stddev_fields';
+  height?: Maybe<Scalars['Float']>;
+};
+
+/** aggregate stddev_pop on columns */
+export type Token_Bonded_Stddev_Pop_Fields = {
+  __typename?: 'token_bonded_stddev_pop_fields';
+  height?: Maybe<Scalars['Float']>;
+};
+
+/** aggregate stddev_samp on columns */
+export type Token_Bonded_Stddev_Samp_Fields = {
+  __typename?: 'token_bonded_stddev_samp_fields';
+  height?: Maybe<Scalars['Float']>;
+};
+
+/** Streaming cursor of the table "token_bonded" */
+export type Token_Bonded_Stream_Cursor_Input = {
+  /** Stream column input with initial value */
+  initial_value: Token_Bonded_Stream_Cursor_Value_Input;
+  /** cursor ordering */
+  ordering?: InputMaybe<Cursor_Ordering>;
+};
+
+/** Initial value of the column from where the streaming should start */
+export type Token_Bonded_Stream_Cursor_Value_Input = {
+  amount?: InputMaybe<Scalars['String']>;
+  denom?: InputMaybe<Scalars['String']>;
+  height?: InputMaybe<Scalars['bigint']>;
+};
+
+/** aggregate sum on columns */
+export type Token_Bonded_Sum_Fields = {
+  __typename?: 'token_bonded_sum_fields';
+  height?: Maybe<Scalars['bigint']>;
+};
+
+/** update columns of table "token_bonded" */
+export enum Token_Bonded_Update_Column {
+  /** column name */
+  Amount = 'amount',
+  /** column name */
+  Denom = 'denom',
+  /** column name */
+  Height = 'height'
+}
+
+export type Token_Bonded_Updates = {
+  /** increments the numeric columns with given value of the filtered values */
+  _inc?: InputMaybe<Token_Bonded_Inc_Input>;
+  /** sets the columns of the filtered rows to the given values */
+  _set?: InputMaybe<Token_Bonded_Set_Input>;
+  /** filter the rows which have to be updated */
+  where: Token_Bonded_Bool_Exp;
+};
+
+/** aggregate var_pop on columns */
+export type Token_Bonded_Var_Pop_Fields = {
+  __typename?: 'token_bonded_var_pop_fields';
+  height?: Maybe<Scalars['Float']>;
+};
+
+/** aggregate var_samp on columns */
+export type Token_Bonded_Var_Samp_Fields = {
+  __typename?: 'token_bonded_var_samp_fields';
+  height?: Maybe<Scalars['Float']>;
+};
+
+/** aggregate variance on columns */
+export type Token_Bonded_Variance_Fields = {
+  __typename?: 'token_bonded_variance_fields';
+  height?: Maybe<Scalars['Float']>;
 };
 
 /** Boolean expression to filter rows from the table "token". All fields are combined with a logical 'AND'. */
@@ -20559,6 +18661,215 @@ export type Token_Stream_Cursor_Value_Input = {
   name?: InputMaybe<Scalars['String']>;
 };
 
+/** columns and relationships of "token_unbonding" */
+export type Token_Unbonding = {
+  __typename?: 'token_unbonding';
+  amount: Scalars['String'];
+  denom: Scalars['String'];
+  height: Scalars['bigint'];
+};
+
+/** aggregated selection of "token_unbonding" */
+export type Token_Unbonding_Aggregate = {
+  __typename?: 'token_unbonding_aggregate';
+  aggregate?: Maybe<Token_Unbonding_Aggregate_Fields>;
+  nodes: Array<Token_Unbonding>;
+};
+
+/** aggregate fields of "token_unbonding" */
+export type Token_Unbonding_Aggregate_Fields = {
+  __typename?: 'token_unbonding_aggregate_fields';
+  avg?: Maybe<Token_Unbonding_Avg_Fields>;
+  count: Scalars['Int'];
+  max?: Maybe<Token_Unbonding_Max_Fields>;
+  min?: Maybe<Token_Unbonding_Min_Fields>;
+  stddev?: Maybe<Token_Unbonding_Stddev_Fields>;
+  stddev_pop?: Maybe<Token_Unbonding_Stddev_Pop_Fields>;
+  stddev_samp?: Maybe<Token_Unbonding_Stddev_Samp_Fields>;
+  sum?: Maybe<Token_Unbonding_Sum_Fields>;
+  var_pop?: Maybe<Token_Unbonding_Var_Pop_Fields>;
+  var_samp?: Maybe<Token_Unbonding_Var_Samp_Fields>;
+  variance?: Maybe<Token_Unbonding_Variance_Fields>;
+};
+
+
+/** aggregate fields of "token_unbonding" */
+export type Token_Unbonding_Aggregate_FieldsCountArgs = {
+  columns?: InputMaybe<Array<Token_Unbonding_Select_Column>>;
+  distinct?: InputMaybe<Scalars['Boolean']>;
+};
+
+/** aggregate avg on columns */
+export type Token_Unbonding_Avg_Fields = {
+  __typename?: 'token_unbonding_avg_fields';
+  height?: Maybe<Scalars['Float']>;
+};
+
+/** Boolean expression to filter rows from the table "token_unbonding". All fields are combined with a logical 'AND'. */
+export type Token_Unbonding_Bool_Exp = {
+  _and?: InputMaybe<Array<Token_Unbonding_Bool_Exp>>;
+  _not?: InputMaybe<Token_Unbonding_Bool_Exp>;
+  _or?: InputMaybe<Array<Token_Unbonding_Bool_Exp>>;
+  amount?: InputMaybe<String_Comparison_Exp>;
+  denom?: InputMaybe<String_Comparison_Exp>;
+  height?: InputMaybe<Bigint_Comparison_Exp>;
+};
+
+/** unique or primary key constraints on table "token_unbonding" */
+export enum Token_Unbonding_Constraint {
+  /** unique or primary key constraint on columns "denom" */
+  TokenUnbondingPkey = 'token_unbonding_pkey'
+}
+
+/** input type for incrementing numeric columns in table "token_unbonding" */
+export type Token_Unbonding_Inc_Input = {
+  height?: InputMaybe<Scalars['bigint']>;
+};
+
+/** input type for inserting data into table "token_unbonding" */
+export type Token_Unbonding_Insert_Input = {
+  amount?: InputMaybe<Scalars['String']>;
+  denom?: InputMaybe<Scalars['String']>;
+  height?: InputMaybe<Scalars['bigint']>;
+};
+
+/** aggregate max on columns */
+export type Token_Unbonding_Max_Fields = {
+  __typename?: 'token_unbonding_max_fields';
+  amount?: Maybe<Scalars['String']>;
+  denom?: Maybe<Scalars['String']>;
+  height?: Maybe<Scalars['bigint']>;
+};
+
+/** aggregate min on columns */
+export type Token_Unbonding_Min_Fields = {
+  __typename?: 'token_unbonding_min_fields';
+  amount?: Maybe<Scalars['String']>;
+  denom?: Maybe<Scalars['String']>;
+  height?: Maybe<Scalars['bigint']>;
+};
+
+/** response of any mutation on the table "token_unbonding" */
+export type Token_Unbonding_Mutation_Response = {
+  __typename?: 'token_unbonding_mutation_response';
+  /** number of rows affected by the mutation */
+  affected_rows: Scalars['Int'];
+  /** data from the rows affected by the mutation */
+  returning: Array<Token_Unbonding>;
+};
+
+/** on_conflict condition type for table "token_unbonding" */
+export type Token_Unbonding_On_Conflict = {
+  constraint: Token_Unbonding_Constraint;
+  update_columns?: Array<Token_Unbonding_Update_Column>;
+  where?: InputMaybe<Token_Unbonding_Bool_Exp>;
+};
+
+/** Ordering options when selecting data from "token_unbonding". */
+export type Token_Unbonding_Order_By = {
+  amount?: InputMaybe<Order_By>;
+  denom?: InputMaybe<Order_By>;
+  height?: InputMaybe<Order_By>;
+};
+
+/** primary key columns input for table: token_unbonding */
+export type Token_Unbonding_Pk_Columns_Input = {
+  denom: Scalars['String'];
+};
+
+/** select columns of table "token_unbonding" */
+export enum Token_Unbonding_Select_Column {
+  /** column name */
+  Amount = 'amount',
+  /** column name */
+  Denom = 'denom',
+  /** column name */
+  Height = 'height'
+}
+
+/** input type for updating data in table "token_unbonding" */
+export type Token_Unbonding_Set_Input = {
+  amount?: InputMaybe<Scalars['String']>;
+  denom?: InputMaybe<Scalars['String']>;
+  height?: InputMaybe<Scalars['bigint']>;
+};
+
+/** aggregate stddev on columns */
+export type Token_Unbonding_Stddev_Fields = {
+  __typename?: 'token_unbonding_stddev_fields';
+  height?: Maybe<Scalars['Float']>;
+};
+
+/** aggregate stddev_pop on columns */
+export type Token_Unbonding_Stddev_Pop_Fields = {
+  __typename?: 'token_unbonding_stddev_pop_fields';
+  height?: Maybe<Scalars['Float']>;
+};
+
+/** aggregate stddev_samp on columns */
+export type Token_Unbonding_Stddev_Samp_Fields = {
+  __typename?: 'token_unbonding_stddev_samp_fields';
+  height?: Maybe<Scalars['Float']>;
+};
+
+/** Streaming cursor of the table "token_unbonding" */
+export type Token_Unbonding_Stream_Cursor_Input = {
+  /** Stream column input with initial value */
+  initial_value: Token_Unbonding_Stream_Cursor_Value_Input;
+  /** cursor ordering */
+  ordering?: InputMaybe<Cursor_Ordering>;
+};
+
+/** Initial value of the column from where the streaming should start */
+export type Token_Unbonding_Stream_Cursor_Value_Input = {
+  amount?: InputMaybe<Scalars['String']>;
+  denom?: InputMaybe<Scalars['String']>;
+  height?: InputMaybe<Scalars['bigint']>;
+};
+
+/** aggregate sum on columns */
+export type Token_Unbonding_Sum_Fields = {
+  __typename?: 'token_unbonding_sum_fields';
+  height?: Maybe<Scalars['bigint']>;
+};
+
+/** update columns of table "token_unbonding" */
+export enum Token_Unbonding_Update_Column {
+  /** column name */
+  Amount = 'amount',
+  /** column name */
+  Denom = 'denom',
+  /** column name */
+  Height = 'height'
+}
+
+export type Token_Unbonding_Updates = {
+  /** increments the numeric columns with given value of the filtered values */
+  _inc?: InputMaybe<Token_Unbonding_Inc_Input>;
+  /** sets the columns of the filtered rows to the given values */
+  _set?: InputMaybe<Token_Unbonding_Set_Input>;
+  /** filter the rows which have to be updated */
+  where: Token_Unbonding_Bool_Exp;
+};
+
+/** aggregate var_pop on columns */
+export type Token_Unbonding_Var_Pop_Fields = {
+  __typename?: 'token_unbonding_var_pop_fields';
+  height?: Maybe<Scalars['Float']>;
+};
+
+/** aggregate var_samp on columns */
+export type Token_Unbonding_Var_Samp_Fields = {
+  __typename?: 'token_unbonding_var_samp_fields';
+  height?: Maybe<Scalars['Float']>;
+};
+
+/** aggregate variance on columns */
+export type Token_Unbonding_Variance_Fields = {
+  __typename?: 'token_unbonding_variance_fields';
+  height?: Maybe<Scalars['Float']>;
+};
+
 /** columns and relationships of "token_unit" */
 export type Token_Unit = {
   __typename?: 'token_unit';
@@ -21008,9 +19319,9 @@ export type TransactionSigner_InfosArgs = {
   path?: InputMaybe<Scalars['String']>;
 };
 
-/** columns and relationships of "transaction_46" */
-export type Transaction_46 = {
-  __typename?: 'transaction_46';
+/** columns and relationships of "transaction_105" */
+export type Transaction_105 = {
+  __typename?: 'transaction_105';
   fee: Scalars['jsonb'];
   gas_used?: Maybe<Scalars['bigint']>;
   gas_wanted?: Maybe<Scalars['bigint']>;
@@ -21027,80 +19338,80 @@ export type Transaction_46 = {
 };
 
 
-/** columns and relationships of "transaction_46" */
-export type Transaction_46FeeArgs = {
+/** columns and relationships of "transaction_105" */
+export type Transaction_105FeeArgs = {
   path?: InputMaybe<Scalars['String']>;
 };
 
 
-/** columns and relationships of "transaction_46" */
-export type Transaction_46LogsArgs = {
+/** columns and relationships of "transaction_105" */
+export type Transaction_105LogsArgs = {
   path?: InputMaybe<Scalars['String']>;
 };
 
 
-/** columns and relationships of "transaction_46" */
-export type Transaction_46MessagesArgs = {
+/** columns and relationships of "transaction_105" */
+export type Transaction_105MessagesArgs = {
   path?: InputMaybe<Scalars['String']>;
 };
 
 
-/** columns and relationships of "transaction_46" */
-export type Transaction_46Signer_InfosArgs = {
+/** columns and relationships of "transaction_105" */
+export type Transaction_105Signer_InfosArgs = {
   path?: InputMaybe<Scalars['String']>;
 };
 
-/** aggregated selection of "transaction_46" */
-export type Transaction_46_Aggregate = {
-  __typename?: 'transaction_46_aggregate';
-  aggregate?: Maybe<Transaction_46_Aggregate_Fields>;
-  nodes: Array<Transaction_46>;
+/** aggregated selection of "transaction_105" */
+export type Transaction_105_Aggregate = {
+  __typename?: 'transaction_105_aggregate';
+  aggregate?: Maybe<Transaction_105_Aggregate_Fields>;
+  nodes: Array<Transaction_105>;
 };
 
-/** aggregate fields of "transaction_46" */
-export type Transaction_46_Aggregate_Fields = {
-  __typename?: 'transaction_46_aggregate_fields';
-  avg?: Maybe<Transaction_46_Avg_Fields>;
+/** aggregate fields of "transaction_105" */
+export type Transaction_105_Aggregate_Fields = {
+  __typename?: 'transaction_105_aggregate_fields';
+  avg?: Maybe<Transaction_105_Avg_Fields>;
   count: Scalars['Int'];
-  max?: Maybe<Transaction_46_Max_Fields>;
-  min?: Maybe<Transaction_46_Min_Fields>;
-  stddev?: Maybe<Transaction_46_Stddev_Fields>;
-  stddev_pop?: Maybe<Transaction_46_Stddev_Pop_Fields>;
-  stddev_samp?: Maybe<Transaction_46_Stddev_Samp_Fields>;
-  sum?: Maybe<Transaction_46_Sum_Fields>;
-  var_pop?: Maybe<Transaction_46_Var_Pop_Fields>;
-  var_samp?: Maybe<Transaction_46_Var_Samp_Fields>;
-  variance?: Maybe<Transaction_46_Variance_Fields>;
+  max?: Maybe<Transaction_105_Max_Fields>;
+  min?: Maybe<Transaction_105_Min_Fields>;
+  stddev?: Maybe<Transaction_105_Stddev_Fields>;
+  stddev_pop?: Maybe<Transaction_105_Stddev_Pop_Fields>;
+  stddev_samp?: Maybe<Transaction_105_Stddev_Samp_Fields>;
+  sum?: Maybe<Transaction_105_Sum_Fields>;
+  var_pop?: Maybe<Transaction_105_Var_Pop_Fields>;
+  var_samp?: Maybe<Transaction_105_Var_Samp_Fields>;
+  variance?: Maybe<Transaction_105_Variance_Fields>;
 };
 
 
-/** aggregate fields of "transaction_46" */
-export type Transaction_46_Aggregate_FieldsCountArgs = {
-  columns?: InputMaybe<Array<Transaction_46_Select_Column>>;
+/** aggregate fields of "transaction_105" */
+export type Transaction_105_Aggregate_FieldsCountArgs = {
+  columns?: InputMaybe<Array<Transaction_105_Select_Column>>;
   distinct?: InputMaybe<Scalars['Boolean']>;
 };
 
 /** append existing jsonb value of filtered columns with new jsonb value */
-export type Transaction_46_Append_Input = {
+export type Transaction_105_Append_Input = {
   fee?: InputMaybe<Scalars['jsonb']>;
   logs?: InputMaybe<Scalars['jsonb']>;
   signer_infos?: InputMaybe<Scalars['jsonb']>;
 };
 
 /** aggregate avg on columns */
-export type Transaction_46_Avg_Fields = {
-  __typename?: 'transaction_46_avg_fields';
+export type Transaction_105_Avg_Fields = {
+  __typename?: 'transaction_105_avg_fields';
   gas_used?: Maybe<Scalars['Float']>;
   gas_wanted?: Maybe<Scalars['Float']>;
   height?: Maybe<Scalars['Float']>;
   partition_id?: Maybe<Scalars['Float']>;
 };
 
-/** Boolean expression to filter rows from the table "transaction_46". All fields are combined with a logical 'AND'. */
-export type Transaction_46_Bool_Exp = {
-  _and?: InputMaybe<Array<Transaction_46_Bool_Exp>>;
-  _not?: InputMaybe<Transaction_46_Bool_Exp>;
-  _or?: InputMaybe<Array<Transaction_46_Bool_Exp>>;
+/** Boolean expression to filter rows from the table "transaction_105". All fields are combined with a logical 'AND'. */
+export type Transaction_105_Bool_Exp = {
+  _and?: InputMaybe<Array<Transaction_105_Bool_Exp>>;
+  _not?: InputMaybe<Transaction_105_Bool_Exp>;
+  _or?: InputMaybe<Array<Transaction_105_Bool_Exp>>;
   fee?: InputMaybe<Jsonb_Comparison_Exp>;
   gas_used?: InputMaybe<Bigint_Comparison_Exp>;
   gas_wanted?: InputMaybe<Bigint_Comparison_Exp>;
@@ -21116,43 +19427,43 @@ export type Transaction_46_Bool_Exp = {
   success?: InputMaybe<Boolean_Comparison_Exp>;
 };
 
-/** unique or primary key constraints on table "transaction_46" */
-export enum Transaction_46_Constraint {
+/** unique or primary key constraints on table "transaction_105" */
+export enum Transaction_105_Constraint {
   /** unique or primary key constraint on columns "partition_id", "hash" */
-  Transaction_46HashPartitionIdKey = 'transaction_46_hash_partition_id_key'
+  Transaction_105HashPartitionIdKey = 'transaction_105_hash_partition_id_key'
 }
 
 /** delete the field or element with specified path (for JSON arrays, negative integers count from the end) */
-export type Transaction_46_Delete_At_Path_Input = {
+export type Transaction_105_Delete_At_Path_Input = {
   fee?: InputMaybe<Array<Scalars['String']>>;
   logs?: InputMaybe<Array<Scalars['String']>>;
   signer_infos?: InputMaybe<Array<Scalars['String']>>;
 };
 
 /** delete the array element with specified index (negative integers count from the end). throws an error if top level container is not an array */
-export type Transaction_46_Delete_Elem_Input = {
+export type Transaction_105_Delete_Elem_Input = {
   fee?: InputMaybe<Scalars['Int']>;
   logs?: InputMaybe<Scalars['Int']>;
   signer_infos?: InputMaybe<Scalars['Int']>;
 };
 
 /** delete key/value pair or string element. key/value pairs are matched based on their key value */
-export type Transaction_46_Delete_Key_Input = {
+export type Transaction_105_Delete_Key_Input = {
   fee?: InputMaybe<Scalars['String']>;
   logs?: InputMaybe<Scalars['String']>;
   signer_infos?: InputMaybe<Scalars['String']>;
 };
 
-/** input type for incrementing numeric columns in table "transaction_46" */
-export type Transaction_46_Inc_Input = {
+/** input type for incrementing numeric columns in table "transaction_105" */
+export type Transaction_105_Inc_Input = {
   gas_used?: InputMaybe<Scalars['bigint']>;
   gas_wanted?: InputMaybe<Scalars['bigint']>;
   height?: InputMaybe<Scalars['bigint']>;
   partition_id?: InputMaybe<Scalars['bigint']>;
 };
 
-/** input type for inserting data into table "transaction_46" */
-export type Transaction_46_Insert_Input = {
+/** input type for inserting data into table "transaction_105" */
+export type Transaction_105_Insert_Input = {
   fee?: InputMaybe<Scalars['jsonb']>;
   gas_used?: InputMaybe<Scalars['bigint']>;
   gas_wanted?: InputMaybe<Scalars['bigint']>;
@@ -21169,8 +19480,8 @@ export type Transaction_46_Insert_Input = {
 };
 
 /** aggregate max on columns */
-export type Transaction_46_Max_Fields = {
-  __typename?: 'transaction_46_max_fields';
+export type Transaction_105_Max_Fields = {
+  __typename?: 'transaction_105_max_fields';
   gas_used?: Maybe<Scalars['bigint']>;
   gas_wanted?: Maybe<Scalars['bigint']>;
   hash?: Maybe<Scalars['String']>;
@@ -21182,8 +19493,8 @@ export type Transaction_46_Max_Fields = {
 };
 
 /** aggregate min on columns */
-export type Transaction_46_Min_Fields = {
-  __typename?: 'transaction_46_min_fields';
+export type Transaction_105_Min_Fields = {
+  __typename?: 'transaction_105_min_fields';
   gas_used?: Maybe<Scalars['bigint']>;
   gas_wanted?: Maybe<Scalars['bigint']>;
   hash?: Maybe<Scalars['String']>;
@@ -21194,24 +19505,24 @@ export type Transaction_46_Min_Fields = {
   signatures?: Maybe<Array<Scalars['String']>>;
 };
 
-/** response of any mutation on the table "transaction_46" */
-export type Transaction_46_Mutation_Response = {
-  __typename?: 'transaction_46_mutation_response';
+/** response of any mutation on the table "transaction_105" */
+export type Transaction_105_Mutation_Response = {
+  __typename?: 'transaction_105_mutation_response';
   /** number of rows affected by the mutation */
   affected_rows: Scalars['Int'];
   /** data from the rows affected by the mutation */
-  returning: Array<Transaction_46>;
+  returning: Array<Transaction_105>;
 };
 
-/** on_conflict condition type for table "transaction_46" */
-export type Transaction_46_On_Conflict = {
-  constraint: Transaction_46_Constraint;
-  update_columns?: Array<Transaction_46_Update_Column>;
-  where?: InputMaybe<Transaction_46_Bool_Exp>;
+/** on_conflict condition type for table "transaction_105" */
+export type Transaction_105_On_Conflict = {
+  constraint: Transaction_105_Constraint;
+  update_columns?: Array<Transaction_105_Update_Column>;
+  where?: InputMaybe<Transaction_105_Bool_Exp>;
 };
 
-/** Ordering options when selecting data from "transaction_46". */
-export type Transaction_46_Order_By = {
+/** Ordering options when selecting data from "transaction_105". */
+export type Transaction_105_Order_By = {
   fee?: InputMaybe<Order_By>;
   gas_used?: InputMaybe<Order_By>;
   gas_wanted?: InputMaybe<Order_By>;
@@ -21228,14 +19539,14 @@ export type Transaction_46_Order_By = {
 };
 
 /** prepend existing jsonb value of filtered columns with new jsonb value */
-export type Transaction_46_Prepend_Input = {
+export type Transaction_105_Prepend_Input = {
   fee?: InputMaybe<Scalars['jsonb']>;
   logs?: InputMaybe<Scalars['jsonb']>;
   signer_infos?: InputMaybe<Scalars['jsonb']>;
 };
 
-/** select columns of table "transaction_46" */
-export enum Transaction_46_Select_Column {
+/** select columns of table "transaction_105" */
+export enum Transaction_105_Select_Column {
   /** column name */
   Fee = 'fee',
   /** column name */
@@ -21264,8 +19575,8 @@ export enum Transaction_46_Select_Column {
   Success = 'success'
 }
 
-/** input type for updating data in table "transaction_46" */
-export type Transaction_46_Set_Input = {
+/** input type for updating data in table "transaction_105" */
+export type Transaction_105_Set_Input = {
   fee?: InputMaybe<Scalars['jsonb']>;
   gas_used?: InputMaybe<Scalars['bigint']>;
   gas_wanted?: InputMaybe<Scalars['bigint']>;
@@ -21282,8 +19593,8 @@ export type Transaction_46_Set_Input = {
 };
 
 /** aggregate stddev on columns */
-export type Transaction_46_Stddev_Fields = {
-  __typename?: 'transaction_46_stddev_fields';
+export type Transaction_105_Stddev_Fields = {
+  __typename?: 'transaction_105_stddev_fields';
   gas_used?: Maybe<Scalars['Float']>;
   gas_wanted?: Maybe<Scalars['Float']>;
   height?: Maybe<Scalars['Float']>;
@@ -21291,8 +19602,8 @@ export type Transaction_46_Stddev_Fields = {
 };
 
 /** aggregate stddev_pop on columns */
-export type Transaction_46_Stddev_Pop_Fields = {
-  __typename?: 'transaction_46_stddev_pop_fields';
+export type Transaction_105_Stddev_Pop_Fields = {
+  __typename?: 'transaction_105_stddev_pop_fields';
   gas_used?: Maybe<Scalars['Float']>;
   gas_wanted?: Maybe<Scalars['Float']>;
   height?: Maybe<Scalars['Float']>;
@@ -21300,24 +19611,24 @@ export type Transaction_46_Stddev_Pop_Fields = {
 };
 
 /** aggregate stddev_samp on columns */
-export type Transaction_46_Stddev_Samp_Fields = {
-  __typename?: 'transaction_46_stddev_samp_fields';
+export type Transaction_105_Stddev_Samp_Fields = {
+  __typename?: 'transaction_105_stddev_samp_fields';
   gas_used?: Maybe<Scalars['Float']>;
   gas_wanted?: Maybe<Scalars['Float']>;
   height?: Maybe<Scalars['Float']>;
   partition_id?: Maybe<Scalars['Float']>;
 };
 
-/** Streaming cursor of the table "transaction_46" */
-export type Transaction_46_Stream_Cursor_Input = {
+/** Streaming cursor of the table "transaction_105" */
+export type Transaction_105_Stream_Cursor_Input = {
   /** Stream column input with initial value */
-  initial_value: Transaction_46_Stream_Cursor_Value_Input;
+  initial_value: Transaction_105_Stream_Cursor_Value_Input;
   /** cursor ordering */
   ordering?: InputMaybe<Cursor_Ordering>;
 };
 
 /** Initial value of the column from where the streaming should start */
-export type Transaction_46_Stream_Cursor_Value_Input = {
+export type Transaction_105_Stream_Cursor_Value_Input = {
   fee?: InputMaybe<Scalars['jsonb']>;
   gas_used?: InputMaybe<Scalars['bigint']>;
   gas_wanted?: InputMaybe<Scalars['bigint']>;
@@ -21334,16 +19645,16 @@ export type Transaction_46_Stream_Cursor_Value_Input = {
 };
 
 /** aggregate sum on columns */
-export type Transaction_46_Sum_Fields = {
-  __typename?: 'transaction_46_sum_fields';
+export type Transaction_105_Sum_Fields = {
+  __typename?: 'transaction_105_sum_fields';
   gas_used?: Maybe<Scalars['bigint']>;
   gas_wanted?: Maybe<Scalars['bigint']>;
   height?: Maybe<Scalars['bigint']>;
   partition_id?: Maybe<Scalars['bigint']>;
 };
 
-/** update columns of table "transaction_46" */
-export enum Transaction_46_Update_Column {
+/** update columns of table "transaction_105" */
+export enum Transaction_105_Update_Column {
   /** column name */
   Fee = 'fee',
   /** column name */
@@ -21372,28 +19683,28 @@ export enum Transaction_46_Update_Column {
   Success = 'success'
 }
 
-export type Transaction_46_Updates = {
+export type Transaction_105_Updates = {
   /** append existing jsonb value of filtered columns with new jsonb value */
-  _append?: InputMaybe<Transaction_46_Append_Input>;
+  _append?: InputMaybe<Transaction_105_Append_Input>;
   /** delete the field or element with specified path (for JSON arrays, negative integers count from the end) */
-  _delete_at_path?: InputMaybe<Transaction_46_Delete_At_Path_Input>;
+  _delete_at_path?: InputMaybe<Transaction_105_Delete_At_Path_Input>;
   /** delete the array element with specified index (negative integers count from the end). throws an error if top level container is not an array */
-  _delete_elem?: InputMaybe<Transaction_46_Delete_Elem_Input>;
+  _delete_elem?: InputMaybe<Transaction_105_Delete_Elem_Input>;
   /** delete key/value pair or string element. key/value pairs are matched based on their key value */
-  _delete_key?: InputMaybe<Transaction_46_Delete_Key_Input>;
+  _delete_key?: InputMaybe<Transaction_105_Delete_Key_Input>;
   /** increments the numeric columns with given value of the filtered values */
-  _inc?: InputMaybe<Transaction_46_Inc_Input>;
+  _inc?: InputMaybe<Transaction_105_Inc_Input>;
   /** prepend existing jsonb value of filtered columns with new jsonb value */
-  _prepend?: InputMaybe<Transaction_46_Prepend_Input>;
+  _prepend?: InputMaybe<Transaction_105_Prepend_Input>;
   /** sets the columns of the filtered rows to the given values */
-  _set?: InputMaybe<Transaction_46_Set_Input>;
+  _set?: InputMaybe<Transaction_105_Set_Input>;
   /** filter the rows which have to be updated */
-  where: Transaction_46_Bool_Exp;
+  where: Transaction_105_Bool_Exp;
 };
 
 /** aggregate var_pop on columns */
-export type Transaction_46_Var_Pop_Fields = {
-  __typename?: 'transaction_46_var_pop_fields';
+export type Transaction_105_Var_Pop_Fields = {
+  __typename?: 'transaction_105_var_pop_fields';
   gas_used?: Maybe<Scalars['Float']>;
   gas_wanted?: Maybe<Scalars['Float']>;
   height?: Maybe<Scalars['Float']>;
@@ -21401,8 +19712,8 @@ export type Transaction_46_Var_Pop_Fields = {
 };
 
 /** aggregate var_samp on columns */
-export type Transaction_46_Var_Samp_Fields = {
-  __typename?: 'transaction_46_var_samp_fields';
+export type Transaction_105_Var_Samp_Fields = {
+  __typename?: 'transaction_105_var_samp_fields';
   gas_used?: Maybe<Scalars['Float']>;
   gas_wanted?: Maybe<Scalars['Float']>;
   height?: Maybe<Scalars['Float']>;
@@ -21410,2058 +19721,8 @@ export type Transaction_46_Var_Samp_Fields = {
 };
 
 /** aggregate variance on columns */
-export type Transaction_46_Variance_Fields = {
-  __typename?: 'transaction_46_variance_fields';
-  gas_used?: Maybe<Scalars['Float']>;
-  gas_wanted?: Maybe<Scalars['Float']>;
-  height?: Maybe<Scalars['Float']>;
-  partition_id?: Maybe<Scalars['Float']>;
-};
-
-/** columns and relationships of "transaction_47" */
-export type Transaction_47 = {
-  __typename?: 'transaction_47';
-  fee: Scalars['jsonb'];
-  gas_used?: Maybe<Scalars['bigint']>;
-  gas_wanted?: Maybe<Scalars['bigint']>;
-  hash: Scalars['String'];
-  height: Scalars['bigint'];
-  logs?: Maybe<Scalars['jsonb']>;
-  memo?: Maybe<Scalars['String']>;
-  messages: Scalars['json'];
-  partition_id: Scalars['bigint'];
-  raw_log?: Maybe<Scalars['String']>;
-  signatures: Array<Scalars['String']>;
-  signer_infos: Scalars['jsonb'];
-  success: Scalars['Boolean'];
-};
-
-
-/** columns and relationships of "transaction_47" */
-export type Transaction_47FeeArgs = {
-  path?: InputMaybe<Scalars['String']>;
-};
-
-
-/** columns and relationships of "transaction_47" */
-export type Transaction_47LogsArgs = {
-  path?: InputMaybe<Scalars['String']>;
-};
-
-
-/** columns and relationships of "transaction_47" */
-export type Transaction_47MessagesArgs = {
-  path?: InputMaybe<Scalars['String']>;
-};
-
-
-/** columns and relationships of "transaction_47" */
-export type Transaction_47Signer_InfosArgs = {
-  path?: InputMaybe<Scalars['String']>;
-};
-
-/** aggregated selection of "transaction_47" */
-export type Transaction_47_Aggregate = {
-  __typename?: 'transaction_47_aggregate';
-  aggregate?: Maybe<Transaction_47_Aggregate_Fields>;
-  nodes: Array<Transaction_47>;
-};
-
-/** aggregate fields of "transaction_47" */
-export type Transaction_47_Aggregate_Fields = {
-  __typename?: 'transaction_47_aggregate_fields';
-  avg?: Maybe<Transaction_47_Avg_Fields>;
-  count: Scalars['Int'];
-  max?: Maybe<Transaction_47_Max_Fields>;
-  min?: Maybe<Transaction_47_Min_Fields>;
-  stddev?: Maybe<Transaction_47_Stddev_Fields>;
-  stddev_pop?: Maybe<Transaction_47_Stddev_Pop_Fields>;
-  stddev_samp?: Maybe<Transaction_47_Stddev_Samp_Fields>;
-  sum?: Maybe<Transaction_47_Sum_Fields>;
-  var_pop?: Maybe<Transaction_47_Var_Pop_Fields>;
-  var_samp?: Maybe<Transaction_47_Var_Samp_Fields>;
-  variance?: Maybe<Transaction_47_Variance_Fields>;
-};
-
-
-/** aggregate fields of "transaction_47" */
-export type Transaction_47_Aggregate_FieldsCountArgs = {
-  columns?: InputMaybe<Array<Transaction_47_Select_Column>>;
-  distinct?: InputMaybe<Scalars['Boolean']>;
-};
-
-/** append existing jsonb value of filtered columns with new jsonb value */
-export type Transaction_47_Append_Input = {
-  fee?: InputMaybe<Scalars['jsonb']>;
-  logs?: InputMaybe<Scalars['jsonb']>;
-  signer_infos?: InputMaybe<Scalars['jsonb']>;
-};
-
-/** aggregate avg on columns */
-export type Transaction_47_Avg_Fields = {
-  __typename?: 'transaction_47_avg_fields';
-  gas_used?: Maybe<Scalars['Float']>;
-  gas_wanted?: Maybe<Scalars['Float']>;
-  height?: Maybe<Scalars['Float']>;
-  partition_id?: Maybe<Scalars['Float']>;
-};
-
-/** Boolean expression to filter rows from the table "transaction_47". All fields are combined with a logical 'AND'. */
-export type Transaction_47_Bool_Exp = {
-  _and?: InputMaybe<Array<Transaction_47_Bool_Exp>>;
-  _not?: InputMaybe<Transaction_47_Bool_Exp>;
-  _or?: InputMaybe<Array<Transaction_47_Bool_Exp>>;
-  fee?: InputMaybe<Jsonb_Comparison_Exp>;
-  gas_used?: InputMaybe<Bigint_Comparison_Exp>;
-  gas_wanted?: InputMaybe<Bigint_Comparison_Exp>;
-  hash?: InputMaybe<String_Comparison_Exp>;
-  height?: InputMaybe<Bigint_Comparison_Exp>;
-  logs?: InputMaybe<Jsonb_Comparison_Exp>;
-  memo?: InputMaybe<String_Comparison_Exp>;
-  messages?: InputMaybe<Json_Comparison_Exp>;
-  partition_id?: InputMaybe<Bigint_Comparison_Exp>;
-  raw_log?: InputMaybe<String_Comparison_Exp>;
-  signatures?: InputMaybe<String_Array_Comparison_Exp>;
-  signer_infos?: InputMaybe<Jsonb_Comparison_Exp>;
-  success?: InputMaybe<Boolean_Comparison_Exp>;
-};
-
-/** unique or primary key constraints on table "transaction_47" */
-export enum Transaction_47_Constraint {
-  /** unique or primary key constraint on columns "partition_id", "hash" */
-  Transaction_47HashPartitionIdKey = 'transaction_47_hash_partition_id_key'
-}
-
-/** delete the field or element with specified path (for JSON arrays, negative integers count from the end) */
-export type Transaction_47_Delete_At_Path_Input = {
-  fee?: InputMaybe<Array<Scalars['String']>>;
-  logs?: InputMaybe<Array<Scalars['String']>>;
-  signer_infos?: InputMaybe<Array<Scalars['String']>>;
-};
-
-/** delete the array element with specified index (negative integers count from the end). throws an error if top level container is not an array */
-export type Transaction_47_Delete_Elem_Input = {
-  fee?: InputMaybe<Scalars['Int']>;
-  logs?: InputMaybe<Scalars['Int']>;
-  signer_infos?: InputMaybe<Scalars['Int']>;
-};
-
-/** delete key/value pair or string element. key/value pairs are matched based on their key value */
-export type Transaction_47_Delete_Key_Input = {
-  fee?: InputMaybe<Scalars['String']>;
-  logs?: InputMaybe<Scalars['String']>;
-  signer_infos?: InputMaybe<Scalars['String']>;
-};
-
-/** input type for incrementing numeric columns in table "transaction_47" */
-export type Transaction_47_Inc_Input = {
-  gas_used?: InputMaybe<Scalars['bigint']>;
-  gas_wanted?: InputMaybe<Scalars['bigint']>;
-  height?: InputMaybe<Scalars['bigint']>;
-  partition_id?: InputMaybe<Scalars['bigint']>;
-};
-
-/** input type for inserting data into table "transaction_47" */
-export type Transaction_47_Insert_Input = {
-  fee?: InputMaybe<Scalars['jsonb']>;
-  gas_used?: InputMaybe<Scalars['bigint']>;
-  gas_wanted?: InputMaybe<Scalars['bigint']>;
-  hash?: InputMaybe<Scalars['String']>;
-  height?: InputMaybe<Scalars['bigint']>;
-  logs?: InputMaybe<Scalars['jsonb']>;
-  memo?: InputMaybe<Scalars['String']>;
-  messages?: InputMaybe<Scalars['json']>;
-  partition_id?: InputMaybe<Scalars['bigint']>;
-  raw_log?: InputMaybe<Scalars['String']>;
-  signatures?: InputMaybe<Array<Scalars['String']>>;
-  signer_infos?: InputMaybe<Scalars['jsonb']>;
-  success?: InputMaybe<Scalars['Boolean']>;
-};
-
-/** aggregate max on columns */
-export type Transaction_47_Max_Fields = {
-  __typename?: 'transaction_47_max_fields';
-  gas_used?: Maybe<Scalars['bigint']>;
-  gas_wanted?: Maybe<Scalars['bigint']>;
-  hash?: Maybe<Scalars['String']>;
-  height?: Maybe<Scalars['bigint']>;
-  memo?: Maybe<Scalars['String']>;
-  partition_id?: Maybe<Scalars['bigint']>;
-  raw_log?: Maybe<Scalars['String']>;
-  signatures?: Maybe<Array<Scalars['String']>>;
-};
-
-/** aggregate min on columns */
-export type Transaction_47_Min_Fields = {
-  __typename?: 'transaction_47_min_fields';
-  gas_used?: Maybe<Scalars['bigint']>;
-  gas_wanted?: Maybe<Scalars['bigint']>;
-  hash?: Maybe<Scalars['String']>;
-  height?: Maybe<Scalars['bigint']>;
-  memo?: Maybe<Scalars['String']>;
-  partition_id?: Maybe<Scalars['bigint']>;
-  raw_log?: Maybe<Scalars['String']>;
-  signatures?: Maybe<Array<Scalars['String']>>;
-};
-
-/** response of any mutation on the table "transaction_47" */
-export type Transaction_47_Mutation_Response = {
-  __typename?: 'transaction_47_mutation_response';
-  /** number of rows affected by the mutation */
-  affected_rows: Scalars['Int'];
-  /** data from the rows affected by the mutation */
-  returning: Array<Transaction_47>;
-};
-
-/** on_conflict condition type for table "transaction_47" */
-export type Transaction_47_On_Conflict = {
-  constraint: Transaction_47_Constraint;
-  update_columns?: Array<Transaction_47_Update_Column>;
-  where?: InputMaybe<Transaction_47_Bool_Exp>;
-};
-
-/** Ordering options when selecting data from "transaction_47". */
-export type Transaction_47_Order_By = {
-  fee?: InputMaybe<Order_By>;
-  gas_used?: InputMaybe<Order_By>;
-  gas_wanted?: InputMaybe<Order_By>;
-  hash?: InputMaybe<Order_By>;
-  height?: InputMaybe<Order_By>;
-  logs?: InputMaybe<Order_By>;
-  memo?: InputMaybe<Order_By>;
-  messages?: InputMaybe<Order_By>;
-  partition_id?: InputMaybe<Order_By>;
-  raw_log?: InputMaybe<Order_By>;
-  signatures?: InputMaybe<Order_By>;
-  signer_infos?: InputMaybe<Order_By>;
-  success?: InputMaybe<Order_By>;
-};
-
-/** prepend existing jsonb value of filtered columns with new jsonb value */
-export type Transaction_47_Prepend_Input = {
-  fee?: InputMaybe<Scalars['jsonb']>;
-  logs?: InputMaybe<Scalars['jsonb']>;
-  signer_infos?: InputMaybe<Scalars['jsonb']>;
-};
-
-/** select columns of table "transaction_47" */
-export enum Transaction_47_Select_Column {
-  /** column name */
-  Fee = 'fee',
-  /** column name */
-  GasUsed = 'gas_used',
-  /** column name */
-  GasWanted = 'gas_wanted',
-  /** column name */
-  Hash = 'hash',
-  /** column name */
-  Height = 'height',
-  /** column name */
-  Logs = 'logs',
-  /** column name */
-  Memo = 'memo',
-  /** column name */
-  Messages = 'messages',
-  /** column name */
-  PartitionId = 'partition_id',
-  /** column name */
-  RawLog = 'raw_log',
-  /** column name */
-  Signatures = 'signatures',
-  /** column name */
-  SignerInfos = 'signer_infos',
-  /** column name */
-  Success = 'success'
-}
-
-/** input type for updating data in table "transaction_47" */
-export type Transaction_47_Set_Input = {
-  fee?: InputMaybe<Scalars['jsonb']>;
-  gas_used?: InputMaybe<Scalars['bigint']>;
-  gas_wanted?: InputMaybe<Scalars['bigint']>;
-  hash?: InputMaybe<Scalars['String']>;
-  height?: InputMaybe<Scalars['bigint']>;
-  logs?: InputMaybe<Scalars['jsonb']>;
-  memo?: InputMaybe<Scalars['String']>;
-  messages?: InputMaybe<Scalars['json']>;
-  partition_id?: InputMaybe<Scalars['bigint']>;
-  raw_log?: InputMaybe<Scalars['String']>;
-  signatures?: InputMaybe<Array<Scalars['String']>>;
-  signer_infos?: InputMaybe<Scalars['jsonb']>;
-  success?: InputMaybe<Scalars['Boolean']>;
-};
-
-/** aggregate stddev on columns */
-export type Transaction_47_Stddev_Fields = {
-  __typename?: 'transaction_47_stddev_fields';
-  gas_used?: Maybe<Scalars['Float']>;
-  gas_wanted?: Maybe<Scalars['Float']>;
-  height?: Maybe<Scalars['Float']>;
-  partition_id?: Maybe<Scalars['Float']>;
-};
-
-/** aggregate stddev_pop on columns */
-export type Transaction_47_Stddev_Pop_Fields = {
-  __typename?: 'transaction_47_stddev_pop_fields';
-  gas_used?: Maybe<Scalars['Float']>;
-  gas_wanted?: Maybe<Scalars['Float']>;
-  height?: Maybe<Scalars['Float']>;
-  partition_id?: Maybe<Scalars['Float']>;
-};
-
-/** aggregate stddev_samp on columns */
-export type Transaction_47_Stddev_Samp_Fields = {
-  __typename?: 'transaction_47_stddev_samp_fields';
-  gas_used?: Maybe<Scalars['Float']>;
-  gas_wanted?: Maybe<Scalars['Float']>;
-  height?: Maybe<Scalars['Float']>;
-  partition_id?: Maybe<Scalars['Float']>;
-};
-
-/** Streaming cursor of the table "transaction_47" */
-export type Transaction_47_Stream_Cursor_Input = {
-  /** Stream column input with initial value */
-  initial_value: Transaction_47_Stream_Cursor_Value_Input;
-  /** cursor ordering */
-  ordering?: InputMaybe<Cursor_Ordering>;
-};
-
-/** Initial value of the column from where the streaming should start */
-export type Transaction_47_Stream_Cursor_Value_Input = {
-  fee?: InputMaybe<Scalars['jsonb']>;
-  gas_used?: InputMaybe<Scalars['bigint']>;
-  gas_wanted?: InputMaybe<Scalars['bigint']>;
-  hash?: InputMaybe<Scalars['String']>;
-  height?: InputMaybe<Scalars['bigint']>;
-  logs?: InputMaybe<Scalars['jsonb']>;
-  memo?: InputMaybe<Scalars['String']>;
-  messages?: InputMaybe<Scalars['json']>;
-  partition_id?: InputMaybe<Scalars['bigint']>;
-  raw_log?: InputMaybe<Scalars['String']>;
-  signatures?: InputMaybe<Array<Scalars['String']>>;
-  signer_infos?: InputMaybe<Scalars['jsonb']>;
-  success?: InputMaybe<Scalars['Boolean']>;
-};
-
-/** aggregate sum on columns */
-export type Transaction_47_Sum_Fields = {
-  __typename?: 'transaction_47_sum_fields';
-  gas_used?: Maybe<Scalars['bigint']>;
-  gas_wanted?: Maybe<Scalars['bigint']>;
-  height?: Maybe<Scalars['bigint']>;
-  partition_id?: Maybe<Scalars['bigint']>;
-};
-
-/** update columns of table "transaction_47" */
-export enum Transaction_47_Update_Column {
-  /** column name */
-  Fee = 'fee',
-  /** column name */
-  GasUsed = 'gas_used',
-  /** column name */
-  GasWanted = 'gas_wanted',
-  /** column name */
-  Hash = 'hash',
-  /** column name */
-  Height = 'height',
-  /** column name */
-  Logs = 'logs',
-  /** column name */
-  Memo = 'memo',
-  /** column name */
-  Messages = 'messages',
-  /** column name */
-  PartitionId = 'partition_id',
-  /** column name */
-  RawLog = 'raw_log',
-  /** column name */
-  Signatures = 'signatures',
-  /** column name */
-  SignerInfos = 'signer_infos',
-  /** column name */
-  Success = 'success'
-}
-
-export type Transaction_47_Updates = {
-  /** append existing jsonb value of filtered columns with new jsonb value */
-  _append?: InputMaybe<Transaction_47_Append_Input>;
-  /** delete the field or element with specified path (for JSON arrays, negative integers count from the end) */
-  _delete_at_path?: InputMaybe<Transaction_47_Delete_At_Path_Input>;
-  /** delete the array element with specified index (negative integers count from the end). throws an error if top level container is not an array */
-  _delete_elem?: InputMaybe<Transaction_47_Delete_Elem_Input>;
-  /** delete key/value pair or string element. key/value pairs are matched based on their key value */
-  _delete_key?: InputMaybe<Transaction_47_Delete_Key_Input>;
-  /** increments the numeric columns with given value of the filtered values */
-  _inc?: InputMaybe<Transaction_47_Inc_Input>;
-  /** prepend existing jsonb value of filtered columns with new jsonb value */
-  _prepend?: InputMaybe<Transaction_47_Prepend_Input>;
-  /** sets the columns of the filtered rows to the given values */
-  _set?: InputMaybe<Transaction_47_Set_Input>;
-  /** filter the rows which have to be updated */
-  where: Transaction_47_Bool_Exp;
-};
-
-/** aggregate var_pop on columns */
-export type Transaction_47_Var_Pop_Fields = {
-  __typename?: 'transaction_47_var_pop_fields';
-  gas_used?: Maybe<Scalars['Float']>;
-  gas_wanted?: Maybe<Scalars['Float']>;
-  height?: Maybe<Scalars['Float']>;
-  partition_id?: Maybe<Scalars['Float']>;
-};
-
-/** aggregate var_samp on columns */
-export type Transaction_47_Var_Samp_Fields = {
-  __typename?: 'transaction_47_var_samp_fields';
-  gas_used?: Maybe<Scalars['Float']>;
-  gas_wanted?: Maybe<Scalars['Float']>;
-  height?: Maybe<Scalars['Float']>;
-  partition_id?: Maybe<Scalars['Float']>;
-};
-
-/** aggregate variance on columns */
-export type Transaction_47_Variance_Fields = {
-  __typename?: 'transaction_47_variance_fields';
-  gas_used?: Maybe<Scalars['Float']>;
-  gas_wanted?: Maybe<Scalars['Float']>;
-  height?: Maybe<Scalars['Float']>;
-  partition_id?: Maybe<Scalars['Float']>;
-};
-
-/** columns and relationships of "transaction_48" */
-export type Transaction_48 = {
-  __typename?: 'transaction_48';
-  fee: Scalars['jsonb'];
-  gas_used?: Maybe<Scalars['bigint']>;
-  gas_wanted?: Maybe<Scalars['bigint']>;
-  hash: Scalars['String'];
-  height: Scalars['bigint'];
-  logs?: Maybe<Scalars['jsonb']>;
-  memo?: Maybe<Scalars['String']>;
-  messages: Scalars['json'];
-  partition_id: Scalars['bigint'];
-  raw_log?: Maybe<Scalars['String']>;
-  signatures: Array<Scalars['String']>;
-  signer_infos: Scalars['jsonb'];
-  success: Scalars['Boolean'];
-};
-
-
-/** columns and relationships of "transaction_48" */
-export type Transaction_48FeeArgs = {
-  path?: InputMaybe<Scalars['String']>;
-};
-
-
-/** columns and relationships of "transaction_48" */
-export type Transaction_48LogsArgs = {
-  path?: InputMaybe<Scalars['String']>;
-};
-
-
-/** columns and relationships of "transaction_48" */
-export type Transaction_48MessagesArgs = {
-  path?: InputMaybe<Scalars['String']>;
-};
-
-
-/** columns and relationships of "transaction_48" */
-export type Transaction_48Signer_InfosArgs = {
-  path?: InputMaybe<Scalars['String']>;
-};
-
-/** aggregated selection of "transaction_48" */
-export type Transaction_48_Aggregate = {
-  __typename?: 'transaction_48_aggregate';
-  aggregate?: Maybe<Transaction_48_Aggregate_Fields>;
-  nodes: Array<Transaction_48>;
-};
-
-/** aggregate fields of "transaction_48" */
-export type Transaction_48_Aggregate_Fields = {
-  __typename?: 'transaction_48_aggregate_fields';
-  avg?: Maybe<Transaction_48_Avg_Fields>;
-  count: Scalars['Int'];
-  max?: Maybe<Transaction_48_Max_Fields>;
-  min?: Maybe<Transaction_48_Min_Fields>;
-  stddev?: Maybe<Transaction_48_Stddev_Fields>;
-  stddev_pop?: Maybe<Transaction_48_Stddev_Pop_Fields>;
-  stddev_samp?: Maybe<Transaction_48_Stddev_Samp_Fields>;
-  sum?: Maybe<Transaction_48_Sum_Fields>;
-  var_pop?: Maybe<Transaction_48_Var_Pop_Fields>;
-  var_samp?: Maybe<Transaction_48_Var_Samp_Fields>;
-  variance?: Maybe<Transaction_48_Variance_Fields>;
-};
-
-
-/** aggregate fields of "transaction_48" */
-export type Transaction_48_Aggregate_FieldsCountArgs = {
-  columns?: InputMaybe<Array<Transaction_48_Select_Column>>;
-  distinct?: InputMaybe<Scalars['Boolean']>;
-};
-
-/** append existing jsonb value of filtered columns with new jsonb value */
-export type Transaction_48_Append_Input = {
-  fee?: InputMaybe<Scalars['jsonb']>;
-  logs?: InputMaybe<Scalars['jsonb']>;
-  signer_infos?: InputMaybe<Scalars['jsonb']>;
-};
-
-/** aggregate avg on columns */
-export type Transaction_48_Avg_Fields = {
-  __typename?: 'transaction_48_avg_fields';
-  gas_used?: Maybe<Scalars['Float']>;
-  gas_wanted?: Maybe<Scalars['Float']>;
-  height?: Maybe<Scalars['Float']>;
-  partition_id?: Maybe<Scalars['Float']>;
-};
-
-/** Boolean expression to filter rows from the table "transaction_48". All fields are combined with a logical 'AND'. */
-export type Transaction_48_Bool_Exp = {
-  _and?: InputMaybe<Array<Transaction_48_Bool_Exp>>;
-  _not?: InputMaybe<Transaction_48_Bool_Exp>;
-  _or?: InputMaybe<Array<Transaction_48_Bool_Exp>>;
-  fee?: InputMaybe<Jsonb_Comparison_Exp>;
-  gas_used?: InputMaybe<Bigint_Comparison_Exp>;
-  gas_wanted?: InputMaybe<Bigint_Comparison_Exp>;
-  hash?: InputMaybe<String_Comparison_Exp>;
-  height?: InputMaybe<Bigint_Comparison_Exp>;
-  logs?: InputMaybe<Jsonb_Comparison_Exp>;
-  memo?: InputMaybe<String_Comparison_Exp>;
-  messages?: InputMaybe<Json_Comparison_Exp>;
-  partition_id?: InputMaybe<Bigint_Comparison_Exp>;
-  raw_log?: InputMaybe<String_Comparison_Exp>;
-  signatures?: InputMaybe<String_Array_Comparison_Exp>;
-  signer_infos?: InputMaybe<Jsonb_Comparison_Exp>;
-  success?: InputMaybe<Boolean_Comparison_Exp>;
-};
-
-/** unique or primary key constraints on table "transaction_48" */
-export enum Transaction_48_Constraint {
-  /** unique or primary key constraint on columns "partition_id", "hash" */
-  Transaction_48HashPartitionIdKey = 'transaction_48_hash_partition_id_key'
-}
-
-/** delete the field or element with specified path (for JSON arrays, negative integers count from the end) */
-export type Transaction_48_Delete_At_Path_Input = {
-  fee?: InputMaybe<Array<Scalars['String']>>;
-  logs?: InputMaybe<Array<Scalars['String']>>;
-  signer_infos?: InputMaybe<Array<Scalars['String']>>;
-};
-
-/** delete the array element with specified index (negative integers count from the end). throws an error if top level container is not an array */
-export type Transaction_48_Delete_Elem_Input = {
-  fee?: InputMaybe<Scalars['Int']>;
-  logs?: InputMaybe<Scalars['Int']>;
-  signer_infos?: InputMaybe<Scalars['Int']>;
-};
-
-/** delete key/value pair or string element. key/value pairs are matched based on their key value */
-export type Transaction_48_Delete_Key_Input = {
-  fee?: InputMaybe<Scalars['String']>;
-  logs?: InputMaybe<Scalars['String']>;
-  signer_infos?: InputMaybe<Scalars['String']>;
-};
-
-/** input type for incrementing numeric columns in table "transaction_48" */
-export type Transaction_48_Inc_Input = {
-  gas_used?: InputMaybe<Scalars['bigint']>;
-  gas_wanted?: InputMaybe<Scalars['bigint']>;
-  height?: InputMaybe<Scalars['bigint']>;
-  partition_id?: InputMaybe<Scalars['bigint']>;
-};
-
-/** input type for inserting data into table "transaction_48" */
-export type Transaction_48_Insert_Input = {
-  fee?: InputMaybe<Scalars['jsonb']>;
-  gas_used?: InputMaybe<Scalars['bigint']>;
-  gas_wanted?: InputMaybe<Scalars['bigint']>;
-  hash?: InputMaybe<Scalars['String']>;
-  height?: InputMaybe<Scalars['bigint']>;
-  logs?: InputMaybe<Scalars['jsonb']>;
-  memo?: InputMaybe<Scalars['String']>;
-  messages?: InputMaybe<Scalars['json']>;
-  partition_id?: InputMaybe<Scalars['bigint']>;
-  raw_log?: InputMaybe<Scalars['String']>;
-  signatures?: InputMaybe<Array<Scalars['String']>>;
-  signer_infos?: InputMaybe<Scalars['jsonb']>;
-  success?: InputMaybe<Scalars['Boolean']>;
-};
-
-/** aggregate max on columns */
-export type Transaction_48_Max_Fields = {
-  __typename?: 'transaction_48_max_fields';
-  gas_used?: Maybe<Scalars['bigint']>;
-  gas_wanted?: Maybe<Scalars['bigint']>;
-  hash?: Maybe<Scalars['String']>;
-  height?: Maybe<Scalars['bigint']>;
-  memo?: Maybe<Scalars['String']>;
-  partition_id?: Maybe<Scalars['bigint']>;
-  raw_log?: Maybe<Scalars['String']>;
-  signatures?: Maybe<Array<Scalars['String']>>;
-};
-
-/** aggregate min on columns */
-export type Transaction_48_Min_Fields = {
-  __typename?: 'transaction_48_min_fields';
-  gas_used?: Maybe<Scalars['bigint']>;
-  gas_wanted?: Maybe<Scalars['bigint']>;
-  hash?: Maybe<Scalars['String']>;
-  height?: Maybe<Scalars['bigint']>;
-  memo?: Maybe<Scalars['String']>;
-  partition_id?: Maybe<Scalars['bigint']>;
-  raw_log?: Maybe<Scalars['String']>;
-  signatures?: Maybe<Array<Scalars['String']>>;
-};
-
-/** response of any mutation on the table "transaction_48" */
-export type Transaction_48_Mutation_Response = {
-  __typename?: 'transaction_48_mutation_response';
-  /** number of rows affected by the mutation */
-  affected_rows: Scalars['Int'];
-  /** data from the rows affected by the mutation */
-  returning: Array<Transaction_48>;
-};
-
-/** on_conflict condition type for table "transaction_48" */
-export type Transaction_48_On_Conflict = {
-  constraint: Transaction_48_Constraint;
-  update_columns?: Array<Transaction_48_Update_Column>;
-  where?: InputMaybe<Transaction_48_Bool_Exp>;
-};
-
-/** Ordering options when selecting data from "transaction_48". */
-export type Transaction_48_Order_By = {
-  fee?: InputMaybe<Order_By>;
-  gas_used?: InputMaybe<Order_By>;
-  gas_wanted?: InputMaybe<Order_By>;
-  hash?: InputMaybe<Order_By>;
-  height?: InputMaybe<Order_By>;
-  logs?: InputMaybe<Order_By>;
-  memo?: InputMaybe<Order_By>;
-  messages?: InputMaybe<Order_By>;
-  partition_id?: InputMaybe<Order_By>;
-  raw_log?: InputMaybe<Order_By>;
-  signatures?: InputMaybe<Order_By>;
-  signer_infos?: InputMaybe<Order_By>;
-  success?: InputMaybe<Order_By>;
-};
-
-/** prepend existing jsonb value of filtered columns with new jsonb value */
-export type Transaction_48_Prepend_Input = {
-  fee?: InputMaybe<Scalars['jsonb']>;
-  logs?: InputMaybe<Scalars['jsonb']>;
-  signer_infos?: InputMaybe<Scalars['jsonb']>;
-};
-
-/** select columns of table "transaction_48" */
-export enum Transaction_48_Select_Column {
-  /** column name */
-  Fee = 'fee',
-  /** column name */
-  GasUsed = 'gas_used',
-  /** column name */
-  GasWanted = 'gas_wanted',
-  /** column name */
-  Hash = 'hash',
-  /** column name */
-  Height = 'height',
-  /** column name */
-  Logs = 'logs',
-  /** column name */
-  Memo = 'memo',
-  /** column name */
-  Messages = 'messages',
-  /** column name */
-  PartitionId = 'partition_id',
-  /** column name */
-  RawLog = 'raw_log',
-  /** column name */
-  Signatures = 'signatures',
-  /** column name */
-  SignerInfos = 'signer_infos',
-  /** column name */
-  Success = 'success'
-}
-
-/** input type for updating data in table "transaction_48" */
-export type Transaction_48_Set_Input = {
-  fee?: InputMaybe<Scalars['jsonb']>;
-  gas_used?: InputMaybe<Scalars['bigint']>;
-  gas_wanted?: InputMaybe<Scalars['bigint']>;
-  hash?: InputMaybe<Scalars['String']>;
-  height?: InputMaybe<Scalars['bigint']>;
-  logs?: InputMaybe<Scalars['jsonb']>;
-  memo?: InputMaybe<Scalars['String']>;
-  messages?: InputMaybe<Scalars['json']>;
-  partition_id?: InputMaybe<Scalars['bigint']>;
-  raw_log?: InputMaybe<Scalars['String']>;
-  signatures?: InputMaybe<Array<Scalars['String']>>;
-  signer_infos?: InputMaybe<Scalars['jsonb']>;
-  success?: InputMaybe<Scalars['Boolean']>;
-};
-
-/** aggregate stddev on columns */
-export type Transaction_48_Stddev_Fields = {
-  __typename?: 'transaction_48_stddev_fields';
-  gas_used?: Maybe<Scalars['Float']>;
-  gas_wanted?: Maybe<Scalars['Float']>;
-  height?: Maybe<Scalars['Float']>;
-  partition_id?: Maybe<Scalars['Float']>;
-};
-
-/** aggregate stddev_pop on columns */
-export type Transaction_48_Stddev_Pop_Fields = {
-  __typename?: 'transaction_48_stddev_pop_fields';
-  gas_used?: Maybe<Scalars['Float']>;
-  gas_wanted?: Maybe<Scalars['Float']>;
-  height?: Maybe<Scalars['Float']>;
-  partition_id?: Maybe<Scalars['Float']>;
-};
-
-/** aggregate stddev_samp on columns */
-export type Transaction_48_Stddev_Samp_Fields = {
-  __typename?: 'transaction_48_stddev_samp_fields';
-  gas_used?: Maybe<Scalars['Float']>;
-  gas_wanted?: Maybe<Scalars['Float']>;
-  height?: Maybe<Scalars['Float']>;
-  partition_id?: Maybe<Scalars['Float']>;
-};
-
-/** Streaming cursor of the table "transaction_48" */
-export type Transaction_48_Stream_Cursor_Input = {
-  /** Stream column input with initial value */
-  initial_value: Transaction_48_Stream_Cursor_Value_Input;
-  /** cursor ordering */
-  ordering?: InputMaybe<Cursor_Ordering>;
-};
-
-/** Initial value of the column from where the streaming should start */
-export type Transaction_48_Stream_Cursor_Value_Input = {
-  fee?: InputMaybe<Scalars['jsonb']>;
-  gas_used?: InputMaybe<Scalars['bigint']>;
-  gas_wanted?: InputMaybe<Scalars['bigint']>;
-  hash?: InputMaybe<Scalars['String']>;
-  height?: InputMaybe<Scalars['bigint']>;
-  logs?: InputMaybe<Scalars['jsonb']>;
-  memo?: InputMaybe<Scalars['String']>;
-  messages?: InputMaybe<Scalars['json']>;
-  partition_id?: InputMaybe<Scalars['bigint']>;
-  raw_log?: InputMaybe<Scalars['String']>;
-  signatures?: InputMaybe<Array<Scalars['String']>>;
-  signer_infos?: InputMaybe<Scalars['jsonb']>;
-  success?: InputMaybe<Scalars['Boolean']>;
-};
-
-/** aggregate sum on columns */
-export type Transaction_48_Sum_Fields = {
-  __typename?: 'transaction_48_sum_fields';
-  gas_used?: Maybe<Scalars['bigint']>;
-  gas_wanted?: Maybe<Scalars['bigint']>;
-  height?: Maybe<Scalars['bigint']>;
-  partition_id?: Maybe<Scalars['bigint']>;
-};
-
-/** update columns of table "transaction_48" */
-export enum Transaction_48_Update_Column {
-  /** column name */
-  Fee = 'fee',
-  /** column name */
-  GasUsed = 'gas_used',
-  /** column name */
-  GasWanted = 'gas_wanted',
-  /** column name */
-  Hash = 'hash',
-  /** column name */
-  Height = 'height',
-  /** column name */
-  Logs = 'logs',
-  /** column name */
-  Memo = 'memo',
-  /** column name */
-  Messages = 'messages',
-  /** column name */
-  PartitionId = 'partition_id',
-  /** column name */
-  RawLog = 'raw_log',
-  /** column name */
-  Signatures = 'signatures',
-  /** column name */
-  SignerInfos = 'signer_infos',
-  /** column name */
-  Success = 'success'
-}
-
-export type Transaction_48_Updates = {
-  /** append existing jsonb value of filtered columns with new jsonb value */
-  _append?: InputMaybe<Transaction_48_Append_Input>;
-  /** delete the field or element with specified path (for JSON arrays, negative integers count from the end) */
-  _delete_at_path?: InputMaybe<Transaction_48_Delete_At_Path_Input>;
-  /** delete the array element with specified index (negative integers count from the end). throws an error if top level container is not an array */
-  _delete_elem?: InputMaybe<Transaction_48_Delete_Elem_Input>;
-  /** delete key/value pair or string element. key/value pairs are matched based on their key value */
-  _delete_key?: InputMaybe<Transaction_48_Delete_Key_Input>;
-  /** increments the numeric columns with given value of the filtered values */
-  _inc?: InputMaybe<Transaction_48_Inc_Input>;
-  /** prepend existing jsonb value of filtered columns with new jsonb value */
-  _prepend?: InputMaybe<Transaction_48_Prepend_Input>;
-  /** sets the columns of the filtered rows to the given values */
-  _set?: InputMaybe<Transaction_48_Set_Input>;
-  /** filter the rows which have to be updated */
-  where: Transaction_48_Bool_Exp;
-};
-
-/** aggregate var_pop on columns */
-export type Transaction_48_Var_Pop_Fields = {
-  __typename?: 'transaction_48_var_pop_fields';
-  gas_used?: Maybe<Scalars['Float']>;
-  gas_wanted?: Maybe<Scalars['Float']>;
-  height?: Maybe<Scalars['Float']>;
-  partition_id?: Maybe<Scalars['Float']>;
-};
-
-/** aggregate var_samp on columns */
-export type Transaction_48_Var_Samp_Fields = {
-  __typename?: 'transaction_48_var_samp_fields';
-  gas_used?: Maybe<Scalars['Float']>;
-  gas_wanted?: Maybe<Scalars['Float']>;
-  height?: Maybe<Scalars['Float']>;
-  partition_id?: Maybe<Scalars['Float']>;
-};
-
-/** aggregate variance on columns */
-export type Transaction_48_Variance_Fields = {
-  __typename?: 'transaction_48_variance_fields';
-  gas_used?: Maybe<Scalars['Float']>;
-  gas_wanted?: Maybe<Scalars['Float']>;
-  height?: Maybe<Scalars['Float']>;
-  partition_id?: Maybe<Scalars['Float']>;
-};
-
-/** columns and relationships of "transaction_49" */
-export type Transaction_49 = {
-  __typename?: 'transaction_49';
-  fee: Scalars['jsonb'];
-  gas_used?: Maybe<Scalars['bigint']>;
-  gas_wanted?: Maybe<Scalars['bigint']>;
-  hash: Scalars['String'];
-  height: Scalars['bigint'];
-  logs?: Maybe<Scalars['jsonb']>;
-  memo?: Maybe<Scalars['String']>;
-  messages: Scalars['json'];
-  partition_id: Scalars['bigint'];
-  raw_log?: Maybe<Scalars['String']>;
-  signatures: Array<Scalars['String']>;
-  signer_infos: Scalars['jsonb'];
-  success: Scalars['Boolean'];
-};
-
-
-/** columns and relationships of "transaction_49" */
-export type Transaction_49FeeArgs = {
-  path?: InputMaybe<Scalars['String']>;
-};
-
-
-/** columns and relationships of "transaction_49" */
-export type Transaction_49LogsArgs = {
-  path?: InputMaybe<Scalars['String']>;
-};
-
-
-/** columns and relationships of "transaction_49" */
-export type Transaction_49MessagesArgs = {
-  path?: InputMaybe<Scalars['String']>;
-};
-
-
-/** columns and relationships of "transaction_49" */
-export type Transaction_49Signer_InfosArgs = {
-  path?: InputMaybe<Scalars['String']>;
-};
-
-/** aggregated selection of "transaction_49" */
-export type Transaction_49_Aggregate = {
-  __typename?: 'transaction_49_aggregate';
-  aggregate?: Maybe<Transaction_49_Aggregate_Fields>;
-  nodes: Array<Transaction_49>;
-};
-
-/** aggregate fields of "transaction_49" */
-export type Transaction_49_Aggregate_Fields = {
-  __typename?: 'transaction_49_aggregate_fields';
-  avg?: Maybe<Transaction_49_Avg_Fields>;
-  count: Scalars['Int'];
-  max?: Maybe<Transaction_49_Max_Fields>;
-  min?: Maybe<Transaction_49_Min_Fields>;
-  stddev?: Maybe<Transaction_49_Stddev_Fields>;
-  stddev_pop?: Maybe<Transaction_49_Stddev_Pop_Fields>;
-  stddev_samp?: Maybe<Transaction_49_Stddev_Samp_Fields>;
-  sum?: Maybe<Transaction_49_Sum_Fields>;
-  var_pop?: Maybe<Transaction_49_Var_Pop_Fields>;
-  var_samp?: Maybe<Transaction_49_Var_Samp_Fields>;
-  variance?: Maybe<Transaction_49_Variance_Fields>;
-};
-
-
-/** aggregate fields of "transaction_49" */
-export type Transaction_49_Aggregate_FieldsCountArgs = {
-  columns?: InputMaybe<Array<Transaction_49_Select_Column>>;
-  distinct?: InputMaybe<Scalars['Boolean']>;
-};
-
-/** append existing jsonb value of filtered columns with new jsonb value */
-export type Transaction_49_Append_Input = {
-  fee?: InputMaybe<Scalars['jsonb']>;
-  logs?: InputMaybe<Scalars['jsonb']>;
-  signer_infos?: InputMaybe<Scalars['jsonb']>;
-};
-
-/** aggregate avg on columns */
-export type Transaction_49_Avg_Fields = {
-  __typename?: 'transaction_49_avg_fields';
-  gas_used?: Maybe<Scalars['Float']>;
-  gas_wanted?: Maybe<Scalars['Float']>;
-  height?: Maybe<Scalars['Float']>;
-  partition_id?: Maybe<Scalars['Float']>;
-};
-
-/** Boolean expression to filter rows from the table "transaction_49". All fields are combined with a logical 'AND'. */
-export type Transaction_49_Bool_Exp = {
-  _and?: InputMaybe<Array<Transaction_49_Bool_Exp>>;
-  _not?: InputMaybe<Transaction_49_Bool_Exp>;
-  _or?: InputMaybe<Array<Transaction_49_Bool_Exp>>;
-  fee?: InputMaybe<Jsonb_Comparison_Exp>;
-  gas_used?: InputMaybe<Bigint_Comparison_Exp>;
-  gas_wanted?: InputMaybe<Bigint_Comparison_Exp>;
-  hash?: InputMaybe<String_Comparison_Exp>;
-  height?: InputMaybe<Bigint_Comparison_Exp>;
-  logs?: InputMaybe<Jsonb_Comparison_Exp>;
-  memo?: InputMaybe<String_Comparison_Exp>;
-  messages?: InputMaybe<Json_Comparison_Exp>;
-  partition_id?: InputMaybe<Bigint_Comparison_Exp>;
-  raw_log?: InputMaybe<String_Comparison_Exp>;
-  signatures?: InputMaybe<String_Array_Comparison_Exp>;
-  signer_infos?: InputMaybe<Jsonb_Comparison_Exp>;
-  success?: InputMaybe<Boolean_Comparison_Exp>;
-};
-
-/** unique or primary key constraints on table "transaction_49" */
-export enum Transaction_49_Constraint {
-  /** unique or primary key constraint on columns "partition_id", "hash" */
-  Transaction_49HashPartitionIdKey = 'transaction_49_hash_partition_id_key'
-}
-
-/** delete the field or element with specified path (for JSON arrays, negative integers count from the end) */
-export type Transaction_49_Delete_At_Path_Input = {
-  fee?: InputMaybe<Array<Scalars['String']>>;
-  logs?: InputMaybe<Array<Scalars['String']>>;
-  signer_infos?: InputMaybe<Array<Scalars['String']>>;
-};
-
-/** delete the array element with specified index (negative integers count from the end). throws an error if top level container is not an array */
-export type Transaction_49_Delete_Elem_Input = {
-  fee?: InputMaybe<Scalars['Int']>;
-  logs?: InputMaybe<Scalars['Int']>;
-  signer_infos?: InputMaybe<Scalars['Int']>;
-};
-
-/** delete key/value pair or string element. key/value pairs are matched based on their key value */
-export type Transaction_49_Delete_Key_Input = {
-  fee?: InputMaybe<Scalars['String']>;
-  logs?: InputMaybe<Scalars['String']>;
-  signer_infos?: InputMaybe<Scalars['String']>;
-};
-
-/** input type for incrementing numeric columns in table "transaction_49" */
-export type Transaction_49_Inc_Input = {
-  gas_used?: InputMaybe<Scalars['bigint']>;
-  gas_wanted?: InputMaybe<Scalars['bigint']>;
-  height?: InputMaybe<Scalars['bigint']>;
-  partition_id?: InputMaybe<Scalars['bigint']>;
-};
-
-/** input type for inserting data into table "transaction_49" */
-export type Transaction_49_Insert_Input = {
-  fee?: InputMaybe<Scalars['jsonb']>;
-  gas_used?: InputMaybe<Scalars['bigint']>;
-  gas_wanted?: InputMaybe<Scalars['bigint']>;
-  hash?: InputMaybe<Scalars['String']>;
-  height?: InputMaybe<Scalars['bigint']>;
-  logs?: InputMaybe<Scalars['jsonb']>;
-  memo?: InputMaybe<Scalars['String']>;
-  messages?: InputMaybe<Scalars['json']>;
-  partition_id?: InputMaybe<Scalars['bigint']>;
-  raw_log?: InputMaybe<Scalars['String']>;
-  signatures?: InputMaybe<Array<Scalars['String']>>;
-  signer_infos?: InputMaybe<Scalars['jsonb']>;
-  success?: InputMaybe<Scalars['Boolean']>;
-};
-
-/** aggregate max on columns */
-export type Transaction_49_Max_Fields = {
-  __typename?: 'transaction_49_max_fields';
-  gas_used?: Maybe<Scalars['bigint']>;
-  gas_wanted?: Maybe<Scalars['bigint']>;
-  hash?: Maybe<Scalars['String']>;
-  height?: Maybe<Scalars['bigint']>;
-  memo?: Maybe<Scalars['String']>;
-  partition_id?: Maybe<Scalars['bigint']>;
-  raw_log?: Maybe<Scalars['String']>;
-  signatures?: Maybe<Array<Scalars['String']>>;
-};
-
-/** aggregate min on columns */
-export type Transaction_49_Min_Fields = {
-  __typename?: 'transaction_49_min_fields';
-  gas_used?: Maybe<Scalars['bigint']>;
-  gas_wanted?: Maybe<Scalars['bigint']>;
-  hash?: Maybe<Scalars['String']>;
-  height?: Maybe<Scalars['bigint']>;
-  memo?: Maybe<Scalars['String']>;
-  partition_id?: Maybe<Scalars['bigint']>;
-  raw_log?: Maybe<Scalars['String']>;
-  signatures?: Maybe<Array<Scalars['String']>>;
-};
-
-/** response of any mutation on the table "transaction_49" */
-export type Transaction_49_Mutation_Response = {
-  __typename?: 'transaction_49_mutation_response';
-  /** number of rows affected by the mutation */
-  affected_rows: Scalars['Int'];
-  /** data from the rows affected by the mutation */
-  returning: Array<Transaction_49>;
-};
-
-/** on_conflict condition type for table "transaction_49" */
-export type Transaction_49_On_Conflict = {
-  constraint: Transaction_49_Constraint;
-  update_columns?: Array<Transaction_49_Update_Column>;
-  where?: InputMaybe<Transaction_49_Bool_Exp>;
-};
-
-/** Ordering options when selecting data from "transaction_49". */
-export type Transaction_49_Order_By = {
-  fee?: InputMaybe<Order_By>;
-  gas_used?: InputMaybe<Order_By>;
-  gas_wanted?: InputMaybe<Order_By>;
-  hash?: InputMaybe<Order_By>;
-  height?: InputMaybe<Order_By>;
-  logs?: InputMaybe<Order_By>;
-  memo?: InputMaybe<Order_By>;
-  messages?: InputMaybe<Order_By>;
-  partition_id?: InputMaybe<Order_By>;
-  raw_log?: InputMaybe<Order_By>;
-  signatures?: InputMaybe<Order_By>;
-  signer_infos?: InputMaybe<Order_By>;
-  success?: InputMaybe<Order_By>;
-};
-
-/** prepend existing jsonb value of filtered columns with new jsonb value */
-export type Transaction_49_Prepend_Input = {
-  fee?: InputMaybe<Scalars['jsonb']>;
-  logs?: InputMaybe<Scalars['jsonb']>;
-  signer_infos?: InputMaybe<Scalars['jsonb']>;
-};
-
-/** select columns of table "transaction_49" */
-export enum Transaction_49_Select_Column {
-  /** column name */
-  Fee = 'fee',
-  /** column name */
-  GasUsed = 'gas_used',
-  /** column name */
-  GasWanted = 'gas_wanted',
-  /** column name */
-  Hash = 'hash',
-  /** column name */
-  Height = 'height',
-  /** column name */
-  Logs = 'logs',
-  /** column name */
-  Memo = 'memo',
-  /** column name */
-  Messages = 'messages',
-  /** column name */
-  PartitionId = 'partition_id',
-  /** column name */
-  RawLog = 'raw_log',
-  /** column name */
-  Signatures = 'signatures',
-  /** column name */
-  SignerInfos = 'signer_infos',
-  /** column name */
-  Success = 'success'
-}
-
-/** input type for updating data in table "transaction_49" */
-export type Transaction_49_Set_Input = {
-  fee?: InputMaybe<Scalars['jsonb']>;
-  gas_used?: InputMaybe<Scalars['bigint']>;
-  gas_wanted?: InputMaybe<Scalars['bigint']>;
-  hash?: InputMaybe<Scalars['String']>;
-  height?: InputMaybe<Scalars['bigint']>;
-  logs?: InputMaybe<Scalars['jsonb']>;
-  memo?: InputMaybe<Scalars['String']>;
-  messages?: InputMaybe<Scalars['json']>;
-  partition_id?: InputMaybe<Scalars['bigint']>;
-  raw_log?: InputMaybe<Scalars['String']>;
-  signatures?: InputMaybe<Array<Scalars['String']>>;
-  signer_infos?: InputMaybe<Scalars['jsonb']>;
-  success?: InputMaybe<Scalars['Boolean']>;
-};
-
-/** aggregate stddev on columns */
-export type Transaction_49_Stddev_Fields = {
-  __typename?: 'transaction_49_stddev_fields';
-  gas_used?: Maybe<Scalars['Float']>;
-  gas_wanted?: Maybe<Scalars['Float']>;
-  height?: Maybe<Scalars['Float']>;
-  partition_id?: Maybe<Scalars['Float']>;
-};
-
-/** aggregate stddev_pop on columns */
-export type Transaction_49_Stddev_Pop_Fields = {
-  __typename?: 'transaction_49_stddev_pop_fields';
-  gas_used?: Maybe<Scalars['Float']>;
-  gas_wanted?: Maybe<Scalars['Float']>;
-  height?: Maybe<Scalars['Float']>;
-  partition_id?: Maybe<Scalars['Float']>;
-};
-
-/** aggregate stddev_samp on columns */
-export type Transaction_49_Stddev_Samp_Fields = {
-  __typename?: 'transaction_49_stddev_samp_fields';
-  gas_used?: Maybe<Scalars['Float']>;
-  gas_wanted?: Maybe<Scalars['Float']>;
-  height?: Maybe<Scalars['Float']>;
-  partition_id?: Maybe<Scalars['Float']>;
-};
-
-/** Streaming cursor of the table "transaction_49" */
-export type Transaction_49_Stream_Cursor_Input = {
-  /** Stream column input with initial value */
-  initial_value: Transaction_49_Stream_Cursor_Value_Input;
-  /** cursor ordering */
-  ordering?: InputMaybe<Cursor_Ordering>;
-};
-
-/** Initial value of the column from where the streaming should start */
-export type Transaction_49_Stream_Cursor_Value_Input = {
-  fee?: InputMaybe<Scalars['jsonb']>;
-  gas_used?: InputMaybe<Scalars['bigint']>;
-  gas_wanted?: InputMaybe<Scalars['bigint']>;
-  hash?: InputMaybe<Scalars['String']>;
-  height?: InputMaybe<Scalars['bigint']>;
-  logs?: InputMaybe<Scalars['jsonb']>;
-  memo?: InputMaybe<Scalars['String']>;
-  messages?: InputMaybe<Scalars['json']>;
-  partition_id?: InputMaybe<Scalars['bigint']>;
-  raw_log?: InputMaybe<Scalars['String']>;
-  signatures?: InputMaybe<Array<Scalars['String']>>;
-  signer_infos?: InputMaybe<Scalars['jsonb']>;
-  success?: InputMaybe<Scalars['Boolean']>;
-};
-
-/** aggregate sum on columns */
-export type Transaction_49_Sum_Fields = {
-  __typename?: 'transaction_49_sum_fields';
-  gas_used?: Maybe<Scalars['bigint']>;
-  gas_wanted?: Maybe<Scalars['bigint']>;
-  height?: Maybe<Scalars['bigint']>;
-  partition_id?: Maybe<Scalars['bigint']>;
-};
-
-/** update columns of table "transaction_49" */
-export enum Transaction_49_Update_Column {
-  /** column name */
-  Fee = 'fee',
-  /** column name */
-  GasUsed = 'gas_used',
-  /** column name */
-  GasWanted = 'gas_wanted',
-  /** column name */
-  Hash = 'hash',
-  /** column name */
-  Height = 'height',
-  /** column name */
-  Logs = 'logs',
-  /** column name */
-  Memo = 'memo',
-  /** column name */
-  Messages = 'messages',
-  /** column name */
-  PartitionId = 'partition_id',
-  /** column name */
-  RawLog = 'raw_log',
-  /** column name */
-  Signatures = 'signatures',
-  /** column name */
-  SignerInfos = 'signer_infos',
-  /** column name */
-  Success = 'success'
-}
-
-export type Transaction_49_Updates = {
-  /** append existing jsonb value of filtered columns with new jsonb value */
-  _append?: InputMaybe<Transaction_49_Append_Input>;
-  /** delete the field or element with specified path (for JSON arrays, negative integers count from the end) */
-  _delete_at_path?: InputMaybe<Transaction_49_Delete_At_Path_Input>;
-  /** delete the array element with specified index (negative integers count from the end). throws an error if top level container is not an array */
-  _delete_elem?: InputMaybe<Transaction_49_Delete_Elem_Input>;
-  /** delete key/value pair or string element. key/value pairs are matched based on their key value */
-  _delete_key?: InputMaybe<Transaction_49_Delete_Key_Input>;
-  /** increments the numeric columns with given value of the filtered values */
-  _inc?: InputMaybe<Transaction_49_Inc_Input>;
-  /** prepend existing jsonb value of filtered columns with new jsonb value */
-  _prepend?: InputMaybe<Transaction_49_Prepend_Input>;
-  /** sets the columns of the filtered rows to the given values */
-  _set?: InputMaybe<Transaction_49_Set_Input>;
-  /** filter the rows which have to be updated */
-  where: Transaction_49_Bool_Exp;
-};
-
-/** aggregate var_pop on columns */
-export type Transaction_49_Var_Pop_Fields = {
-  __typename?: 'transaction_49_var_pop_fields';
-  gas_used?: Maybe<Scalars['Float']>;
-  gas_wanted?: Maybe<Scalars['Float']>;
-  height?: Maybe<Scalars['Float']>;
-  partition_id?: Maybe<Scalars['Float']>;
-};
-
-/** aggregate var_samp on columns */
-export type Transaction_49_Var_Samp_Fields = {
-  __typename?: 'transaction_49_var_samp_fields';
-  gas_used?: Maybe<Scalars['Float']>;
-  gas_wanted?: Maybe<Scalars['Float']>;
-  height?: Maybe<Scalars['Float']>;
-  partition_id?: Maybe<Scalars['Float']>;
-};
-
-/** aggregate variance on columns */
-export type Transaction_49_Variance_Fields = {
-  __typename?: 'transaction_49_variance_fields';
-  gas_used?: Maybe<Scalars['Float']>;
-  gas_wanted?: Maybe<Scalars['Float']>;
-  height?: Maybe<Scalars['Float']>;
-  partition_id?: Maybe<Scalars['Float']>;
-};
-
-/** columns and relationships of "transaction_50" */
-export type Transaction_50 = {
-  __typename?: 'transaction_50';
-  fee: Scalars['jsonb'];
-  gas_used?: Maybe<Scalars['bigint']>;
-  gas_wanted?: Maybe<Scalars['bigint']>;
-  hash: Scalars['String'];
-  height: Scalars['bigint'];
-  logs?: Maybe<Scalars['jsonb']>;
-  memo?: Maybe<Scalars['String']>;
-  messages: Scalars['json'];
-  partition_id: Scalars['bigint'];
-  raw_log?: Maybe<Scalars['String']>;
-  signatures: Array<Scalars['String']>;
-  signer_infos: Scalars['jsonb'];
-  success: Scalars['Boolean'];
-};
-
-
-/** columns and relationships of "transaction_50" */
-export type Transaction_50FeeArgs = {
-  path?: InputMaybe<Scalars['String']>;
-};
-
-
-/** columns and relationships of "transaction_50" */
-export type Transaction_50LogsArgs = {
-  path?: InputMaybe<Scalars['String']>;
-};
-
-
-/** columns and relationships of "transaction_50" */
-export type Transaction_50MessagesArgs = {
-  path?: InputMaybe<Scalars['String']>;
-};
-
-
-/** columns and relationships of "transaction_50" */
-export type Transaction_50Signer_InfosArgs = {
-  path?: InputMaybe<Scalars['String']>;
-};
-
-/** aggregated selection of "transaction_50" */
-export type Transaction_50_Aggregate = {
-  __typename?: 'transaction_50_aggregate';
-  aggregate?: Maybe<Transaction_50_Aggregate_Fields>;
-  nodes: Array<Transaction_50>;
-};
-
-/** aggregate fields of "transaction_50" */
-export type Transaction_50_Aggregate_Fields = {
-  __typename?: 'transaction_50_aggregate_fields';
-  avg?: Maybe<Transaction_50_Avg_Fields>;
-  count: Scalars['Int'];
-  max?: Maybe<Transaction_50_Max_Fields>;
-  min?: Maybe<Transaction_50_Min_Fields>;
-  stddev?: Maybe<Transaction_50_Stddev_Fields>;
-  stddev_pop?: Maybe<Transaction_50_Stddev_Pop_Fields>;
-  stddev_samp?: Maybe<Transaction_50_Stddev_Samp_Fields>;
-  sum?: Maybe<Transaction_50_Sum_Fields>;
-  var_pop?: Maybe<Transaction_50_Var_Pop_Fields>;
-  var_samp?: Maybe<Transaction_50_Var_Samp_Fields>;
-  variance?: Maybe<Transaction_50_Variance_Fields>;
-};
-
-
-/** aggregate fields of "transaction_50" */
-export type Transaction_50_Aggregate_FieldsCountArgs = {
-  columns?: InputMaybe<Array<Transaction_50_Select_Column>>;
-  distinct?: InputMaybe<Scalars['Boolean']>;
-};
-
-/** append existing jsonb value of filtered columns with new jsonb value */
-export type Transaction_50_Append_Input = {
-  fee?: InputMaybe<Scalars['jsonb']>;
-  logs?: InputMaybe<Scalars['jsonb']>;
-  signer_infos?: InputMaybe<Scalars['jsonb']>;
-};
-
-/** aggregate avg on columns */
-export type Transaction_50_Avg_Fields = {
-  __typename?: 'transaction_50_avg_fields';
-  gas_used?: Maybe<Scalars['Float']>;
-  gas_wanted?: Maybe<Scalars['Float']>;
-  height?: Maybe<Scalars['Float']>;
-  partition_id?: Maybe<Scalars['Float']>;
-};
-
-/** Boolean expression to filter rows from the table "transaction_50". All fields are combined with a logical 'AND'. */
-export type Transaction_50_Bool_Exp = {
-  _and?: InputMaybe<Array<Transaction_50_Bool_Exp>>;
-  _not?: InputMaybe<Transaction_50_Bool_Exp>;
-  _or?: InputMaybe<Array<Transaction_50_Bool_Exp>>;
-  fee?: InputMaybe<Jsonb_Comparison_Exp>;
-  gas_used?: InputMaybe<Bigint_Comparison_Exp>;
-  gas_wanted?: InputMaybe<Bigint_Comparison_Exp>;
-  hash?: InputMaybe<String_Comparison_Exp>;
-  height?: InputMaybe<Bigint_Comparison_Exp>;
-  logs?: InputMaybe<Jsonb_Comparison_Exp>;
-  memo?: InputMaybe<String_Comparison_Exp>;
-  messages?: InputMaybe<Json_Comparison_Exp>;
-  partition_id?: InputMaybe<Bigint_Comparison_Exp>;
-  raw_log?: InputMaybe<String_Comparison_Exp>;
-  signatures?: InputMaybe<String_Array_Comparison_Exp>;
-  signer_infos?: InputMaybe<Jsonb_Comparison_Exp>;
-  success?: InputMaybe<Boolean_Comparison_Exp>;
-};
-
-/** unique or primary key constraints on table "transaction_50" */
-export enum Transaction_50_Constraint {
-  /** unique or primary key constraint on columns "partition_id", "hash" */
-  Transaction_50HashPartitionIdKey = 'transaction_50_hash_partition_id_key'
-}
-
-/** delete the field or element with specified path (for JSON arrays, negative integers count from the end) */
-export type Transaction_50_Delete_At_Path_Input = {
-  fee?: InputMaybe<Array<Scalars['String']>>;
-  logs?: InputMaybe<Array<Scalars['String']>>;
-  signer_infos?: InputMaybe<Array<Scalars['String']>>;
-};
-
-/** delete the array element with specified index (negative integers count from the end). throws an error if top level container is not an array */
-export type Transaction_50_Delete_Elem_Input = {
-  fee?: InputMaybe<Scalars['Int']>;
-  logs?: InputMaybe<Scalars['Int']>;
-  signer_infos?: InputMaybe<Scalars['Int']>;
-};
-
-/** delete key/value pair or string element. key/value pairs are matched based on their key value */
-export type Transaction_50_Delete_Key_Input = {
-  fee?: InputMaybe<Scalars['String']>;
-  logs?: InputMaybe<Scalars['String']>;
-  signer_infos?: InputMaybe<Scalars['String']>;
-};
-
-/** input type for incrementing numeric columns in table "transaction_50" */
-export type Transaction_50_Inc_Input = {
-  gas_used?: InputMaybe<Scalars['bigint']>;
-  gas_wanted?: InputMaybe<Scalars['bigint']>;
-  height?: InputMaybe<Scalars['bigint']>;
-  partition_id?: InputMaybe<Scalars['bigint']>;
-};
-
-/** input type for inserting data into table "transaction_50" */
-export type Transaction_50_Insert_Input = {
-  fee?: InputMaybe<Scalars['jsonb']>;
-  gas_used?: InputMaybe<Scalars['bigint']>;
-  gas_wanted?: InputMaybe<Scalars['bigint']>;
-  hash?: InputMaybe<Scalars['String']>;
-  height?: InputMaybe<Scalars['bigint']>;
-  logs?: InputMaybe<Scalars['jsonb']>;
-  memo?: InputMaybe<Scalars['String']>;
-  messages?: InputMaybe<Scalars['json']>;
-  partition_id?: InputMaybe<Scalars['bigint']>;
-  raw_log?: InputMaybe<Scalars['String']>;
-  signatures?: InputMaybe<Array<Scalars['String']>>;
-  signer_infos?: InputMaybe<Scalars['jsonb']>;
-  success?: InputMaybe<Scalars['Boolean']>;
-};
-
-/** aggregate max on columns */
-export type Transaction_50_Max_Fields = {
-  __typename?: 'transaction_50_max_fields';
-  gas_used?: Maybe<Scalars['bigint']>;
-  gas_wanted?: Maybe<Scalars['bigint']>;
-  hash?: Maybe<Scalars['String']>;
-  height?: Maybe<Scalars['bigint']>;
-  memo?: Maybe<Scalars['String']>;
-  partition_id?: Maybe<Scalars['bigint']>;
-  raw_log?: Maybe<Scalars['String']>;
-  signatures?: Maybe<Array<Scalars['String']>>;
-};
-
-/** aggregate min on columns */
-export type Transaction_50_Min_Fields = {
-  __typename?: 'transaction_50_min_fields';
-  gas_used?: Maybe<Scalars['bigint']>;
-  gas_wanted?: Maybe<Scalars['bigint']>;
-  hash?: Maybe<Scalars['String']>;
-  height?: Maybe<Scalars['bigint']>;
-  memo?: Maybe<Scalars['String']>;
-  partition_id?: Maybe<Scalars['bigint']>;
-  raw_log?: Maybe<Scalars['String']>;
-  signatures?: Maybe<Array<Scalars['String']>>;
-};
-
-/** response of any mutation on the table "transaction_50" */
-export type Transaction_50_Mutation_Response = {
-  __typename?: 'transaction_50_mutation_response';
-  /** number of rows affected by the mutation */
-  affected_rows: Scalars['Int'];
-  /** data from the rows affected by the mutation */
-  returning: Array<Transaction_50>;
-};
-
-/** on_conflict condition type for table "transaction_50" */
-export type Transaction_50_On_Conflict = {
-  constraint: Transaction_50_Constraint;
-  update_columns?: Array<Transaction_50_Update_Column>;
-  where?: InputMaybe<Transaction_50_Bool_Exp>;
-};
-
-/** Ordering options when selecting data from "transaction_50". */
-export type Transaction_50_Order_By = {
-  fee?: InputMaybe<Order_By>;
-  gas_used?: InputMaybe<Order_By>;
-  gas_wanted?: InputMaybe<Order_By>;
-  hash?: InputMaybe<Order_By>;
-  height?: InputMaybe<Order_By>;
-  logs?: InputMaybe<Order_By>;
-  memo?: InputMaybe<Order_By>;
-  messages?: InputMaybe<Order_By>;
-  partition_id?: InputMaybe<Order_By>;
-  raw_log?: InputMaybe<Order_By>;
-  signatures?: InputMaybe<Order_By>;
-  signer_infos?: InputMaybe<Order_By>;
-  success?: InputMaybe<Order_By>;
-};
-
-/** prepend existing jsonb value of filtered columns with new jsonb value */
-export type Transaction_50_Prepend_Input = {
-  fee?: InputMaybe<Scalars['jsonb']>;
-  logs?: InputMaybe<Scalars['jsonb']>;
-  signer_infos?: InputMaybe<Scalars['jsonb']>;
-};
-
-/** select columns of table "transaction_50" */
-export enum Transaction_50_Select_Column {
-  /** column name */
-  Fee = 'fee',
-  /** column name */
-  GasUsed = 'gas_used',
-  /** column name */
-  GasWanted = 'gas_wanted',
-  /** column name */
-  Hash = 'hash',
-  /** column name */
-  Height = 'height',
-  /** column name */
-  Logs = 'logs',
-  /** column name */
-  Memo = 'memo',
-  /** column name */
-  Messages = 'messages',
-  /** column name */
-  PartitionId = 'partition_id',
-  /** column name */
-  RawLog = 'raw_log',
-  /** column name */
-  Signatures = 'signatures',
-  /** column name */
-  SignerInfos = 'signer_infos',
-  /** column name */
-  Success = 'success'
-}
-
-/** input type for updating data in table "transaction_50" */
-export type Transaction_50_Set_Input = {
-  fee?: InputMaybe<Scalars['jsonb']>;
-  gas_used?: InputMaybe<Scalars['bigint']>;
-  gas_wanted?: InputMaybe<Scalars['bigint']>;
-  hash?: InputMaybe<Scalars['String']>;
-  height?: InputMaybe<Scalars['bigint']>;
-  logs?: InputMaybe<Scalars['jsonb']>;
-  memo?: InputMaybe<Scalars['String']>;
-  messages?: InputMaybe<Scalars['json']>;
-  partition_id?: InputMaybe<Scalars['bigint']>;
-  raw_log?: InputMaybe<Scalars['String']>;
-  signatures?: InputMaybe<Array<Scalars['String']>>;
-  signer_infos?: InputMaybe<Scalars['jsonb']>;
-  success?: InputMaybe<Scalars['Boolean']>;
-};
-
-/** aggregate stddev on columns */
-export type Transaction_50_Stddev_Fields = {
-  __typename?: 'transaction_50_stddev_fields';
-  gas_used?: Maybe<Scalars['Float']>;
-  gas_wanted?: Maybe<Scalars['Float']>;
-  height?: Maybe<Scalars['Float']>;
-  partition_id?: Maybe<Scalars['Float']>;
-};
-
-/** aggregate stddev_pop on columns */
-export type Transaction_50_Stddev_Pop_Fields = {
-  __typename?: 'transaction_50_stddev_pop_fields';
-  gas_used?: Maybe<Scalars['Float']>;
-  gas_wanted?: Maybe<Scalars['Float']>;
-  height?: Maybe<Scalars['Float']>;
-  partition_id?: Maybe<Scalars['Float']>;
-};
-
-/** aggregate stddev_samp on columns */
-export type Transaction_50_Stddev_Samp_Fields = {
-  __typename?: 'transaction_50_stddev_samp_fields';
-  gas_used?: Maybe<Scalars['Float']>;
-  gas_wanted?: Maybe<Scalars['Float']>;
-  height?: Maybe<Scalars['Float']>;
-  partition_id?: Maybe<Scalars['Float']>;
-};
-
-/** Streaming cursor of the table "transaction_50" */
-export type Transaction_50_Stream_Cursor_Input = {
-  /** Stream column input with initial value */
-  initial_value: Transaction_50_Stream_Cursor_Value_Input;
-  /** cursor ordering */
-  ordering?: InputMaybe<Cursor_Ordering>;
-};
-
-/** Initial value of the column from where the streaming should start */
-export type Transaction_50_Stream_Cursor_Value_Input = {
-  fee?: InputMaybe<Scalars['jsonb']>;
-  gas_used?: InputMaybe<Scalars['bigint']>;
-  gas_wanted?: InputMaybe<Scalars['bigint']>;
-  hash?: InputMaybe<Scalars['String']>;
-  height?: InputMaybe<Scalars['bigint']>;
-  logs?: InputMaybe<Scalars['jsonb']>;
-  memo?: InputMaybe<Scalars['String']>;
-  messages?: InputMaybe<Scalars['json']>;
-  partition_id?: InputMaybe<Scalars['bigint']>;
-  raw_log?: InputMaybe<Scalars['String']>;
-  signatures?: InputMaybe<Array<Scalars['String']>>;
-  signer_infos?: InputMaybe<Scalars['jsonb']>;
-  success?: InputMaybe<Scalars['Boolean']>;
-};
-
-/** aggregate sum on columns */
-export type Transaction_50_Sum_Fields = {
-  __typename?: 'transaction_50_sum_fields';
-  gas_used?: Maybe<Scalars['bigint']>;
-  gas_wanted?: Maybe<Scalars['bigint']>;
-  height?: Maybe<Scalars['bigint']>;
-  partition_id?: Maybe<Scalars['bigint']>;
-};
-
-/** update columns of table "transaction_50" */
-export enum Transaction_50_Update_Column {
-  /** column name */
-  Fee = 'fee',
-  /** column name */
-  GasUsed = 'gas_used',
-  /** column name */
-  GasWanted = 'gas_wanted',
-  /** column name */
-  Hash = 'hash',
-  /** column name */
-  Height = 'height',
-  /** column name */
-  Logs = 'logs',
-  /** column name */
-  Memo = 'memo',
-  /** column name */
-  Messages = 'messages',
-  /** column name */
-  PartitionId = 'partition_id',
-  /** column name */
-  RawLog = 'raw_log',
-  /** column name */
-  Signatures = 'signatures',
-  /** column name */
-  SignerInfos = 'signer_infos',
-  /** column name */
-  Success = 'success'
-}
-
-export type Transaction_50_Updates = {
-  /** append existing jsonb value of filtered columns with new jsonb value */
-  _append?: InputMaybe<Transaction_50_Append_Input>;
-  /** delete the field or element with specified path (for JSON arrays, negative integers count from the end) */
-  _delete_at_path?: InputMaybe<Transaction_50_Delete_At_Path_Input>;
-  /** delete the array element with specified index (negative integers count from the end). throws an error if top level container is not an array */
-  _delete_elem?: InputMaybe<Transaction_50_Delete_Elem_Input>;
-  /** delete key/value pair or string element. key/value pairs are matched based on their key value */
-  _delete_key?: InputMaybe<Transaction_50_Delete_Key_Input>;
-  /** increments the numeric columns with given value of the filtered values */
-  _inc?: InputMaybe<Transaction_50_Inc_Input>;
-  /** prepend existing jsonb value of filtered columns with new jsonb value */
-  _prepend?: InputMaybe<Transaction_50_Prepend_Input>;
-  /** sets the columns of the filtered rows to the given values */
-  _set?: InputMaybe<Transaction_50_Set_Input>;
-  /** filter the rows which have to be updated */
-  where: Transaction_50_Bool_Exp;
-};
-
-/** aggregate var_pop on columns */
-export type Transaction_50_Var_Pop_Fields = {
-  __typename?: 'transaction_50_var_pop_fields';
-  gas_used?: Maybe<Scalars['Float']>;
-  gas_wanted?: Maybe<Scalars['Float']>;
-  height?: Maybe<Scalars['Float']>;
-  partition_id?: Maybe<Scalars['Float']>;
-};
-
-/** aggregate var_samp on columns */
-export type Transaction_50_Var_Samp_Fields = {
-  __typename?: 'transaction_50_var_samp_fields';
-  gas_used?: Maybe<Scalars['Float']>;
-  gas_wanted?: Maybe<Scalars['Float']>;
-  height?: Maybe<Scalars['Float']>;
-  partition_id?: Maybe<Scalars['Float']>;
-};
-
-/** aggregate variance on columns */
-export type Transaction_50_Variance_Fields = {
-  __typename?: 'transaction_50_variance_fields';
-  gas_used?: Maybe<Scalars['Float']>;
-  gas_wanted?: Maybe<Scalars['Float']>;
-  height?: Maybe<Scalars['Float']>;
-  partition_id?: Maybe<Scalars['Float']>;
-};
-
-/** columns and relationships of "transaction_104" */
-export type Transaction_104 = {
-  __typename?: 'transaction_104';
-  fee: Scalars['jsonb'];
-  gas_used?: Maybe<Scalars['bigint']>;
-  gas_wanted?: Maybe<Scalars['bigint']>;
-  hash: Scalars['String'];
-  height: Scalars['bigint'];
-  logs?: Maybe<Scalars['jsonb']>;
-  memo?: Maybe<Scalars['String']>;
-  messages: Scalars['json'];
-  partition_id: Scalars['bigint'];
-  raw_log?: Maybe<Scalars['String']>;
-  signatures: Array<Scalars['String']>;
-  signer_infos: Scalars['jsonb'];
-  success: Scalars['Boolean'];
-};
-
-
-/** columns and relationships of "transaction_104" */
-export type Transaction_104FeeArgs = {
-  path?: InputMaybe<Scalars['String']>;
-};
-
-
-/** columns and relationships of "transaction_104" */
-export type Transaction_104LogsArgs = {
-  path?: InputMaybe<Scalars['String']>;
-};
-
-
-/** columns and relationships of "transaction_104" */
-export type Transaction_104MessagesArgs = {
-  path?: InputMaybe<Scalars['String']>;
-};
-
-
-/** columns and relationships of "transaction_104" */
-export type Transaction_104Signer_InfosArgs = {
-  path?: InputMaybe<Scalars['String']>;
-};
-
-/** aggregated selection of "transaction_104" */
-export type Transaction_104_Aggregate = {
-  __typename?: 'transaction_104_aggregate';
-  aggregate?: Maybe<Transaction_104_Aggregate_Fields>;
-  nodes: Array<Transaction_104>;
-};
-
-/** aggregate fields of "transaction_104" */
-export type Transaction_104_Aggregate_Fields = {
-  __typename?: 'transaction_104_aggregate_fields';
-  avg?: Maybe<Transaction_104_Avg_Fields>;
-  count: Scalars['Int'];
-  max?: Maybe<Transaction_104_Max_Fields>;
-  min?: Maybe<Transaction_104_Min_Fields>;
-  stddev?: Maybe<Transaction_104_Stddev_Fields>;
-  stddev_pop?: Maybe<Transaction_104_Stddev_Pop_Fields>;
-  stddev_samp?: Maybe<Transaction_104_Stddev_Samp_Fields>;
-  sum?: Maybe<Transaction_104_Sum_Fields>;
-  var_pop?: Maybe<Transaction_104_Var_Pop_Fields>;
-  var_samp?: Maybe<Transaction_104_Var_Samp_Fields>;
-  variance?: Maybe<Transaction_104_Variance_Fields>;
-};
-
-
-/** aggregate fields of "transaction_104" */
-export type Transaction_104_Aggregate_FieldsCountArgs = {
-  columns?: InputMaybe<Array<Transaction_104_Select_Column>>;
-  distinct?: InputMaybe<Scalars['Boolean']>;
-};
-
-/** append existing jsonb value of filtered columns with new jsonb value */
-export type Transaction_104_Append_Input = {
-  fee?: InputMaybe<Scalars['jsonb']>;
-  logs?: InputMaybe<Scalars['jsonb']>;
-  signer_infos?: InputMaybe<Scalars['jsonb']>;
-};
-
-/** aggregate avg on columns */
-export type Transaction_104_Avg_Fields = {
-  __typename?: 'transaction_104_avg_fields';
-  gas_used?: Maybe<Scalars['Float']>;
-  gas_wanted?: Maybe<Scalars['Float']>;
-  height?: Maybe<Scalars['Float']>;
-  partition_id?: Maybe<Scalars['Float']>;
-};
-
-/** Boolean expression to filter rows from the table "transaction_104". All fields are combined with a logical 'AND'. */
-export type Transaction_104_Bool_Exp = {
-  _and?: InputMaybe<Array<Transaction_104_Bool_Exp>>;
-  _not?: InputMaybe<Transaction_104_Bool_Exp>;
-  _or?: InputMaybe<Array<Transaction_104_Bool_Exp>>;
-  fee?: InputMaybe<Jsonb_Comparison_Exp>;
-  gas_used?: InputMaybe<Bigint_Comparison_Exp>;
-  gas_wanted?: InputMaybe<Bigint_Comparison_Exp>;
-  hash?: InputMaybe<String_Comparison_Exp>;
-  height?: InputMaybe<Bigint_Comparison_Exp>;
-  logs?: InputMaybe<Jsonb_Comparison_Exp>;
-  memo?: InputMaybe<String_Comparison_Exp>;
-  messages?: InputMaybe<Json_Comparison_Exp>;
-  partition_id?: InputMaybe<Bigint_Comparison_Exp>;
-  raw_log?: InputMaybe<String_Comparison_Exp>;
-  signatures?: InputMaybe<String_Array_Comparison_Exp>;
-  signer_infos?: InputMaybe<Jsonb_Comparison_Exp>;
-  success?: InputMaybe<Boolean_Comparison_Exp>;
-};
-
-/** unique or primary key constraints on table "transaction_104" */
-export enum Transaction_104_Constraint {
-  /** unique or primary key constraint on columns "partition_id", "hash" */
-  Transaction_104HashPartitionIdKey = 'transaction_104_hash_partition_id_key'
-}
-
-/** delete the field or element with specified path (for JSON arrays, negative integers count from the end) */
-export type Transaction_104_Delete_At_Path_Input = {
-  fee?: InputMaybe<Array<Scalars['String']>>;
-  logs?: InputMaybe<Array<Scalars['String']>>;
-  signer_infos?: InputMaybe<Array<Scalars['String']>>;
-};
-
-/** delete the array element with specified index (negative integers count from the end). throws an error if top level container is not an array */
-export type Transaction_104_Delete_Elem_Input = {
-  fee?: InputMaybe<Scalars['Int']>;
-  logs?: InputMaybe<Scalars['Int']>;
-  signer_infos?: InputMaybe<Scalars['Int']>;
-};
-
-/** delete key/value pair or string element. key/value pairs are matched based on their key value */
-export type Transaction_104_Delete_Key_Input = {
-  fee?: InputMaybe<Scalars['String']>;
-  logs?: InputMaybe<Scalars['String']>;
-  signer_infos?: InputMaybe<Scalars['String']>;
-};
-
-/** input type for incrementing numeric columns in table "transaction_104" */
-export type Transaction_104_Inc_Input = {
-  gas_used?: InputMaybe<Scalars['bigint']>;
-  gas_wanted?: InputMaybe<Scalars['bigint']>;
-  height?: InputMaybe<Scalars['bigint']>;
-  partition_id?: InputMaybe<Scalars['bigint']>;
-};
-
-/** input type for inserting data into table "transaction_104" */
-export type Transaction_104_Insert_Input = {
-  fee?: InputMaybe<Scalars['jsonb']>;
-  gas_used?: InputMaybe<Scalars['bigint']>;
-  gas_wanted?: InputMaybe<Scalars['bigint']>;
-  hash?: InputMaybe<Scalars['String']>;
-  height?: InputMaybe<Scalars['bigint']>;
-  logs?: InputMaybe<Scalars['jsonb']>;
-  memo?: InputMaybe<Scalars['String']>;
-  messages?: InputMaybe<Scalars['json']>;
-  partition_id?: InputMaybe<Scalars['bigint']>;
-  raw_log?: InputMaybe<Scalars['String']>;
-  signatures?: InputMaybe<Array<Scalars['String']>>;
-  signer_infos?: InputMaybe<Scalars['jsonb']>;
-  success?: InputMaybe<Scalars['Boolean']>;
-};
-
-/** aggregate max on columns */
-export type Transaction_104_Max_Fields = {
-  __typename?: 'transaction_104_max_fields';
-  gas_used?: Maybe<Scalars['bigint']>;
-  gas_wanted?: Maybe<Scalars['bigint']>;
-  hash?: Maybe<Scalars['String']>;
-  height?: Maybe<Scalars['bigint']>;
-  memo?: Maybe<Scalars['String']>;
-  partition_id?: Maybe<Scalars['bigint']>;
-  raw_log?: Maybe<Scalars['String']>;
-  signatures?: Maybe<Array<Scalars['String']>>;
-};
-
-/** aggregate min on columns */
-export type Transaction_104_Min_Fields = {
-  __typename?: 'transaction_104_min_fields';
-  gas_used?: Maybe<Scalars['bigint']>;
-  gas_wanted?: Maybe<Scalars['bigint']>;
-  hash?: Maybe<Scalars['String']>;
-  height?: Maybe<Scalars['bigint']>;
-  memo?: Maybe<Scalars['String']>;
-  partition_id?: Maybe<Scalars['bigint']>;
-  raw_log?: Maybe<Scalars['String']>;
-  signatures?: Maybe<Array<Scalars['String']>>;
-};
-
-/** response of any mutation on the table "transaction_104" */
-export type Transaction_104_Mutation_Response = {
-  __typename?: 'transaction_104_mutation_response';
-  /** number of rows affected by the mutation */
-  affected_rows: Scalars['Int'];
-  /** data from the rows affected by the mutation */
-  returning: Array<Transaction_104>;
-};
-
-/** on_conflict condition type for table "transaction_104" */
-export type Transaction_104_On_Conflict = {
-  constraint: Transaction_104_Constraint;
-  update_columns?: Array<Transaction_104_Update_Column>;
-  where?: InputMaybe<Transaction_104_Bool_Exp>;
-};
-
-/** Ordering options when selecting data from "transaction_104". */
-export type Transaction_104_Order_By = {
-  fee?: InputMaybe<Order_By>;
-  gas_used?: InputMaybe<Order_By>;
-  gas_wanted?: InputMaybe<Order_By>;
-  hash?: InputMaybe<Order_By>;
-  height?: InputMaybe<Order_By>;
-  logs?: InputMaybe<Order_By>;
-  memo?: InputMaybe<Order_By>;
-  messages?: InputMaybe<Order_By>;
-  partition_id?: InputMaybe<Order_By>;
-  raw_log?: InputMaybe<Order_By>;
-  signatures?: InputMaybe<Order_By>;
-  signer_infos?: InputMaybe<Order_By>;
-  success?: InputMaybe<Order_By>;
-};
-
-/** prepend existing jsonb value of filtered columns with new jsonb value */
-export type Transaction_104_Prepend_Input = {
-  fee?: InputMaybe<Scalars['jsonb']>;
-  logs?: InputMaybe<Scalars['jsonb']>;
-  signer_infos?: InputMaybe<Scalars['jsonb']>;
-};
-
-/** select columns of table "transaction_104" */
-export enum Transaction_104_Select_Column {
-  /** column name */
-  Fee = 'fee',
-  /** column name */
-  GasUsed = 'gas_used',
-  /** column name */
-  GasWanted = 'gas_wanted',
-  /** column name */
-  Hash = 'hash',
-  /** column name */
-  Height = 'height',
-  /** column name */
-  Logs = 'logs',
-  /** column name */
-  Memo = 'memo',
-  /** column name */
-  Messages = 'messages',
-  /** column name */
-  PartitionId = 'partition_id',
-  /** column name */
-  RawLog = 'raw_log',
-  /** column name */
-  Signatures = 'signatures',
-  /** column name */
-  SignerInfos = 'signer_infos',
-  /** column name */
-  Success = 'success'
-}
-
-/** input type for updating data in table "transaction_104" */
-export type Transaction_104_Set_Input = {
-  fee?: InputMaybe<Scalars['jsonb']>;
-  gas_used?: InputMaybe<Scalars['bigint']>;
-  gas_wanted?: InputMaybe<Scalars['bigint']>;
-  hash?: InputMaybe<Scalars['String']>;
-  height?: InputMaybe<Scalars['bigint']>;
-  logs?: InputMaybe<Scalars['jsonb']>;
-  memo?: InputMaybe<Scalars['String']>;
-  messages?: InputMaybe<Scalars['json']>;
-  partition_id?: InputMaybe<Scalars['bigint']>;
-  raw_log?: InputMaybe<Scalars['String']>;
-  signatures?: InputMaybe<Array<Scalars['String']>>;
-  signer_infos?: InputMaybe<Scalars['jsonb']>;
-  success?: InputMaybe<Scalars['Boolean']>;
-};
-
-/** aggregate stddev on columns */
-export type Transaction_104_Stddev_Fields = {
-  __typename?: 'transaction_104_stddev_fields';
-  gas_used?: Maybe<Scalars['Float']>;
-  gas_wanted?: Maybe<Scalars['Float']>;
-  height?: Maybe<Scalars['Float']>;
-  partition_id?: Maybe<Scalars['Float']>;
-};
-
-/** aggregate stddev_pop on columns */
-export type Transaction_104_Stddev_Pop_Fields = {
-  __typename?: 'transaction_104_stddev_pop_fields';
-  gas_used?: Maybe<Scalars['Float']>;
-  gas_wanted?: Maybe<Scalars['Float']>;
-  height?: Maybe<Scalars['Float']>;
-  partition_id?: Maybe<Scalars['Float']>;
-};
-
-/** aggregate stddev_samp on columns */
-export type Transaction_104_Stddev_Samp_Fields = {
-  __typename?: 'transaction_104_stddev_samp_fields';
-  gas_used?: Maybe<Scalars['Float']>;
-  gas_wanted?: Maybe<Scalars['Float']>;
-  height?: Maybe<Scalars['Float']>;
-  partition_id?: Maybe<Scalars['Float']>;
-};
-
-/** Streaming cursor of the table "transaction_104" */
-export type Transaction_104_Stream_Cursor_Input = {
-  /** Stream column input with initial value */
-  initial_value: Transaction_104_Stream_Cursor_Value_Input;
-  /** cursor ordering */
-  ordering?: InputMaybe<Cursor_Ordering>;
-};
-
-/** Initial value of the column from where the streaming should start */
-export type Transaction_104_Stream_Cursor_Value_Input = {
-  fee?: InputMaybe<Scalars['jsonb']>;
-  gas_used?: InputMaybe<Scalars['bigint']>;
-  gas_wanted?: InputMaybe<Scalars['bigint']>;
-  hash?: InputMaybe<Scalars['String']>;
-  height?: InputMaybe<Scalars['bigint']>;
-  logs?: InputMaybe<Scalars['jsonb']>;
-  memo?: InputMaybe<Scalars['String']>;
-  messages?: InputMaybe<Scalars['json']>;
-  partition_id?: InputMaybe<Scalars['bigint']>;
-  raw_log?: InputMaybe<Scalars['String']>;
-  signatures?: InputMaybe<Array<Scalars['String']>>;
-  signer_infos?: InputMaybe<Scalars['jsonb']>;
-  success?: InputMaybe<Scalars['Boolean']>;
-};
-
-/** aggregate sum on columns */
-export type Transaction_104_Sum_Fields = {
-  __typename?: 'transaction_104_sum_fields';
-  gas_used?: Maybe<Scalars['bigint']>;
-  gas_wanted?: Maybe<Scalars['bigint']>;
-  height?: Maybe<Scalars['bigint']>;
-  partition_id?: Maybe<Scalars['bigint']>;
-};
-
-/** update columns of table "transaction_104" */
-export enum Transaction_104_Update_Column {
-  /** column name */
-  Fee = 'fee',
-  /** column name */
-  GasUsed = 'gas_used',
-  /** column name */
-  GasWanted = 'gas_wanted',
-  /** column name */
-  Hash = 'hash',
-  /** column name */
-  Height = 'height',
-  /** column name */
-  Logs = 'logs',
-  /** column name */
-  Memo = 'memo',
-  /** column name */
-  Messages = 'messages',
-  /** column name */
-  PartitionId = 'partition_id',
-  /** column name */
-  RawLog = 'raw_log',
-  /** column name */
-  Signatures = 'signatures',
-  /** column name */
-  SignerInfos = 'signer_infos',
-  /** column name */
-  Success = 'success'
-}
-
-export type Transaction_104_Updates = {
-  /** append existing jsonb value of filtered columns with new jsonb value */
-  _append?: InputMaybe<Transaction_104_Append_Input>;
-  /** delete the field or element with specified path (for JSON arrays, negative integers count from the end) */
-  _delete_at_path?: InputMaybe<Transaction_104_Delete_At_Path_Input>;
-  /** delete the array element with specified index (negative integers count from the end). throws an error if top level container is not an array */
-  _delete_elem?: InputMaybe<Transaction_104_Delete_Elem_Input>;
-  /** delete key/value pair or string element. key/value pairs are matched based on their key value */
-  _delete_key?: InputMaybe<Transaction_104_Delete_Key_Input>;
-  /** increments the numeric columns with given value of the filtered values */
-  _inc?: InputMaybe<Transaction_104_Inc_Input>;
-  /** prepend existing jsonb value of filtered columns with new jsonb value */
-  _prepend?: InputMaybe<Transaction_104_Prepend_Input>;
-  /** sets the columns of the filtered rows to the given values */
-  _set?: InputMaybe<Transaction_104_Set_Input>;
-  /** filter the rows which have to be updated */
-  where: Transaction_104_Bool_Exp;
-};
-
-/** aggregate var_pop on columns */
-export type Transaction_104_Var_Pop_Fields = {
-  __typename?: 'transaction_104_var_pop_fields';
-  gas_used?: Maybe<Scalars['Float']>;
-  gas_wanted?: Maybe<Scalars['Float']>;
-  height?: Maybe<Scalars['Float']>;
-  partition_id?: Maybe<Scalars['Float']>;
-};
-
-/** aggregate var_samp on columns */
-export type Transaction_104_Var_Samp_Fields = {
-  __typename?: 'transaction_104_var_samp_fields';
-  gas_used?: Maybe<Scalars['Float']>;
-  gas_wanted?: Maybe<Scalars['Float']>;
-  height?: Maybe<Scalars['Float']>;
-  partition_id?: Maybe<Scalars['Float']>;
-};
-
-/** aggregate variance on columns */
-export type Transaction_104_Variance_Fields = {
-  __typename?: 'transaction_104_variance_fields';
+export type Transaction_105_Variance_Fields = {
+  __typename?: 'transaction_105_variance_fields';
   gas_used?: Maybe<Scalars['Float']>;
   gas_wanted?: Maybe<Scalars['Float']>;
   height?: Maybe<Scalars['Float']>;
@@ -27848,6 +24109,11 @@ export type GetMessagesByAddressQueryVariables = Exact<{
 
 export type GetMessagesByAddressQuery = { messagesByAddress: Array<{ __typename?: 'message', transaction?: { __typename?: 'transaction', height: any, hash: string, success: boolean, messages: any, logs?: any | null, block: { __typename?: 'block', height: any, timestamp: any } } | null }> };
 
+export type MultistakingQueryVariables = Exact<{ [key: string]: never; }>;
+
+
+export type MultistakingQuery = { token_bonded: Array<{ __typename?: 'token_bonded', amount: string, denom: string }>, token_unbonding: Array<{ __typename?: 'token_unbonding', amount: string, denom: string }> };
+
 export type OnlineVotingPowerQueryVariables = Exact<{ [key: string]: never; }>;
 
 
@@ -28861,6 +25127,45 @@ export function useGetMessagesByAddressLazyQuery(baseOptions?: Apollo.LazyQueryH
 export type GetMessagesByAddressQueryHookResult = ReturnType<typeof useGetMessagesByAddressQuery>;
 export type GetMessagesByAddressLazyQueryHookResult = ReturnType<typeof useGetMessagesByAddressLazyQuery>;
 export type GetMessagesByAddressQueryResult = Apollo.QueryResult<GetMessagesByAddressQuery, GetMessagesByAddressQueryVariables>;
+export const MultistakingDocument = gql`
+    query Multistaking {
+  token_bonded {
+    amount
+    denom
+  }
+  token_unbonding {
+    amount
+    denom
+  }
+}
+    `;
+
+/**
+ * __useMultistakingQuery__
+ *
+ * To run a query within a React component, call `useMultistakingQuery` and pass it any options that fit your needs.
+ * When your component renders, `useMultistakingQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useMultistakingQuery({
+ *   variables: {
+ *   },
+ * });
+ */
+export function useMultistakingQuery(baseOptions?: Apollo.QueryHookOptions<MultistakingQuery, MultistakingQueryVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useQuery<MultistakingQuery, MultistakingQueryVariables>(MultistakingDocument, options);
+      }
+export function useMultistakingLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<MultistakingQuery, MultistakingQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return Apollo.useLazyQuery<MultistakingQuery, MultistakingQueryVariables>(MultistakingDocument, options);
+        }
+export type MultistakingQueryHookResult = ReturnType<typeof useMultistakingQuery>;
+export type MultistakingLazyQueryHookResult = ReturnType<typeof useMultistakingLazyQuery>;
+export type MultistakingQueryResult = Apollo.QueryResult<MultistakingQuery, MultistakingQueryVariables>;
 export const OnlineVotingPowerDocument = gql`
     query OnlineVotingPower {
   activeTotal: validator_status_aggregate(where: {status: {_eq: 3}}) {

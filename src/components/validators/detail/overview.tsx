@@ -13,6 +13,7 @@ import useTranslation from "next-translate/useTranslation";
 import HelpLink from "@/components/helper/help_link";
 import numeral from "numeral";
 import NextLink from "next/link";
+import { formatValAddress } from "@/utils/format_address";
 
 function shortenText(text, maxLength = 40) {
   return text?.length > maxLength ? `${text.slice(0, maxLength)}...` : text;
@@ -31,7 +32,7 @@ export default function Overview({ state }) {
 
   return (
     <Box
-      bg="#F6F7F8"
+      bg="#FAFBFC"
       p={6}
       borderRadius="md"
       boxShadow="sm"
@@ -75,8 +76,8 @@ export default function Overview({ state }) {
               value={overview.operatorAddress}
             />
             <HelpLink
-              href={ADDRESS_DETAILS(overview.selfDelegateAddress)}
-              value={overview.selfDelegateAddress}
+              href={ADDRESS_DETAILS(formatValAddress(overview?.operatorAddress))}
+              value={formatValAddress(overview?.operatorAddress)}
             />
 
             <Link asChild colorPalette={"blue"}>

@@ -158,7 +158,7 @@ export default function VotesTable() {
           </Tabs.List>
         </Tabs.Root>
       </Flex>
-      <Box bg="#f9f9f9" py={6} px={3} borderRadius="md" boxShadow="sm">
+      <Box bg="#FAFBFC" py={6} px={3} borderRadius="md" boxShadow="sm">
         {isMobile ? (
           <Stack borderRadius={'2xl'} overflowY={'auto'} separator={<StackSeparator/>} bg="white" py={4} px={6} mb={3}>
             {items.map((item, index) => (
@@ -171,7 +171,7 @@ export default function VotesTable() {
               {isMobile ? (
                 <></>
               ) : (
-                <Table.Row  bg="#f9f9f9">
+                <Table.Row  bg="#FAFBFC">
                   <Table.ColumnHeader>Block</Table.ColumnHeader>
                   <Table.ColumnHeader>Vote</Table.ColumnHeader>
                 </Table.Row>

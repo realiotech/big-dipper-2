@@ -100,7 +100,7 @@ const PriceChart = () => {
   };
 
   return (
-    <GridItem borderRadius="20px" bgColor="#F6F7F8" py="5" px="8" colSpan={2}>
+    <GridItem borderRadius="20px" bgColor="#FAFBFC" py="5" px="8" colSpan={2}>
       <Text fontSize="24px" fontWeight="bold" pb="6">
         Price (~24h)
       </Text>

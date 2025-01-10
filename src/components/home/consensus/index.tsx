@@ -29,7 +29,7 @@ const Consensus = () => {
     const proposerProfile = useProfileRecoil(state.proposer);
 
     return (
-        <GridItem borderRadius='20px' bgColor='#F6F7F8' py='5' px='8'>
+        <GridItem borderRadius='20px' bgColor='#FAFBFC' py='5' px='8'>
             <Text>
                 {t('consensus')}
             </Text>
