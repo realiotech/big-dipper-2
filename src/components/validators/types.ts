@@ -8,6 +8,7 @@ export interface ValidatorType {
   jailed: boolean;
   tombstoned: boolean;
   topVotingPower?: boolean; // top 34% VP
+  denom: string;
 }
 
 export interface ValidatorsState {

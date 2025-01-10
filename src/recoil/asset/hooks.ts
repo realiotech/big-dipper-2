@@ -34,7 +34,7 @@ async function fetchAssets() {
       symbol: 'RIO',
       name: 'Realio Network',
       description: 'Realio Network Token',
-      image: '/images/assets/rio.png',
+      image: '/images/assets/RIO.png',
       decimals: 18,
       price: 1
     },
@@ -43,7 +43,7 @@ async function fetchAssets() {
       symbol: 'RST',
       name: 'Realio Staking Token',
       description: 'Realio Network Staking Token',
-      image: '/images/assets/rst.png',
+      image: '/images/assets/RST.png',
       decimals: 18,
       price: 1
     },
@@ -52,7 +52,7 @@ async function fetchAssets() {
       symbol: 'LMX',
       name: 'LMX Token',
       description: 'LMX Token',
-      image: '/images/assets/lmx.png',
+      image: '/images/assets/LMX.png',
       decimals: 18,
       price: 1
     },

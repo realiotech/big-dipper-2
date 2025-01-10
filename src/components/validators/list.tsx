@@ -27,6 +27,9 @@ import NextLink from "next/link";
 import SearchValidator from "./search";
 import { fetchColumns } from "./utils";
 import ColumnHeader from "./header";
+import Asset from "../helper/asset";
+import { readAsset } from "@/recoil/asset";
+import { useRecoilValue } from "recoil";
 
 const SkeletonValidatorItems = ({ rowCount = 30 }) => {
     return (
@@ -136,6 +139,7 @@ const SkeletonItem = () => {
 
 const ValidatorItem = ({ item, idx }) => {
   const { t } = useTranslation("validators");
+  const asset = useRecoilValue(readAsset(item.denom))
   const status = getValidatorStatus(item.status, item.jailed, item.tombstoned);
   const percentDisplay =
     item.status === 3
@@ -150,6 +154,13 @@ const ValidatorItem = ({ item, idx }) => {
           name={item.validator.name}
           address={item.validator.address}
           image={item.validator.imageUrl}
+        />
+      </Table.Cell>
+      <Table.Cell>
+        <Asset
+          name={asset?.symbol}
+          denom={asset?.denom}
+          image={asset?.image}
         />
       </Table.Cell>
       <Table.Cell w={"30%"}>

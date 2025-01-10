@@ -14,6 +14,9 @@ import HelpLink from "@/components/helper/help_link";
 import numeral from "numeral";
 import NextLink from "next/link";
 import { formatValAddress } from "@/utils/format_address";
+import Asset from "@/components/helper/asset";
+import { useRecoilValue } from "recoil";
+import { readAsset } from "@/recoil/asset";
 
 function shortenText(text, maxLength = 40) {
   return text?.length > maxLength ? `${text.slice(0, maxLength)}...` : text;
@@ -22,6 +25,7 @@ function shortenText(text, maxLength = 40) {
 export default function Overview({ state }) {
   const { t } = useTranslation("validators");
   const { overview, status } = state;
+  const asset = useRecoilValue(readAsset(overview?.denom))
   const { imageUrl, name, address } = useProfileRecoil(overview.validator);
   const statusTheme = getValidatorStatus(
     status.status,
@@ -64,13 +68,14 @@ export default function Overview({ state }) {
         {overview.description}
       </Text>
       <Box mb={4}>
-        <Flex fontSize="sm" gap={"10px"} >
+        <Flex fontSize="sm" gap={"10px"} alignContent={'space-between'}>
           <VStack align="flex-start">
             <Text>Operator Address:</Text>
             <Text>Self Delegate Address:</Text>
             <Text>Web Site:</Text>
+            <Text>Staking Token:</Text>
           </VStack>
-          <VStack align="flex-start">
+          <VStack align="flex-end">
             <HelpLink
               href={ADDRESS_DETAILS(overview.operatorAddress)}
               value={overview.operatorAddress}
@@ -85,6 +90,7 @@ export default function Overview({ state }) {
                 {shortenText(overview.website)}
               </NextLink>
             </Link>
+            <Asset denom={asset?.denom} image={asset?.image} name={asset?.symbol} />
           </VStack>
         </Flex>
       </Box>

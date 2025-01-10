@@ -17,6 +17,10 @@ export const fetchColumns = (
             align: 'left'
         },
         {
+            key: 'bondToken',
+            align: 'left'
+        },
+        {
             key: 'votingPower',
             sortKey: 'votingPower',
             sort: true,

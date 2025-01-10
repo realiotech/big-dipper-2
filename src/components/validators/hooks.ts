@@ -26,27 +26,28 @@ const formatValidators = (data: ValidatorsQuery): Partial<ValidatorsState> => {
     ).value() ?? 0;
 
   const { signedBlockWindow } = slashingParams;
-  let formattedItems: ValidatorType[] = data.validator
-    .filter((x) => x.validatorInfo)
+  let formattedItems: ValidatorType[] = data.validator_denom
+    .filter((x) => x.validator.validatorInfo)
     .map((x) => {
       const votingPower =
-        (x?.validatorVotingPowers?.[0]?.votingPower ?? 0);
+        (x?.validator?.validatorVotingPowers?.[0]?.votingPower ?? 0);
       const votingPowerPercent = votingPowerOverall
         ? numeral((votingPower / votingPowerOverall) * 100).value()
         : 0;
 
-      const missedBlockCounter = x?.validatorSigningInfos?.[0]?.missedBlocksCounter ?? 0;
+      const missedBlockCounter = x?.validator?.validatorSigningInfos?.[0]?.missedBlocksCounter ?? 0;
       const condition = getValidatorCondition(signedBlockWindow, missedBlockCounter);
 
       return {
-        validator: x.validatorInfo?.operatorAddress ?? '',
+        validator: x?.validator.validatorInfo?.operatorAddress ?? '',
         votingPower: votingPower ?? 0,
         votingPowerPercent: votingPowerPercent ?? 0,
-        commission: (x?.validatorCommissions?.[0]?.commission ?? 0) * 100,
+        commission: (x?.validator?.validatorCommissions?.[0]?.commission ?? 0) * 100,
         condition,
-        status: x?.validatorStatuses?.[0]?.status ?? 0,
-        jailed: x?.validatorStatuses?.[0]?.jailed ?? false,
-        tombstoned: x?.validatorSigningInfos?.[0]?.tombstoned ?? false,
+        status: x?.validator?.validatorStatuses?.[0]?.status ?? 0,
+        jailed: x?.validator?.validatorStatuses?.[0]?.jailed ?? false,
+        tombstoned: x?.validator?.validatorSigningInfos?.[0]?.tombstoned ?? false,
+        denom: x?.denom
       };
     });
 

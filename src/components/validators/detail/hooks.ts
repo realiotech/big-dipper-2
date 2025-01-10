@@ -237,36 +237,37 @@ function formatValidatorVotingPower(data: ValidatorVotingPowersQuery): Partial<V
 
 function formatValidatorOverview(data: ValidatorInfoQuery): Partial<ValidatorOverviewState> {
     const stateChange: Partial<ValidatorOverviewState> = {};
-    if (!data.validator.length) {
+    if (!data.validator_denom.length) {
         stateChange.exists = false;
         return stateChange;
     }
 
-    const operatorAddress = data?.validator?.[0]?.validatorInfo?.operatorAddress ?? '';
-    const selfDelegateAddress = data?.validator?.[0]?.validatorInfo?.selfDelegateAddress ?? '';
+    const operatorAddress = data?.validator_denom?.[0]?.validator.validatorInfo?.operatorAddress ?? '';
+    const selfDelegateAddress = data?.validator_denom?.[0]?.validator.validatorInfo?.selfDelegateAddress ?? '';
     const overview = {
         validator: operatorAddress,
         operatorAddress,
         selfDelegateAddress,
-        description: data.validator[0]?.validatorDescriptions?.[0]?.details ?? '',
-        website: data.validator[0]?.validatorDescriptions?.[0]?.website ?? '',
+        description: data.validator_denom[0]?.validator.validatorDescriptions?.[0]?.details ?? '',
+        website: data.validator_denom[0]?.validator.validatorDescriptions?.[0]?.website ?? '',
+        denom: data.validator_denom[0]?.denom ?? '',
     };
 
     const slashingParams = SlashingParams.fromJson(data?.slashingParams?.[0]?.params ?? {});
     const missedBlockCounter =
-        data.validator[0]?.validatorSigningInfos?.[0]?.missedBlocksCounter ?? 0;
+        data.validator_denom[0]?.validator.validatorSigningInfos?.[0]?.missedBlocksCounter ?? 0;
     const { signedBlockWindow } = slashingParams;
     const condition = getValidatorCondition(signedBlockWindow, missedBlockCounter);
 
     const status: StatusType = {
-        status: data.validator[0]?.validatorStatuses?.[0]?.status ?? 3,
-        jailed: data.validator[0]?.validatorStatuses?.[0]?.jailed ?? false,
-        tombstoned: data.validator[0]?.validatorSigningInfos?.[0]?.tombstoned ?? false,
-        commission: data.validator[0]?.validatorCommissions?.[0]?.commission ?? 0,
+        status: data.validator_denom[0]?.validator.validatorStatuses?.[0]?.status ?? 3,
+        jailed: data.validator_denom[0]?.validator.validatorStatuses?.[0]?.jailed ?? false,
+        tombstoned: data.validator_denom[0]?.validator.validatorSigningInfos?.[0]?.tombstoned ?? false,
+        commission: data.validator_denom[0]?.validator.validatorCommissions?.[0]?.commission ?? 0,
         condition,
         missedBlockCounter,
         signedBlockWindow,
-        maxRate: data?.validator?.[0]?.validatorInfo?.maxRate ?? '0',
+        maxRate: data?.validator_denom?.[0]?.validator.validatorInfo?.maxRate ?? '0',
     };
 
     stateChange.exists = true;
