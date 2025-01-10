@@ -28,15 +28,12 @@ export const useHero = () => {
       const newState: any = {
         loading: false,
       };
-
-      if (data.tokenPrice.length === 10) {
-        newState.tokenPriceHistory = data.tokenPrice.reverse().map((x) => {
-          return ({
-            time: x.timestamp,
-            value: x.price,
-          });
+      newState.tokenPriceHistory = data.tokenPrice.reverse().map((x) => {
+        return ({
+          time: x.timestamp,
+          value: x.price,
         });
-      }
+      });
       handleSetState(newState);
     },
     onError: (() => {
