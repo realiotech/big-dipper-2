@@ -190,6 +190,7 @@ export default function VotesTable() {
           pageSize={10}
           page={page + 1}
           onPageChange={(e) => handlePageChange(e, e.page - 1)}
+          marginTop={'10px'}
         >
           <HStack wrap="wrap">
             <PaginationPrevTrigger />

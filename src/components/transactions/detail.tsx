@@ -28,7 +28,7 @@ export default function TransactionDetails() {
   const { overview, logs, messages } = state;
   const isMobile = useBreakpointValue({ base: true, md: false });
   return (
-    <Box p={6} minHeight="100vh">
+    <Box p={6} minHeight="85vh">
       {/* Overview Section */}
       <Box bg="gray.50" p={6} borderRadius="md" boxShadow="sm" mb={8}>
         <Text fontSize="lg" fontWeight="bold" mb={4}>
