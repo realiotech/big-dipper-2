@@ -44,7 +44,7 @@ export default function ProposalDetail() {
     const statusInfo = getStatusInfo(overview.status, t);
     const isMobile = useBreakpointValue({base: true, md: false})
     return (
-        <Box bg="white" minHeight="100vh">
+        <Box bg="white" minHeight="85vh">
             <Flex gap={'10'} align="center" mb={4}>
                 <Text fontSize="xl" fontWeight="bold">
                     #{overview.id} {overview.title}
