@@ -25,7 +25,7 @@ export default function BlockDetails() {
 
 
     return (
-        <Box minHeight="100vh">
+        <Box minHeight="85vh">
             <Box bg="#FAFBFC" w={'full'} p={6} borderRadius="md" boxShadow="sm" mb={8}>
                 <Text fontSize="lg" fontWeight="bold" mb={4}>
                     Overview
