@@ -21,12 +21,12 @@ import { Doughnut } from "react-chartjs-2";
 import { Chart as ChartJS, ArcElement, Tooltip, Legend } from "chart.js";
 import { TfiReload } from "react-icons/tfi";
 import { ProgressBar, ProgressRoot } from "@/components/ui/progress";
-import Transactions from "./transactions";
 import { IoCopyOutline } from "react-icons/io5";
+import Transactions from "./transactions";
 
 ChartJS.register(ArcElement, Tooltip, Legend);
 
-export default function Dashboard() {
+export default function AccountDetail() {
   // Donut Chart Data
   const chartData = {
     labels: ["RST", "RIO", "XLM", "USDC", "LMX"],
@@ -247,7 +247,6 @@ export default function Dashboard() {
         </Box>
       </Flex>
 
-      {/* Transactions Section */}
       <Transactions />
     </Box>
   );
