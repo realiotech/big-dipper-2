@@ -30,6 +30,7 @@ import ColumnHeader from "./header";
 import Asset from "../helper/asset";
 import { readAsset } from "@/recoil/asset";
 import { useRecoilValue } from "recoil";
+import { DelegateDialog } from "./dialog";
 
 const SkeletonValidatorItems = ({ rowCount = 30 }) => {
     return (
@@ -191,11 +192,11 @@ const ValidatorItem = ({ item, idx }) => {
       </Table.Cell>
       <Table.Cell textAlign="left">
         <Link asChild>
-          <NextLink href={ADDRESS_DETAILS(item?.validator.address)}>
+          {/* <NextLink href={ADDRESS_DETAILS(item?.validator.address)}> */}
             <Button bg={"#707D8A"} size="sm" disabled={item.status !== 3}>
-              Delegate
+              <DelegateDialog/>
             </Button>
-          </NextLink>
+          {/* </NextLink> */}
         </Link>
       </Table.Cell>
     </Table.Row>
@@ -306,7 +307,7 @@ const ValidatorList = () => {
                       handleSort={handleSort}
                     />
                   ))}
-                  {Array.from({ length: Math.max(0, 6 - columns.length) }).map(
+                  {Array.from({ length: Math.max(0, 7 - columns.length) }).map(
                     (_, idx) => (
                       <Table.ColumnHeader key={`placeholder-${idx}`} />
                     )
