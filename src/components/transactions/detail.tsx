@@ -20,10 +20,7 @@ import { getMiddleEllipsis } from "@/utils";
 
 export default function TransactionDetails() {
   const {
-    state,
-    onMessageFilterCallback,
-    toggleMessageDisplay,
-    filterMessages,
+    state
   } = useTransactionDetails();
   const { overview, logs, messages } = state;
   const isMobile = useBreakpointValue({ base: true, md: false });

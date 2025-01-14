@@ -29,14 +29,12 @@ ChartJS.register(
 const PriceChart = () => {
   const { state } = useHero();
   const { tickPriceFormatter, formatTime } = usePrice();
-
   // Format the price history data
   const formatItems = state.tokenPriceHistory.map((item) => ({
     time: formatTime(dayjs.utc(item.time), "locale"),
     fullTime: formatDayJs(dayjs.utc(item.time), "locale"),
     value: item.value,
   }));
-
   const priceData = {
     labels: formatItems.map((item) => item.time), // X-axis labels
     datasets: [
