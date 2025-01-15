@@ -159,4 +159,40 @@ export const formatGov = (data: Gov, t: any) => [
     label: t('votingPeriod'),
     detail: convertBySeconds(nanoToSeconds(data.votingPeriod), t),
   },
+  {
+    key: 'minDepositRatio',
+    label: t('Min Deposit Ratio'),
+    detail: `${numeral(data.minDepositRatio * 100).format('0.[00]')}%`,
+  },
+
+  {
+    key: 'minInitialDepositRatio',
+    label: t('Min Initial Deposit Ratio'),
+    detail: `${numeral(data.minInitialDepositRatio * 100).format('0.[00]')}%`,
+  },
+  {
+    key: 'proposalCancelRatio',
+    label: t('Proposal Cancel Ratio'),
+    detail: `${numeral(data.proposalCancelRatio * 100).format('0.[00]')}%`,
+  },
+  {
+    key: 'expeditedMinDeposit',
+    label: t('Expedited Min Deposit'),
+    detail: `${numeral(data.expeditedMinDeposit.value).format('0.[00]')} ${data.expeditedMinDeposit.displayDenom.toUpperCase()}`,
+  },
+  {
+    key: 'expeditedThreshold',
+    label: t('Expedited Threshold'),
+    detail: `${numeral(data.expeditedThreshold * 100).format('0.[00]')}%`,
+  },
+  {
+    key: 'expeditedVotingPeriod',
+    label: t('Expedited Voting Period'),
+    detail: convertBySeconds(nanoToSeconds(data.expeditedVotingPeriod), t),
+  },
+  {
+    key: 'burnVoteVeto',
+    label: t('Burn Vote Veto'),
+    detail: data.burnVoteVeto.toString().toUpperCase(),
+  },
 ];

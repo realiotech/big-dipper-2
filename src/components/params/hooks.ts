@@ -1,7 +1,7 @@
 import numeral from 'numeral';
 import * as R from 'ramda';
 import { useCallback, useState } from 'react';
-import {chainConfig} from '@/configs';
+import { chainConfig } from '@/configs';
 import { ParamsQuery, useParamsQuery } from '@/graphql/types/general_types';
 import { DistributionParams, GovParams, MintParams, SlashingParams, StakingParams } from '@/models';
 import type { ParamsState } from '@/components/params/types';
@@ -103,15 +103,25 @@ const formatGov = (data: ParamsQuery) => {
     const govParamsRaw = GovParams.fromJson(data?.govParams?.[0] ?? {});
     return {
       minDeposit: formatToken(
-        govParamsRaw.depositParams.minDeposit?.[0]?.amount ?? 0,
-        govParamsRaw.depositParams.minDeposit?.[0]?.denom ?? primaryTokenUnit
+        govParamsRaw.params.minDeposit?.[0]?.amount ?? 0,
+        govParamsRaw.params.minDeposit?.[0]?.denom ?? primaryTokenUnit
       ),
-      maxDepositPeriod: govParamsRaw.depositParams.maxDepositPeriod,
-      quorum: numeral(numeral(govParamsRaw.tallyParams.quorum).format('0.[00]')).value() ?? 0,
-      threshold: numeral(numeral(govParamsRaw.tallyParams.threshold).format('0.[00]')).value() ?? 0,
+      maxDepositPeriod: govParamsRaw.params.maxDepositPeriod,
+      quorum: numeral(numeral(govParamsRaw.params.quorum).format('0.[00]')).value() ?? 0,
+      threshold: numeral(numeral(govParamsRaw.params.threshold).format('0.[00]')).value() ?? 0,
       vetoThreshold:
-        numeral(numeral(govParamsRaw.tallyParams.vetoThreshold).format('0.[00]')).value() ?? 0,
-      votingPeriod: govParamsRaw.votingParams.votingPeriod,
+        numeral(numeral(govParamsRaw.params.vetoThreshold).format('0.[00]')).value() ?? 0,
+      votingPeriod: govParamsRaw.params.votingPeriod,
+      minDepositRatio: numeral(numeral(govParamsRaw.params.minDepositRatio).format('0.[00]')).value() ?? 0,
+      minInitialDepositRatio: numeral(numeral(govParamsRaw.params.minInitialDepositRatio).format('0.[00]')).value() ?? 0,
+      proposalCancelRatio: numeral(numeral(govParamsRaw.params.proposalCancelRatio).format('0.[00]')).value() ?? 0,
+      expeditedMinDeposit: formatToken(
+        govParamsRaw.params.expeditedMinDeposit?.[0]?.amount ?? 0,
+        govParamsRaw.params.expeditedMinDeposit?.[0]?.denom ?? primaryTokenUnit
+      ),
+      expeditedThreshold: numeral(numeral(govParamsRaw.params.expeditedThreshold).format('0.[00]')).value() ?? 0,
+      expeditedVotingPeriod: numeral(numeral(govParamsRaw.params.expeditedVotingPeriod).format('0.[00]')).value() ?? 0,
+      burnVoteVeto: govParamsRaw.params.burnVoteVeto,
     };
   }
 
