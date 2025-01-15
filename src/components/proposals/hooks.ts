@@ -18,9 +18,9 @@ const formatProposals = (data?: ProposalsQuery): ProposalType[] => {
   if (!data?.proposals) return [];
 
   return data.proposals.map((x) => ({
-    description: xss(x?.description?.replace(/\\n\s?/g, '<br/>')) ?? '',
+    description: xss(x?.description?.replace(/\\n\s?/g, '<br/>')) ?  xss(x?.description?.replace(/\\n\s?/g, '<br/>')) : x.content?.[0] && x.content[0].content ?  xss(x.content[0].content.description.replace(/\\n\s?/g, '<br/>')) : '',
     id: x.proposalId,
-    title: x.title ?? '',
+    title: x.title ? x.title : x.content?.[0] && x.content[0].content ? x.content[0].content.title : '',
     status: x.status ?? '',
   }));
 };
@@ -113,16 +113,25 @@ const formatOverview = (data: ProposalDetailsQuery) => {
   let votingEndTime = data?.proposal?.[0]?.votingEndTime ?? DEFAULT_TIME;
   votingEndTime = votingEndTime === DEFAULT_TIME ? '' : votingEndTime;
 
+  if ( !data?.proposal ) {
+    return {}
+  }
+
+  let proposal = data?.proposal?.[0];
+  let propsalType = proposal.content?.[0] ? proposal.content[0].content ? proposal.content[0].content['@type'] : proposal.content[0]['@type']  : ''
+  let description = proposal.description ? proposal.description : proposal.content?.[0] && proposal.content[0].content ? proposal.content[0].content.description : ''
+  let title = proposal.title ? proposal.title : proposal.content?.[0] && proposal.content[0].content ? proposal.content[0].content.title : ''
+
   const overview = {
-    proposer: data?.proposal?.[0]?.proposer ?? '',
-    content: data?.proposal?.[0]?.content ?? '',
-    title: data?.proposal?.[0]?.title ?? '',
-    id: data?.proposal?.[0]?.proposalId ?? '',
-    description: data?.proposal?.[0]?.description ?? '',
-    status: data?.proposal?.[0]?.status ?? '',
-    submitTime: data?.proposal?.[0]?.submitTime ?? '',
-    proposalType: data?.proposal?.[0]?.proposalType ?? '',
-    depositEndTime: data?.proposal?.[0]?.depositEndTime ?? '',
+    proposer: proposal?.proposer ?? '',
+    content: proposal.content ?? '',
+    title: title,
+    id: proposal.proposalId ?? '',
+    description: description,
+    status: proposal.status ?? '',
+    submitTime: proposal.submitTime ?? '',
+    proposalType: propsalType.length > 0 ? propsalType.substring(1) : propsalType,
+    depositEndTime: proposal.depositEndTime ?? '',
     votingStartTime,
     votingEndTime,
   };
@@ -188,6 +197,9 @@ export const useProposalDetails = () => {
     onCompleted: (data) => {
       handleSetState((prevState) => ({ ...prevState, ...formatProposalQuery(data) }));
     },
+    onError: (error) => {
+      console.log('error', error);
+    }
   });
 
   return {
@@ -234,6 +246,9 @@ export const useVotesGraph = () => {
     onCompleted: (data) => {
       handleSetState((prevState) => ({ ...prevState, ...foramtProposalTally(data) }));
     },
+    onError: (error) => {
+      console.log('error', error);
+    }
   });
 
   const foramtProposalTally = (data: ProposalDetailsTallyQuery) => {

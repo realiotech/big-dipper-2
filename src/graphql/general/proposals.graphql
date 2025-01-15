@@ -3,6 +3,7 @@ query Proposals ($limit: Int = 7, $offset: Int = 0) {
     title
     proposalId: id
     status
+    content
     description
   }
   total: proposal_aggregate {

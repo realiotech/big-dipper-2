@@ -45,7 +45,7 @@ const ProposalItem = ({ proposal }) => {
             {statusInfo.value}
           </Badge>
         </Flex>
-        <Text color="gray.500" fontSize="sm">
+        <Text lineClamp="3" color="gray.500" fontSize="sm">
           {proposal.description}
         </Text>
       </Flex>
