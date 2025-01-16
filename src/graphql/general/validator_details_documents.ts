@@ -1,20 +1,16 @@
 export const ValidatorDelegationsDocument = /* GraphQL */ `
-  query ValidatorDelegations(
-    $validatorAddress: String!
-    $offset: Int = 0
-    $limit: Int = 10
-    $pagination: Boolean! = true
-  ) {
-    delegations: action_validator_delegations(
-      address: $validatorAddress
-      limit: $limit
-      offset: $offset
-      count_total: $pagination
-    ) {
-      delegations
-      pagination
-    }
+query ValidatorDelegations($validatorAddress: String!, $offset: Int = 0, $limit: Int = 10) {
+  ms_locks(limit: $limit, offset: $offset, where: {val_addr: {_eq: $validatorAddress}}) {
+    bond_weight
+    amount
+    denom
+    staker_addr
+    val_addr
   }
+  ms_locks_count(args: {val_addr: $validatorAddress}) {
+    total
+  }
+}
 `;
 
 export const ValidatorRedelegationsDocument = /* GraphQL */ `
@@ -37,20 +33,15 @@ export const ValidatorRedelegationsDocument = /* GraphQL */ `
 `;
 
 export const ValidatorUndelegationsDocument = /* GraphQL */ `
-  query ValidatorUndelegations(
-    $validatorAddress: String!
-    $offset: Int = 0
-    $limit: Int = 10
-    $pagination: Boolean! = true
-  ) {
-    undelegations: action_validator_unbonding_delegations(
-      address: $validatorAddress
-      limit: $limit
-      offset: $offset
-      count_total: $pagination
-    ) {
-      undelegations: unbonding_delegations
-      pagination
-    }
+  ms_unlocks(limit: $limit, offset: $offset, where: {val_addr: {_eq: $validatorAddress}}) {
+    bond_weight
+    amount
+    denom
+    creation_height
+    staker_addr
+    val_addr
+  }
+  ms_unlocks_count(args: {val_addr: $validatorAddress}) {
+    total
   }
 `;

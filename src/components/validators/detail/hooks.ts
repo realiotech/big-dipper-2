@@ -70,6 +70,7 @@ const initialValidatorOverviewState: ValidatorOverviewState = {
     exists: true,
     overview: {
         validator: '',
+        denom: '',
         operatorAddress: '',
         selfDelegateAddress: '',
         description: '',
@@ -452,23 +453,6 @@ export const formatDelegations = (data: Delegations[]) =>
         })
         .sort(R.comparator((a, b) => Big(a.amount?.value).gt(b.amount?.value)));
 
-export const formatRedelegations = (data: Redelegations[]) => {
-    const results: RedelegationType[] = [];
-    data.forEach((x) => {
-        R.pathOr<NonNullable<(typeof x)['entries']>>([], ['entries'], x).forEach((y) => {
-            results.push({
-                address: x?.delegator_address ?? '',
-                to: x?.validator_dst_address ?? '',
-                amount: formatToken(y.balance, primaryTokenUnit),
-                completionTime: R.pathOr('', ['completion_time'], y),
-            });
-        });
-    });
-    results.sort(R.comparator((a, b) => a.completionTime < b.completionTime));
-
-    return results;
-};
-
 export const formatUnbondings = (data: Undelegations[]) => {
     const results: UnbondingType[] = [];
     data.forEach((x) => {
@@ -476,19 +460,17 @@ export const formatUnbondings = (data: Undelegations[]) => {
             results.push({
                 address: R.pathOr('', ['delegator_address'], x),
                 amount: formatToken(y.balance, primaryTokenUnit),
-                completionTime: R.pathOr('', ['completion_time'], y),
             });
         });
     });
 
-    results.sort((a, b) => ((a.completionTime ?? '') < (b.completionTime ?? '') ? -1 : 1));
+    results.sort((a, b) => ((a.amount ?? '') < (b.amount ?? '') ? -1 : 1));
 
     return results;
 };
 
 export const useStaking = (
     delegationsPage: number,
-    redelegationsPage: number,
     unbondingsPage: number,
     address?: string
 ) => {
@@ -515,13 +497,12 @@ export const useStaking = (
             validatorAddress,
             limit: ROWS_PER_PAGE,
             offset: delegationsPage * ROWS_PER_PAGE,
-            pagination: false,
         },
     });
     useEffect(() => {
         if (delegationsLoading) return;
         if (delegationsError) {
-            delegationsRefetch({ pagination: false });
+            delegationsRefetch();
         }
     }, [delegationsError, delegationsLoading, delegationsRefetch]);
     useValidatorDelegationsQuery({
@@ -529,7 +510,6 @@ export const useStaking = (
             validatorAddress,
             limit: ROWS_PER_PAGE,
             offset: (delegationsPage + 1) * ROWS_PER_PAGE,
-            pagination: false,
         },
     });
 
@@ -543,7 +523,6 @@ export const useStaking = (
             validatorAddress,
             limit: 0,
             offset: 0,
-            pagination: true,
         },
         skip: delegationsPagination !== undefined,
     });
@@ -551,60 +530,9 @@ export const useStaking = (
         if (dError) {
             dRefetch();
         } else if (dData) {
-            setDelegationsPagination(dData?.delegations?.pagination?.total ?? 0);
+            setDelegationsPagination(dData?.?.total ?? 0);
         }
     }, [dData, dError, dRefetch]);
-
-    // =====================================
-    // redelegations
-    // =====================================
-    const {
-        data: redelegationsData,
-        loading: redelegationsLoading,
-        error: redelegationsError,
-        refetch: redelegationsRefetch,
-    } = useValidatorRedelegationsQuery({
-        variables: {
-            validatorAddress,
-            limit: ROWS_PER_PAGE,
-            offset: redelegationsPage * ROWS_PER_PAGE,
-        },
-    });
-    useEffect(() => {
-        if (redelegationsLoading) return;
-        if (redelegationsError) {
-            redelegationsRefetch({ pagination: false });
-        }
-    }, [redelegationsError, redelegationsLoading, redelegationsRefetch]);
-    useValidatorRedelegationsQuery({
-        variables: {
-            validatorAddress,
-            limit: ROWS_PER_PAGE,
-            offset: (redelegationsPage + 1) * ROWS_PER_PAGE,
-        },
-    });
-
-    const [redelegationsPagination, setRedelegationsPagination] = useState<number | undefined>();
-    const {
-        data: rData,
-        error: rError,
-        refetch: rRefetch,
-    } = useValidatorRedelegationsQuery({
-        variables: {
-            validatorAddress,
-            limit: 0,
-            offset: 0,
-            pagination: true,
-        },
-        skip: redelegationsPagination !== undefined,
-    });
-    useEffect(() => {
-        if (rError) {
-            rRefetch();
-        } else if (rData) {
-            setRedelegationsPagination(rData?.redelegations?.pagination?.total ?? 0);
-        }
-    }, [rData, rError, rRefetch]);
 
     // =====================================
     // unbondings
@@ -624,7 +552,7 @@ export const useStaking = (
     useEffect(() => {
         if (undelegationsLoading) return;
         if (undelegationsError) {
-            undelegationsRefetch({ pagination: false });
+            undelegationsRefetch();
         }
     }, [undelegationsError, undelegationsLoading, undelegationsRefetch]);
     useValidatorUndelegationsQuery({
@@ -645,7 +573,6 @@ export const useStaking = (
             validatorAddress,
             limit: 0,
             offset: 0,
-            pagination: true,
         },
         skip: undelegationsPagination !== undefined,
     });
@@ -672,19 +599,13 @@ export const useStaking = (
         delegations: {
             loading: delegationsLoading,
             count: delegationsPagination,
-            data: formatDelegations(delegationsData?.delegations?.delegations ?? []),
+            // data: formatDelegations(delegationsData?.delegations?.delegations ?? []),
             error: delegationsError,
-        },
-        redelegations: {
-            loading: redelegationsLoading,
-            count: redelegationsPagination,
-            data: formatRedelegations(redelegationsData?.redelegations?.redelegations ?? []),
-            error: redelegationsError,
         },
         unbondings: {
             loading: undelegationsLoading,
             count: undelegationsPagination,
-            data: formatUnbondings(undelegationsData?.undelegations?.undelegations ?? []),
+            // data: formatUnbondings(undelegationsData?.undelegations?.undelegations ?? []),
             error: undelegationsError,
         },
         handleTabChange,

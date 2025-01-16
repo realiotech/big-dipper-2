@@ -26446,11 +26446,10 @@ export type ValidatorDelegationsQueryVariables = Exact<{
   validatorAddress: Scalars['String'];
   offset?: InputMaybe<Scalars['Int']>;
   limit?: InputMaybe<Scalars['Int']>;
-  pagination?: Scalars['Boolean'];
 }>;
 
 
-export type ValidatorDelegationsQuery = { delegations?: { __typename?: 'ActionDelegationResponse', delegations?: Array<any | null> | null, pagination?: any | null } | null };
+export type ValidatorDelegationsQuery = { ms_locks: Array<{ __typename?: 'ms_locks', bond_weight?: string | null, amount?: string | null, denom?: string | null, staker_addr: string }> };
 
 export type ValidatorRedelegationsQueryVariables = Exact<{
   validatorAddress: Scalars['String'];
@@ -26466,11 +26465,10 @@ export type ValidatorUndelegationsQueryVariables = Exact<{
   validatorAddress: Scalars['String'];
   offset?: InputMaybe<Scalars['Int']>;
   limit?: InputMaybe<Scalars['Int']>;
-  pagination?: Scalars['Boolean'];
 }>;
 
 
-export type ValidatorUndelegationsQuery = { undelegations?: { __typename?: 'ActionUnbondingDelegationResponse', pagination?: any | null, undelegations?: Array<any | null> | null } | null };
+export type ValidatorUndelegationsQuery = { ms_unlocks: Array<{ __typename?: 'ms_unlocks', bond_weight?: string | null, amount?: string | null, denom?: string | null, staker_addr: string, val_addr: string, creation_height: any }> };
 
 export type ValidatorsQueryVariables = Exact<{ [key: string]: never; }>;
 
@@ -28315,15 +28313,16 @@ export type ValidatorAddressQueryHookResult = ReturnType<typeof useValidatorAddr
 export type ValidatorAddressLazyQueryHookResult = ReturnType<typeof useValidatorAddressLazyQuery>;
 export type ValidatorAddressQueryResult = Apollo.QueryResult<ValidatorAddressQuery, ValidatorAddressQueryVariables>;
 export const ValidatorDelegationsDocument = gql`
-    query ValidatorDelegations($validatorAddress: String!, $offset: Int = 0, $limit: Int = 10, $pagination: Boolean! = true) {
-  delegations: action_validator_delegations(
-    address: $validatorAddress
+    query ValidatorDelegations($validatorAddress: String!, $offset: Int = 0, $limit: Int = 10) {
+  ms_locks(
+    where: {val_addr: {_eq: $validatorAddress}}
     limit: $limit
     offset: $offset
-    count_total: $pagination
   ) {
-    delegations
-    pagination
+    bond_weight
+    amount
+    denom
+    staker_addr
   }
 }
     `;
@@ -28343,7 +28342,6 @@ export const ValidatorDelegationsDocument = gql`
  *      validatorAddress: // value for 'validatorAddress'
  *      offset: // value for 'offset'
  *      limit: // value for 'limit'
- *      pagination: // value for 'pagination'
  *   },
  * });
  */
@@ -28403,15 +28401,18 @@ export type ValidatorRedelegationsQueryHookResult = ReturnType<typeof useValidat
 export type ValidatorRedelegationsLazyQueryHookResult = ReturnType<typeof useValidatorRedelegationsLazyQuery>;
 export type ValidatorRedelegationsQueryResult = Apollo.QueryResult<ValidatorRedelegationsQuery, ValidatorRedelegationsQueryVariables>;
 export const ValidatorUndelegationsDocument = gql`
-    query ValidatorUndelegations($validatorAddress: String!, $offset: Int = 0, $limit: Int = 10, $pagination: Boolean! = true) {
-  undelegations: action_validator_unbonding_delegations(
-    address: $validatorAddress
+    query ValidatorUndelegations($validatorAddress: String!, $offset: Int = 0, $limit: Int = 10) {
+  ms_unlocks(
+    where: {val_addr: {_eq: $validatorAddress}}
     limit: $limit
     offset: $offset
-    count_total: $pagination
   ) {
-    undelegations: unbonding_delegations
-    pagination
+    bond_weight
+    amount
+    denom
+    staker_addr
+    val_addr
+    creation_height
   }
 }
     `;
@@ -28431,7 +28432,6 @@ export const ValidatorUndelegationsDocument = gql`
  *      validatorAddress: // value for 'validatorAddress'
  *      offset: // value for 'offset'
  *      limit: // value for 'limit'
- *      pagination: // value for 'pagination'
  *   },
  * });
  */
