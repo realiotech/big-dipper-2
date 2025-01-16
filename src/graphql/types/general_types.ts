@@ -6919,6 +6919,11 @@ export enum Ms_Locks_Constraint {
   MsLocksPkey = 'ms_locks_pkey'
 }
 
+/** ms_locks_countNative Query Arguments */
+export type Ms_Locks_Count_Arguments = {
+  val_addr: Scalars['String'];
+};
+
 /** input type for incrementing numeric columns in table "ms_locks" */
 export type Ms_Locks_Inc_Input = {
   height?: InputMaybe<Scalars['bigint']>;
@@ -7167,6 +7172,11 @@ export enum Ms_Unlocks_Constraint {
   /** unique or primary key constraint on columns "val_addr", "staker_addr", "creation_height" */
   MsUnlocksPkey = 'ms_unlocks_pkey'
 }
+
+/** ms_unlocks_countNative Query Arguments */
+export type Ms_Unlocks_Count_Arguments = {
+  val_addr: Scalars['String'];
+};
 
 /** input type for incrementing numeric columns in table "ms_unlocks" */
 export type Ms_Unlocks_Inc_Input = {
@@ -13751,12 +13761,14 @@ export type Query_Root = {
   ms_locks_aggregate: Ms_Locks_Aggregate;
   /** fetch data from the table: "ms_locks" using primary key columns */
   ms_locks_by_pk?: Maybe<Ms_Locks>;
+  ms_locks_count: Array<Total>;
   /** fetch data from the table: "ms_unlocks" */
   ms_unlocks: Array<Ms_Unlocks>;
   /** fetch aggregated fields from the table: "ms_unlocks" */
   ms_unlocks_aggregate: Ms_Unlocks_Aggregate;
   /** fetch data from the table: "ms_unlocks" using primary key columns */
   ms_unlocks_by_pk?: Maybe<Ms_Unlocks>;
+  ms_unlocks_count: Array<Total>;
   /** fetch data from the table: "pre_commit" */
   pre_commit: Array<Pre_Commit>;
   /** fetch aggregated fields from the table: "pre_commit" */
@@ -14565,6 +14577,16 @@ export type Query_RootMs_Locks_By_PkArgs = {
 };
 
 
+export type Query_RootMs_Locks_CountArgs = {
+  args: Ms_Locks_Count_Arguments;
+  distinct_on?: InputMaybe<Array<Total_Enum_Name>>;
+  limit?: InputMaybe<Scalars['Int']>;
+  offset?: InputMaybe<Scalars['Int']>;
+  order_by?: InputMaybe<Array<Total_Order_By>>;
+  where?: InputMaybe<Total_Bool_Exp_Bool_Exp>;
+};
+
+
 export type Query_RootMs_UnlocksArgs = {
   distinct_on?: InputMaybe<Array<Ms_Unlocks_Select_Column>>;
   limit?: InputMaybe<Scalars['Int']>;
@@ -14587,6 +14609,16 @@ export type Query_RootMs_Unlocks_By_PkArgs = {
   creation_height: Scalars['bigint'];
   staker_addr: Scalars['String'];
   val_addr: Scalars['String'];
+};
+
+
+export type Query_RootMs_Unlocks_CountArgs = {
+  args: Ms_Unlocks_Count_Arguments;
+  distinct_on?: InputMaybe<Array<Total_Enum_Name>>;
+  limit?: InputMaybe<Scalars['Int']>;
+  offset?: InputMaybe<Scalars['Int']>;
+  order_by?: InputMaybe<Array<Total_Order_By>>;
+  where?: InputMaybe<Total_Bool_Exp_Bool_Exp>;
 };
 
 
@@ -16492,6 +16524,7 @@ export type Subscription_Root = {
   ms_locks_aggregate: Ms_Locks_Aggregate;
   /** fetch data from the table: "ms_locks" using primary key columns */
   ms_locks_by_pk?: Maybe<Ms_Locks>;
+  ms_locks_count: Array<Total>;
   /** fetch data from the table in a streaming manner: "ms_locks" */
   ms_locks_stream: Array<Ms_Locks>;
   /** fetch data from the table: "ms_unlocks" */
@@ -16500,6 +16533,7 @@ export type Subscription_Root = {
   ms_unlocks_aggregate: Ms_Unlocks_Aggregate;
   /** fetch data from the table: "ms_unlocks" using primary key columns */
   ms_unlocks_by_pk?: Maybe<Ms_Unlocks>;
+  ms_unlocks_count: Array<Total>;
   /** fetch data from the table in a streaming manner: "ms_unlocks" */
   ms_unlocks_stream: Array<Ms_Unlocks>;
   /** fetch data from the table: "pre_commit" */
@@ -17453,6 +17487,16 @@ export type Subscription_RootMs_Locks_By_PkArgs = {
 };
 
 
+export type Subscription_RootMs_Locks_CountArgs = {
+  args: Ms_Locks_Count_Arguments;
+  distinct_on?: InputMaybe<Array<Total_Enum_Name>>;
+  limit?: InputMaybe<Scalars['Int']>;
+  offset?: InputMaybe<Scalars['Int']>;
+  order_by?: InputMaybe<Array<Total_Order_By>>;
+  where?: InputMaybe<Total_Bool_Exp_Bool_Exp>;
+};
+
+
 export type Subscription_RootMs_Locks_StreamArgs = {
   batch_size: Scalars['Int'];
   cursor: Array<InputMaybe<Ms_Locks_Stream_Cursor_Input>>;
@@ -17482,6 +17526,16 @@ export type Subscription_RootMs_Unlocks_By_PkArgs = {
   creation_height: Scalars['bigint'];
   staker_addr: Scalars['String'];
   val_addr: Scalars['String'];
+};
+
+
+export type Subscription_RootMs_Unlocks_CountArgs = {
+  args: Ms_Unlocks_Count_Arguments;
+  distinct_on?: InputMaybe<Array<Total_Enum_Name>>;
+  limit?: InputMaybe<Scalars['Int']>;
+  offset?: InputMaybe<Scalars['Int']>;
+  order_by?: InputMaybe<Array<Total_Order_By>>;
+  where?: InputMaybe<Total_Bool_Exp_Bool_Exp>;
 };
 
 
@@ -20586,6 +20640,29 @@ export type Token_Updates = {
   _set?: InputMaybe<Token_Set_Input>;
   /** filter the rows which have to be updated */
   where: Token_Bool_Exp;
+};
+
+export type Total = {
+  __typename?: 'total';
+  total?: Maybe<Scalars['bigint']>;
+};
+
+/** Boolean expression to filter rows from the logical model for "total". All fields are combined with a logical 'AND'. */
+export type Total_Bool_Exp_Bool_Exp = {
+  _and?: InputMaybe<Array<Total_Bool_Exp_Bool_Exp>>;
+  _not?: InputMaybe<Total_Bool_Exp_Bool_Exp>;
+  _or?: InputMaybe<Array<Total_Bool_Exp_Bool_Exp>>;
+  total?: InputMaybe<Bigint_Comparison_Exp>;
+};
+
+export enum Total_Enum_Name {
+  /** column name */
+  Total = 'total'
+}
+
+/** Ordering options when selecting data from "total". */
+export type Total_Order_By = {
+  total?: InputMaybe<Order_By>;
 };
 
 /** columns and relationships of "transaction" */
@@ -26442,34 +26519,6 @@ export type ValidatorAddressQueryVariables = Exact<{
 
 export type ValidatorAddressQuery = { validator: Array<{ __typename?: 'validator', validatorInfo?: { __typename?: 'validator_info', operatorAddress: string, selfDelegateAddress?: string | null } | null }> };
 
-export type ValidatorDelegationsQueryVariables = Exact<{
-  validatorAddress: Scalars['String'];
-  offset?: InputMaybe<Scalars['Int']>;
-  limit?: InputMaybe<Scalars['Int']>;
-}>;
-
-
-export type ValidatorDelegationsQuery = { ms_locks: Array<{ __typename?: 'ms_locks', bond_weight?: string | null, amount?: string | null, denom?: string | null, staker_addr: string }> };
-
-export type ValidatorRedelegationsQueryVariables = Exact<{
-  validatorAddress: Scalars['String'];
-  offset?: InputMaybe<Scalars['Int']>;
-  limit?: InputMaybe<Scalars['Int']>;
-  pagination?: Scalars['Boolean'];
-}>;
-
-
-export type ValidatorRedelegationsQuery = { redelegations?: { __typename?: 'ActionRedelegationResponse', redelegations?: Array<any | null> | null, pagination?: any | null } | null };
-
-export type ValidatorUndelegationsQueryVariables = Exact<{
-  validatorAddress: Scalars['String'];
-  offset?: InputMaybe<Scalars['Int']>;
-  limit?: InputMaybe<Scalars['Int']>;
-}>;
-
-
-export type ValidatorUndelegationsQuery = { ms_unlocks: Array<{ __typename?: 'ms_unlocks', bond_weight?: string | null, amount?: string | null, denom?: string | null, staker_addr: string, val_addr: string, creation_height: any }> };
-
 export type ValidatorsQueryVariables = Exact<{ [key: string]: never; }>;
 
 
@@ -28312,140 +28361,6 @@ export function useValidatorAddressLazyQuery(baseOptions?: Apollo.LazyQueryHookO
 export type ValidatorAddressQueryHookResult = ReturnType<typeof useValidatorAddressQuery>;
 export type ValidatorAddressLazyQueryHookResult = ReturnType<typeof useValidatorAddressLazyQuery>;
 export type ValidatorAddressQueryResult = Apollo.QueryResult<ValidatorAddressQuery, ValidatorAddressQueryVariables>;
-export const ValidatorDelegationsDocument = gql`
-    query ValidatorDelegations($validatorAddress: String!, $offset: Int = 0, $limit: Int = 10) {
-  ms_locks(
-    where: {val_addr: {_eq: $validatorAddress}}
-    limit: $limit
-    offset: $offset
-  ) {
-    bond_weight
-    amount
-    denom
-    staker_addr
-  }
-}
-    `;
-
-/**
- * __useValidatorDelegationsQuery__
- *
- * To run a query within a React component, call `useValidatorDelegationsQuery` and pass it any options that fit your needs.
- * When your component renders, `useValidatorDelegationsQuery` returns an object from Apollo Client that contains loading, error, and data properties
- * you can use to render your UI.
- *
- * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
- *
- * @example
- * const { data, loading, error } = useValidatorDelegationsQuery({
- *   variables: {
- *      validatorAddress: // value for 'validatorAddress'
- *      offset: // value for 'offset'
- *      limit: // value for 'limit'
- *   },
- * });
- */
-export function useValidatorDelegationsQuery(baseOptions: Apollo.QueryHookOptions<ValidatorDelegationsQuery, ValidatorDelegationsQueryVariables>) {
-        const options = {...defaultOptions, ...baseOptions}
-        return Apollo.useQuery<ValidatorDelegationsQuery, ValidatorDelegationsQueryVariables>(ValidatorDelegationsDocument, options);
-      }
-export function useValidatorDelegationsLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<ValidatorDelegationsQuery, ValidatorDelegationsQueryVariables>) {
-          const options = {...defaultOptions, ...baseOptions}
-          return Apollo.useLazyQuery<ValidatorDelegationsQuery, ValidatorDelegationsQueryVariables>(ValidatorDelegationsDocument, options);
-        }
-export type ValidatorDelegationsQueryHookResult = ReturnType<typeof useValidatorDelegationsQuery>;
-export type ValidatorDelegationsLazyQueryHookResult = ReturnType<typeof useValidatorDelegationsLazyQuery>;
-export type ValidatorDelegationsQueryResult = Apollo.QueryResult<ValidatorDelegationsQuery, ValidatorDelegationsQueryVariables>;
-export const ValidatorRedelegationsDocument = gql`
-    query ValidatorRedelegations($validatorAddress: String!, $offset: Int = 0, $limit: Int = 10, $pagination: Boolean! = true) {
-  redelegations: action_validator_redelegations_from(
-    address: $validatorAddress
-    limit: $limit
-    offset: $offset
-    count_total: $pagination
-  ) {
-    redelegations
-    pagination
-  }
-}
-    `;
-
-/**
- * __useValidatorRedelegationsQuery__
- *
- * To run a query within a React component, call `useValidatorRedelegationsQuery` and pass it any options that fit your needs.
- * When your component renders, `useValidatorRedelegationsQuery` returns an object from Apollo Client that contains loading, error, and data properties
- * you can use to render your UI.
- *
- * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
- *
- * @example
- * const { data, loading, error } = useValidatorRedelegationsQuery({
- *   variables: {
- *      validatorAddress: // value for 'validatorAddress'
- *      offset: // value for 'offset'
- *      limit: // value for 'limit'
- *      pagination: // value for 'pagination'
- *   },
- * });
- */
-export function useValidatorRedelegationsQuery(baseOptions: Apollo.QueryHookOptions<ValidatorRedelegationsQuery, ValidatorRedelegationsQueryVariables>) {
-        const options = {...defaultOptions, ...baseOptions}
-        return Apollo.useQuery<ValidatorRedelegationsQuery, ValidatorRedelegationsQueryVariables>(ValidatorRedelegationsDocument, options);
-      }
-export function useValidatorRedelegationsLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<ValidatorRedelegationsQuery, ValidatorRedelegationsQueryVariables>) {
-          const options = {...defaultOptions, ...baseOptions}
-          return Apollo.useLazyQuery<ValidatorRedelegationsQuery, ValidatorRedelegationsQueryVariables>(ValidatorRedelegationsDocument, options);
-        }
-export type ValidatorRedelegationsQueryHookResult = ReturnType<typeof useValidatorRedelegationsQuery>;
-export type ValidatorRedelegationsLazyQueryHookResult = ReturnType<typeof useValidatorRedelegationsLazyQuery>;
-export type ValidatorRedelegationsQueryResult = Apollo.QueryResult<ValidatorRedelegationsQuery, ValidatorRedelegationsQueryVariables>;
-export const ValidatorUndelegationsDocument = gql`
-    query ValidatorUndelegations($validatorAddress: String!, $offset: Int = 0, $limit: Int = 10) {
-  ms_unlocks(
-    where: {val_addr: {_eq: $validatorAddress}}
-    limit: $limit
-    offset: $offset
-  ) {
-    bond_weight
-    amount
-    denom
-    staker_addr
-    val_addr
-    creation_height
-  }
-}
-    `;
-
-/**
- * __useValidatorUndelegationsQuery__
- *
- * To run a query within a React component, call `useValidatorUndelegationsQuery` and pass it any options that fit your needs.
- * When your component renders, `useValidatorUndelegationsQuery` returns an object from Apollo Client that contains loading, error, and data properties
- * you can use to render your UI.
- *
- * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
- *
- * @example
- * const { data, loading, error } = useValidatorUndelegationsQuery({
- *   variables: {
- *      validatorAddress: // value for 'validatorAddress'
- *      offset: // value for 'offset'
- *      limit: // value for 'limit'
- *   },
- * });
- */
-export function useValidatorUndelegationsQuery(baseOptions: Apollo.QueryHookOptions<ValidatorUndelegationsQuery, ValidatorUndelegationsQueryVariables>) {
-        const options = {...defaultOptions, ...baseOptions}
-        return Apollo.useQuery<ValidatorUndelegationsQuery, ValidatorUndelegationsQueryVariables>(ValidatorUndelegationsDocument, options);
-      }
-export function useValidatorUndelegationsLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<ValidatorUndelegationsQuery, ValidatorUndelegationsQueryVariables>) {
-          const options = {...defaultOptions, ...baseOptions}
-          return Apollo.useLazyQuery<ValidatorUndelegationsQuery, ValidatorUndelegationsQueryVariables>(ValidatorUndelegationsDocument, options);
-        }
-export type ValidatorUndelegationsQueryHookResult = ReturnType<typeof useValidatorUndelegationsQuery>;
-export type ValidatorUndelegationsLazyQueryHookResult = ReturnType<typeof useValidatorUndelegationsLazyQuery>;
-export type ValidatorUndelegationsQueryResult = Apollo.QueryResult<ValidatorUndelegationsQuery, ValidatorUndelegationsQueryVariables>;
 export const ValidatorsDocument = gql`
     query Validators {
   stakingPool: staking_pool(limit: 1, order_by: {height: desc}) {
