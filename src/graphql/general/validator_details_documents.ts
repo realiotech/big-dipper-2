@@ -1,16 +1,16 @@
 export const ValidatorDelegationsDocument = /* GraphQL */ `
-query ValidatorDelegations($validatorAddress: String!, $offset: Int = 0, $limit: Int = 10) {
-  ms_locks(limit: $limit, offset: $offset, where: {val_addr: {_eq: $validatorAddress}}) {
-    bond_weight
-    amount
-    denom
-    staker_addr
-    val_addr
+  query ValidatorDelegations($validatorAddress: String!, $offset: Int = 0, $limit: Int = 10) {
+    ms_locks(limit: $limit, offset: $offset, where: {val_addr: {_eq: $validatorAddress}}) {
+      bond_weight
+      amount
+      denom
+      staker_addr
+      val_addr
+    }
+    ms_locks_count(args: {val_addr: $validatorAddress}) {
+      total
+    }
   }
-  ms_locks_count(args: {val_addr: $validatorAddress}) {
-    total
-  }
-}
 `;
 
 export const ValidatorRedelegationsDocument = /* GraphQL */ `
@@ -33,15 +33,17 @@ export const ValidatorRedelegationsDocument = /* GraphQL */ `
 `;
 
 export const ValidatorUndelegationsDocument = /* GraphQL */ `
-  ms_unlocks(limit: $limit, offset: $offset, where: {val_addr: {_eq: $validatorAddress}}) {
-    bond_weight
-    amount
-    denom
-    creation_height
-    staker_addr
-    val_addr
-  }
-  ms_unlocks_count(args: {val_addr: $validatorAddress}) {
-    total
+  query ValidatorUndelegations($validatorAddress: String!, $offset: Int = 0, $limit: Int = 10) {
+    ms_unlocks(limit: $limit, offset: $offset, where: {val_addr: {_eq: $validatorAddress}}) {
+      bond_weight
+      amount
+      denom
+      creation_height
+      staker_addr
+      val_addr
+    }
+    ms_unlocks_count(args: {val_addr: $validatorAddress}) {
+      total
+    }
   }
 `;

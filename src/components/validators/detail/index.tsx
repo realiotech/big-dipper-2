@@ -29,7 +29,7 @@ export default function ValidatorDetails() {
         />
       </Flex>
       <Blocks address={operatorAddress} />
-      <Staking address={operatorAddress} />
+      <Staking address={operatorAddress} asset={validatorOverviewState?.overview?.denom} />
       <Transactions />
     </Box>
   );

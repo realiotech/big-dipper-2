@@ -8,28 +8,29 @@ import {
 } from "@chakra-ui/react";
 import { useStaking } from "./hooks";
 import NoData from "@/components/helper/nodata";
+import Delegations from "@/components/staking/delegations";
+import Undelegations from "@/components/staking/undelegations";
 
-export default function Staking({ address }) {
-  const [delegationsPage, setDelegationsPage] = useState(0);
-  const [redelegationsPage, setRedelegationsPage] = useState(0);
-  const [unbondingsPage, setUnbondingsPage] = useState(0);
-  const { state, delegations, unbondings, handleTabChange } =
-    useStaking(delegationsPage, unbondingsPage, address);
-
+export default function Staking({ address, asset }) {
+  const { delegations, unbondings, delegationsPage, unbondingsPage, setDelegationsPage, setUnboningsPage } =
+    useStaking(address);
   return (
     <Tabs.Root
-      value={state.tab + 1}
+      defaultValue={1}
       variant="subtle"
-      handleTabChange={(e) => handleTabChange(e, e.value - 1)}
     >
       <TabsList mb={5}>
-        <TabsTrigger value={1}>Delegations ({delegations.count})</TabsTrigger>
-        <TabsTrigger value={3}>Unbondings ({unbondings.count})</TabsTrigger>
+        <TabsTrigger value={1}>Delegations ({delegations.count ?? 0})</TabsTrigger>
+        <TabsTrigger value={2}>Unbondings ({unbondings.count ?? 0})</TabsTrigger>
       </TabsList>
       {delegations?.data ? (
         <Box bg="#FAFBFC" p={6} borderRadius="md" boxShadow="sm" mb={8}>
-          <TabsContent value={1}></TabsContent>
-          <TabsContent value={3}></TabsContent>
+          <TabsContent value={1}>
+            <Delegations data={delegations} asset={asset} page={delegationsPage} setPage={setDelegationsPage} />
+          </TabsContent>
+          <TabsContent value={2}>
+            <Undelegations data={unbondings} asset={asset} page={unbondingsPage} setPage={setUnboningsPage} />
+          </TabsContent>
         </Box>
       ) : (
         <NoData />

@@ -4,7 +4,6 @@ import {
   Text,
   Flex,
   Table,
-  Image,
   For,
   useBreakpointValue,
   Link as ChakraLink,
