@@ -11,6 +11,7 @@ import {
   Stack,
   useBreakpointValue,
   StackSeparator,
+  Show,
 } from "@chakra-ui/react";
 import useTranslation from "next-translate/useTranslation";
 import { useVotes } from "./hooks";
@@ -27,6 +28,7 @@ import {
 } from "@/components/ui/pagination";
 import { useProfileRecoil } from "@/recoil/profiles";
 import Proposer from "../helper/proposer";
+import NoData from "../helper/nodata";
 
 const VoteItemMobile = ({ vote }) => {
   const { name, address, imageUrl } = useProfileRecoil(vote.user);
@@ -159,7 +161,7 @@ export default function VotesTable() {
         </Tabs.Root>
       </Flex>
       <Box bg="#FAFBFC" py={6} px={3} borderRadius="md" boxShadow="sm">
-        {isMobile ? (
+        { items?.length ? isMobile ? (
           <Stack borderRadius={'2xl'} overflowY={'auto'} separator={<StackSeparator/>} bg="white" py={4} px={6} mb={3}>
             {items.map((item, index) => (
               <VoteItemMobile vote={item} key={`vote-${index}`} />
@@ -184,20 +186,22 @@ export default function VotesTable() {
                 ))}
             </Table.Body>
           </Table.Root>
-        )}
-        <PaginationRoot
-          count={state.data.length}
-          pageSize={10}
-          page={page + 1}
-          onPageChange={(e) => handlePageChange(e, e.page - 1)}
-          marginTop={'10px'}
-        >
-          <HStack wrap="wrap">
-            <PaginationPrevTrigger />
-            <PaginationItems />
-            <PaginationNextTrigger />
-          </HStack>
-        </PaginationRoot>
+        ) : <NoData />}
+        <Show when={state?.data?.length > 10}>
+          <PaginationRoot
+            count={state.data.length}
+            pageSize={10}
+            page={page + 1}
+            onPageChange={(e) => handlePageChange(e, e.page - 1)}
+            marginTop={'10px'}
+          >
+            <HStack wrap="wrap">
+              <PaginationPrevTrigger />
+              <PaginationItems />
+              <PaginationNextTrigger />
+            </HStack>
+          </PaginationRoot>
+        </Show>
       </Box>
     </>
   );

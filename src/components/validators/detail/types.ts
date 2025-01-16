@@ -62,7 +62,8 @@ export type StakingType<T> = {
 
 export interface DelegationType {
     address: string;
-    amount: TokenUnit;
+    amount: string;
+    denom: string;
 }
 
 export interface RedelegationType {
@@ -74,8 +75,8 @@ export interface RedelegationType {
 
 export interface UnbondingType {
     address: string;
-    amount: TokenUnit;
-    completionTime?: string;
+    amount: string;
+    denom: string;
 }
 
 export type DelegationsType = StakingType<DelegationType>;
