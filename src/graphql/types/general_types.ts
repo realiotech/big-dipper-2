@@ -26213,6 +26213,13 @@ export type Vesting_Period_Variance_Order_By = {
   vesting_account_id?: InputMaybe<Order_By>;
 };
 
+export type BalancesByAddressQueryVariables = Exact<{
+  account: Scalars['String'];
+}>;
+
+
+export type BalancesByAddressQuery = { balance: Array<{ __typename?: 'balance', amount: string, denom: string }> };
+
 export type AccountCommissionQueryVariables = Exact<{
   validatorAddress: Scalars['String'];
 }>;
@@ -26558,6 +26565,42 @@ export type ValidatorAddressesQueryVariables = Exact<{ [key: string]: never; }>;
 export type ValidatorAddressesQuery = { validator: Array<{ __typename?: 'validator', validatorInfo?: { __typename?: 'validator_info', operatorAddress: string, selfDelegateAddress?: string | null, consensusAddress: string } | null, validatorDescriptions: Array<{ __typename?: 'validator_description', moniker?: string | null, avatarUrl?: string | null }> }> };
 
 
+export const BalancesByAddressDocument = gql`
+    query BalancesByAddress($account: String!) {
+  balance(where: {address: {_eq: $account}}) {
+    amount
+    denom
+  }
+}
+    `;
+
+/**
+ * __useBalancesByAddressQuery__
+ *
+ * To run a query within a React component, call `useBalancesByAddressQuery` and pass it any options that fit your needs.
+ * When your component renders, `useBalancesByAddressQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useBalancesByAddressQuery({
+ *   variables: {
+ *      account: // value for 'account'
+ *   },
+ * });
+ */
+export function useBalancesByAddressQuery(baseOptions: Apollo.QueryHookOptions<BalancesByAddressQuery, BalancesByAddressQueryVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useQuery<BalancesByAddressQuery, BalancesByAddressQueryVariables>(BalancesByAddressDocument, options);
+      }
+export function useBalancesByAddressLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<BalancesByAddressQuery, BalancesByAddressQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return Apollo.useLazyQuery<BalancesByAddressQuery, BalancesByAddressQueryVariables>(BalancesByAddressDocument, options);
+        }
+export type BalancesByAddressQueryHookResult = ReturnType<typeof useBalancesByAddressQuery>;
+export type BalancesByAddressLazyQueryHookResult = ReturnType<typeof useBalancesByAddressLazyQuery>;
+export type BalancesByAddressQueryResult = Apollo.QueryResult<BalancesByAddressQuery, BalancesByAddressQueryVariables>;
 export const AccountCommissionDocument = gql`
     query AccountCommission($validatorAddress: String!) {
   commission: action_validator_commission_amount(address: $validatorAddress) {

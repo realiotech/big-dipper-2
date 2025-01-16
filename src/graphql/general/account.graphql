@@ -1,0 +1,6 @@
+query BalancesByAddress($account: String!) {
+  balance(where: {address: {_eq: $account}}) {
+    amount
+    denom
+  }
+}

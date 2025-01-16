@@ -4,6 +4,7 @@ import { useEffect, useState } from 'react';
 
 import {
   GetMessagesByAddressQuery,
+  useBalancesByAddressQuery,
   useGetMessagesByAddressQuery,
 } from '@/graphql/types/general_types';
 
@@ -12,6 +13,8 @@ import type { TransactionState } from '@/components/validators/detail/types';
 import { convertMsgType } from '@/utils/convert_msg_type';
 import { useRecoilValue } from 'recoil';
 import { readFilter } from '@/recoil/transactions_filter';
+import type { OverviewType } from './types';
+import { convertToEvmAddress } from './utils';
 
 const LIMIT = 50;
 
@@ -117,4 +120,32 @@ export function useTransactions() {
     state,
     loadNextPage,
   };
+}
+
+export function useOverview(): OverviewType {
+  const router = useRouter()
+  const address = router?.query?.address as string
+
+  const [balances, setBalances] = useState([])
+  const [completed, setCompleted] = useState(false)
+
+  useBalancesByAddressQuery({
+    variables: {
+      account: address
+    },
+    onCompleted: (data) => {
+      setCompleted(true)
+      setBalances(data.balance)
+    },
+    onError: (e) => {
+      console.error(e)
+    }
+  })
+
+  return {
+    address,
+    balances,
+    completed,
+    evmAddress: convertToEvmAddress(address)
+  }
 }
