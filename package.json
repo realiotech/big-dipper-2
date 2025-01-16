@@ -20,7 +20,7 @@
     "@chakra-ui/progress": "^2.2.0",
     "@chakra-ui/react": "^3.2.2",
     "@cosmjs/launchpad": "^0.27.1",
-    "@cosmjs/stargate": "^0.29.5",
+    "@cosmjs/stargate": "^0.33.0",
     "@emotion/react": "^11.11.0",
     "@emotion/server": "^11.11.0",
     "@emotion/styled": "^11.11.0",

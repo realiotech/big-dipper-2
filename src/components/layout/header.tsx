@@ -20,6 +20,7 @@ import { InputGroup } from '../ui/input-group';
 import MenuDrawer from './menudrawer';
 import SearchBar from './search';
 import PageHeader from './page-header';
+import WalletPopover from './wallet-popover';
 
 export default function Header() {
   const marketState = useRecoilValue(readMarket);
@@ -60,7 +61,7 @@ export default function Header() {
         >
           {chainConfig.network}
         </Center>
-        <IconButton
+        {/* <IconButton
           aria-label="connect wallet"
           rounded="full"
           bgColor="#707D8A"
@@ -68,7 +69,8 @@ export default function Header() {
           h="60px"
         >
           <Wallet />
-        </IconButton>
+        </IconButton> */}
+        <WalletPopover/>
       </HStack>
     </Flex>
   ) : (
