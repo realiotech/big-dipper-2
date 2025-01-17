@@ -13,6 +13,7 @@ export interface AtomState {
   walletAddress: string | null; // New field for the wallet address
   chainId: string | null; // New field for the chain ID
   signer: any | null; // New field for the signer object
+  balance: string | null; // New field for the balance
 }
 
 const initialState: AtomState = {
@@ -28,6 +29,7 @@ const initialState: AtomState = {
   walletAddress: null, // Default to null
   chainId: null, // Default to null
   signer: null, // Default to null
+  balance: null
 };
 
 export const atomState = atom<AtomState>({

@@ -19,6 +19,14 @@ import {
 } from "@/components/ui/dialog";
 import { IoCloseOutline } from "react-icons/io5";
 import { useState } from "react";
+import { createDelegateTx } from "@/utils/delegate_transaction";
+import {
+    createSignerInfo,
+    createAuthInfo,
+    createFee,
+  } from "@injectivelabs/sdk-ts";
+import { useRecoilValue } from "recoil";
+import { atomState } from "@/recoil/wallet/atom";
 
 export const DelegateDialog = ({
   denom,
@@ -27,8 +35,9 @@ export const DelegateDialog = ({
   operatorName,
   operatorAddress,
 }) => {
+  const wallet = useRecoilValue(atomState); // Access wallet state
   const [formData, setFormData] = useState({
-    sender: "realio13zz4mvgwmppzlnve09zshqlf4r2x4uqtwf6ckzk",
+    sender: wallet.walletAddress,
     validator: operatorAddress || "",
     denom: denom || "",
     amount: "",
@@ -37,16 +46,44 @@ export const DelegateDialog = ({
     memo: "realio.network",
   });
 
+  const [loading, setLoading] = useState(false);
+
   const handleChange = (e) => {
     const { name, value } = e.target;
     setFormData((prev) => ({ ...prev, [name]: value }));
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    console.log("Form Data Submitted:", formData);
+  
+    if (!wallet.signer) {
+      console.error("No signer found. Please connect your wallet.");
+      return;
+    }
+  
+    try {
+      setLoading(true);
+      console.log("Sending transaction with data:", formData);
+  
+      const txResult = await createDelegateTx({
+        sender: formData.sender,
+        validator: formData.validator,
+        denom: denom,
+        amount: formData.amount,
+        fees: formData.fees,
+        gas: formData.gas,
+        memo: formData.memo,
+        signer: wallet.signer, // Ensure signer is correctly passed
+        decimal: decimal,
+      });
+      console.log("Signer Info:", wallet.signer);
+      console.log("Transaction Result:", txResult);
+      setLoading(false);
+    } catch (err) {
+      console.error("Transaction failed:", err);
+      setLoading(false);
+    }
   };
-
   return (
     <DialogRoot size="md" placement={"center"} motionPreset="slide-in-bottom">
       <DialogTrigger asChild>
@@ -72,10 +109,10 @@ export const DelegateDialog = ({
                   Sender
                 </Text>
                 <Input
+                  readOnly
                   name="sender"
                   placeholder="realio13zz4mvgwm..."
                   value={formData.sender}
-                  onChange={handleChange}
                 />
               </Box>
 
@@ -98,7 +135,7 @@ export const DelegateDialog = ({
                   <Text fontSize="sm" mb={1}>
                     Amount
                   </Text>
-                  <Text fontSize="xs">Available: 1000 RIO</Text>
+                  <Text fontSize="xs">Available: ${wallet.balance} RIO1</Text>
                 </Flex>
                 <Group w={"full"} attached>
                   <Input
@@ -152,12 +189,15 @@ export const DelegateDialog = ({
             </VStack>
           </DialogBody>
           <DialogFooter>
-            <DialogTrigger w={"full"}>
-
-            <Button type="submit" bg={"#707D8A"} w={"full"} colorScheme="blue">
+            <Button
+              type="submit"
+              bg={"#707D8A"}
+              w={"full"}
+              colorScheme="blue"
+              isLoading={loading}
+            >
               Send
             </Button>
-            </DialogTrigger>
           </DialogFooter>
         </form>
       </DialogContent>
