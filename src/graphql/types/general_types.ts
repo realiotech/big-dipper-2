@@ -13835,6 +13835,7 @@ export type Query_Root = {
   supply: Array<Supply>;
   /** fetch aggregated fields from the table: "supply" */
   supply_aggregate: Supply_Aggregate;
+  supply_by_denom: Array<Total_Supply>;
   /** fetch data from the table: "supply" using primary key columns */
   supply_by_pk?: Maybe<Supply>;
   /** fetch data from the table: "token" */
@@ -14888,6 +14889,16 @@ export type Query_RootSupply_AggregateArgs = {
   offset?: InputMaybe<Scalars['Int']>;
   order_by?: InputMaybe<Array<Supply_Order_By>>;
   where?: InputMaybe<Supply_Bool_Exp>;
+};
+
+
+export type Query_RootSupply_By_DenomArgs = {
+  args: Supply_By_Denom_Arguments;
+  distinct_on?: InputMaybe<Array<Total_Supply_Enum_Name>>;
+  limit?: InputMaybe<Scalars['Int']>;
+  offset?: InputMaybe<Scalars['Int']>;
+  order_by?: InputMaybe<Array<Total_Supply_Order_By>>;
+  where?: InputMaybe<Total_Supply_Bool_Exp_Bool_Exp>;
 };
 
 
@@ -16626,6 +16637,7 @@ export type Subscription_Root = {
   supply: Array<Supply>;
   /** fetch aggregated fields from the table: "supply" */
   supply_aggregate: Supply_Aggregate;
+  supply_by_denom: Array<Total_Supply>;
   /** fetch data from the table: "supply" using primary key columns */
   supply_by_pk?: Maybe<Supply>;
   /** fetch data from the table in a streaming manner: "supply" */
@@ -17899,6 +17911,16 @@ export type Subscription_RootSupply_AggregateArgs = {
 };
 
 
+export type Subscription_RootSupply_By_DenomArgs = {
+  args: Supply_By_Denom_Arguments;
+  distinct_on?: InputMaybe<Array<Total_Supply_Enum_Name>>;
+  limit?: InputMaybe<Scalars['Int']>;
+  offset?: InputMaybe<Scalars['Int']>;
+  order_by?: InputMaybe<Array<Total_Supply_Order_By>>;
+  where?: InputMaybe<Total_Supply_Bool_Exp_Bool_Exp>;
+};
+
+
 export type Subscription_RootSupply_By_PkArgs = {
   one_row_id: Scalars['Boolean'];
 };
@@ -18557,6 +18579,11 @@ export type Supply_Bool_Exp = {
   coins?: InputMaybe<Coin_Array_Comparison_Exp>;
   height?: InputMaybe<Bigint_Comparison_Exp>;
   one_row_id?: InputMaybe<Boolean_Comparison_Exp>;
+};
+
+/** supply_by_denomNative Query Arguments */
+export type Supply_By_Denom_Arguments = {
+  denom: Scalars['String'];
 };
 
 /** unique or primary key constraints on table "supply" */
@@ -20663,6 +20690,29 @@ export enum Total_Enum_Name {
 /** Ordering options when selecting data from "total". */
 export type Total_Order_By = {
   total?: InputMaybe<Order_By>;
+};
+
+export type Total_Supply = {
+  __typename?: 'total_supply';
+  supply?: Maybe<Scalars['String']>;
+};
+
+/** Boolean expression to filter rows from the logical model for "total_supply". All fields are combined with a logical 'AND'. */
+export type Total_Supply_Bool_Exp_Bool_Exp = {
+  _and?: InputMaybe<Array<Total_Supply_Bool_Exp_Bool_Exp>>;
+  _not?: InputMaybe<Total_Supply_Bool_Exp_Bool_Exp>;
+  _or?: InputMaybe<Array<Total_Supply_Bool_Exp_Bool_Exp>>;
+  supply?: InputMaybe<String_Comparison_Exp>;
+};
+
+export enum Total_Supply_Enum_Name {
+  /** column name */
+  Supply = 'supply'
+}
+
+/** Ordering options when selecting data from "total_supply". */
+export type Total_Supply_Order_By = {
+  supply?: InputMaybe<Order_By>;
 };
 
 /** columns and relationships of "transaction" */
@@ -26297,6 +26347,13 @@ export type ActiveValidatorCountQueryVariables = Exact<{ [key: string]: never; }
 
 export type ActiveValidatorCountQuery = { activeTotal: { __typename?: 'validator_status_aggregate', aggregate?: { __typename?: 'validator_status_aggregate_fields', count: number } | null }, inactiveTotal: { __typename?: 'validator_status_aggregate', aggregate?: { __typename?: 'validator_status_aggregate_fields', count: number } | null }, total: { __typename?: 'validator_status_aggregate', aggregate?: { __typename?: 'validator_status_aggregate_fields', count: number } | null } };
 
+export type AssetOverviewQueryVariables = Exact<{
+  denom: Scalars['String'];
+}>;
+
+
+export type AssetOverviewQuery = { supply_by_denom: Array<{ __typename?: 'total_supply', supply?: string | null }>, token_holder: Array<{ __typename?: 'token_holder', num_holder: any }> };
+
 export type BlockDetailsQueryVariables = Exact<{
   height?: InputMaybe<Scalars['bigint']>;
   signatureHeight?: InputMaybe<Scalars['bigint']>;
@@ -26990,6 +27047,44 @@ export function useActiveValidatorCountLazyQuery(baseOptions?: Apollo.LazyQueryH
 export type ActiveValidatorCountQueryHookResult = ReturnType<typeof useActiveValidatorCountQuery>;
 export type ActiveValidatorCountLazyQueryHookResult = ReturnType<typeof useActiveValidatorCountLazyQuery>;
 export type ActiveValidatorCountQueryResult = Apollo.QueryResult<ActiveValidatorCountQuery, ActiveValidatorCountQueryVariables>;
+export const AssetOverviewDocument = gql`
+    query AssetOverview($denom: String!) {
+  supply_by_denom(args: {denom: $denom}) {
+    supply
+  }
+  token_holder(where: {denom: {_eq: $denom}}) {
+    num_holder
+  }
+}
+    `;
+
+/**
+ * __useAssetOverviewQuery__
+ *
+ * To run a query within a React component, call `useAssetOverviewQuery` and pass it any options that fit your needs.
+ * When your component renders, `useAssetOverviewQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useAssetOverviewQuery({
+ *   variables: {
+ *      denom: // value for 'denom'
+ *   },
+ * });
+ */
+export function useAssetOverviewQuery(baseOptions: Apollo.QueryHookOptions<AssetOverviewQuery, AssetOverviewQueryVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useQuery<AssetOverviewQuery, AssetOverviewQueryVariables>(AssetOverviewDocument, options);
+      }
+export function useAssetOverviewLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<AssetOverviewQuery, AssetOverviewQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return Apollo.useLazyQuery<AssetOverviewQuery, AssetOverviewQueryVariables>(AssetOverviewDocument, options);
+        }
+export type AssetOverviewQueryHookResult = ReturnType<typeof useAssetOverviewQuery>;
+export type AssetOverviewLazyQueryHookResult = ReturnType<typeof useAssetOverviewLazyQuery>;
+export type AssetOverviewQueryResult = Apollo.QueryResult<AssetOverviewQuery, AssetOverviewQueryVariables>;
 export const BlockDetailsDocument = gql`
     query BlockDetails($height: bigint, $signatureHeight: bigint) {
   transaction(where: {height: {_eq: $height}}) {
