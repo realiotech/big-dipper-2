@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { use, useEffect, useState } from "react";
 import {
     Box,
     Flex,
@@ -11,15 +11,58 @@ import {
     Center,
     Grid,
     GridItem,
+    Skeleton,
 } from "@chakra-ui/react";
 import { FiShoppingCart } from "react-icons/fi";
 import AssetOverview from "./overview";
+import { useOverview, useHolders } from "./hooks";
 import Staking from "./staking";
 import { useRouter } from "next/router";
+import Pagination from "../layout/pagination";
+import numeral from "numeral";
+import HelpLink from "../helper/help_link";
+
+const denomToTokenMap = {
+    "rio": "Realio Network",
+    "rst": "Realio Security Token",
+    "lmx": "Liquid Mining Token",
+}
+
+const HolderItem = ({ item }) => {
+    return (
+        <Table.Row>
+            <Table.Cell>
+                <HelpLink
+                    href={`/accounts/${item.address}`}
+                    value={item.address}
+                />
+            </Table.Cell>
+            <Table.Cell>{item.balance.value}</Table.Cell>
+            <Table.Cell>{item.balance.displayDenom.toUpperCase()}</Table.Cell>
+        </Table.Row>
+    );
+};
+
+const SkeletonBlockItem = ({ index }) => {
+    return (
+        <Table.Row key={`block-${index}`}>
+            <Table.Cell>
+                <Skeleton key={`block-${index}`} h={"5px"} w="full" mb="4" />
+            </Table.Cell>
+            <Table.Cell>
+                <Skeleton key={`block-${index}`} h={"5px"} w="full" mb="4" />
+            </Table.Cell>
+            <Table.Cell>
+                <Skeleton key={`block-${index}`} h={"5px"} w="full" mb="4" />
+            </Table.Cell>
+        </Table.Row>
+    )
+}
 
 const AssetDetails = () => {
     const router = useRouter()
-
+    const { state, maxHolders } = useOverview()
+    const { holderState, pageInfo, handlePageChange } = useHolders(maxHolders)
     const [selectedTab, setSelectedTab] = useState("staking");
 
     return (
@@ -40,7 +83,7 @@ const AssetDetails = () => {
                         <Box bg="black" w="60px" h="60px" borderRadius="full" />
                         <VStack align="flex-start" spacing={0}>
                             <Text fontSize="lg" fontWeight="bold">
-                                Realio Network (RIO)
+                                {`${denomToTokenMap[state?.denom]} (${state?.denom.toUpperCase()})`}
                             </Text>
                             <Text color="gray.500">Token Overview</Text>
                         </VStack>
@@ -100,11 +143,49 @@ const AssetDetails = () => {
                             <Tabs.Content value="holders">
                                 <Box p={6}>
                                     <Text fontSize="md" mb={4}>
-                                        Top 1000 holders (from a total of 31,309 holders)
+                                        Top {maxHolders} holders (from a total of {`${state?.holders ?? 0}`} holders)
                                     </Text>
-                                    <Table.Root variant="simple" colorScheme="gray">
-
+                                    <Table.Root colorScheme="gray">
+                                        <Table.Header bg="#FAFBFC">
+                                            <Table.Row bgColor="inherit">
+                                                <Table.ColumnHeader>Address</Table.ColumnHeader>
+                                                <Table.ColumnHeader>Amount</Table.ColumnHeader>
+                                                <Table.ColumnHeader>Denom</Table.ColumnHeader>
+                                            </Table.Row>
+                                        </Table.Header>
+                                        <Table.Body>
+                                            {!holderState.loading ? holderState.holders.length === 0 ? (
+                                                <Center
+                                                    borderRadius="20px"
+                                                    bgColor="#FAFBFC"
+                                                    py="5"
+                                                    px="8"
+                                                    minH="65vh"
+                                                    w="full"
+                                                >
+                                                    <Text>Nothing to show</Text>
+                                                </Center>
+                                            ) : holderState.holders.map((item, index) => (
+                                                <HolderItem
+                                                    item={item}
+                                                />
+                                            )) : (
+                                                Array.from({ length: 20 }).map((_, index) => (
+                                                    <SkeletonBlockItem
+                                                        index={index}
+                                                    />
+                                                ))
+                                            )
+                                            }
+                                        </Table.Body>
                                     </Table.Root>
+                                    <Center w="full" py="4">
+                                        <Pagination
+                                            pageInfo={pageInfo}
+                                            pageChangeFunc={handlePageChange}
+                                            pageSizeChangeFunc={() => { }}
+                                        />
+                                    </Center>
                                 </Box>
                             </Tabs.Content>
                             <Tabs.Content value="staking">

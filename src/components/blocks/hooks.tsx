@@ -128,7 +128,7 @@ export const useBlocks = () => {
 
     blockQuery.refetch({
       limit: PAGE_SIZE,
-      offset: page * PAGE_SIZE,
+      offset: (page - 1) * PAGE_SIZE,
     }).then(({ data }) => {
       const blocks = formatBlocks(data);
       const oldestBlock = blocks[blocks.length - 1];

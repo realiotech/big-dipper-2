@@ -21,10 +21,10 @@ import numeral from "numeral";
 import { formatTokenByExponent } from "@/utils";
 
 export default function AssetOverview() {
-    const { denom, supply, holders } = useOverview()
-    const metadata = useRecoilValue(readAsset(denom))
+    const { state, maxHolders } = useOverview()
+    const metadata = useRecoilValue(readAsset(state.denom))
 
-    const supplyAmt = formatTokenByExponent(supply, metadata?.decimals)
+    const supplyAmt = formatTokenByExponent(state.supply, metadata?.decimals)
     const supplyInUsd = parseFloat(supplyAmt) * metadata?.price
     return (
         <>
@@ -50,7 +50,7 @@ export default function AssetOverview() {
                             Holders
                         </Text>
                         <Text fontSize="lg" fontWeight="bold">
-                            {numeral(holders).format('0,0')}
+                            {numeral(state.holders).format('0,0')}
                         </Text>
                     </Box>
                 </Flex>
