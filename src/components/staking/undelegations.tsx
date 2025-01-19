@@ -80,7 +80,7 @@ export default function Undelegations({ data, displayMode, page, setPage }) {
                 </Table.Header>
                 <Table.Body>
                     {
-                        !data?.loading ? data?.data.length === 0 ? (
+                        !data?.loading ? !data?.data || data?.data.length === 0 ? (
                             <Table.Row>
                                 <Table.Cell colSpan={5} textAlign="center">
                                     <Center borderRadius="20px" bgColor="#FAFBFC" py="5" px="8" minH="65vh" w="full">

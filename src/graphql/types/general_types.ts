@@ -31635,6 +31635,16 @@ export type AssetUndelegationsQueryVariables = Exact<{
 
 export type AssetUndelegationsQuery = { ms_unlocks: Array<{ __typename?: 'ms_unlocks', bond_weight?: string | null, amount?: string | null, denom?: string | null, creation_height: any, staker_addr: string, val_addr: string }>, unlocks_count_by_denom: Array<{ __typename?: 'count', count: any }> };
 
+export type AssetHoldersQueryVariables = Exact<{
+  denom: Scalars['String'];
+  offset?: InputMaybe<Scalars['Int']>;
+  limit?: InputMaybe<Scalars['Int']>;
+  order_by?: InputMaybe<Scalars['String']>;
+}>;
+
+
+export type AssetHoldersQuery = { balance: Array<{ __typename?: 'balance', address: string, amount: string, denom: string }> };
+
 export type BlockDetailsQueryVariables = Exact<{
   height?: InputMaybe<Scalars['bigint']>;
   signatureHeight?: InputMaybe<Scalars['bigint']>;
@@ -32416,6 +32426,51 @@ export function useAssetUndelegationsLazyQuery(baseOptions?: Apollo.LazyQueryHoo
 export type AssetUndelegationsQueryHookResult = ReturnType<typeof useAssetUndelegationsQuery>;
 export type AssetUndelegationsLazyQueryHookResult = ReturnType<typeof useAssetUndelegationsLazyQuery>;
 export type AssetUndelegationsQueryResult = Apollo.QueryResult<AssetUndelegationsQuery, AssetUndelegationsQueryVariables>;
+export const AssetHoldersDocument = gql`
+    query AssetHolders($denom: String!, $offset: Int = 0, $limit: Int = 10, $order_by: String = "desc") {
+  balance(
+    limit: $limit
+    offset: $offset
+    where: {denom: {_eq: $denom}}
+    order_by: {amount: desc}
+  ) {
+    address
+    amount
+    denom
+  }
+}
+    `;
+
+/**
+ * __useAssetHoldersQuery__
+ *
+ * To run a query within a React component, call `useAssetHoldersQuery` and pass it any options that fit your needs.
+ * When your component renders, `useAssetHoldersQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useAssetHoldersQuery({
+ *   variables: {
+ *      denom: // value for 'denom'
+ *      offset: // value for 'offset'
+ *      limit: // value for 'limit'
+ *      order_by: // value for 'order_by'
+ *   },
+ * });
+ */
+export function useAssetHoldersQuery(baseOptions: Apollo.QueryHookOptions<AssetHoldersQuery, AssetHoldersQueryVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useQuery<AssetHoldersQuery, AssetHoldersQueryVariables>(AssetHoldersDocument, options);
+      }
+export function useAssetHoldersLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<AssetHoldersQuery, AssetHoldersQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return Apollo.useLazyQuery<AssetHoldersQuery, AssetHoldersQueryVariables>(AssetHoldersDocument, options);
+        }
+export type AssetHoldersQueryHookResult = ReturnType<typeof useAssetHoldersQuery>;
+export type AssetHoldersLazyQueryHookResult = ReturnType<typeof useAssetHoldersLazyQuery>;
+export type AssetHoldersQueryResult = Apollo.QueryResult<AssetHoldersQuery, AssetHoldersQueryVariables>;
 export const BlockDetailsDocument = gql`
     query BlockDetails($height: bigint, $signatureHeight: bigint) {
   transaction(where: {height: {_eq: $height}}) {
