@@ -16,33 +16,61 @@ import { ADDRESS_DETAILS, formatTokenByExponent } from "@/utils";
 import Asset from "../helper/asset";
 import { PaginationItems, PaginationNextTrigger, PaginationPrevTrigger, PaginationRoot } from "../ui/pagination";
 
-const DelegationItem = ({ item, asset }) => {
-    const votingPower = parseFloat(formatTokenByExponent(item.amount, asset?.decimals)) * parseFloat(item.bond_weight)
+const getDisplayHeaders = (displayMode) => {
+    if (displayMode === 1) return <Table.ColumnHeader>Address</Table.ColumnHeader>
+    if (displayMode === 2) return <Table.ColumnHeader>Validator</Table.ColumnHeader>
+    return (
+        <>
+            <Table.ColumnHeader>Address</Table.ColumnHeader>
+            <Table.ColumnHeader>Validator</Table.ColumnHeader>
+        </>
+    )
+}
+
+const getDisplayData = (displayMode, staker_addr, val_addr) => {
+    if (displayMode === 1) return <Table.Cell>
+        <HelpLink href={ADDRESS_DETAILS(staker_addr)} value={staker_addr} />
+    </Table.Cell>
+    if (displayMode === 2) return <Table.Cell>
+        <HelpLink href={ADDRESS_DETAILS(val_addr)} value={val_addr} />
+    </Table.Cell>
+    return (
+        <>
+            <Table.Cell>
+                <HelpLink href={ADDRESS_DETAILS(staker_addr)} value={staker_addr} />
+            </Table.Cell>
+            <Table.Cell>
+                <HelpLink href={ADDRESS_DETAILS(val_addr)} value={val_addr} />
+            </Table.Cell>
+        </>
+    )
+}
+const DelegationItem = ({ item, asset, displayMode }) => {
+    const assetDetail = useRecoilValue(readAsset(asset))
+
+    const votingPower = parseFloat(formatTokenByExponent(item.amount, assetDetail?.decimals)) * parseFloat(item.bond_weight)
     return (
         <Table.Row>
-            <Table.Cell>
-                <HelpLink href={ADDRESS_DETAILS(item.staker_addr)} value={item.staker_addr} />
-            </Table.Cell>
+            {getDisplayData(displayMode, item.staker_addr, item.val_addr)}
             <Table.Cell>{numeral(item.bond_weight).format('0.0')}</Table.Cell>
             <Table.Cell>{numeral(votingPower).format('0,0.00')}</Table.Cell>
             <Table.Cell>
-                {numeral(formatTokenByExponent(item.amount, asset?.decimals)).format('0,0.00')} {" "}
+                {numeral(formatTokenByExponent(item.amount, assetDetail?.decimals)).format('0,0.00')} {" "}
             </Table.Cell>
             <Table.Cell>
-                <Asset name={asset?.symbol} image={asset?.image} denom={asset?.denom} />
+                <Asset name={assetDetail?.symbol} image={assetDetail?.image} denom={assetDetail?.denom} />
             </Table.Cell>
         </Table.Row>
     )
 }
 
-export default function Delegations({ data, asset, page, setPage }) {
-    const assetDetail = useRecoilValue(readAsset(asset))
+export default function Delegations({ data, page, setPage, displayMode }) {
     return (
         <VStack>
             <Table.Root showColumnBorder={false} h="full" w="full">
                 <Table.Header>
                     <Table.Row bg="#FAFBFC">
-                        <Table.ColumnHeader>Address</Table.ColumnHeader>
+                        {getDisplayHeaders(displayMode)}
                         <Table.ColumnHeader>Bond Weight</Table.ColumnHeader>
                         <Table.ColumnHeader>Voting Power</Table.ColumnHeader>
                         <Table.ColumnHeader>Amount</Table.ColumnHeader>
@@ -59,17 +87,15 @@ export default function Delegations({ data, asset, page, setPage }) {
                                     </Center>
                                 </Table.Cell>
                             </Table.Row>
-                        ) : (
-                            <For each={data.data}>
-                                {(item, index) => <DelegationItem item={item} key={`delegation-${index}`} asset={assetDetail} />}
-                            </For>
-                        ) : (
-                            Array.from({ length: 10 }).map((_, index) => (
-                                <SkeletonItem
-                                    index={index}
-                                />
-                            ))
-                        )
+                        ) :
+                            data.data.map((item, index) => <DelegationItem item={item} key={`delegation-${index}`} asset={item?.denom} displayMode={displayMode} />)
+                            : (
+                                Array.from({ length: 10 }).map((_, index) => (
+                                    <SkeletonItem
+                                        index={index}
+                                    />
+                                ))
+                            )
                     }
                 </Table.Body>
             </Table.Root>
@@ -77,7 +103,7 @@ export default function Delegations({ data, asset, page, setPage }) {
                 count={data?.count}
                 pageSize={10}
                 value={page + 1}
-                onPageChange={(e) => setPage(e.page-1)}
+                onPageChange={(e) => setPage(e.page - 1)}
             >
                 <HStack>
                     <PaginationPrevTrigger />

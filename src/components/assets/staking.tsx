@@ -1,4 +1,3 @@
-import { useState } from "react";
 import {
   Box,
   Tabs,
@@ -11,9 +10,9 @@ import NoData from "@/components/helper/nodata";
 import Delegations from "@/components/staking/delegations";
 import Undelegations from "@/components/staking/undelegations";
 
-export default function Staking({ address }) {
+export default function Staking({ denom }) {
   const { delegations, unbondings, delegationsPage, unbondingsPage, setDelegationsPage, setUnboningsPage } =
-    useStaking(address);
+      useStaking(denom);
   return (
     <Tabs.Root
       defaultValue={1}
@@ -26,10 +25,10 @@ export default function Staking({ address }) {
       {delegations?.data ? (
         <Box bg="#FAFBFC" p={6} borderRadius="md" boxShadow="sm" mb={8}>
           <TabsContent value={1}>
-            <Delegations data={delegations} page={delegationsPage} setPage={setDelegationsPage} displayMode={1} />
+            <Delegations data={delegations} page={delegationsPage} setPage={setDelegationsPage} displayMode={0} />
           </TabsContent>
           <TabsContent value={2}>
-            <Undelegations data={unbondings} page={unbondingsPage} setPage={setUnboningsPage} displayMode={1} />
+            <Undelegations data={unbondings} page={unbondingsPage} setPage={setUnboningsPage} displayMode={0} />
           </TabsContent>
         </Box>
       ) : (

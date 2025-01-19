@@ -25,8 +25,6 @@ import {
     ValidatorVPState,
     ValidatorProfileState,
     ValidatorOverviewState,
-    Delegations,
-    Undelegations,
 } from '@/components/validators/detail/types';
 import { formatToken } from '@/utils/format_token';
 import { getValidatorCondition } from '@/utils/get_validator_condition';
@@ -435,11 +433,6 @@ const { primaryTokenUnit } = chainConfig;
 
 export const ROWS_PER_PAGE = 10;
 
-export const formatDelegations = (data: Delegations[]) =>
-    data.sort(R.comparator((a, b) => Big(a.amount).gt(Big(b.amount))));
-
-export const formatUnbondings = (data: Undelegations[]) => data.sort(R.comparator((a, b) => Big(a.amount).gt(Big(b.amount))));
-
 export const useStaking = (
     address?: string
 ) => {
@@ -501,13 +494,13 @@ export const useStaking = (
         delegations: {
             loading: delegationsLoading,
             count: delegationsData?.locks_count_by_val?.[0].count ?? 0,
-            data: formatDelegations(delegationsData?.ms_locks ?? []),
+            data: delegationsData?.ms_locks ?? [],
             error: delegationsError,
         },
         unbondings: {
             loading: undelegationsLoading,
             count: undelegationsData?.unlocks_count_by_val?.[0].count ?? 0,
-            data: formatUnbondings(undelegationsData?.ms_unlocks ?? []),
+            data: undelegationsData?.ms_unlocks,
             error: undelegationsError,
         },
         delegationsPage,

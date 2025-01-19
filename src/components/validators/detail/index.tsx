@@ -12,11 +12,11 @@ import Transactions from "./transactions";
 import Staking from "./staking";
 
 export default function ValidatorDetails() {
-  const { state, loading } = useValidatorProfileDetails();
-  const { exists, desmosProfile, operatorAddress } = state;
-  const { state: validatorOverviewState, loading: validatorOverviewLoading } =
+  const { state } = useValidatorProfileDetails();
+  const { operatorAddress } = state;
+  const { state: validatorOverviewState } =
     useValidatorOverviewDetails();
-  const { state: validatorVPState, loading: validatorVPLoading } =
+  const { state: validatorVPState } =
     useValidatorVotingPowerDetails();
 
   return (
@@ -29,7 +29,7 @@ export default function ValidatorDetails() {
         />
       </Flex>
       <Blocks address={operatorAddress} />
-      <Staking address={operatorAddress} asset={validatorOverviewState?.overview?.denom} />
+      <Staking address={operatorAddress} />
       <Transactions />
     </Box>
   );

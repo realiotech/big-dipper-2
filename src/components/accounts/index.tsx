@@ -11,6 +11,7 @@ import Transactions from "./transactions";
 import { useOverview } from "./hooks";
 import Assets from "./assets";
 import AssetChart from "./asset_chart";
+import Staking from "./staking";
 
 
 export default function AccountDetail() {
@@ -56,6 +57,7 @@ export default function AccountDetail() {
 
         <AssetChart balances={balances} />
       </Flex>
+      <Staking address={address} />
       <Transactions />
     </Box>
   );

@@ -1729,6 +1729,10 @@ export type Block = {
   /** An aggregate relationship */
   transaction_102s_aggregate: Transaction_102_Aggregate;
   /** An array relationship */
+  transaction_103s: Array<Transaction_103>;
+  /** An aggregate relationship */
+  transaction_103s_aggregate: Transaction_103_Aggregate;
+  /** An array relationship */
   transaction_105s: Array<Transaction_105>;
   /** An aggregate relationship */
   transaction_105s_aggregate: Transaction_105_Aggregate;
@@ -1886,6 +1890,26 @@ export type BlockTransaction_102s_AggregateArgs = {
   offset?: InputMaybe<Scalars['Int']>;
   order_by?: InputMaybe<Array<Transaction_102_Order_By>>;
   where?: InputMaybe<Transaction_102_Bool_Exp>;
+};
+
+
+/** columns and relationships of "block" */
+export type BlockTransaction_103sArgs = {
+  distinct_on?: InputMaybe<Array<Transaction_103_Select_Column>>;
+  limit?: InputMaybe<Scalars['Int']>;
+  offset?: InputMaybe<Scalars['Int']>;
+  order_by?: InputMaybe<Array<Transaction_103_Order_By>>;
+  where?: InputMaybe<Transaction_103_Bool_Exp>;
+};
+
+
+/** columns and relationships of "block" */
+export type BlockTransaction_103s_AggregateArgs = {
+  distinct_on?: InputMaybe<Array<Transaction_103_Select_Column>>;
+  limit?: InputMaybe<Scalars['Int']>;
+  offset?: InputMaybe<Scalars['Int']>;
+  order_by?: InputMaybe<Array<Transaction_103_Order_By>>;
+  where?: InputMaybe<Transaction_103_Bool_Exp>;
 };
 
 
@@ -2071,6 +2095,8 @@ export type Block_Bool_Exp = {
   transaction_101s_aggregate?: InputMaybe<Transaction_101_Aggregate_Bool_Exp>;
   transaction_102s?: InputMaybe<Transaction_102_Bool_Exp>;
   transaction_102s_aggregate?: InputMaybe<Transaction_102_Aggregate_Bool_Exp>;
+  transaction_103s?: InputMaybe<Transaction_103_Bool_Exp>;
+  transaction_103s_aggregate?: InputMaybe<Transaction_103_Aggregate_Bool_Exp>;
   transaction_105s?: InputMaybe<Transaction_105_Bool_Exp>;
   transaction_105s_aggregate?: InputMaybe<Transaction_105_Aggregate_Bool_Exp>;
   transaction_106s?: InputMaybe<Transaction_106_Bool_Exp>;
@@ -2112,6 +2138,7 @@ export type Block_Insert_Input = {
   transaction_100s?: InputMaybe<Transaction_100_Arr_Rel_Insert_Input>;
   transaction_101s?: InputMaybe<Transaction_101_Arr_Rel_Insert_Input>;
   transaction_102s?: InputMaybe<Transaction_102_Arr_Rel_Insert_Input>;
+  transaction_103s?: InputMaybe<Transaction_103_Arr_Rel_Insert_Input>;
   transaction_105s?: InputMaybe<Transaction_105_Arr_Rel_Insert_Input>;
   transaction_106s?: InputMaybe<Transaction_106_Arr_Rel_Insert_Input>;
   transactions?: InputMaybe<Transaction_Arr_Rel_Insert_Input>;
@@ -2199,6 +2226,7 @@ export type Block_Order_By = {
   transaction_100s_aggregate?: InputMaybe<Transaction_100_Aggregate_Order_By>;
   transaction_101s_aggregate?: InputMaybe<Transaction_101_Aggregate_Order_By>;
   transaction_102s_aggregate?: InputMaybe<Transaction_102_Aggregate_Order_By>;
+  transaction_103s_aggregate?: InputMaybe<Transaction_103_Aggregate_Order_By>;
   transaction_105s_aggregate?: InputMaybe<Transaction_105_Aggregate_Order_By>;
   transaction_106s_aggregate?: InputMaybe<Transaction_106_Aggregate_Order_By>;
   transactions_aggregate?: InputMaybe<Transaction_Aggregate_Order_By>;
@@ -4835,6 +4863,12 @@ export type Locks_Count_By_Del_Arguments = {
   address: Scalars['String'];
 };
 
+/** locks_count_by_denomNative Query Arguments */
+export type Locks_Count_By_Denom_Arguments = {
+  /** Native Query argument denom */
+  denom: Scalars['String'];
+};
+
 /** locks_count_by_valNative Query Arguments */
 export type Locks_Count_By_Val_Arguments = {
   /** Native Query argument address */
@@ -4860,6 +4894,8 @@ export type Message = {
   transaction_101?: Maybe<Transaction_101>;
   /** An object relationship */
   transaction_102?: Maybe<Transaction_102>;
+  /** An object relationship */
+  transaction_103?: Maybe<Transaction_103>;
   /** An object relationship */
   transaction_105?: Maybe<Transaction_105>;
   /** An object relationship */
@@ -6054,6 +6090,399 @@ export type Message_102_Variance_Order_By = {
   partition_id?: InputMaybe<Order_By>;
 };
 
+/** columns and relationships of "message_103" */
+export type Message_103 = {
+  __typename?: 'message_103';
+  height: Scalars['bigint'];
+  index: Scalars['bigint'];
+  involved_accounts_addresses: Array<Scalars['String']>;
+  /** An object relationship */
+  message_type: Message_Type;
+  partition_id: Scalars['bigint'];
+  /** An object relationship */
+  transaction?: Maybe<Transaction>;
+  transaction_hash: Scalars['String'];
+  type: Scalars['String'];
+  value: Scalars['json'];
+};
+
+
+/** columns and relationships of "message_103" */
+export type Message_103ValueArgs = {
+  path?: InputMaybe<Scalars['String']>;
+};
+
+/** aggregated selection of "message_103" */
+export type Message_103_Aggregate = {
+  __typename?: 'message_103_aggregate';
+  aggregate?: Maybe<Message_103_Aggregate_Fields>;
+  nodes: Array<Message_103>;
+};
+
+export type Message_103_Aggregate_Bool_Exp = {
+  count?: InputMaybe<Message_103_Aggregate_Bool_Exp_Count>;
+};
+
+export type Message_103_Aggregate_Bool_Exp_Count = {
+  arguments?: InputMaybe<Array<Message_103_Select_Column>>;
+  distinct?: InputMaybe<Scalars['Boolean']>;
+  filter?: InputMaybe<Message_103_Bool_Exp>;
+  predicate: Int_Comparison_Exp;
+};
+
+/** aggregate fields of "message_103" */
+export type Message_103_Aggregate_Fields = {
+  __typename?: 'message_103_aggregate_fields';
+  avg?: Maybe<Message_103_Avg_Fields>;
+  count: Scalars['Int'];
+  max?: Maybe<Message_103_Max_Fields>;
+  min?: Maybe<Message_103_Min_Fields>;
+  stddev?: Maybe<Message_103_Stddev_Fields>;
+  stddev_pop?: Maybe<Message_103_Stddev_Pop_Fields>;
+  stddev_samp?: Maybe<Message_103_Stddev_Samp_Fields>;
+  sum?: Maybe<Message_103_Sum_Fields>;
+  var_pop?: Maybe<Message_103_Var_Pop_Fields>;
+  var_samp?: Maybe<Message_103_Var_Samp_Fields>;
+  variance?: Maybe<Message_103_Variance_Fields>;
+};
+
+
+/** aggregate fields of "message_103" */
+export type Message_103_Aggregate_FieldsCountArgs = {
+  columns?: InputMaybe<Array<Message_103_Select_Column>>;
+  distinct?: InputMaybe<Scalars['Boolean']>;
+};
+
+/** order by aggregate values of table "message_103" */
+export type Message_103_Aggregate_Order_By = {
+  avg?: InputMaybe<Message_103_Avg_Order_By>;
+  count?: InputMaybe<Order_By>;
+  max?: InputMaybe<Message_103_Max_Order_By>;
+  min?: InputMaybe<Message_103_Min_Order_By>;
+  stddev?: InputMaybe<Message_103_Stddev_Order_By>;
+  stddev_pop?: InputMaybe<Message_103_Stddev_Pop_Order_By>;
+  stddev_samp?: InputMaybe<Message_103_Stddev_Samp_Order_By>;
+  sum?: InputMaybe<Message_103_Sum_Order_By>;
+  var_pop?: InputMaybe<Message_103_Var_Pop_Order_By>;
+  var_samp?: InputMaybe<Message_103_Var_Samp_Order_By>;
+  variance?: InputMaybe<Message_103_Variance_Order_By>;
+};
+
+/** input type for inserting array relation for remote table "message_103" */
+export type Message_103_Arr_Rel_Insert_Input = {
+  data: Array<Message_103_Insert_Input>;
+  /** upsert condition */
+  on_conflict?: InputMaybe<Message_103_On_Conflict>;
+};
+
+/** aggregate avg on columns */
+export type Message_103_Avg_Fields = {
+  __typename?: 'message_103_avg_fields';
+  height?: Maybe<Scalars['Float']>;
+  index?: Maybe<Scalars['Float']>;
+  partition_id?: Maybe<Scalars['Float']>;
+};
+
+/** order by avg() on columns of table "message_103" */
+export type Message_103_Avg_Order_By = {
+  height?: InputMaybe<Order_By>;
+  index?: InputMaybe<Order_By>;
+  partition_id?: InputMaybe<Order_By>;
+};
+
+/** Boolean expression to filter rows from the table "message_103". All fields are combined with a logical 'AND'. */
+export type Message_103_Bool_Exp = {
+  _and?: InputMaybe<Array<Message_103_Bool_Exp>>;
+  _not?: InputMaybe<Message_103_Bool_Exp>;
+  _or?: InputMaybe<Array<Message_103_Bool_Exp>>;
+  height?: InputMaybe<Bigint_Comparison_Exp>;
+  index?: InputMaybe<Bigint_Comparison_Exp>;
+  involved_accounts_addresses?: InputMaybe<String_Array_Comparison_Exp>;
+  message_type?: InputMaybe<Message_Type_Bool_Exp>;
+  partition_id?: InputMaybe<Bigint_Comparison_Exp>;
+  transaction?: InputMaybe<Transaction_Bool_Exp>;
+  transaction_hash?: InputMaybe<String_Comparison_Exp>;
+  type?: InputMaybe<String_Comparison_Exp>;
+  value?: InputMaybe<Json_Comparison_Exp>;
+};
+
+/** unique or primary key constraints on table "message_103" */
+export enum Message_103_Constraint {
+  /** unique or primary key constraint on columns "index", "partition_id", "transaction_hash" */
+  Message_103TransactionHashIndexPartitionIdKey = 'message_103_transaction_hash_index_partition_id_key'
+}
+
+/** input type for incrementing numeric columns in table "message_103" */
+export type Message_103_Inc_Input = {
+  height?: InputMaybe<Scalars['bigint']>;
+  index?: InputMaybe<Scalars['bigint']>;
+  partition_id?: InputMaybe<Scalars['bigint']>;
+};
+
+/** input type for inserting data into table "message_103" */
+export type Message_103_Insert_Input = {
+  height?: InputMaybe<Scalars['bigint']>;
+  index?: InputMaybe<Scalars['bigint']>;
+  involved_accounts_addresses?: InputMaybe<Array<Scalars['String']>>;
+  message_type?: InputMaybe<Message_Type_Obj_Rel_Insert_Input>;
+  partition_id?: InputMaybe<Scalars['bigint']>;
+  transaction?: InputMaybe<Transaction_Obj_Rel_Insert_Input>;
+  transaction_hash?: InputMaybe<Scalars['String']>;
+  type?: InputMaybe<Scalars['String']>;
+  value?: InputMaybe<Scalars['json']>;
+};
+
+/** aggregate max on columns */
+export type Message_103_Max_Fields = {
+  __typename?: 'message_103_max_fields';
+  height?: Maybe<Scalars['bigint']>;
+  index?: Maybe<Scalars['bigint']>;
+  involved_accounts_addresses?: Maybe<Array<Scalars['String']>>;
+  partition_id?: Maybe<Scalars['bigint']>;
+  transaction_hash?: Maybe<Scalars['String']>;
+  type?: Maybe<Scalars['String']>;
+};
+
+/** order by max() on columns of table "message_103" */
+export type Message_103_Max_Order_By = {
+  height?: InputMaybe<Order_By>;
+  index?: InputMaybe<Order_By>;
+  involved_accounts_addresses?: InputMaybe<Order_By>;
+  partition_id?: InputMaybe<Order_By>;
+  transaction_hash?: InputMaybe<Order_By>;
+  type?: InputMaybe<Order_By>;
+};
+
+/** aggregate min on columns */
+export type Message_103_Min_Fields = {
+  __typename?: 'message_103_min_fields';
+  height?: Maybe<Scalars['bigint']>;
+  index?: Maybe<Scalars['bigint']>;
+  involved_accounts_addresses?: Maybe<Array<Scalars['String']>>;
+  partition_id?: Maybe<Scalars['bigint']>;
+  transaction_hash?: Maybe<Scalars['String']>;
+  type?: Maybe<Scalars['String']>;
+};
+
+/** order by min() on columns of table "message_103" */
+export type Message_103_Min_Order_By = {
+  height?: InputMaybe<Order_By>;
+  index?: InputMaybe<Order_By>;
+  involved_accounts_addresses?: InputMaybe<Order_By>;
+  partition_id?: InputMaybe<Order_By>;
+  transaction_hash?: InputMaybe<Order_By>;
+  type?: InputMaybe<Order_By>;
+};
+
+/** response of any mutation on the table "message_103" */
+export type Message_103_Mutation_Response = {
+  __typename?: 'message_103_mutation_response';
+  /** number of rows affected by the mutation */
+  affected_rows: Scalars['Int'];
+  /** data from the rows affected by the mutation */
+  returning: Array<Message_103>;
+};
+
+/** on_conflict condition type for table "message_103" */
+export type Message_103_On_Conflict = {
+  constraint: Message_103_Constraint;
+  update_columns?: Array<Message_103_Update_Column>;
+  where?: InputMaybe<Message_103_Bool_Exp>;
+};
+
+/** Ordering options when selecting data from "message_103". */
+export type Message_103_Order_By = {
+  height?: InputMaybe<Order_By>;
+  index?: InputMaybe<Order_By>;
+  involved_accounts_addresses?: InputMaybe<Order_By>;
+  message_type?: InputMaybe<Message_Type_Order_By>;
+  partition_id?: InputMaybe<Order_By>;
+  transaction?: InputMaybe<Transaction_Order_By>;
+  transaction_hash?: InputMaybe<Order_By>;
+  type?: InputMaybe<Order_By>;
+  value?: InputMaybe<Order_By>;
+};
+
+/** select columns of table "message_103" */
+export enum Message_103_Select_Column {
+  /** column name */
+  Height = 'height',
+  /** column name */
+  Index = 'index',
+  /** column name */
+  InvolvedAccountsAddresses = 'involved_accounts_addresses',
+  /** column name */
+  PartitionId = 'partition_id',
+  /** column name */
+  TransactionHash = 'transaction_hash',
+  /** column name */
+  Type = 'type',
+  /** column name */
+  Value = 'value'
+}
+
+/** input type for updating data in table "message_103" */
+export type Message_103_Set_Input = {
+  height?: InputMaybe<Scalars['bigint']>;
+  index?: InputMaybe<Scalars['bigint']>;
+  involved_accounts_addresses?: InputMaybe<Array<Scalars['String']>>;
+  partition_id?: InputMaybe<Scalars['bigint']>;
+  transaction_hash?: InputMaybe<Scalars['String']>;
+  type?: InputMaybe<Scalars['String']>;
+  value?: InputMaybe<Scalars['json']>;
+};
+
+/** aggregate stddev on columns */
+export type Message_103_Stddev_Fields = {
+  __typename?: 'message_103_stddev_fields';
+  height?: Maybe<Scalars['Float']>;
+  index?: Maybe<Scalars['Float']>;
+  partition_id?: Maybe<Scalars['Float']>;
+};
+
+/** order by stddev() on columns of table "message_103" */
+export type Message_103_Stddev_Order_By = {
+  height?: InputMaybe<Order_By>;
+  index?: InputMaybe<Order_By>;
+  partition_id?: InputMaybe<Order_By>;
+};
+
+/** aggregate stddev_pop on columns */
+export type Message_103_Stddev_Pop_Fields = {
+  __typename?: 'message_103_stddev_pop_fields';
+  height?: Maybe<Scalars['Float']>;
+  index?: Maybe<Scalars['Float']>;
+  partition_id?: Maybe<Scalars['Float']>;
+};
+
+/** order by stddev_pop() on columns of table "message_103" */
+export type Message_103_Stddev_Pop_Order_By = {
+  height?: InputMaybe<Order_By>;
+  index?: InputMaybe<Order_By>;
+  partition_id?: InputMaybe<Order_By>;
+};
+
+/** aggregate stddev_samp on columns */
+export type Message_103_Stddev_Samp_Fields = {
+  __typename?: 'message_103_stddev_samp_fields';
+  height?: Maybe<Scalars['Float']>;
+  index?: Maybe<Scalars['Float']>;
+  partition_id?: Maybe<Scalars['Float']>;
+};
+
+/** order by stddev_samp() on columns of table "message_103" */
+export type Message_103_Stddev_Samp_Order_By = {
+  height?: InputMaybe<Order_By>;
+  index?: InputMaybe<Order_By>;
+  partition_id?: InputMaybe<Order_By>;
+};
+
+/** Streaming cursor of the table "message_103" */
+export type Message_103_Stream_Cursor_Input = {
+  /** Stream column input with initial value */
+  initial_value: Message_103_Stream_Cursor_Value_Input;
+  /** cursor ordering */
+  ordering?: InputMaybe<Cursor_Ordering>;
+};
+
+/** Initial value of the column from where the streaming should start */
+export type Message_103_Stream_Cursor_Value_Input = {
+  height?: InputMaybe<Scalars['bigint']>;
+  index?: InputMaybe<Scalars['bigint']>;
+  involved_accounts_addresses?: InputMaybe<Array<Scalars['String']>>;
+  partition_id?: InputMaybe<Scalars['bigint']>;
+  transaction_hash?: InputMaybe<Scalars['String']>;
+  type?: InputMaybe<Scalars['String']>;
+  value?: InputMaybe<Scalars['json']>;
+};
+
+/** aggregate sum on columns */
+export type Message_103_Sum_Fields = {
+  __typename?: 'message_103_sum_fields';
+  height?: Maybe<Scalars['bigint']>;
+  index?: Maybe<Scalars['bigint']>;
+  partition_id?: Maybe<Scalars['bigint']>;
+};
+
+/** order by sum() on columns of table "message_103" */
+export type Message_103_Sum_Order_By = {
+  height?: InputMaybe<Order_By>;
+  index?: InputMaybe<Order_By>;
+  partition_id?: InputMaybe<Order_By>;
+};
+
+/** update columns of table "message_103" */
+export enum Message_103_Update_Column {
+  /** column name */
+  Height = 'height',
+  /** column name */
+  Index = 'index',
+  /** column name */
+  InvolvedAccountsAddresses = 'involved_accounts_addresses',
+  /** column name */
+  PartitionId = 'partition_id',
+  /** column name */
+  TransactionHash = 'transaction_hash',
+  /** column name */
+  Type = 'type',
+  /** column name */
+  Value = 'value'
+}
+
+export type Message_103_Updates = {
+  /** increments the numeric columns with given value of the filtered values */
+  _inc?: InputMaybe<Message_103_Inc_Input>;
+  /** sets the columns of the filtered rows to the given values */
+  _set?: InputMaybe<Message_103_Set_Input>;
+  /** filter the rows which have to be updated */
+  where: Message_103_Bool_Exp;
+};
+
+/** aggregate var_pop on columns */
+export type Message_103_Var_Pop_Fields = {
+  __typename?: 'message_103_var_pop_fields';
+  height?: Maybe<Scalars['Float']>;
+  index?: Maybe<Scalars['Float']>;
+  partition_id?: Maybe<Scalars['Float']>;
+};
+
+/** order by var_pop() on columns of table "message_103" */
+export type Message_103_Var_Pop_Order_By = {
+  height?: InputMaybe<Order_By>;
+  index?: InputMaybe<Order_By>;
+  partition_id?: InputMaybe<Order_By>;
+};
+
+/** aggregate var_samp on columns */
+export type Message_103_Var_Samp_Fields = {
+  __typename?: 'message_103_var_samp_fields';
+  height?: Maybe<Scalars['Float']>;
+  index?: Maybe<Scalars['Float']>;
+  partition_id?: Maybe<Scalars['Float']>;
+};
+
+/** order by var_samp() on columns of table "message_103" */
+export type Message_103_Var_Samp_Order_By = {
+  height?: InputMaybe<Order_By>;
+  index?: InputMaybe<Order_By>;
+  partition_id?: InputMaybe<Order_By>;
+};
+
+/** aggregate variance on columns */
+export type Message_103_Variance_Fields = {
+  __typename?: 'message_103_variance_fields';
+  height?: Maybe<Scalars['Float']>;
+  index?: Maybe<Scalars['Float']>;
+  partition_id?: Maybe<Scalars['Float']>;
+};
+
+/** order by variance() on columns of table "message_103" */
+export type Message_103_Variance_Order_By = {
+  height?: InputMaybe<Order_By>;
+  index?: InputMaybe<Order_By>;
+  partition_id?: InputMaybe<Order_By>;
+};
+
 /** columns and relationships of "message_105" */
 export type Message_105 = {
   __typename?: 'message_105';
@@ -6933,6 +7362,7 @@ export type Message_Bool_Exp = {
   transaction_100?: InputMaybe<Transaction_100_Bool_Exp>;
   transaction_101?: InputMaybe<Transaction_101_Bool_Exp>;
   transaction_102?: InputMaybe<Transaction_102_Bool_Exp>;
+  transaction_103?: InputMaybe<Transaction_103_Bool_Exp>;
   transaction_105?: InputMaybe<Transaction_105_Bool_Exp>;
   transaction_106?: InputMaybe<Transaction_106_Bool_Exp>;
   transaction_hash?: InputMaybe<String_Comparison_Exp>;
@@ -6965,6 +7395,7 @@ export type Message_Insert_Input = {
   transaction_100?: InputMaybe<Transaction_100_Obj_Rel_Insert_Input>;
   transaction_101?: InputMaybe<Transaction_101_Obj_Rel_Insert_Input>;
   transaction_102?: InputMaybe<Transaction_102_Obj_Rel_Insert_Input>;
+  transaction_103?: InputMaybe<Transaction_103_Obj_Rel_Insert_Input>;
   transaction_105?: InputMaybe<Transaction_105_Obj_Rel_Insert_Input>;
   transaction_106?: InputMaybe<Transaction_106_Obj_Rel_Insert_Input>;
   transaction_hash?: InputMaybe<Scalars['String']>;
@@ -7042,6 +7473,7 @@ export type Message_Order_By = {
   transaction_100?: InputMaybe<Transaction_100_Order_By>;
   transaction_101?: InputMaybe<Transaction_101_Order_By>;
   transaction_102?: InputMaybe<Transaction_102_Order_By>;
+  transaction_103?: InputMaybe<Transaction_103_Order_By>;
   transaction_105?: InputMaybe<Transaction_105_Order_By>;
   transaction_106?: InputMaybe<Transaction_106_Order_By>;
   transaction_hash?: InputMaybe<Order_By>;
@@ -7175,6 +7607,10 @@ export type Message_Type = {
   /** An aggregate relationship */
   message_102s_aggregate: Message_102_Aggregate;
   /** An array relationship */
+  message_103s: Array<Message_103>;
+  /** An aggregate relationship */
+  message_103s_aggregate: Message_103_Aggregate;
+  /** An array relationship */
   message_105s: Array<Message_105>;
   /** An aggregate relationship */
   message_105s_aggregate: Message_105_Aggregate;
@@ -7248,6 +7684,26 @@ export type Message_TypeMessage_102s_AggregateArgs = {
   offset?: InputMaybe<Scalars['Int']>;
   order_by?: InputMaybe<Array<Message_102_Order_By>>;
   where?: InputMaybe<Message_102_Bool_Exp>;
+};
+
+
+/** columns and relationships of "message_type" */
+export type Message_TypeMessage_103sArgs = {
+  distinct_on?: InputMaybe<Array<Message_103_Select_Column>>;
+  limit?: InputMaybe<Scalars['Int']>;
+  offset?: InputMaybe<Scalars['Int']>;
+  order_by?: InputMaybe<Array<Message_103_Order_By>>;
+  where?: InputMaybe<Message_103_Bool_Exp>;
+};
+
+
+/** columns and relationships of "message_type" */
+export type Message_TypeMessage_103s_AggregateArgs = {
+  distinct_on?: InputMaybe<Array<Message_103_Select_Column>>;
+  limit?: InputMaybe<Scalars['Int']>;
+  offset?: InputMaybe<Scalars['Int']>;
+  order_by?: InputMaybe<Array<Message_103_Order_By>>;
+  where?: InputMaybe<Message_103_Bool_Exp>;
 };
 
 
@@ -7359,6 +7815,8 @@ export type Message_Type_Bool_Exp = {
   message_101s_aggregate?: InputMaybe<Message_101_Aggregate_Bool_Exp>;
   message_102s?: InputMaybe<Message_102_Bool_Exp>;
   message_102s_aggregate?: InputMaybe<Message_102_Aggregate_Bool_Exp>;
+  message_103s?: InputMaybe<Message_103_Bool_Exp>;
+  message_103s_aggregate?: InputMaybe<Message_103_Aggregate_Bool_Exp>;
   message_105s?: InputMaybe<Message_105_Bool_Exp>;
   message_105s_aggregate?: InputMaybe<Message_105_Aggregate_Bool_Exp>;
   message_106s?: InputMaybe<Message_106_Bool_Exp>;
@@ -7387,6 +7845,7 @@ export type Message_Type_Insert_Input = {
   message_100s?: InputMaybe<Message_100_Arr_Rel_Insert_Input>;
   message_101s?: InputMaybe<Message_101_Arr_Rel_Insert_Input>;
   message_102s?: InputMaybe<Message_102_Arr_Rel_Insert_Input>;
+  message_103s?: InputMaybe<Message_103_Arr_Rel_Insert_Input>;
   message_105s?: InputMaybe<Message_105_Arr_Rel_Insert_Input>;
   message_106s?: InputMaybe<Message_106_Arr_Rel_Insert_Input>;
   messages?: InputMaybe<Message_Arr_Rel_Insert_Input>;
@@ -7442,6 +7901,7 @@ export type Message_Type_Order_By = {
   message_100s_aggregate?: InputMaybe<Message_100_Aggregate_Order_By>;
   message_101s_aggregate?: InputMaybe<Message_101_Aggregate_Order_By>;
   message_102s_aggregate?: InputMaybe<Message_102_Aggregate_Order_By>;
+  message_103s_aggregate?: InputMaybe<Message_103_Aggregate_Order_By>;
   message_105s_aggregate?: InputMaybe<Message_105_Aggregate_Order_By>;
   message_106s_aggregate?: InputMaybe<Message_106_Aggregate_Order_By>;
   messages_aggregate?: InputMaybe<Message_Aggregate_Order_By>;
@@ -8873,6 +9333,8 @@ export type Mutation_Root = {
   delete_message_101?: Maybe<Message_101_Mutation_Response>;
   /** delete data from the table: "message_102" */
   delete_message_102?: Maybe<Message_102_Mutation_Response>;
+  /** delete data from the table: "message_103" */
+  delete_message_103?: Maybe<Message_103_Mutation_Response>;
   /** delete data from the table: "message_105" */
   delete_message_105?: Maybe<Message_105_Mutation_Response>;
   /** delete data from the table: "message_106" */
@@ -8971,6 +9433,8 @@ export type Mutation_Root = {
   delete_transaction_101?: Maybe<Transaction_101_Mutation_Response>;
   /** delete data from the table: "transaction_102" */
   delete_transaction_102?: Maybe<Transaction_102_Mutation_Response>;
+  /** delete data from the table: "transaction_103" */
+  delete_transaction_103?: Maybe<Transaction_103_Mutation_Response>;
   /** delete data from the table: "transaction_105" */
   delete_transaction_105?: Maybe<Transaction_105_Mutation_Response>;
   /** delete data from the table: "transaction_106" */
@@ -9087,6 +9551,10 @@ export type Mutation_Root = {
   insert_message_102?: Maybe<Message_102_Mutation_Response>;
   /** insert a single row into the table: "message_102" */
   insert_message_102_one?: Maybe<Message_102>;
+  /** insert data into the table: "message_103" */
+  insert_message_103?: Maybe<Message_103_Mutation_Response>;
+  /** insert a single row into the table: "message_103" */
+  insert_message_103_one?: Maybe<Message_103>;
   /** insert data into the table: "message_105" */
   insert_message_105?: Maybe<Message_105_Mutation_Response>;
   /** insert a single row into the table: "message_105" */
@@ -9215,6 +9683,10 @@ export type Mutation_Root = {
   insert_transaction_102?: Maybe<Transaction_102_Mutation_Response>;
   /** insert a single row into the table: "transaction_102" */
   insert_transaction_102_one?: Maybe<Transaction_102>;
+  /** insert data into the table: "transaction_103" */
+  insert_transaction_103?: Maybe<Transaction_103_Mutation_Response>;
+  /** insert a single row into the table: "transaction_103" */
+  insert_transaction_103_one?: Maybe<Transaction_103>;
   /** insert data into the table: "transaction_105" */
   insert_transaction_105?: Maybe<Transaction_105_Mutation_Response>;
   /** insert a single row into the table: "transaction_105" */
@@ -9367,6 +9839,10 @@ export type Mutation_Root = {
   update_message_102?: Maybe<Message_102_Mutation_Response>;
   /** update multiples rows of table: "message_102" */
   update_message_102_many?: Maybe<Array<Maybe<Message_102_Mutation_Response>>>;
+  /** update data of the table: "message_103" */
+  update_message_103?: Maybe<Message_103_Mutation_Response>;
+  /** update multiples rows of table: "message_103" */
+  update_message_103_many?: Maybe<Array<Maybe<Message_103_Mutation_Response>>>;
   /** update data of the table: "message_105" */
   update_message_105?: Maybe<Message_105_Mutation_Response>;
   /** update multiples rows of table: "message_105" */
@@ -9529,6 +10005,10 @@ export type Mutation_Root = {
   update_transaction_102?: Maybe<Transaction_102_Mutation_Response>;
   /** update multiples rows of table: "transaction_102" */
   update_transaction_102_many?: Maybe<Array<Maybe<Transaction_102_Mutation_Response>>>;
+  /** update data of the table: "transaction_103" */
+  update_transaction_103?: Maybe<Transaction_103_Mutation_Response>;
+  /** update multiples rows of table: "transaction_103" */
+  update_transaction_103_many?: Maybe<Array<Maybe<Transaction_103_Mutation_Response>>>;
   /** update data of the table: "transaction_105" */
   update_transaction_105?: Maybe<Transaction_105_Mutation_Response>;
   /** update multiples rows of table: "transaction_105" */
@@ -9796,6 +10276,12 @@ export type Mutation_RootDelete_Message_101Args = {
 /** mutation root */
 export type Mutation_RootDelete_Message_102Args = {
   where: Message_102_Bool_Exp;
+};
+
+
+/** mutation root */
+export type Mutation_RootDelete_Message_103Args = {
+  where: Message_103_Bool_Exp;
 };
 
 
@@ -10093,6 +10579,12 @@ export type Mutation_RootDelete_Transaction_101Args = {
 /** mutation root */
 export type Mutation_RootDelete_Transaction_102Args = {
   where: Transaction_102_Bool_Exp;
+};
+
+
+/** mutation root */
+export type Mutation_RootDelete_Transaction_103Args = {
+  where: Transaction_103_Bool_Exp;
 };
 
 
@@ -10476,6 +10968,20 @@ export type Mutation_RootInsert_Message_102Args = {
 export type Mutation_RootInsert_Message_102_OneArgs = {
   object: Message_102_Insert_Input;
   on_conflict?: InputMaybe<Message_102_On_Conflict>;
+};
+
+
+/** mutation root */
+export type Mutation_RootInsert_Message_103Args = {
+  objects: Array<Message_103_Insert_Input>;
+  on_conflict?: InputMaybe<Message_103_On_Conflict>;
+};
+
+
+/** mutation root */
+export type Mutation_RootInsert_Message_103_OneArgs = {
+  object: Message_103_Insert_Input;
+  on_conflict?: InputMaybe<Message_103_On_Conflict>;
 };
 
 
@@ -10920,6 +11426,20 @@ export type Mutation_RootInsert_Transaction_102Args = {
 export type Mutation_RootInsert_Transaction_102_OneArgs = {
   object: Transaction_102_Insert_Input;
   on_conflict?: InputMaybe<Transaction_102_On_Conflict>;
+};
+
+
+/** mutation root */
+export type Mutation_RootInsert_Transaction_103Args = {
+  objects: Array<Transaction_103_Insert_Input>;
+  on_conflict?: InputMaybe<Transaction_103_On_Conflict>;
+};
+
+
+/** mutation root */
+export type Mutation_RootInsert_Transaction_103_OneArgs = {
+  object: Transaction_103_Insert_Input;
+  on_conflict?: InputMaybe<Transaction_103_On_Conflict>;
 };
 
 
@@ -11493,6 +12013,20 @@ export type Mutation_RootUpdate_Message_102Args = {
 /** mutation root */
 export type Mutation_RootUpdate_Message_102_ManyArgs = {
   updates: Array<Message_102_Updates>;
+};
+
+
+/** mutation root */
+export type Mutation_RootUpdate_Message_103Args = {
+  _inc?: InputMaybe<Message_103_Inc_Input>;
+  _set?: InputMaybe<Message_103_Set_Input>;
+  where: Message_103_Bool_Exp;
+};
+
+
+/** mutation root */
+export type Mutation_RootUpdate_Message_103_ManyArgs = {
+  updates: Array<Message_103_Updates>;
 };
 
 
@@ -12134,6 +12668,25 @@ export type Mutation_RootUpdate_Transaction_102Args = {
 /** mutation root */
 export type Mutation_RootUpdate_Transaction_102_ManyArgs = {
   updates: Array<Transaction_102_Updates>;
+};
+
+
+/** mutation root */
+export type Mutation_RootUpdate_Transaction_103Args = {
+  _append?: InputMaybe<Transaction_103_Append_Input>;
+  _delete_at_path?: InputMaybe<Transaction_103_Delete_At_Path_Input>;
+  _delete_elem?: InputMaybe<Transaction_103_Delete_Elem_Input>;
+  _delete_key?: InputMaybe<Transaction_103_Delete_Key_Input>;
+  _inc?: InputMaybe<Transaction_103_Inc_Input>;
+  _prepend?: InputMaybe<Transaction_103_Prepend_Input>;
+  _set?: InputMaybe<Transaction_103_Set_Input>;
+  where: Transaction_103_Bool_Exp;
+};
+
+
+/** mutation root */
+export type Mutation_RootUpdate_Transaction_103_ManyArgs = {
+  updates: Array<Transaction_103_Updates>;
 };
 
 
@@ -15427,6 +15980,7 @@ export type Query_Root = {
   /** fetch data from the table: "inflation" using primary key columns */
   inflation_by_pk?: Maybe<Inflation>;
   locks_count_by_del: Array<Count>;
+  locks_count_by_denom: Array<Count>;
   locks_count_by_val: Array<Count>;
   /** fetch data from the table: "message" */
   message: Array<Message>;
@@ -15442,6 +15996,10 @@ export type Query_Root = {
   message_102: Array<Message_102>;
   /** fetch aggregated fields from the table: "message_102" */
   message_102_aggregate: Message_102_Aggregate;
+  /** fetch data from the table: "message_103" */
+  message_103: Array<Message_103>;
+  /** fetch aggregated fields from the table: "message_103" */
+  message_103_aggregate: Message_103_Aggregate;
   /** fetch data from the table: "message_105" */
   message_105: Array<Message_105>;
   /** fetch aggregated fields from the table: "message_105" */
@@ -15609,6 +16167,10 @@ export type Query_Root = {
   transaction_102: Array<Transaction_102>;
   /** fetch aggregated fields from the table: "transaction_102" */
   transaction_102_aggregate: Transaction_102_Aggregate;
+  /** fetch data from the table: "transaction_103" */
+  transaction_103: Array<Transaction_103>;
+  /** fetch aggregated fields from the table: "transaction_103" */
+  transaction_103_aggregate: Transaction_103_Aggregate;
   /** fetch data from the table: "transaction_105" */
   transaction_105: Array<Transaction_105>;
   /** fetch aggregated fields from the table: "transaction_105" */
@@ -15620,6 +16182,7 @@ export type Query_Root = {
   /** fetch aggregated fields from the table: "transaction" */
   transaction_aggregate: Transaction_Aggregate;
   unlocks_count_by_del: Array<Count>;
+  unlocks_count_by_denom: Array<Count>;
   unlocks_count_by_val: Array<Count>;
   /** fetch data from the table: "validator" */
   validator: Array<Validator>;
@@ -16149,6 +16712,16 @@ export type Query_RootLocks_Count_By_DelArgs = {
 };
 
 
+export type Query_RootLocks_Count_By_DenomArgs = {
+  args: Locks_Count_By_Denom_Arguments;
+  distinct_on?: InputMaybe<Array<Count_Enum_Name>>;
+  limit?: InputMaybe<Scalars['Int']>;
+  offset?: InputMaybe<Scalars['Int']>;
+  order_by?: InputMaybe<Array<Count_Order_By>>;
+  where?: InputMaybe<Count_Bool_Exp_Bool_Exp>;
+};
+
+
 export type Query_RootLocks_Count_By_ValArgs = {
   args: Locks_Count_By_Val_Arguments;
   distinct_on?: InputMaybe<Array<Count_Enum_Name>>;
@@ -16219,6 +16792,24 @@ export type Query_RootMessage_102_AggregateArgs = {
   offset?: InputMaybe<Scalars['Int']>;
   order_by?: InputMaybe<Array<Message_102_Order_By>>;
   where?: InputMaybe<Message_102_Bool_Exp>;
+};
+
+
+export type Query_RootMessage_103Args = {
+  distinct_on?: InputMaybe<Array<Message_103_Select_Column>>;
+  limit?: InputMaybe<Scalars['Int']>;
+  offset?: InputMaybe<Scalars['Int']>;
+  order_by?: InputMaybe<Array<Message_103_Order_By>>;
+  where?: InputMaybe<Message_103_Bool_Exp>;
+};
+
+
+export type Query_RootMessage_103_AggregateArgs = {
+  distinct_on?: InputMaybe<Array<Message_103_Select_Column>>;
+  limit?: InputMaybe<Scalars['Int']>;
+  offset?: InputMaybe<Scalars['Int']>;
+  order_by?: InputMaybe<Array<Message_103_Order_By>>;
+  where?: InputMaybe<Message_103_Bool_Exp>;
 };
 
 
@@ -16916,6 +17507,24 @@ export type Query_RootTransaction_102_AggregateArgs = {
 };
 
 
+export type Query_RootTransaction_103Args = {
+  distinct_on?: InputMaybe<Array<Transaction_103_Select_Column>>;
+  limit?: InputMaybe<Scalars['Int']>;
+  offset?: InputMaybe<Scalars['Int']>;
+  order_by?: InputMaybe<Array<Transaction_103_Order_By>>;
+  where?: InputMaybe<Transaction_103_Bool_Exp>;
+};
+
+
+export type Query_RootTransaction_103_AggregateArgs = {
+  distinct_on?: InputMaybe<Array<Transaction_103_Select_Column>>;
+  limit?: InputMaybe<Scalars['Int']>;
+  offset?: InputMaybe<Scalars['Int']>;
+  order_by?: InputMaybe<Array<Transaction_103_Order_By>>;
+  where?: InputMaybe<Transaction_103_Bool_Exp>;
+};
+
+
 export type Query_RootTransaction_105Args = {
   distinct_on?: InputMaybe<Array<Transaction_105_Select_Column>>;
   limit?: InputMaybe<Scalars['Int']>;
@@ -16963,6 +17572,16 @@ export type Query_RootTransaction_AggregateArgs = {
 
 export type Query_RootUnlocks_Count_By_DelArgs = {
   args: Unlocks_Count_By_Del_Arguments;
+  distinct_on?: InputMaybe<Array<Count_Enum_Name>>;
+  limit?: InputMaybe<Scalars['Int']>;
+  offset?: InputMaybe<Scalars['Int']>;
+  order_by?: InputMaybe<Array<Count_Order_By>>;
+  where?: InputMaybe<Count_Bool_Exp_Bool_Exp>;
+};
+
+
+export type Query_RootUnlocks_Count_By_DenomArgs = {
+  args: Unlocks_Count_By_Denom_Arguments;
   distinct_on?: InputMaybe<Array<Count_Enum_Name>>;
   limit?: InputMaybe<Scalars['Int']>;
   offset?: InputMaybe<Scalars['Int']>;
@@ -18349,6 +18968,7 @@ export type Subscription_Root = {
   /** fetch data from the table in a streaming manner: "inflation" */
   inflation_stream: Array<Inflation>;
   locks_count_by_del: Array<Count>;
+  locks_count_by_denom: Array<Count>;
   locks_count_by_val: Array<Count>;
   /** fetch data from the table: "message" */
   message: Array<Message>;
@@ -18370,6 +18990,12 @@ export type Subscription_Root = {
   message_102_aggregate: Message_102_Aggregate;
   /** fetch data from the table in a streaming manner: "message_102" */
   message_102_stream: Array<Message_102>;
+  /** fetch data from the table: "message_103" */
+  message_103: Array<Message_103>;
+  /** fetch aggregated fields from the table: "message_103" */
+  message_103_aggregate: Message_103_Aggregate;
+  /** fetch data from the table in a streaming manner: "message_103" */
+  message_103_stream: Array<Message_103>;
   /** fetch data from the table: "message_105" */
   message_105: Array<Message_105>;
   /** fetch aggregated fields from the table: "message_105" */
@@ -18601,6 +19227,12 @@ export type Subscription_Root = {
   transaction_102_aggregate: Transaction_102_Aggregate;
   /** fetch data from the table in a streaming manner: "transaction_102" */
   transaction_102_stream: Array<Transaction_102>;
+  /** fetch data from the table: "transaction_103" */
+  transaction_103: Array<Transaction_103>;
+  /** fetch aggregated fields from the table: "transaction_103" */
+  transaction_103_aggregate: Transaction_103_Aggregate;
+  /** fetch data from the table in a streaming manner: "transaction_103" */
+  transaction_103_stream: Array<Transaction_103>;
   /** fetch data from the table: "transaction_105" */
   transaction_105: Array<Transaction_105>;
   /** fetch aggregated fields from the table: "transaction_105" */
@@ -18618,6 +19250,7 @@ export type Subscription_Root = {
   /** fetch data from the table in a streaming manner: "transaction" */
   transaction_stream: Array<Transaction>;
   unlocks_count_by_del: Array<Count>;
+  unlocks_count_by_denom: Array<Count>;
   unlocks_count_by_val: Array<Count>;
   /** fetch data from the table: "validator" */
   validator: Array<Validator>;
@@ -19187,6 +19820,16 @@ export type Subscription_RootLocks_Count_By_DelArgs = {
 };
 
 
+export type Subscription_RootLocks_Count_By_DenomArgs = {
+  args: Locks_Count_By_Denom_Arguments;
+  distinct_on?: InputMaybe<Array<Count_Enum_Name>>;
+  limit?: InputMaybe<Scalars['Int']>;
+  offset?: InputMaybe<Scalars['Int']>;
+  order_by?: InputMaybe<Array<Count_Order_By>>;
+  where?: InputMaybe<Count_Bool_Exp_Bool_Exp>;
+};
+
+
 export type Subscription_RootLocks_Count_By_ValArgs = {
   args: Locks_Count_By_Val_Arguments;
   distinct_on?: InputMaybe<Array<Count_Enum_Name>>;
@@ -19278,6 +19921,31 @@ export type Subscription_RootMessage_102_StreamArgs = {
   batch_size: Scalars['Int'];
   cursor: Array<InputMaybe<Message_102_Stream_Cursor_Input>>;
   where?: InputMaybe<Message_102_Bool_Exp>;
+};
+
+
+export type Subscription_RootMessage_103Args = {
+  distinct_on?: InputMaybe<Array<Message_103_Select_Column>>;
+  limit?: InputMaybe<Scalars['Int']>;
+  offset?: InputMaybe<Scalars['Int']>;
+  order_by?: InputMaybe<Array<Message_103_Order_By>>;
+  where?: InputMaybe<Message_103_Bool_Exp>;
+};
+
+
+export type Subscription_RootMessage_103_AggregateArgs = {
+  distinct_on?: InputMaybe<Array<Message_103_Select_Column>>;
+  limit?: InputMaybe<Scalars['Int']>;
+  offset?: InputMaybe<Scalars['Int']>;
+  order_by?: InputMaybe<Array<Message_103_Order_By>>;
+  where?: InputMaybe<Message_103_Bool_Exp>;
+};
+
+
+export type Subscription_RootMessage_103_StreamArgs = {
+  batch_size: Scalars['Int'];
+  cursor: Array<InputMaybe<Message_103_Stream_Cursor_Input>>;
+  where?: InputMaybe<Message_103_Bool_Exp>;
 };
 
 
@@ -20199,6 +20867,31 @@ export type Subscription_RootTransaction_102_StreamArgs = {
 };
 
 
+export type Subscription_RootTransaction_103Args = {
+  distinct_on?: InputMaybe<Array<Transaction_103_Select_Column>>;
+  limit?: InputMaybe<Scalars['Int']>;
+  offset?: InputMaybe<Scalars['Int']>;
+  order_by?: InputMaybe<Array<Transaction_103_Order_By>>;
+  where?: InputMaybe<Transaction_103_Bool_Exp>;
+};
+
+
+export type Subscription_RootTransaction_103_AggregateArgs = {
+  distinct_on?: InputMaybe<Array<Transaction_103_Select_Column>>;
+  limit?: InputMaybe<Scalars['Int']>;
+  offset?: InputMaybe<Scalars['Int']>;
+  order_by?: InputMaybe<Array<Transaction_103_Order_By>>;
+  where?: InputMaybe<Transaction_103_Bool_Exp>;
+};
+
+
+export type Subscription_RootTransaction_103_StreamArgs = {
+  batch_size: Scalars['Int'];
+  cursor: Array<InputMaybe<Transaction_103_Stream_Cursor_Input>>;
+  where?: InputMaybe<Transaction_103_Bool_Exp>;
+};
+
+
 export type Subscription_RootTransaction_105Args = {
   distinct_on?: InputMaybe<Array<Transaction_105_Select_Column>>;
   limit?: InputMaybe<Scalars['Int']>;
@@ -20267,6 +20960,16 @@ export type Subscription_RootTransaction_StreamArgs = {
 
 export type Subscription_RootUnlocks_Count_By_DelArgs = {
   args: Unlocks_Count_By_Del_Arguments;
+  distinct_on?: InputMaybe<Array<Count_Enum_Name>>;
+  limit?: InputMaybe<Scalars['Int']>;
+  offset?: InputMaybe<Scalars['Int']>;
+  order_by?: InputMaybe<Array<Count_Order_By>>;
+  where?: InputMaybe<Count_Bool_Exp_Bool_Exp>;
+};
+
+
+export type Subscription_RootUnlocks_Count_By_DenomArgs = {
+  args: Unlocks_Count_By_Denom_Arguments;
   distinct_on?: InputMaybe<Array<Count_Enum_Name>>;
   limit?: InputMaybe<Scalars['Int']>;
   offset?: InputMaybe<Scalars['Int']>;
@@ -22772,6 +23475,10 @@ export type Transaction = {
   /** An aggregate relationship */
   message_102s_aggregate: Message_102_Aggregate;
   /** An array relationship */
+  message_103s: Array<Message_103>;
+  /** An aggregate relationship */
+  message_103s_aggregate: Message_103_Aggregate;
+  /** An array relationship */
   message_105s: Array<Message_105>;
   /** An aggregate relationship */
   message_105s_aggregate: Message_105_Aggregate;
@@ -22861,6 +23568,26 @@ export type TransactionMessage_102s_AggregateArgs = {
   offset?: InputMaybe<Scalars['Int']>;
   order_by?: InputMaybe<Array<Message_102_Order_By>>;
   where?: InputMaybe<Message_102_Bool_Exp>;
+};
+
+
+/** columns and relationships of "transaction" */
+export type TransactionMessage_103sArgs = {
+  distinct_on?: InputMaybe<Array<Message_103_Select_Column>>;
+  limit?: InputMaybe<Scalars['Int']>;
+  offset?: InputMaybe<Scalars['Int']>;
+  order_by?: InputMaybe<Array<Message_103_Order_By>>;
+  where?: InputMaybe<Message_103_Bool_Exp>;
+};
+
+
+/** columns and relationships of "transaction" */
+export type TransactionMessage_103s_AggregateArgs = {
+  distinct_on?: InputMaybe<Array<Message_103_Select_Column>>;
+  limit?: InputMaybe<Scalars['Int']>;
+  offset?: InputMaybe<Scalars['Int']>;
+  order_by?: InputMaybe<Array<Message_103_Order_By>>;
+  where?: InputMaybe<Message_103_Bool_Exp>;
 };
 
 
@@ -24147,9 +24874,9 @@ export type Transaction_102 = {
   memo?: Maybe<Scalars['String']>;
   messages: Scalars['json'];
   /** An array relationship */
-  messagesByPartitionIdTransactionHash: Array<Message>;
+  messagesByTransactionHashPartitionId: Array<Message>;
   /** An aggregate relationship */
-  messagesByPartitionIdTransactionHash_aggregate: Message_Aggregate;
+  messagesByTransactionHashPartitionId_aggregate: Message_Aggregate;
   partition_id: Scalars['bigint'];
   raw_log?: Maybe<Scalars['String']>;
   signatures: Array<Scalars['String']>;
@@ -24177,7 +24904,7 @@ export type Transaction_102MessagesArgs = {
 
 
 /** columns and relationships of "transaction_102" */
-export type Transaction_102MessagesByPartitionIdTransactionHashArgs = {
+export type Transaction_102MessagesByTransactionHashPartitionIdArgs = {
   distinct_on?: InputMaybe<Array<Message_Select_Column>>;
   limit?: InputMaybe<Scalars['Int']>;
   offset?: InputMaybe<Scalars['Int']>;
@@ -24187,7 +24914,7 @@ export type Transaction_102MessagesByPartitionIdTransactionHashArgs = {
 
 
 /** columns and relationships of "transaction_102" */
-export type Transaction_102MessagesByPartitionIdTransactionHash_AggregateArgs = {
+export type Transaction_102MessagesByTransactionHashPartitionId_AggregateArgs = {
   distinct_on?: InputMaybe<Array<Message_Select_Column>>;
   limit?: InputMaybe<Scalars['Int']>;
   offset?: InputMaybe<Scalars['Int']>;
@@ -24318,8 +25045,8 @@ export type Transaction_102_Bool_Exp = {
   logs?: InputMaybe<Jsonb_Comparison_Exp>;
   memo?: InputMaybe<String_Comparison_Exp>;
   messages?: InputMaybe<Json_Comparison_Exp>;
-  messagesByPartitionIdTransactionHash?: InputMaybe<Message_Bool_Exp>;
-  messagesByPartitionIdTransactionHash_aggregate?: InputMaybe<Message_Aggregate_Bool_Exp>;
+  messagesByTransactionHashPartitionId?: InputMaybe<Message_Bool_Exp>;
+  messagesByTransactionHashPartitionId_aggregate?: InputMaybe<Message_Aggregate_Bool_Exp>;
   partition_id?: InputMaybe<Bigint_Comparison_Exp>;
   raw_log?: InputMaybe<String_Comparison_Exp>;
   signatures?: InputMaybe<String_Array_Comparison_Exp>;
@@ -24373,7 +25100,7 @@ export type Transaction_102_Insert_Input = {
   logs?: InputMaybe<Scalars['jsonb']>;
   memo?: InputMaybe<Scalars['String']>;
   messages?: InputMaybe<Scalars['json']>;
-  messagesByPartitionIdTransactionHash?: InputMaybe<Message_Arr_Rel_Insert_Input>;
+  messagesByTransactionHashPartitionId?: InputMaybe<Message_Arr_Rel_Insert_Input>;
   partition_id?: InputMaybe<Scalars['bigint']>;
   raw_log?: InputMaybe<Scalars['String']>;
   signatures?: InputMaybe<Array<Scalars['String']>>;
@@ -24465,7 +25192,7 @@ export type Transaction_102_Order_By = {
   logs?: InputMaybe<Order_By>;
   memo?: InputMaybe<Order_By>;
   messages?: InputMaybe<Order_By>;
-  messagesByPartitionIdTransactionHash_aggregate?: InputMaybe<Message_Aggregate_Order_By>;
+  messagesByTransactionHashPartitionId_aggregate?: InputMaybe<Message_Aggregate_Order_By>;
   partition_id?: InputMaybe<Order_By>;
   raw_log?: InputMaybe<Order_By>;
   signatures?: InputMaybe<Order_By>;
@@ -24726,6 +25453,605 @@ export type Transaction_102_Variance_Fields = {
 
 /** order by variance() on columns of table "transaction_102" */
 export type Transaction_102_Variance_Order_By = {
+  gas_used?: InputMaybe<Order_By>;
+  gas_wanted?: InputMaybe<Order_By>;
+  height?: InputMaybe<Order_By>;
+  partition_id?: InputMaybe<Order_By>;
+};
+
+/** columns and relationships of "transaction_103" */
+export type Transaction_103 = {
+  __typename?: 'transaction_103';
+  /** An object relationship */
+  block: Block;
+  fee: Scalars['jsonb'];
+  gas_used?: Maybe<Scalars['bigint']>;
+  gas_wanted?: Maybe<Scalars['bigint']>;
+  hash: Scalars['String'];
+  height: Scalars['bigint'];
+  logs?: Maybe<Scalars['jsonb']>;
+  memo?: Maybe<Scalars['String']>;
+  messages: Scalars['json'];
+  /** An array relationship */
+  messagesByPartitionIdTransactionHash: Array<Message>;
+  /** An aggregate relationship */
+  messagesByPartitionIdTransactionHash_aggregate: Message_Aggregate;
+  partition_id: Scalars['bigint'];
+  raw_log?: Maybe<Scalars['String']>;
+  signatures: Array<Scalars['String']>;
+  signer_infos: Scalars['jsonb'];
+  success: Scalars['Boolean'];
+};
+
+
+/** columns and relationships of "transaction_103" */
+export type Transaction_103FeeArgs = {
+  path?: InputMaybe<Scalars['String']>;
+};
+
+
+/** columns and relationships of "transaction_103" */
+export type Transaction_103LogsArgs = {
+  path?: InputMaybe<Scalars['String']>;
+};
+
+
+/** columns and relationships of "transaction_103" */
+export type Transaction_103MessagesArgs = {
+  path?: InputMaybe<Scalars['String']>;
+};
+
+
+/** columns and relationships of "transaction_103" */
+export type Transaction_103MessagesByPartitionIdTransactionHashArgs = {
+  distinct_on?: InputMaybe<Array<Message_Select_Column>>;
+  limit?: InputMaybe<Scalars['Int']>;
+  offset?: InputMaybe<Scalars['Int']>;
+  order_by?: InputMaybe<Array<Message_Order_By>>;
+  where?: InputMaybe<Message_Bool_Exp>;
+};
+
+
+/** columns and relationships of "transaction_103" */
+export type Transaction_103MessagesByPartitionIdTransactionHash_AggregateArgs = {
+  distinct_on?: InputMaybe<Array<Message_Select_Column>>;
+  limit?: InputMaybe<Scalars['Int']>;
+  offset?: InputMaybe<Scalars['Int']>;
+  order_by?: InputMaybe<Array<Message_Order_By>>;
+  where?: InputMaybe<Message_Bool_Exp>;
+};
+
+
+/** columns and relationships of "transaction_103" */
+export type Transaction_103Signer_InfosArgs = {
+  path?: InputMaybe<Scalars['String']>;
+};
+
+/** aggregated selection of "transaction_103" */
+export type Transaction_103_Aggregate = {
+  __typename?: 'transaction_103_aggregate';
+  aggregate?: Maybe<Transaction_103_Aggregate_Fields>;
+  nodes: Array<Transaction_103>;
+};
+
+export type Transaction_103_Aggregate_Bool_Exp = {
+  bool_and?: InputMaybe<Transaction_103_Aggregate_Bool_Exp_Bool_And>;
+  bool_or?: InputMaybe<Transaction_103_Aggregate_Bool_Exp_Bool_Or>;
+  count?: InputMaybe<Transaction_103_Aggregate_Bool_Exp_Count>;
+};
+
+export type Transaction_103_Aggregate_Bool_Exp_Bool_And = {
+  arguments: Transaction_103_Select_Column_Transaction_103_Aggregate_Bool_Exp_Bool_And_Arguments_Columns;
+  distinct?: InputMaybe<Scalars['Boolean']>;
+  filter?: InputMaybe<Transaction_103_Bool_Exp>;
+  predicate: Boolean_Comparison_Exp;
+};
+
+export type Transaction_103_Aggregate_Bool_Exp_Bool_Or = {
+  arguments: Transaction_103_Select_Column_Transaction_103_Aggregate_Bool_Exp_Bool_Or_Arguments_Columns;
+  distinct?: InputMaybe<Scalars['Boolean']>;
+  filter?: InputMaybe<Transaction_103_Bool_Exp>;
+  predicate: Boolean_Comparison_Exp;
+};
+
+export type Transaction_103_Aggregate_Bool_Exp_Count = {
+  arguments?: InputMaybe<Array<Transaction_103_Select_Column>>;
+  distinct?: InputMaybe<Scalars['Boolean']>;
+  filter?: InputMaybe<Transaction_103_Bool_Exp>;
+  predicate: Int_Comparison_Exp;
+};
+
+/** aggregate fields of "transaction_103" */
+export type Transaction_103_Aggregate_Fields = {
+  __typename?: 'transaction_103_aggregate_fields';
+  avg?: Maybe<Transaction_103_Avg_Fields>;
+  count: Scalars['Int'];
+  max?: Maybe<Transaction_103_Max_Fields>;
+  min?: Maybe<Transaction_103_Min_Fields>;
+  stddev?: Maybe<Transaction_103_Stddev_Fields>;
+  stddev_pop?: Maybe<Transaction_103_Stddev_Pop_Fields>;
+  stddev_samp?: Maybe<Transaction_103_Stddev_Samp_Fields>;
+  sum?: Maybe<Transaction_103_Sum_Fields>;
+  var_pop?: Maybe<Transaction_103_Var_Pop_Fields>;
+  var_samp?: Maybe<Transaction_103_Var_Samp_Fields>;
+  variance?: Maybe<Transaction_103_Variance_Fields>;
+};
+
+
+/** aggregate fields of "transaction_103" */
+export type Transaction_103_Aggregate_FieldsCountArgs = {
+  columns?: InputMaybe<Array<Transaction_103_Select_Column>>;
+  distinct?: InputMaybe<Scalars['Boolean']>;
+};
+
+/** order by aggregate values of table "transaction_103" */
+export type Transaction_103_Aggregate_Order_By = {
+  avg?: InputMaybe<Transaction_103_Avg_Order_By>;
+  count?: InputMaybe<Order_By>;
+  max?: InputMaybe<Transaction_103_Max_Order_By>;
+  min?: InputMaybe<Transaction_103_Min_Order_By>;
+  stddev?: InputMaybe<Transaction_103_Stddev_Order_By>;
+  stddev_pop?: InputMaybe<Transaction_103_Stddev_Pop_Order_By>;
+  stddev_samp?: InputMaybe<Transaction_103_Stddev_Samp_Order_By>;
+  sum?: InputMaybe<Transaction_103_Sum_Order_By>;
+  var_pop?: InputMaybe<Transaction_103_Var_Pop_Order_By>;
+  var_samp?: InputMaybe<Transaction_103_Var_Samp_Order_By>;
+  variance?: InputMaybe<Transaction_103_Variance_Order_By>;
+};
+
+/** append existing jsonb value of filtered columns with new jsonb value */
+export type Transaction_103_Append_Input = {
+  fee?: InputMaybe<Scalars['jsonb']>;
+  logs?: InputMaybe<Scalars['jsonb']>;
+  signer_infos?: InputMaybe<Scalars['jsonb']>;
+};
+
+/** input type for inserting array relation for remote table "transaction_103" */
+export type Transaction_103_Arr_Rel_Insert_Input = {
+  data: Array<Transaction_103_Insert_Input>;
+  /** upsert condition */
+  on_conflict?: InputMaybe<Transaction_103_On_Conflict>;
+};
+
+/** aggregate avg on columns */
+export type Transaction_103_Avg_Fields = {
+  __typename?: 'transaction_103_avg_fields';
+  gas_used?: Maybe<Scalars['Float']>;
+  gas_wanted?: Maybe<Scalars['Float']>;
+  height?: Maybe<Scalars['Float']>;
+  partition_id?: Maybe<Scalars['Float']>;
+};
+
+/** order by avg() on columns of table "transaction_103" */
+export type Transaction_103_Avg_Order_By = {
+  gas_used?: InputMaybe<Order_By>;
+  gas_wanted?: InputMaybe<Order_By>;
+  height?: InputMaybe<Order_By>;
+  partition_id?: InputMaybe<Order_By>;
+};
+
+/** Boolean expression to filter rows from the table "transaction_103". All fields are combined with a logical 'AND'. */
+export type Transaction_103_Bool_Exp = {
+  _and?: InputMaybe<Array<Transaction_103_Bool_Exp>>;
+  _not?: InputMaybe<Transaction_103_Bool_Exp>;
+  _or?: InputMaybe<Array<Transaction_103_Bool_Exp>>;
+  block?: InputMaybe<Block_Bool_Exp>;
+  fee?: InputMaybe<Jsonb_Comparison_Exp>;
+  gas_used?: InputMaybe<Bigint_Comparison_Exp>;
+  gas_wanted?: InputMaybe<Bigint_Comparison_Exp>;
+  hash?: InputMaybe<String_Comparison_Exp>;
+  height?: InputMaybe<Bigint_Comparison_Exp>;
+  logs?: InputMaybe<Jsonb_Comparison_Exp>;
+  memo?: InputMaybe<String_Comparison_Exp>;
+  messages?: InputMaybe<Json_Comparison_Exp>;
+  messagesByPartitionIdTransactionHash?: InputMaybe<Message_Bool_Exp>;
+  messagesByPartitionIdTransactionHash_aggregate?: InputMaybe<Message_Aggregate_Bool_Exp>;
+  partition_id?: InputMaybe<Bigint_Comparison_Exp>;
+  raw_log?: InputMaybe<String_Comparison_Exp>;
+  signatures?: InputMaybe<String_Array_Comparison_Exp>;
+  signer_infos?: InputMaybe<Jsonb_Comparison_Exp>;
+  success?: InputMaybe<Boolean_Comparison_Exp>;
+};
+
+/** unique or primary key constraints on table "transaction_103" */
+export enum Transaction_103_Constraint {
+  /** unique or primary key constraint on columns "partition_id", "hash" */
+  Transaction_103HashPartitionIdKey = 'transaction_103_hash_partition_id_key'
+}
+
+/** delete the field or element with specified path (for JSON arrays, negative integers count from the end) */
+export type Transaction_103_Delete_At_Path_Input = {
+  fee?: InputMaybe<Array<Scalars['String']>>;
+  logs?: InputMaybe<Array<Scalars['String']>>;
+  signer_infos?: InputMaybe<Array<Scalars['String']>>;
+};
+
+/** delete the array element with specified index (negative integers count from the end). throws an error if top level container is not an array */
+export type Transaction_103_Delete_Elem_Input = {
+  fee?: InputMaybe<Scalars['Int']>;
+  logs?: InputMaybe<Scalars['Int']>;
+  signer_infos?: InputMaybe<Scalars['Int']>;
+};
+
+/** delete key/value pair or string element. key/value pairs are matched based on their key value */
+export type Transaction_103_Delete_Key_Input = {
+  fee?: InputMaybe<Scalars['String']>;
+  logs?: InputMaybe<Scalars['String']>;
+  signer_infos?: InputMaybe<Scalars['String']>;
+};
+
+/** input type for incrementing numeric columns in table "transaction_103" */
+export type Transaction_103_Inc_Input = {
+  gas_used?: InputMaybe<Scalars['bigint']>;
+  gas_wanted?: InputMaybe<Scalars['bigint']>;
+  height?: InputMaybe<Scalars['bigint']>;
+  partition_id?: InputMaybe<Scalars['bigint']>;
+};
+
+/** input type for inserting data into table "transaction_103" */
+export type Transaction_103_Insert_Input = {
+  block?: InputMaybe<Block_Obj_Rel_Insert_Input>;
+  fee?: InputMaybe<Scalars['jsonb']>;
+  gas_used?: InputMaybe<Scalars['bigint']>;
+  gas_wanted?: InputMaybe<Scalars['bigint']>;
+  hash?: InputMaybe<Scalars['String']>;
+  height?: InputMaybe<Scalars['bigint']>;
+  logs?: InputMaybe<Scalars['jsonb']>;
+  memo?: InputMaybe<Scalars['String']>;
+  messages?: InputMaybe<Scalars['json']>;
+  messagesByPartitionIdTransactionHash?: InputMaybe<Message_Arr_Rel_Insert_Input>;
+  partition_id?: InputMaybe<Scalars['bigint']>;
+  raw_log?: InputMaybe<Scalars['String']>;
+  signatures?: InputMaybe<Array<Scalars['String']>>;
+  signer_infos?: InputMaybe<Scalars['jsonb']>;
+  success?: InputMaybe<Scalars['Boolean']>;
+};
+
+/** aggregate max on columns */
+export type Transaction_103_Max_Fields = {
+  __typename?: 'transaction_103_max_fields';
+  gas_used?: Maybe<Scalars['bigint']>;
+  gas_wanted?: Maybe<Scalars['bigint']>;
+  hash?: Maybe<Scalars['String']>;
+  height?: Maybe<Scalars['bigint']>;
+  memo?: Maybe<Scalars['String']>;
+  partition_id?: Maybe<Scalars['bigint']>;
+  raw_log?: Maybe<Scalars['String']>;
+  signatures?: Maybe<Array<Scalars['String']>>;
+};
+
+/** order by max() on columns of table "transaction_103" */
+export type Transaction_103_Max_Order_By = {
+  gas_used?: InputMaybe<Order_By>;
+  gas_wanted?: InputMaybe<Order_By>;
+  hash?: InputMaybe<Order_By>;
+  height?: InputMaybe<Order_By>;
+  memo?: InputMaybe<Order_By>;
+  partition_id?: InputMaybe<Order_By>;
+  raw_log?: InputMaybe<Order_By>;
+  signatures?: InputMaybe<Order_By>;
+};
+
+/** aggregate min on columns */
+export type Transaction_103_Min_Fields = {
+  __typename?: 'transaction_103_min_fields';
+  gas_used?: Maybe<Scalars['bigint']>;
+  gas_wanted?: Maybe<Scalars['bigint']>;
+  hash?: Maybe<Scalars['String']>;
+  height?: Maybe<Scalars['bigint']>;
+  memo?: Maybe<Scalars['String']>;
+  partition_id?: Maybe<Scalars['bigint']>;
+  raw_log?: Maybe<Scalars['String']>;
+  signatures?: Maybe<Array<Scalars['String']>>;
+};
+
+/** order by min() on columns of table "transaction_103" */
+export type Transaction_103_Min_Order_By = {
+  gas_used?: InputMaybe<Order_By>;
+  gas_wanted?: InputMaybe<Order_By>;
+  hash?: InputMaybe<Order_By>;
+  height?: InputMaybe<Order_By>;
+  memo?: InputMaybe<Order_By>;
+  partition_id?: InputMaybe<Order_By>;
+  raw_log?: InputMaybe<Order_By>;
+  signatures?: InputMaybe<Order_By>;
+};
+
+/** response of any mutation on the table "transaction_103" */
+export type Transaction_103_Mutation_Response = {
+  __typename?: 'transaction_103_mutation_response';
+  /** number of rows affected by the mutation */
+  affected_rows: Scalars['Int'];
+  /** data from the rows affected by the mutation */
+  returning: Array<Transaction_103>;
+};
+
+/** input type for inserting object relation for remote table "transaction_103" */
+export type Transaction_103_Obj_Rel_Insert_Input = {
+  data: Transaction_103_Insert_Input;
+  /** upsert condition */
+  on_conflict?: InputMaybe<Transaction_103_On_Conflict>;
+};
+
+/** on_conflict condition type for table "transaction_103" */
+export type Transaction_103_On_Conflict = {
+  constraint: Transaction_103_Constraint;
+  update_columns?: Array<Transaction_103_Update_Column>;
+  where?: InputMaybe<Transaction_103_Bool_Exp>;
+};
+
+/** Ordering options when selecting data from "transaction_103". */
+export type Transaction_103_Order_By = {
+  block?: InputMaybe<Block_Order_By>;
+  fee?: InputMaybe<Order_By>;
+  gas_used?: InputMaybe<Order_By>;
+  gas_wanted?: InputMaybe<Order_By>;
+  hash?: InputMaybe<Order_By>;
+  height?: InputMaybe<Order_By>;
+  logs?: InputMaybe<Order_By>;
+  memo?: InputMaybe<Order_By>;
+  messages?: InputMaybe<Order_By>;
+  messagesByPartitionIdTransactionHash_aggregate?: InputMaybe<Message_Aggregate_Order_By>;
+  partition_id?: InputMaybe<Order_By>;
+  raw_log?: InputMaybe<Order_By>;
+  signatures?: InputMaybe<Order_By>;
+  signer_infos?: InputMaybe<Order_By>;
+  success?: InputMaybe<Order_By>;
+};
+
+/** prepend existing jsonb value of filtered columns with new jsonb value */
+export type Transaction_103_Prepend_Input = {
+  fee?: InputMaybe<Scalars['jsonb']>;
+  logs?: InputMaybe<Scalars['jsonb']>;
+  signer_infos?: InputMaybe<Scalars['jsonb']>;
+};
+
+/** select columns of table "transaction_103" */
+export enum Transaction_103_Select_Column {
+  /** column name */
+  Fee = 'fee',
+  /** column name */
+  GasUsed = 'gas_used',
+  /** column name */
+  GasWanted = 'gas_wanted',
+  /** column name */
+  Hash = 'hash',
+  /** column name */
+  Height = 'height',
+  /** column name */
+  Logs = 'logs',
+  /** column name */
+  Memo = 'memo',
+  /** column name */
+  Messages = 'messages',
+  /** column name */
+  PartitionId = 'partition_id',
+  /** column name */
+  RawLog = 'raw_log',
+  /** column name */
+  Signatures = 'signatures',
+  /** column name */
+  SignerInfos = 'signer_infos',
+  /** column name */
+  Success = 'success'
+}
+
+/** select "transaction_103_aggregate_bool_exp_bool_and_arguments_columns" columns of table "transaction_103" */
+export enum Transaction_103_Select_Column_Transaction_103_Aggregate_Bool_Exp_Bool_And_Arguments_Columns {
+  /** column name */
+  Success = 'success'
+}
+
+/** select "transaction_103_aggregate_bool_exp_bool_or_arguments_columns" columns of table "transaction_103" */
+export enum Transaction_103_Select_Column_Transaction_103_Aggregate_Bool_Exp_Bool_Or_Arguments_Columns {
+  /** column name */
+  Success = 'success'
+}
+
+/** input type for updating data in table "transaction_103" */
+export type Transaction_103_Set_Input = {
+  fee?: InputMaybe<Scalars['jsonb']>;
+  gas_used?: InputMaybe<Scalars['bigint']>;
+  gas_wanted?: InputMaybe<Scalars['bigint']>;
+  hash?: InputMaybe<Scalars['String']>;
+  height?: InputMaybe<Scalars['bigint']>;
+  logs?: InputMaybe<Scalars['jsonb']>;
+  memo?: InputMaybe<Scalars['String']>;
+  messages?: InputMaybe<Scalars['json']>;
+  partition_id?: InputMaybe<Scalars['bigint']>;
+  raw_log?: InputMaybe<Scalars['String']>;
+  signatures?: InputMaybe<Array<Scalars['String']>>;
+  signer_infos?: InputMaybe<Scalars['jsonb']>;
+  success?: InputMaybe<Scalars['Boolean']>;
+};
+
+/** aggregate stddev on columns */
+export type Transaction_103_Stddev_Fields = {
+  __typename?: 'transaction_103_stddev_fields';
+  gas_used?: Maybe<Scalars['Float']>;
+  gas_wanted?: Maybe<Scalars['Float']>;
+  height?: Maybe<Scalars['Float']>;
+  partition_id?: Maybe<Scalars['Float']>;
+};
+
+/** order by stddev() on columns of table "transaction_103" */
+export type Transaction_103_Stddev_Order_By = {
+  gas_used?: InputMaybe<Order_By>;
+  gas_wanted?: InputMaybe<Order_By>;
+  height?: InputMaybe<Order_By>;
+  partition_id?: InputMaybe<Order_By>;
+};
+
+/** aggregate stddev_pop on columns */
+export type Transaction_103_Stddev_Pop_Fields = {
+  __typename?: 'transaction_103_stddev_pop_fields';
+  gas_used?: Maybe<Scalars['Float']>;
+  gas_wanted?: Maybe<Scalars['Float']>;
+  height?: Maybe<Scalars['Float']>;
+  partition_id?: Maybe<Scalars['Float']>;
+};
+
+/** order by stddev_pop() on columns of table "transaction_103" */
+export type Transaction_103_Stddev_Pop_Order_By = {
+  gas_used?: InputMaybe<Order_By>;
+  gas_wanted?: InputMaybe<Order_By>;
+  height?: InputMaybe<Order_By>;
+  partition_id?: InputMaybe<Order_By>;
+};
+
+/** aggregate stddev_samp on columns */
+export type Transaction_103_Stddev_Samp_Fields = {
+  __typename?: 'transaction_103_stddev_samp_fields';
+  gas_used?: Maybe<Scalars['Float']>;
+  gas_wanted?: Maybe<Scalars['Float']>;
+  height?: Maybe<Scalars['Float']>;
+  partition_id?: Maybe<Scalars['Float']>;
+};
+
+/** order by stddev_samp() on columns of table "transaction_103" */
+export type Transaction_103_Stddev_Samp_Order_By = {
+  gas_used?: InputMaybe<Order_By>;
+  gas_wanted?: InputMaybe<Order_By>;
+  height?: InputMaybe<Order_By>;
+  partition_id?: InputMaybe<Order_By>;
+};
+
+/** Streaming cursor of the table "transaction_103" */
+export type Transaction_103_Stream_Cursor_Input = {
+  /** Stream column input with initial value */
+  initial_value: Transaction_103_Stream_Cursor_Value_Input;
+  /** cursor ordering */
+  ordering?: InputMaybe<Cursor_Ordering>;
+};
+
+/** Initial value of the column from where the streaming should start */
+export type Transaction_103_Stream_Cursor_Value_Input = {
+  fee?: InputMaybe<Scalars['jsonb']>;
+  gas_used?: InputMaybe<Scalars['bigint']>;
+  gas_wanted?: InputMaybe<Scalars['bigint']>;
+  hash?: InputMaybe<Scalars['String']>;
+  height?: InputMaybe<Scalars['bigint']>;
+  logs?: InputMaybe<Scalars['jsonb']>;
+  memo?: InputMaybe<Scalars['String']>;
+  messages?: InputMaybe<Scalars['json']>;
+  partition_id?: InputMaybe<Scalars['bigint']>;
+  raw_log?: InputMaybe<Scalars['String']>;
+  signatures?: InputMaybe<Array<Scalars['String']>>;
+  signer_infos?: InputMaybe<Scalars['jsonb']>;
+  success?: InputMaybe<Scalars['Boolean']>;
+};
+
+/** aggregate sum on columns */
+export type Transaction_103_Sum_Fields = {
+  __typename?: 'transaction_103_sum_fields';
+  gas_used?: Maybe<Scalars['bigint']>;
+  gas_wanted?: Maybe<Scalars['bigint']>;
+  height?: Maybe<Scalars['bigint']>;
+  partition_id?: Maybe<Scalars['bigint']>;
+};
+
+/** order by sum() on columns of table "transaction_103" */
+export type Transaction_103_Sum_Order_By = {
+  gas_used?: InputMaybe<Order_By>;
+  gas_wanted?: InputMaybe<Order_By>;
+  height?: InputMaybe<Order_By>;
+  partition_id?: InputMaybe<Order_By>;
+};
+
+/** update columns of table "transaction_103" */
+export enum Transaction_103_Update_Column {
+  /** column name */
+  Fee = 'fee',
+  /** column name */
+  GasUsed = 'gas_used',
+  /** column name */
+  GasWanted = 'gas_wanted',
+  /** column name */
+  Hash = 'hash',
+  /** column name */
+  Height = 'height',
+  /** column name */
+  Logs = 'logs',
+  /** column name */
+  Memo = 'memo',
+  /** column name */
+  Messages = 'messages',
+  /** column name */
+  PartitionId = 'partition_id',
+  /** column name */
+  RawLog = 'raw_log',
+  /** column name */
+  Signatures = 'signatures',
+  /** column name */
+  SignerInfos = 'signer_infos',
+  /** column name */
+  Success = 'success'
+}
+
+export type Transaction_103_Updates = {
+  /** append existing jsonb value of filtered columns with new jsonb value */
+  _append?: InputMaybe<Transaction_103_Append_Input>;
+  /** delete the field or element with specified path (for JSON arrays, negative integers count from the end) */
+  _delete_at_path?: InputMaybe<Transaction_103_Delete_At_Path_Input>;
+  /** delete the array element with specified index (negative integers count from the end). throws an error if top level container is not an array */
+  _delete_elem?: InputMaybe<Transaction_103_Delete_Elem_Input>;
+  /** delete key/value pair or string element. key/value pairs are matched based on their key value */
+  _delete_key?: InputMaybe<Transaction_103_Delete_Key_Input>;
+  /** increments the numeric columns with given value of the filtered values */
+  _inc?: InputMaybe<Transaction_103_Inc_Input>;
+  /** prepend existing jsonb value of filtered columns with new jsonb value */
+  _prepend?: InputMaybe<Transaction_103_Prepend_Input>;
+  /** sets the columns of the filtered rows to the given values */
+  _set?: InputMaybe<Transaction_103_Set_Input>;
+  /** filter the rows which have to be updated */
+  where: Transaction_103_Bool_Exp;
+};
+
+/** aggregate var_pop on columns */
+export type Transaction_103_Var_Pop_Fields = {
+  __typename?: 'transaction_103_var_pop_fields';
+  gas_used?: Maybe<Scalars['Float']>;
+  gas_wanted?: Maybe<Scalars['Float']>;
+  height?: Maybe<Scalars['Float']>;
+  partition_id?: Maybe<Scalars['Float']>;
+};
+
+/** order by var_pop() on columns of table "transaction_103" */
+export type Transaction_103_Var_Pop_Order_By = {
+  gas_used?: InputMaybe<Order_By>;
+  gas_wanted?: InputMaybe<Order_By>;
+  height?: InputMaybe<Order_By>;
+  partition_id?: InputMaybe<Order_By>;
+};
+
+/** aggregate var_samp on columns */
+export type Transaction_103_Var_Samp_Fields = {
+  __typename?: 'transaction_103_var_samp_fields';
+  gas_used?: Maybe<Scalars['Float']>;
+  gas_wanted?: Maybe<Scalars['Float']>;
+  height?: Maybe<Scalars['Float']>;
+  partition_id?: Maybe<Scalars['Float']>;
+};
+
+/** order by var_samp() on columns of table "transaction_103" */
+export type Transaction_103_Var_Samp_Order_By = {
+  gas_used?: InputMaybe<Order_By>;
+  gas_wanted?: InputMaybe<Order_By>;
+  height?: InputMaybe<Order_By>;
+  partition_id?: InputMaybe<Order_By>;
+};
+
+/** aggregate variance on columns */
+export type Transaction_103_Variance_Fields = {
+  __typename?: 'transaction_103_variance_fields';
+  gas_used?: Maybe<Scalars['Float']>;
+  gas_wanted?: Maybe<Scalars['Float']>;
+  height?: Maybe<Scalars['Float']>;
+  partition_id?: Maybe<Scalars['Float']>;
+};
+
+/** order by variance() on columns of table "transaction_103" */
+export type Transaction_103_Variance_Order_By = {
   gas_used?: InputMaybe<Order_By>;
   gas_wanted?: InputMaybe<Order_By>;
   height?: InputMaybe<Order_By>;
@@ -26052,6 +27378,8 @@ export type Transaction_Bool_Exp = {
   message_101s_aggregate?: InputMaybe<Message_101_Aggregate_Bool_Exp>;
   message_102s?: InputMaybe<Message_102_Bool_Exp>;
   message_102s_aggregate?: InputMaybe<Message_102_Aggregate_Bool_Exp>;
+  message_103s?: InputMaybe<Message_103_Bool_Exp>;
+  message_103s_aggregate?: InputMaybe<Message_103_Aggregate_Bool_Exp>;
   message_105s?: InputMaybe<Message_105_Bool_Exp>;
   message_105s_aggregate?: InputMaybe<Message_105_Aggregate_Bool_Exp>;
   message_106s?: InputMaybe<Message_106_Bool_Exp>;
@@ -26114,6 +27442,7 @@ export type Transaction_Insert_Input = {
   message_100s?: InputMaybe<Message_100_Arr_Rel_Insert_Input>;
   message_101s?: InputMaybe<Message_101_Arr_Rel_Insert_Input>;
   message_102s?: InputMaybe<Message_102_Arr_Rel_Insert_Input>;
+  message_103s?: InputMaybe<Message_103_Arr_Rel_Insert_Input>;
   message_105s?: InputMaybe<Message_105_Arr_Rel_Insert_Input>;
   message_106s?: InputMaybe<Message_106_Arr_Rel_Insert_Input>;
   messages?: InputMaybe<Scalars['json']>;
@@ -26211,6 +27540,7 @@ export type Transaction_Order_By = {
   message_100s_aggregate?: InputMaybe<Message_100_Aggregate_Order_By>;
   message_101s_aggregate?: InputMaybe<Message_101_Aggregate_Order_By>;
   message_102s_aggregate?: InputMaybe<Message_102_Aggregate_Order_By>;
+  message_103s_aggregate?: InputMaybe<Message_103_Aggregate_Order_By>;
   message_105s_aggregate?: InputMaybe<Message_105_Aggregate_Order_By>;
   message_106s_aggregate?: InputMaybe<Message_106_Aggregate_Order_By>;
   messages?: InputMaybe<Order_By>;
@@ -26485,6 +27815,12 @@ export type Transaction_Variance_Order_By = {
 export type Unlocks_Count_By_Del_Arguments = {
   /** Native Query argument address */
   address: Scalars['String'];
+};
+
+/** unlocks_count_by_denomNative Query Arguments */
+export type Unlocks_Count_By_Denom_Arguments = {
+  /** Native Query argument denom */
+  denom: Scalars['String'];
 };
 
 /** unlocks_count_by_valNative Query Arguments */
@@ -30209,6 +31545,24 @@ export type BalancesByAddressQueryVariables = Exact<{
 
 export type BalancesByAddressQuery = { balance: Array<{ __typename?: 'balance', amount: string, denom: string }> };
 
+export type AccountDelegationsQueryVariables = Exact<{
+  address: Scalars['String'];
+  offset?: InputMaybe<Scalars['Int']>;
+  limit?: InputMaybe<Scalars['Int']>;
+}>;
+
+
+export type AccountDelegationsQuery = { ms_locks: Array<{ __typename?: 'ms_locks', bond_weight?: string | null, amount?: string | null, denom?: string | null, staker_addr: string, val_addr: string }>, locks_count_by_del: Array<{ __typename?: 'count', count: any }> };
+
+export type AccountUndelegationsQueryVariables = Exact<{
+  address: Scalars['String'];
+  offset?: InputMaybe<Scalars['Int']>;
+  limit?: InputMaybe<Scalars['Int']>;
+}>;
+
+
+export type AccountUndelegationsQuery = { ms_unlocks: Array<{ __typename?: 'ms_unlocks', bond_weight?: string | null, amount?: string | null, denom?: string | null, creation_height: any, staker_addr: string, val_addr: string }>, unlocks_count_by_del: Array<{ __typename?: 'count', count: any }> };
+
 export type AccountCommissionQueryVariables = Exact<{
   validatorAddress: Scalars['String'];
 }>;
@@ -30251,36 +31605,6 @@ export type AccountDelegationRewardsQueryVariables = Exact<{
 
 export type AccountDelegationRewardsQuery = { delegationRewards?: Array<{ __typename?: 'ActionDelegationReward', coins?: Array<any | null> | null, validatorAddress: string } | null> | null };
 
-export type AccountDelegationsQueryVariables = Exact<{
-  address: Scalars['String'];
-  offset?: InputMaybe<Scalars['Int']>;
-  limit?: InputMaybe<Scalars['Int']>;
-  pagination?: Scalars['Boolean'];
-}>;
-
-
-export type AccountDelegationsQuery = { delegations?: { __typename?: 'ActionDelegationResponse', delegations?: Array<any | null> | null, pagination?: any | null } | null };
-
-export type AccountRedelegationsQueryVariables = Exact<{
-  address: Scalars['String'];
-  offset?: InputMaybe<Scalars['Int']>;
-  limit?: InputMaybe<Scalars['Int']>;
-  pagination?: Scalars['Boolean'];
-}>;
-
-
-export type AccountRedelegationsQuery = { redelegations?: { __typename?: 'ActionRedelegationResponse', redelegations?: Array<any | null> | null, pagination?: any | null } | null };
-
-export type AccountUndelegationsQueryVariables = Exact<{
-  address: Scalars['String'];
-  offset?: InputMaybe<Scalars['Int']>;
-  limit?: InputMaybe<Scalars['Int']>;
-  pagination?: Scalars['Boolean'];
-}>;
-
-
-export type AccountUndelegationsQuery = { undelegations?: { __typename?: 'ActionUnbondingDelegationResponse', pagination?: any | null, undelegations?: Array<any | null> | null } | null };
-
 export type ActiveValidatorCountQueryVariables = Exact<{ [key: string]: never; }>;
 
 
@@ -30292,6 +31616,24 @@ export type AssetOverviewQueryVariables = Exact<{
 
 
 export type AssetOverviewQuery = { supply_by_denom: Array<{ __typename?: 'amount', amount: string }>, token_holder: Array<{ __typename?: 'token_holder', num_holder: any }> };
+
+export type AssetDelegationsQueryVariables = Exact<{
+  denom: Scalars['String'];
+  offset?: InputMaybe<Scalars['Int']>;
+  limit?: InputMaybe<Scalars['Int']>;
+}>;
+
+
+export type AssetDelegationsQuery = { ms_locks: Array<{ __typename?: 'ms_locks', bond_weight?: string | null, amount?: string | null, denom?: string | null, staker_addr: string, val_addr: string }>, locks_count_by_denom: Array<{ __typename?: 'count', count: any }> };
+
+export type AssetUndelegationsQueryVariables = Exact<{
+  denom: Scalars['String'];
+  offset?: InputMaybe<Scalars['Int']>;
+  limit?: InputMaybe<Scalars['Int']>;
+}>;
+
+
+export type AssetUndelegationsQuery = { ms_unlocks: Array<{ __typename?: 'ms_unlocks', bond_weight?: string | null, amount?: string | null, denom?: string | null, creation_height: any, staker_addr: string, val_addr: string }>, unlocks_count_by_denom: Array<{ __typename?: 'count', count: any }> };
 
 export type BlockDetailsQueryVariables = Exact<{
   height?: InputMaybe<Scalars['bigint']>;
@@ -30597,6 +31939,99 @@ export function useBalancesByAddressLazyQuery(baseOptions?: Apollo.LazyQueryHook
 export type BalancesByAddressQueryHookResult = ReturnType<typeof useBalancesByAddressQuery>;
 export type BalancesByAddressLazyQueryHookResult = ReturnType<typeof useBalancesByAddressLazyQuery>;
 export type BalancesByAddressQueryResult = Apollo.QueryResult<BalancesByAddressQuery, BalancesByAddressQueryVariables>;
+export const AccountDelegationsDocument = gql`
+    query AccountDelegations($address: String!, $offset: Int = 0, $limit: Int = 10) {
+  ms_locks(limit: $limit, offset: $offset, where: {staker_addr: {_eq: $address}}) {
+    bond_weight
+    amount
+    denom
+    staker_addr
+    val_addr
+  }
+  locks_count_by_del(args: {address: $address}) {
+    count
+  }
+}
+    `;
+
+/**
+ * __useAccountDelegationsQuery__
+ *
+ * To run a query within a React component, call `useAccountDelegationsQuery` and pass it any options that fit your needs.
+ * When your component renders, `useAccountDelegationsQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useAccountDelegationsQuery({
+ *   variables: {
+ *      address: // value for 'address'
+ *      offset: // value for 'offset'
+ *      limit: // value for 'limit'
+ *   },
+ * });
+ */
+export function useAccountDelegationsQuery(baseOptions: Apollo.QueryHookOptions<AccountDelegationsQuery, AccountDelegationsQueryVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useQuery<AccountDelegationsQuery, AccountDelegationsQueryVariables>(AccountDelegationsDocument, options);
+      }
+export function useAccountDelegationsLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<AccountDelegationsQuery, AccountDelegationsQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return Apollo.useLazyQuery<AccountDelegationsQuery, AccountDelegationsQueryVariables>(AccountDelegationsDocument, options);
+        }
+export type AccountDelegationsQueryHookResult = ReturnType<typeof useAccountDelegationsQuery>;
+export type AccountDelegationsLazyQueryHookResult = ReturnType<typeof useAccountDelegationsLazyQuery>;
+export type AccountDelegationsQueryResult = Apollo.QueryResult<AccountDelegationsQuery, AccountDelegationsQueryVariables>;
+export const AccountUndelegationsDocument = gql`
+    query AccountUndelegations($address: String!, $offset: Int = 0, $limit: Int = 10) {
+  ms_unlocks(
+    limit: $limit
+    offset: $offset
+    where: {staker_addr: {_eq: $address}}
+  ) {
+    bond_weight
+    amount
+    denom
+    creation_height
+    staker_addr
+    val_addr
+  }
+  unlocks_count_by_del(args: {address: $address}) {
+    count
+  }
+}
+    `;
+
+/**
+ * __useAccountUndelegationsQuery__
+ *
+ * To run a query within a React component, call `useAccountUndelegationsQuery` and pass it any options that fit your needs.
+ * When your component renders, `useAccountUndelegationsQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useAccountUndelegationsQuery({
+ *   variables: {
+ *      address: // value for 'address'
+ *      offset: // value for 'offset'
+ *      limit: // value for 'limit'
+ *   },
+ * });
+ */
+export function useAccountUndelegationsQuery(baseOptions: Apollo.QueryHookOptions<AccountUndelegationsQuery, AccountUndelegationsQueryVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useQuery<AccountUndelegationsQuery, AccountUndelegationsQueryVariables>(AccountUndelegationsDocument, options);
+      }
+export function useAccountUndelegationsLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<AccountUndelegationsQuery, AccountUndelegationsQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return Apollo.useLazyQuery<AccountUndelegationsQuery, AccountUndelegationsQueryVariables>(AccountUndelegationsDocument, options);
+        }
+export type AccountUndelegationsQueryHookResult = ReturnType<typeof useAccountUndelegationsQuery>;
+export type AccountUndelegationsLazyQueryHookResult = ReturnType<typeof useAccountUndelegationsLazyQuery>;
+export type AccountUndelegationsQueryResult = Apollo.QueryResult<AccountUndelegationsQuery, AccountUndelegationsQueryVariables>;
 export const AccountCommissionDocument = gql`
     query AccountCommission($validatorAddress: String!) {
   commission: action_validator_commission_amount(address: $validatorAddress) {
@@ -30808,138 +32243,6 @@ export function useAccountDelegationRewardsLazyQuery(baseOptions?: Apollo.LazyQu
 export type AccountDelegationRewardsQueryHookResult = ReturnType<typeof useAccountDelegationRewardsQuery>;
 export type AccountDelegationRewardsLazyQueryHookResult = ReturnType<typeof useAccountDelegationRewardsLazyQuery>;
 export type AccountDelegationRewardsQueryResult = Apollo.QueryResult<AccountDelegationRewardsQuery, AccountDelegationRewardsQueryVariables>;
-export const AccountDelegationsDocument = gql`
-    query AccountDelegations($address: String!, $offset: Int = 0, $limit: Int = 10, $pagination: Boolean! = true) {
-  delegations: action_delegation(
-    address: $address
-    limit: $limit
-    offset: $offset
-    count_total: $pagination
-  ) {
-    delegations
-    pagination
-  }
-}
-    `;
-
-/**
- * __useAccountDelegationsQuery__
- *
- * To run a query within a React component, call `useAccountDelegationsQuery` and pass it any options that fit your needs.
- * When your component renders, `useAccountDelegationsQuery` returns an object from Apollo Client that contains loading, error, and data properties
- * you can use to render your UI.
- *
- * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
- *
- * @example
- * const { data, loading, error } = useAccountDelegationsQuery({
- *   variables: {
- *      address: // value for 'address'
- *      offset: // value for 'offset'
- *      limit: // value for 'limit'
- *      pagination: // value for 'pagination'
- *   },
- * });
- */
-export function useAccountDelegationsQuery(baseOptions: Apollo.QueryHookOptions<AccountDelegationsQuery, AccountDelegationsQueryVariables>) {
-        const options = {...defaultOptions, ...baseOptions}
-        return Apollo.useQuery<AccountDelegationsQuery, AccountDelegationsQueryVariables>(AccountDelegationsDocument, options);
-      }
-export function useAccountDelegationsLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<AccountDelegationsQuery, AccountDelegationsQueryVariables>) {
-          const options = {...defaultOptions, ...baseOptions}
-          return Apollo.useLazyQuery<AccountDelegationsQuery, AccountDelegationsQueryVariables>(AccountDelegationsDocument, options);
-        }
-export type AccountDelegationsQueryHookResult = ReturnType<typeof useAccountDelegationsQuery>;
-export type AccountDelegationsLazyQueryHookResult = ReturnType<typeof useAccountDelegationsLazyQuery>;
-export type AccountDelegationsQueryResult = Apollo.QueryResult<AccountDelegationsQuery, AccountDelegationsQueryVariables>;
-export const AccountRedelegationsDocument = gql`
-    query AccountRedelegations($address: String!, $offset: Int = 0, $limit: Int = 10, $pagination: Boolean! = true) {
-  redelegations: action_redelegation(
-    address: $address
-    limit: $limit
-    offset: $offset
-    count_total: $pagination
-  ) {
-    redelegations
-    pagination
-  }
-}
-    `;
-
-/**
- * __useAccountRedelegationsQuery__
- *
- * To run a query within a React component, call `useAccountRedelegationsQuery` and pass it any options that fit your needs.
- * When your component renders, `useAccountRedelegationsQuery` returns an object from Apollo Client that contains loading, error, and data properties
- * you can use to render your UI.
- *
- * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
- *
- * @example
- * const { data, loading, error } = useAccountRedelegationsQuery({
- *   variables: {
- *      address: // value for 'address'
- *      offset: // value for 'offset'
- *      limit: // value for 'limit'
- *      pagination: // value for 'pagination'
- *   },
- * });
- */
-export function useAccountRedelegationsQuery(baseOptions: Apollo.QueryHookOptions<AccountRedelegationsQuery, AccountRedelegationsQueryVariables>) {
-        const options = {...defaultOptions, ...baseOptions}
-        return Apollo.useQuery<AccountRedelegationsQuery, AccountRedelegationsQueryVariables>(AccountRedelegationsDocument, options);
-      }
-export function useAccountRedelegationsLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<AccountRedelegationsQuery, AccountRedelegationsQueryVariables>) {
-          const options = {...defaultOptions, ...baseOptions}
-          return Apollo.useLazyQuery<AccountRedelegationsQuery, AccountRedelegationsQueryVariables>(AccountRedelegationsDocument, options);
-        }
-export type AccountRedelegationsQueryHookResult = ReturnType<typeof useAccountRedelegationsQuery>;
-export type AccountRedelegationsLazyQueryHookResult = ReturnType<typeof useAccountRedelegationsLazyQuery>;
-export type AccountRedelegationsQueryResult = Apollo.QueryResult<AccountRedelegationsQuery, AccountRedelegationsQueryVariables>;
-export const AccountUndelegationsDocument = gql`
-    query AccountUndelegations($address: String!, $offset: Int = 0, $limit: Int = 10, $pagination: Boolean! = true) {
-  undelegations: action_unbonding_delegation(
-    address: $address
-    limit: $limit
-    offset: $offset
-    count_total: $pagination
-  ) {
-    undelegations: unbonding_delegations
-    pagination
-  }
-}
-    `;
-
-/**
- * __useAccountUndelegationsQuery__
- *
- * To run a query within a React component, call `useAccountUndelegationsQuery` and pass it any options that fit your needs.
- * When your component renders, `useAccountUndelegationsQuery` returns an object from Apollo Client that contains loading, error, and data properties
- * you can use to render your UI.
- *
- * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
- *
- * @example
- * const { data, loading, error } = useAccountUndelegationsQuery({
- *   variables: {
- *      address: // value for 'address'
- *      offset: // value for 'offset'
- *      limit: // value for 'limit'
- *      pagination: // value for 'pagination'
- *   },
- * });
- */
-export function useAccountUndelegationsQuery(baseOptions: Apollo.QueryHookOptions<AccountUndelegationsQuery, AccountUndelegationsQueryVariables>) {
-        const options = {...defaultOptions, ...baseOptions}
-        return Apollo.useQuery<AccountUndelegationsQuery, AccountUndelegationsQueryVariables>(AccountUndelegationsDocument, options);
-      }
-export function useAccountUndelegationsLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<AccountUndelegationsQuery, AccountUndelegationsQueryVariables>) {
-          const options = {...defaultOptions, ...baseOptions}
-          return Apollo.useLazyQuery<AccountUndelegationsQuery, AccountUndelegationsQueryVariables>(AccountUndelegationsDocument, options);
-        }
-export type AccountUndelegationsQueryHookResult = ReturnType<typeof useAccountUndelegationsQuery>;
-export type AccountUndelegationsLazyQueryHookResult = ReturnType<typeof useAccountUndelegationsLazyQuery>;
-export type AccountUndelegationsQueryResult = Apollo.QueryResult<AccountUndelegationsQuery, AccountUndelegationsQueryVariables>;
 export const ActiveValidatorCountDocument = gql`
     query ActiveValidatorCount {
   activeTotal: validator_status_aggregate(where: {status: {_eq: 3}}) {
@@ -31024,6 +32327,95 @@ export function useAssetOverviewLazyQuery(baseOptions?: Apollo.LazyQueryHookOpti
 export type AssetOverviewQueryHookResult = ReturnType<typeof useAssetOverviewQuery>;
 export type AssetOverviewLazyQueryHookResult = ReturnType<typeof useAssetOverviewLazyQuery>;
 export type AssetOverviewQueryResult = Apollo.QueryResult<AssetOverviewQuery, AssetOverviewQueryVariables>;
+export const AssetDelegationsDocument = gql`
+    query AssetDelegations($denom: String!, $offset: Int = 0, $limit: Int = 10) {
+  ms_locks(limit: $limit, offset: $offset, where: {denom: {_eq: $denom}}) {
+    bond_weight
+    amount
+    denom
+    staker_addr
+    val_addr
+  }
+  locks_count_by_denom(args: {denom: $denom}) {
+    count
+  }
+}
+    `;
+
+/**
+ * __useAssetDelegationsQuery__
+ *
+ * To run a query within a React component, call `useAssetDelegationsQuery` and pass it any options that fit your needs.
+ * When your component renders, `useAssetDelegationsQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useAssetDelegationsQuery({
+ *   variables: {
+ *      denom: // value for 'denom'
+ *      offset: // value for 'offset'
+ *      limit: // value for 'limit'
+ *   },
+ * });
+ */
+export function useAssetDelegationsQuery(baseOptions: Apollo.QueryHookOptions<AssetDelegationsQuery, AssetDelegationsQueryVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useQuery<AssetDelegationsQuery, AssetDelegationsQueryVariables>(AssetDelegationsDocument, options);
+      }
+export function useAssetDelegationsLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<AssetDelegationsQuery, AssetDelegationsQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return Apollo.useLazyQuery<AssetDelegationsQuery, AssetDelegationsQueryVariables>(AssetDelegationsDocument, options);
+        }
+export type AssetDelegationsQueryHookResult = ReturnType<typeof useAssetDelegationsQuery>;
+export type AssetDelegationsLazyQueryHookResult = ReturnType<typeof useAssetDelegationsLazyQuery>;
+export type AssetDelegationsQueryResult = Apollo.QueryResult<AssetDelegationsQuery, AssetDelegationsQueryVariables>;
+export const AssetUndelegationsDocument = gql`
+    query AssetUndelegations($denom: String!, $offset: Int = 0, $limit: Int = 10) {
+  ms_unlocks(limit: $limit, offset: $offset, where: {denom: {_eq: $denom}}) {
+    bond_weight
+    amount
+    denom
+    creation_height
+    staker_addr
+    val_addr
+  }
+  unlocks_count_by_denom(args: {denom: $denom}) {
+    count
+  }
+}
+    `;
+
+/**
+ * __useAssetUndelegationsQuery__
+ *
+ * To run a query within a React component, call `useAssetUndelegationsQuery` and pass it any options that fit your needs.
+ * When your component renders, `useAssetUndelegationsQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useAssetUndelegationsQuery({
+ *   variables: {
+ *      denom: // value for 'denom'
+ *      offset: // value for 'offset'
+ *      limit: // value for 'limit'
+ *   },
+ * });
+ */
+export function useAssetUndelegationsQuery(baseOptions: Apollo.QueryHookOptions<AssetUndelegationsQuery, AssetUndelegationsQueryVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useQuery<AssetUndelegationsQuery, AssetUndelegationsQueryVariables>(AssetUndelegationsDocument, options);
+      }
+export function useAssetUndelegationsLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<AssetUndelegationsQuery, AssetUndelegationsQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return Apollo.useLazyQuery<AssetUndelegationsQuery, AssetUndelegationsQueryVariables>(AssetUndelegationsDocument, options);
+        }
+export type AssetUndelegationsQueryHookResult = ReturnType<typeof useAssetUndelegationsQuery>;
+export type AssetUndelegationsLazyQueryHookResult = ReturnType<typeof useAssetUndelegationsLazyQuery>;
+export type AssetUndelegationsQueryResult = Apollo.QueryResult<AssetUndelegationsQuery, AssetUndelegationsQueryVariables>;
 export const BlockDetailsDocument = gql`
     query BlockDetails($height: bigint, $signatureHeight: bigint) {
   transaction(where: {height: {_eq: $height}}) {

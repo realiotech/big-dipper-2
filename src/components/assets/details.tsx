@@ -5,25 +5,25 @@ import {
     Text,
     Button,
     VStack,
-    Link,
     HStack,
-    Icon,
     Tabs,
     Table,
-    TabsContent,
+    Center,
     Grid,
     GridItem,
-    Center,
 } from "@chakra-ui/react";
 import { FiShoppingCart } from "react-icons/fi";
 import AssetOverview from "./overview";
+import Staking from "./staking";
+import { useRouter } from "next/router";
 
 const AssetDetails = () => {
-    const [selectedTab, setSelectedTab] = useState("transfer");
+    const router = useRouter()
+
+    const [selectedTab, setSelectedTab] = useState("staking");
 
     return (
         <Grid templateColumns="repeat(6, 1fr)" gap={"50px"} minH="auto">
-            {/* Header */}
             <GridItem
                 colSpan={6}
                 direction={"row"}
@@ -60,93 +60,60 @@ const AssetDetails = () => {
                 </Flex>
             </GridItem>
             <AssetOverview />
-            {/* <GridItem borderRadius="lg" colSpan={6} bgColor={"#FAFBFC"}>
+            <GridItem borderRadius="lg" colSpan={6} bgColor={"#FAFBFC"}>
                 <Tabs.Root
                     value={selectedTab}
                     onValueChange={(e) => setSelectedTab(e.value)}
                     size="md"
                 >
+                    <Tabs.List bg="white">
+
+                        <Tabs.Trigger
+                            _selected={{
+                                bg: "#707D8A",
+                                color: "white",
+                                borderRadius: "100px",
+                            }}
+                            p={4}
+                            w={{ base: "full", lg: "150px" }}
+                            value="holders"
+                        >
+                            <Center w={'full'}>Holders</Center>
+                        </Tabs.Trigger>
+                        <Tabs.Trigger
+                            _selected={{
+                                bg: "#707D8A",
+                                color: "white",
+                                borderRadius: "100px",
+                            }}
+                            p={4}
+                            w={{ base: "full", lg: "150px" }}
+                            value="staking"
+                        >
+                            <Center w={'full'}>Staking</Center>
+                        </Tabs.Trigger>
+                        <Tabs.Indicator bg="#707D8A" borderRadius="100px" />
+
+                    </Tabs.List>
                     <Box>
                         <Tabs.ContentGroup>
-                            <Tabs.Content value="transfer">
-                                <Box p={6}>
-                                    <Text fontSize="md" mb={4}>
-                                        A total of 6,732 transactions found
-                                    </Text>
-                                    <Table.Root variant="simple" colorScheme="gray">
-                                        <Table.Header>
-                                            <Table.Row>
-                                                <Table.ColumnHeader>Hash</Table.ColumnHeader>
-                                                <Table.ColumnHeader>Method</Table.ColumnHeader>
-                                                <Table.ColumnHeader>Block</Table.ColumnHeader>
-                                                <Table.ColumnHeader>Time</Table.ColumnHeader>
-                                                <Table.ColumnHeader>From</Table.ColumnHeader>
-                                                <Table.ColumnHeader>To</Table.ColumnHeader>
-                                                <Table.ColumnHeader>Amount</Table.ColumnHeader>
-                                            </Table.Row>
-                                        </Table.Header>
-                                        <Table.Body bg="white">
-                                            <>
-                                                {mockTransactions.map((tx, index) => (
-                                                    <Table.Row key={index}>
-                                                        <Table.Cell>
-                                                            <Link color="blue.500">{tx.hash}</Link>
-                                                        </Table.Cell>
-                                                        <Table.Cell>{tx.method}</Table.Cell>
-                                                        <Table.Cell>
-                                                            <Link color="blue.500">{tx.block}</Link>
-                                                        </Table.Cell>
-                                                        <Table.Cell>{tx.time}</Table.Cell>
-                                                        <Table.Cell>
-                                                            <Link color="blue.500">{tx.from}</Link>
-                                                        </Table.Cell>
-                                                        <Table.Cell>
-                                                            <Link color="blue.500">{tx.to}</Link>
-                                                        </Table.Cell>
-                                                        <Table.Cell>{tx.amount}</Table.Cell>
-                                                    </Table.Row>
-                                                ))}
-                                            </>
-                                        </Table.Body>
-                                    </Table.Root>
-                                </Box>
-                            </Tabs.Content>
-
                             <Tabs.Content value="holders">
                                 <Box p={6}>
                                     <Text fontSize="md" mb={4}>
                                         Top 1000 holders (from a total of 31,309 holders)
                                     </Text>
                                     <Table.Root variant="simple" colorScheme="gray">
-                                        <Table.Header>
-                                            <Table.Row>
-                                                <Table.ColumnHeader>Rank</Table.ColumnHeader>
-                                                <Table.ColumnHeader>Address</Table.ColumnHeader>
-                                                <Table.ColumnHeader>Quantity</Table.ColumnHeader>
-                                                <Table.ColumnHeader>Percentage</Table.ColumnHeader>
-                                                <Table.ColumnHeader>Value</Table.ColumnHeader>
-                                            </Table.Row>
-                                        </Table.Header>
-                                        <Table.Body bg="white">
-                                            {mockHolders.map((holder, index) => (
-                                                <Table.Row key={index}>
-                                                    <Table.Cell>{holder.rank}</Table.Cell>
-                                                    <Table.Cell>
-                                                        <Link color="blue.500">{holder.address}</Link>
-                                                    </Table.Cell>
-                                                    <Table.Cell>{holder.quantity}</Table.Cell>
-                                                    <Table.Cell>{holder.percentage}</Table.Cell>
-                                                    <Table.Cell>{holder.value}</Table.Cell>
-                                                </Table.Row>
-                                            ))}
-                                        </Table.Body>
+
                                     </Table.Root>
                                 </Box>
+                            </Tabs.Content>
+                            <Tabs.Content value="staking">
+                                <Staking denom={router?.query?.denom} />
                             </Tabs.Content>
                         </Tabs.ContentGroup>
                     </Box>
                 </Tabs.Root>
-            </GridItem> */}
+            </GridItem>
         </Grid>
     );
 };

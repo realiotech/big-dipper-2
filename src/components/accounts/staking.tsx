@@ -1,4 +1,3 @@
-import { useState } from "react";
 import {
   Box,
   Tabs,
@@ -26,10 +25,10 @@ export default function Staking({ address }) {
       {delegations?.data ? (
         <Box bg="#FAFBFC" p={6} borderRadius="md" boxShadow="sm" mb={8}>
           <TabsContent value={1}>
-            <Delegations data={delegations} page={delegationsPage} setPage={setDelegationsPage} displayMode={1} />
+            <Delegations data={delegations} page={delegationsPage} setPage={setDelegationsPage} displayMode={2} />
           </TabsContent>
           <TabsContent value={2}>
-            <Undelegations data={unbondings} page={unbondingsPage} setPage={setUnboningsPage} displayMode={1} />
+            <Undelegations data={unbondings} page={unbondingsPage} setPage={setUnboningsPage} displayMode={2} />
           </TabsContent>
         </Box>
       ) : (
