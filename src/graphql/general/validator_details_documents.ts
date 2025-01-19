@@ -7,8 +7,8 @@ export const ValidatorDelegationsDocument = /* GraphQL */ `
       staker_addr
       val_addr
     }
-    ms_locks_count(args: {val_addr: $validatorAddress}) {
-      total
+    locks_count_by_val(args: {address: $validatorAddress}) {
+      count
     }
   }
 `;
@@ -42,8 +42,8 @@ export const ValidatorUndelegationsDocument = /* GraphQL */ `
       staker_addr
       val_addr
     }
-    ms_unlocks_count(args: {val_addr: $validatorAddress}) {
-      total
+    unlocks_count_by_val(args: {address: $validatorAddress}) {
+      count
     }
   }
 `;

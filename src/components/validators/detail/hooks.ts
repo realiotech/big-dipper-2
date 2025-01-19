@@ -497,17 +497,16 @@ export const useStaking = (
             undelegationsRefetch();
         }
     }, [undelegationsError, undelegationsLoading, undelegationsRefetch]);
-    console.log(delegationsData)
     return {
         delegations: {
             loading: delegationsLoading,
-            count: delegationsData?.ms_locks_count?.[0].total ?? 0,
+            count: delegationsData?.locks_count_by_val?.[0].count ?? 0,
             data: formatDelegations(delegationsData?.ms_locks ?? []),
             error: delegationsError,
         },
         unbondings: {
             loading: undelegationsLoading,
-            count: undelegationsData?.ms_unlocks_count?.[0].total ?? 0,
+            count: undelegationsData?.unlocks_count_by_val?.[0].count ?? 0,
             data: formatUnbondings(undelegationsData?.ms_unlocks ?? []),
             error: undelegationsError,
         },

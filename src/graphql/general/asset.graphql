@@ -1,6 +1,6 @@
 query AssetOverview($denom: String!) {
   supply_by_denom(args: {denom: $denom}) {
-    supply
+    amount
   }
   token_holder(where: {denom: {_eq: $denom}}){
     num_holder

@@ -15,7 +15,7 @@ export function useOverview() {
         onCompleted: (data) => {
             setState({
                 denom,
-                supply: data.supply_by_denom?.[0].supply,
+                supply: data.supply_by_denom?.[0].amount,
                 holders: data.token_holder?.[0].num_holder
             })
         },
