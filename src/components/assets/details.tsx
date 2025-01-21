@@ -32,19 +32,10 @@ const denomToTokenMap = {
     "lmx": "Liquid Mining Token",
 }
 
-function zeroPad(num) {
-    let pad = ""
-    for (var i = 0; i < num; i++) {
-        pad = pad + "0"
-    }
-
-    return pad
-  }
 
 const HolderItem = ({ item, denom }) => {
     const assetDetail = useRecoilValue(readAsset(denom))
 
-    const valStr =  item.balance.length >= assetDetail?.decimals ? item.balance.substr(0, assetDetail?.decimals) : item.balance + zeroPad(assetDetail?.decimals - item.balance.length)
     return (
         <Table.Row>
             <Table.Cell>
@@ -53,7 +44,7 @@ const HolderItem = ({ item, denom }) => {
                     value={item.address}
                 />
             </Table.Cell>
-            <Table.Cell>{numeral(formatTokenByExponent(valStr, assetDetail?.decimals)).input()}</Table.Cell>
+            <Table.Cell>{numeral(formatTokenByExponent(item.balance, assetDetail?.decimals)).input()}</Table.Cell>
             <Table.Cell>
                 <Asset name={assetDetail?.symbol} image={assetDetail?.image} denom={assetDetail?.denom} />
             </Table.Cell>
