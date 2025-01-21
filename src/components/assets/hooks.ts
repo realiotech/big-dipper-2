@@ -26,9 +26,10 @@ export function useOverview() {
     }
 }, [state])
 
+  const qdenom = denomMap[denom]
   useAssetOverviewQuery({
     variables: {
-      denom: denomMap[denom]
+      denom: qdenom
     },
     onCompleted: (data) => {
       setState({
@@ -41,6 +42,7 @@ export function useOverview() {
   return {
     state,
     maxHolders,
+    qdenom,
   }
 }
 
@@ -48,7 +50,7 @@ const formatHolders = (data: AssetHoldersQuery): Holder[] => {
   return data?.balance?.map((x) => {
     return {
       address: x?.address,
-      balance: formatToken(x?.amount, x?.denom),
+      balance: x?.amount,
     }
   }) ?? []
 }
