@@ -5,10 +5,11 @@ export interface OverviewState {
 }
 
 export interface HolderState {
+    loading: boolean;
     holders: Holder[];
 }
 
 export interface Holder {
     address: string;
-    balance: TokenUnit;
+    balance: string;
   }

@@ -14,7 +14,6 @@ export default function Staking({ denom }) {
   const { delegations, unbondings, delegationsPage, unbondingsPage, setDelegationsPage, setUnboningsPage } =
       useStaking(denom);
 
-  console.log(delegations);
   return (
     <Tabs.Root
       defaultValue={1}

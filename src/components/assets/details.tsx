@@ -19,8 +19,12 @@ import { useOverview, useHolders } from "./hooks";
 import Staking from "./staking";
 import { useRouter } from "next/router";
 import Pagination from "../layout/pagination";
-import numeral from "numeral";
 import HelpLink from "../helper/help_link";
+import Asset from "../helper/asset";
+import { useRecoilValue } from "recoil";
+import { readAsset } from "@/recoil/asset";
+import numeral from "numeral";
+import { formatTokenByExponent } from "@/utils";
 
 const denomToTokenMap = {
     "rio": "Realio Network",
@@ -28,7 +32,19 @@ const denomToTokenMap = {
     "lmx": "Liquid Mining Token",
 }
 
-const HolderItem = ({ item }) => {
+function zeroPad(num) {
+    let pad = ""
+    for (var i = 0; i < num; i++) {
+        pad = pad + "0"
+    }
+
+    return pad
+  }
+
+const HolderItem = ({ item, denom }) => {
+    const assetDetail = useRecoilValue(readAsset(denom))
+
+    const valStr =  item.balance.length >= assetDetail?.decimals ? item.balance.substr(0, assetDetail?.decimals) : item.balance + zeroPad(assetDetail?.decimals - item.balance.length)
     return (
         <Table.Row>
             <Table.Cell>
@@ -37,23 +53,25 @@ const HolderItem = ({ item }) => {
                     value={item.address}
                 />
             </Table.Cell>
-            <Table.Cell>{item.balance.value}</Table.Cell>
-            <Table.Cell>{item.balance.displayDenom.toUpperCase()}</Table.Cell>
+            <Table.Cell>{numeral(formatTokenByExponent(valStr, assetDetail?.decimals)).input()}</Table.Cell>
+            <Table.Cell>
+                <Asset name={assetDetail?.symbol} image={assetDetail?.image} denom={assetDetail?.denom} />
+            </Table.Cell>
         </Table.Row>
     );
 };
 
 const SkeletonBlockItem = ({ index }) => {
     return (
-        <Table.Row key={`block-${index}`}>
+        <Table.Row key={`transaction-${index}`}>
             <Table.Cell>
-                <Skeleton key={`block-${index}`} h={"5px"} w="full" mb="4" />
+                <Skeleton h={"10px"} w="full" mb="2" />
             </Table.Cell>
             <Table.Cell>
-                <Skeleton key={`block-${index}`} h={"5px"} w="full" mb="4" />
+                <Skeleton h={"10px"} w="full" mb="2" />
             </Table.Cell>
             <Table.Cell>
-                <Skeleton key={`block-${index}`} h={"5px"} w="full" mb="4" />
+                <Skeleton h={"10px"} w="full" mb="2" />
             </Table.Cell>
         </Table.Row>
     )
@@ -61,9 +79,11 @@ const SkeletonBlockItem = ({ index }) => {
 
 const AssetDetails = () => {
     const router = useRouter()
-    const { state, maxHolders } = useOverview()
+    const { state, maxHolders, qdenom } = useOverview()
     const { holderState, pageInfo, handlePageChange } = useHolders(maxHolders)
     const [selectedTab, setSelectedTab] = useState("staking");
+
+    console.log(state)
 
     return (
         <Grid templateColumns="repeat(6, 1fr)" gap={"50px"} minH="auto">
@@ -165,9 +185,10 @@ const AssetDetails = () => {
                                                 >
                                                     <Text>Nothing to show</Text>
                                                 </Center>
-                                            ) : holderState.holders.map((item, index) => (
+                                            ) : holderState.holders.map((item, _) => (
                                                 <HolderItem
                                                     item={item}
+                                                    denom={qdenom}
                                                 />
                                             )) : (
                                                 Array.from({ length: 20 }).map((_, index) => (
