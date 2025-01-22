@@ -135,6 +135,7 @@ export default function Undelegations({ data, displayMode, page, setPage }) {
             )}
           </Table.Body>
         </Table.Root>
+      </Box>
         <PaginationRoot
           count={data?.count}
           pageSize={10}
@@ -148,7 +149,6 @@ export default function Undelegations({ data, displayMode, page, setPage }) {
             <PaginationNextTrigger />
           </HStack>
         </PaginationRoot>
-      </Box>
     </VStack>
   );
 }

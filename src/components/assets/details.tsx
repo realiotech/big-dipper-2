@@ -79,7 +79,6 @@ const AssetDetails = () => {
   const { holderState, pageInfo, handlePageChange } = useHolders(maxHolders);
   const [selectedTab, setSelectedTab] = useState("staking");
   const assetDetail = useRecoilValue(readAsset(qdenom));
-  console.log(state);
 
   return (
     <Grid templateColumns="repeat(6, 1fr)" gap={"1.5rem"} minH="auto">
