@@ -58,7 +58,6 @@ export default function Assets({ balances }) {
             borderRadius="md"
             boxShadow="sm"
             flex="2"
-            minW="320px"
         >
             <Flex justify="space-between" align="center" mb={4}>
                 <Text fontSize="lg" fontWeight="bold">

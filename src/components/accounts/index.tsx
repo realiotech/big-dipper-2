@@ -1,21 +1,17 @@
-import {
-  Box,
-  Text,
-  Flex,
-  VStack,
-  Center,
-} from "@chakra-ui/react";
-
+import { Box, Text, Flex, VStack, Center } from "@chakra-ui/react";
+import { Clipboard, useBreakpointValue } from "@chakra-ui/react";
 import { IoCopyOutline } from "react-icons/io5";
+import { IoMdCheckmark } from "react-icons/io";
 import Transactions from "./transactions";
 import { useOverview } from "./hooks";
 import Assets from "./assets";
 import AssetChart from "./asset_chart";
 import Staking from "./staking";
-
+import { getMiddleEllipsis } from "@/utils";
 
 export default function AccountDetail() {
-  const { balances, address, evmAddress, completed} = useOverview()
+  const { balances, address, evmAddress, completed } = useOverview();
+  const isMobile = useBreakpointValue({ base: true, lg: false });
 
   return (
     <Box minH="100vh">
@@ -28,7 +24,7 @@ export default function AccountDetail() {
             borderRadius="md"
             boxShadow="sm"
             flex="1"
-            minW="320px"
+            w={"autp"}
           >
             <Text fontSize="lg" fontWeight="bold" mb={4}>
               Portfolio
@@ -36,21 +32,41 @@ export default function AccountDetail() {
             <VStack gap={0} align={"left"}>
               <Text>Address: </Text>
               <Flex gap={2}>
-                <Text>{address}</Text>
+                <Text>
+                  {isMobile ? getMiddleEllipsis(address, { beginning: 9, ending: 20 }) : address}
+                </Text>
                 <Center>
-                  <IoCopyOutline />
+                <Clipboard.Root value={address} timeout={1000}>
+                  <Clipboard.Trigger asChild>
+                      <Clipboard.Indicator copied={<IoMdCheckmark />}>
+                      <div style= {{cursor: 'pointer'}}>
+                        <IoCopyOutline />
+                      </div>
+                      </Clipboard.Indicator>
+                  </Clipboard.Trigger>
+                </Clipboard.Root>
                 </Center>
               </Flex>
             </VStack>
             <VStack gap={0} align={"left"} mb={3}>
               <Text>EVM address: </Text>
               <Flex gap={2}>
-                <Text>{evmAddress}</Text>
+                <Text>
+                {isMobile ? getMiddleEllipsis(evmAddress, { beginning: 9, ending: 20 }) : evmAddress}
+                </Text>
                 <Center>
-                  <IoCopyOutline />
+                <Clipboard.Root value={evmAddress} timeout={1000}>
+                  <Clipboard.Trigger asChild>
+                      <Clipboard.Indicator copied={<IoMdCheckmark />}>
+                      <div style= {{cursor: 'pointer'}}>
+                        <IoCopyOutline />
+                      </div>
+                      </Clipboard.Indicator>
+                  </Clipboard.Trigger>
+                </Clipboard.Root>
                 </Center>
               </Flex>
-            </VStack> 
+            </VStack>
           </Box>
           <Assets balances={balances} />
         </Flex>

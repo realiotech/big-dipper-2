@@ -90,7 +90,7 @@ export default function AssetChart({ balances }) {
                         </Box>
                     </Flex>
                 </VStack>
-                <VStack w="100%" align="stretch" gap={4}>
+                <VStack w="100%" align="center" gap={4}>
                     {balances.map((item, index) => 
                         <ItemNote metadata={assetMap?.[item.denom]} key={`chart-item-${item.denom}`} asset={item} index={index} />
                     )}
