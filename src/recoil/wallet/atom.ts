@@ -8,6 +8,7 @@ export interface AtomState {
   openPairConnectWalletDialog: boolean;
   openPairKeplrExtensionDialog: boolean;
   openSelectNetworkDialog: boolean;
+  openWalletConnectPopover: boolean;
   walletConnectURI: string;
   walletSelection: string;
   walletAddress: string | null; // New field for the wallet address
@@ -24,6 +25,7 @@ const initialState: AtomState = {
   openPairConnectWalletDialog: false,
   openPairKeplrExtensionDialog: false,
   openSelectNetworkDialog: false,
+  openWalletConnectPopover: false,
   walletConnectURI: '',
   walletSelection: '',
   walletAddress: null, // Default to null

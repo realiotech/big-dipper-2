@@ -27,13 +27,13 @@ export const useKeplrConnect = () => {
       const accounts = await offlineSigner.getAccounts();
       const signer = await SigningStargateClient.connectWithSigner("https://realio.rpc.decentrio.ventures:443", offlineSigner)
       const balance = await client.getBalance(accounts[0].address, 'ario');
-
+      
       setWallet((prev) => ({
         ...prev,
         walletAddress: accounts[0]?.address,
         chainId,
         signer: signer,
-        walletSelection: "keplr",
+        walletSelection: "Keplr",
         balance: balance.amount
       }));
 
@@ -48,24 +48,28 @@ export const useKeplrConnect = () => {
     }
   };
 
-  return { connectKeplr };
+
+  const disconnectKeplr = async () => {
+    setWallet((prev) => ({
+        ...prev,
+        walletAddress: null,
+        chainId: null,
+        signer: null,
+        walletSelection: null,
+        balance: null,
+    }));
+    console.log("Wallet disconnected");
 };
 
-// export const useWalletRecoil = () => {
-//   const [wallet, setWallet] = useRecoilState(atomState);
+  const triggerWalletConnectPopover = () => {
+    setWallet((prev) => ({
+      ...prev,
+      openWalletConnectPopover: !prev.openWalletConnectPopover,
+    }));
+  }
 
-//   useEffect(() => {
-//     // set the wallet values
-//   }, [
-//     setWallet,
-//     wallet.openAuthorizeConnectionDialog,
-//     wallet.openInstallKeplrExtensionDialog,
-//     wallet.openLoginDialog,
-//     wallet.openLoginSuccessDialog,
-//     wallet.openPairConnectWalletDialog,
-//     wallet.openPairKeplrExtensionDialog,
-//     wallet.openSelectNetworkDialog,
-//     wallet.walletConnectURI,
-//     wallet.walletSelection,
-//   ]);
-// };
+
+
+  return { connectKeplr, disconnectKeplr, triggerWalletConnectPopover };
+};
+

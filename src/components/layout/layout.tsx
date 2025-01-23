@@ -11,7 +11,7 @@ export default function Layout({ children }) {
   useMarketRecoil();
   useAssetRecoil();
   const { loading } = useValidatorRecoil();
-  const isMobile = useBreakpointValue({ base: true, md: false });
+  const isMobile = useBreakpointValue({ base: true, lg: false });
   return (
     <Flex
       bgColor="white"

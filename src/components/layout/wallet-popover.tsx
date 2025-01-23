@@ -18,17 +18,23 @@ import {
   import { Wallet } from "../icons/wallet";
   import { IoCloseOutline } from "react-icons/io5";
   import { FaCheckCircle } from "react-icons/fa";
+  import { AiOutlineLoading } from "react-icons/ai";
   import { useState } from "react";
   import { useKeplrConnect } from "@/recoil/wallet/hooks";
+  import { useRecoilValue } from "recoil";
+  import { atomState } from "@/recoil/wallet/atom";
+  import styles from './wallet-popover.module.css'; 
   
   const WalletPopover = () => {
     const [selectedWallet, setSelectedWallet] = useState<string | null>(null);
-    const { connectKeplr } = useKeplrConnect(); // Use the Keplr connection hook
+    const [isLoading, setIsLoading] = useState(false);
+    const { connectKeplr, disconnectKeplr, triggerWalletConnectPopover } = useKeplrConnect(); 
+    const wallet = useRecoilValue(atomState);
   
     const wallets = [
       { id: "keplr", label: "Keplr", iconBg: "blue.500", shortName: "K" },
-      { id: "leap", label: "Leap Wallet", iconBg: "green.500", shortName: "L" },
-      { id: "ledger", label: "Ledger", iconBg: "black", shortName: "L" },
+      { id: "leap", label: "Leap Wallet", iconBg: "green.500", shortName: "L", disabled: true },
+      { id: "ledger", label: "Ledger", iconBg: "black", shortName: "L", disabled: true },
     ];
   
     const handleWalletSelect = (walletId: string) => {
@@ -37,14 +43,16 @@ import {
   
     const handleConnect = async () => {
       if (selectedWallet === "keplr") {
+        setIsLoading(true);
         await connectKeplr();
+        setIsLoading(false);
       } else {
         console.log("Selected wallet not supported:", selectedWallet);
       }
     };
   
     return (
-      <PopoverRoot lazyMount unmountOnExit>
+      <PopoverRoot open={wallet.openWalletConnectPopover} onOpenChange={triggerWalletConnectPopover} lazyMount unmountOnExit>
         <PopoverTrigger asChild>
           <IconButton
             aria-label="connect wallet"
@@ -62,7 +70,7 @@ import {
             {/* Header */}
             <Flex justify="space-between" align="center" mb={4}>
               <Text fontSize="lg" fontWeight="bold">
-                Connect Wallet
+                {wallet?.walletSelection ? wallet.walletSelection : "Connect Wallet"}
               </Text>
               <PopoverTrigger style={{ cursor: "pointer" }}>
                 <IoCloseOutline size={30} />
@@ -71,57 +79,80 @@ import {
             <StackSeparator />
   
             {/* Wallet Options */}
-            <VStack align="stretch" mt={4}>
-              {wallets.map((wallet) => (
-                <HStack
-                  key={wallet.id}
-                  p={4}
-                  border="1px solid"
-                  borderColor={
-                    selectedWallet === wallet.id ? "black" : "#E2E8F0"
-                  }
-                  borderRadius="md"
-                  justify="space-between"
-                  align="center"
-                  cursor="pointer"
-                  onClick={() => handleWalletSelect(wallet.id)}
-                >
-                  <HStack>
-                    <Box
-                      bg={wallet.iconBg}
-                      w="30px"
-                      h="30px"
-                      borderRadius="full"
-                      display="flex"
-                      alignItems="center"
-                      justifyContent="center"
-                      color="white"
-                      fontWeight="bold"
-                    >
-                      {wallet.shortName}
-                    </Box>
-                    <Text fontSize="md" fontWeight="medium">
-                      {wallet.label}
-                    </Text>
-                  </HStack>
-                  {selectedWallet === wallet.id && (
-                    <FaCheckCircle color="green" />
-                  )}
+            {wallet?.walletAddress ? (
+              <VStack align="stretch" mt={4}>
+                <Box>
+                  <Text fontSize="sm" color="gray.600">
+                    Cosmos Address:
+                  </Text>
+                  <Text fontSize="sm" fontWeight="bold">
+                    {wallet.walletAddress}
+                  </Text>
+                </Box>
+                <HStack>
+                  <Button size="sm" bg={"#707D8A"} onClick={disconnectKeplr} variant="solid" w="full">
+                    Disconnect
+                  </Button>
                 </HStack>
-              ))}
-            </VStack>
+              </VStack>
+            ) : (
+              <>
+                <VStack align="stretch" mt={4}>
+                  {wallets.map((wallet) => (
+                    <HStack
+                      key={wallet.id}
+                      p={4}
+                      border="1px solid"
+                      borderColor={
+                        selectedWallet === wallet.id ? "black" : "#E2E8F0"
+                      }
+                      borderRadius="md"
+                      justify="space-between"
+                      align="center"
+                      cursor={wallet.disabled ? "not-allowed" : "pointer"}
+                      opacity={wallet.disabled ? 0.5 : 1}
+                      onClick={() => !wallet.disabled && handleWalletSelect(wallet.id)}
+                    >
+                      <HStack>
+                        <Box
+                          bg={wallet.iconBg}
+                          w="30px"
+                          h="30px"
+                          borderRadius="full"
+                          display="flex"
+                          alignItems="center"
+                          justifyContent="center"
+                          color="white"
+                          fontWeight="bold"
+                        >
+                          {wallet.shortName}
+                        </Box>
+                        <Text fontSize="md" fontWeight="medium">
+                          {wallet.label}
+                        </Text>
+                      </HStack>
+                      {selectedWallet === wallet.id && (
+                        <FaCheckCircle className="spin"  color="green" />
+                      )}
+                    </HStack>
+                  ))}
+                </VStack>
   
-            {/* Connect Button */}
-            <Button
-              mt={6}
-              w="full"
-              bg="#707D8A"
-              color="white"
-              _hover={{ bg: "#505D6A" }}
-              onClick={handleConnect}
-            >
-              Connect Wallet
-            </Button>
+                {/* Connect Button */}
+                <Button
+                  mt={6}
+                  w="full"
+                  bg="#707D8A"
+                  color="white"
+                  _hover={{ bg: "#505D6A" }}
+                  onClick={handleConnect}
+                  isDisabled={selectedWallet !== "keplr"}
+                  cursor={selectedWallet === "keplr" ? "pointer" : "not-allowed"}
+                >
+                      {isLoading ? <AiOutlineLoading className={styles.spin} /> : "Connect Wallet"}
+                </Button>
+              </>
+            )}
           </PopoverBody>
         </PopoverContent>
       </PopoverRoot>
@@ -129,46 +160,3 @@ import {
   };
   
   export default WalletPopover;
-  
-  
-
-{
-  /* Wallet Info */
-}
-{
-  /* <VStack align="stretch" >
-                  <Text fontSize="lg" fontWeight="bold">
-                    Keplr
-                  </Text>
-                  <Box>
-                    <Text fontSize="sm" color="gray.600">
-                      Cosmos Address:
-                    </Text>
-                    <Text fontSize="sm" fontWeight="bold">
-                      realio13zz4mvgwmppzlnve09zshqlf4r2x4uqtwf6ckzk
-                    </Text>
-                  </Box>
-                  <Box>
-                    <Text fontSize="sm" color="gray.600">
-                      EVM Address:
-                    </Text>
-                    <Text fontSize="sm" fontWeight="bold">
-                      0xF728E158B7F00bB2B3A140D125C5a45E54b64aDB
-                    </Text>
-                  </Box>
-                  <HStack >
-                    <Button size="sm" variant="outline" w="full">
-                      Profile
-                    </Button>
-                    <Button
-                      size="sm"
-                      colorScheme="red"
-                      variant="solid"
-                      w="full"
-                    //   leftIcon={<FiLogOut />}
-                    >
-                      Disconnect
-                    </Button>
-                  </HStack>
-                </VStack> */
-}

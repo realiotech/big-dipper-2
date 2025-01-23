@@ -26,7 +26,7 @@ export default function Header() {
   const marketState = useRecoilValue(readMarket);
   const market = formatMarket(marketState);
   const isMobile = useBreakpointValue({
-    base: true, md: false,
+    base: true, lg: false,
   });
 
   return !isMobile ? (
