@@ -193,8 +193,8 @@ const AssetDetails = () => {
                             <Text>Nothing to show</Text>
                           </Center>
                         ) : (
-                          holderState.holders.map((item, _) => (
-                            <HolderItem item={item} denom={qdenom} />
+                          holderState.holders.map((item, index) => (
+                            <HolderItem item={item} denom={qdenom} key={`holder-${index}`} />
                           ))
                         )
                       ) : (

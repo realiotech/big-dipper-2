@@ -21,6 +21,8 @@ import {
   PaginationPrevTrigger,
   PaginationRoot,
 } from "../ui/pagination";
+import { useProfileRecoil } from "@/recoil/profiles";
+import Proposer from "../helper/proposer";
 
 const getDisplayHeaders = (displayMode) => {
   if (displayMode === 1)
@@ -35,7 +37,7 @@ const getDisplayHeaders = (displayMode) => {
   );
 };
 
-const getDisplayData = (displayMode, staker_addr, val_addr) => {
+const getDisplayData = (displayMode, staker_addr, name, address, imageUrl) => {
   if (displayMode === 1)
     return (
       <Table.Cell>
@@ -45,7 +47,7 @@ const getDisplayData = (displayMode, staker_addr, val_addr) => {
   if (displayMode === 2)
     return (
       <Table.Cell>
-        <HelpLink href={ADDRESS_DETAILS(val_addr)} value={val_addr} />
+        <Proposer name={name} address={address} image={imageUrl}/>
       </Table.Cell>
     );
   return (
@@ -54,7 +56,7 @@ const getDisplayData = (displayMode, staker_addr, val_addr) => {
         <HelpLink href={ADDRESS_DETAILS(staker_addr)} value={staker_addr} />
       </Table.Cell>
       <Table.Cell>
-        <HelpLink href={ADDRESS_DETAILS(val_addr)} value={val_addr} />
+        <Proposer name={name} address={address} image={imageUrl} />
       </Table.Cell>
     </>
   );
@@ -66,9 +68,10 @@ const DelegationItem = ({ item, asset, displayMode }) => {
   const votingPower =
     parseFloat(formatTokenByExponent(item.amount, assetDetail?.decimals)) *
     parseFloat(item.bond_weight);
+  const { name, address, imageUrl } = useProfileRecoil(item?.val_addr)
   return (
     <Table.Row>
-      {getDisplayData(displayMode, item.staker_addr, item.val_addr)}
+      {getDisplayData(displayMode, item.staker_addr, name, address, imageUrl)}
       <Table.Cell display={{ base: "none", md: "table-cell" }}>
         {numeral(item.bond_weight).format("0.0")}
       </Table.Cell>
@@ -135,7 +138,7 @@ export default function Delegations({ data, page, setPage, displayMode }) {
                 ))
               )
             ) : (
-              Array.from({ length: 10 }).map((_, index) => <SkeletonItem index={index} />)
+              Array.from({ length: 10 }).map((_, index) => <SkeletonItem key={`delegation-skele-${index}`} index={index} />)
             )}
           </Table.Body>
         </Table.Root>
@@ -146,8 +149,8 @@ export default function Delegations({ data, page, setPage, displayMode }) {
         value={page + 1}
         onPageChange={(e) => setPage(e.page - 1)}
         size={{ base: "xs", md: "lg" }}
-      > 
-        <HStack gap={0}> 
+      >
+        <HStack gap={0}>
           <PaginationPrevTrigger />
           <PaginationItems />
           <PaginationNextTrigger />
