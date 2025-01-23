@@ -16,7 +16,6 @@ import {
   Center,
 } from "@chakra-ui/react";
 import { FiShoppingCart } from "react-icons/fi";
-import { AiOutlineInfoCircle } from "react-icons/ai";
 import { IoCopyOutline } from "react-icons/io5";
 
 const mockTransactions = [

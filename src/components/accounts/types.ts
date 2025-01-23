@@ -1,6 +1,8 @@
 export interface OverviewType {
   address: string;
-  withdrawalAddress: string;
+  evmAddress: string;
+  balances: Balance[];
+  completed: boolean;
 }
 
 export interface BalanceType {
@@ -48,4 +50,9 @@ export interface AccountWithdrawalAddressState {
 export interface AccountRewardsState {
   loading: boolean;
   rewards: RewardsType;
+}
+
+export type Balance = {
+  amount: string;
+  denom: string;
 }

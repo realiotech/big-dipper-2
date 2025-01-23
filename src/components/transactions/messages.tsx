@@ -1,16 +1,19 @@
-import { Box, Flex, Text, Table, Link, Stack, StackSeparator, For } from "@chakra-ui/react"
+import { Box, Flex, Text, Table, Link, Stack, StackSeparator, For, useBreakpointValue } from "@chakra-ui/react"
 import { useState } from "react"
 import { Switch } from "../ui/switch"
 import useTranslation from "next-translate/useTranslation";
 import { getMessageByType } from "../msg/utils";
 
+
 const MessageItem = ({ message, raw }) => {
     const { t } = useTranslation('transactions');
     const formattedItem = getMessageByType(message, raw, t);
+    const isMobile = useBreakpointValue({ base: true, md: false });
+
     return (
-        <Flex w='full' gap='10'>
+        <Flex w='full' gap='10' direction={isMobile? 'column' : 'row'}>
             <Box w='30%'>{formattedItem.type}</Box>
-            <Box>{formattedItem.message}</Box>
+            <Box overflow={'auto'}>{formattedItem.message}</Box>
         </Flex>
     )
 }

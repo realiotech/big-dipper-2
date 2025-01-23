@@ -20,9 +20,12 @@ export const useAssetRecoil = () => {
           newData.push(convertedItem)
         })
         newData.sort((a, b) => a.idx - b.idx)
-        setAssets({ assetArr: newData, assetMap: assetMap })
+        setAssets({ assetArr: newData, assetMap: assetMap, loaded: true })
       })
-      .catch(e => console.log("can not fetch token data", e))
+      .catch(e => {
+        console.log("can not fetch token data", e)
+        setAssets({ assetArr: [], assetMap: {}, loaded: true })
+      })
   }, [])
 }
 

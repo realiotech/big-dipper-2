@@ -1,5 +1,13 @@
 import React from "react";
-import { Box, Flex, Text, Link, VStack } from "@chakra-ui/react";
+import {
+  Box,
+  Flex,
+  Text,
+  Link,
+  VStack,
+  Grid,
+  GridItem,
+} from "@chakra-ui/react";
 import { useProfileRecoil } from "@/recoil/profiles";
 import Proposer from "@/components/helper/proposer";
 import {
@@ -25,7 +33,7 @@ function shortenText(text, maxLength = 40) {
 export default function Overview({ state }) {
   const { t } = useTranslation("validators");
   const { overview, status } = state;
-  const asset = useRecoilValue(readAsset(overview?.denom))
+  const asset = useRecoilValue(readAsset(overview?.denom));
   const { imageUrl, name, address } = useProfileRecoil(overview.validator);
   const statusTheme = getValidatorStatus(
     status.status,
@@ -59,7 +67,7 @@ export default function Overview({ state }) {
           borderRadius="md"
           fontWeight="medium"
           _hover={{ bg: "blue.600" }}
-          display={{base: 'none', md:'block'}}
+          display={{ base: "none", md: "block" }}
         >
           Delegate
         </Box>
@@ -68,46 +76,88 @@ export default function Overview({ state }) {
         {overview.description}
       </Text>
       <Box mb={4}>
-        <Flex fontSize="sm" gap={"10px"} alignContent={'space-between'}>
-          <VStack align="flex-start">
-            <Text>Operator Address:</Text>
-            <Text>Self Delegate Address:</Text>
-            <Text>Web Site:</Text>
-            <Text>Staking Token:</Text>
-          </VStack>
-          <VStack align="flex-end">
-            <HelpLink
-              href={ADDRESS_DETAILS(overview.operatorAddress)}
-              value={overview.operatorAddress}
-            />
-            <HelpLink
-              href={ADDRESS_DETAILS(formatValAddress(overview?.operatorAddress))}
-              value={formatValAddress(overview?.operatorAddress)}
-            />
+        <Flex w={"full"} fontSize="sm" justify={"space-between"}>
+          <Grid templateColumns="1fr 1fr" gap={2} w="full">
+            <GridItem>
+              <Text>Operator Address:</Text>
+            </GridItem>
+            <GridItem textAlign="right">
+              <HelpLink
+                href={ADDRESS_DETAILS(overview.operatorAddress)}
+                value={overview.operatorAddress}
+              />
+            </GridItem>
 
-            <Link asChild colorPalette={"blue"}>
-              <NextLink href={overview.website}>
-                {shortenText(overview.website)}
-              </NextLink>
-            </Link>
-            <Asset denom={asset?.denom} image={asset?.image} name={asset?.symbol} />
-          </VStack>
+            <GridItem>
+              <Text>Self Delegate Address:</Text>
+            </GridItem>
+            <GridItem textAlign="right">
+              <HelpLink
+                href={ADDRESS_DETAILS(
+                  formatValAddress(overview?.operatorAddress)
+                )}
+                value={formatValAddress(overview?.operatorAddress)}
+              />
+            </GridItem>
+
+            <GridItem>
+              <Text>Web Site:</Text>
+            </GridItem>
+            <GridItem textAlign="right">
+              <Link asChild colorPalette="blue">
+                <NextLink href={overview.website}>
+                  {shortenText(overview.website)}
+                </NextLink>
+              </Link>
+            </GridItem>
+
+            <GridItem>
+              <Text>Staking Token:</Text>
+            </GridItem>
+            <GridItem textAlign="right">
+              <Asset
+                denom={asset?.denom}
+                image={asset?.image}
+                name={asset?.symbol}
+              />
+            </GridItem>
+          </Grid>
         </Flex>
       </Box>
-      <Flex direction={{base: 'column', md: 'row'}} justify="space-between" gap={"10px"} fontSize="sm">
-        <Box w = {{base: 'full', md: '200'}} borderRadius={'lg'} padding="10px" bg="white">
+      <Flex
+        direction={{ base: "column", md: "row" }}
+        justify="space-between"
+        gap={"10px"}
+        fontSize="sm"
+      >
+        <Box
+          w={{ base: "full", md: "200" }}
+          borderRadius={"lg"}
+          padding="10px"
+          bg="white"
+        >
           <Flex direction="column">
             <Text>Commission</Text>
             <Text>{numeral(status.commission * 100).format("0.00")}%</Text>
           </Flex>
         </Box>
-        <Box w = {{base: 'full', md: '200'}} borderRadius={'lg'} padding="10px" bg="white">
+        <Box
+          w={{ base: "full", md: "200" }}
+          borderRadius={"lg"}
+          padding="10px"
+          bg="white"
+        >
           <Flex direction="column">
             <Text>Condition</Text>
             <Text color={condition.color}>{t(condition.condition)}</Text>
           </Flex>
         </Box>
-        <Box w = {{base: 'full', md: '200'}} borderRadius={'lg'} padding="10px" bg="white">
+        <Box
+          w={{ base: "full", md: "200" }}
+          borderRadius={"lg"}
+          padding="10px"
+          bg="white"
+        >
           <Flex direction="column">
             <Text>Max Commission Rate</Text>
             <Text>{numeral(status.maxRate * 100).format("0.00")}%</Text>

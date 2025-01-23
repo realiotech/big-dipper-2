@@ -7,7 +7,7 @@ export default function HelpLink({ href, value }) {
     const isMobile = useBreakpointValue({ base: true, lg: false });
     return (
         <Link asChild colorPalette={'blue'}>
-            <NextLink href={href}>{isMobile ? getMiddleEllipsis(value, {beginning:6, ending:5}): value}</NextLink>
+            <NextLink href={href}>{isMobile ? getMiddleEllipsis(value, {beginning:9, ending:2}): value}</NextLink>
         </Link>
     )
 }

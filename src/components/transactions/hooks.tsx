@@ -119,7 +119,7 @@ export const useTransactions = () => {
     // refetch query
     transactionQuery.refetch({
       limit: PAGE_SIZE,
-      offset: page * PAGE_SIZE,
+      offset: (page - 1) * PAGE_SIZE,
     }).then(({ data }) => {
       const transactions = formatTransactions(data);
       const oldestTx = transactions[transactions.length - 1];

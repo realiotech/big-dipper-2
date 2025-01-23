@@ -1,4 +1,4 @@
-import { HStack } from "@chakra-ui/react"
+import { HStack, useBreakpointValue } from "@chakra-ui/react"
 import {
     PaginationItems,
     PaginationNextTrigger,
@@ -18,16 +18,18 @@ export type PageInfo = {
 
 export default function Pagination({pageInfo, pageChangeFunc, pageSizeChangeFunc}: 
     {pageInfo: PageInfo, pageChangeFunc: pageChangeFunc, pageSizeChangeFunc: pageSizeChangeFunc}) {
+      const isMobile = useBreakpointValue({ base: true, md: false });
 
     return (
         <PaginationRoot 
+            size={isMobile ? 'xs' : 'lg'}
             count={pageInfo.count} 
             pageSize={pageInfo.pageSize} 
             defaultPage={1}
             onPageChange={pageChangeFunc}
             onPageSizeChange={pageSizeChangeFunc}
         >
-        <HStack>
+        <HStack gap={0}>
           <PaginationPrevTrigger />
           <PaginationItems />
           <PaginationNextTrigger />

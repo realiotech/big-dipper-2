@@ -1,0 +1,33 @@
+query BalancesByAddress($account: String!) {
+  balance(where: {address: {_eq: $account}}) {
+    amount
+    denom
+  }
+}
+
+query AccountDelegations($address: String!, $offset: Int = 0, $limit: Int = 10) {
+  ms_locks(limit: $limit, offset: $offset, where: {staker_addr: {_eq: $address}}) {
+    bond_weight
+    amount
+    denom
+    staker_addr
+    val_addr
+  }
+  locks_count_by_del(args: {address: $address}) {
+    count
+  }
+}
+
+query AccountUndelegations($address: String!, $offset: Int = 0, $limit: Int = 10) {
+  ms_unlocks(limit: $limit, offset: $offset, where: {staker_addr: {_eq: $address}}) {
+    bond_weight
+    amount
+    denom
+    creation_height
+    staker_addr
+    val_addr
+  }
+  unlocks_count_by_del(args: {address: $address}) {
+    count
+  }
+}

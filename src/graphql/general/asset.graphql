@@ -1,0 +1,44 @@
+query AssetOverview($denom: String!) {
+  supply_by_denom(args: {denom: $denom}) {
+    amount
+  }
+  token_holder(where: {denom: {_eq: $denom}}){
+    num_holder
+  }
+}
+
+query AssetDelegations($denom: String!, $offset: Int = 0, $limit: Int = 10) {
+  ms_locks(limit: $limit, offset: $offset, where: {denom: {_eq: $denom}}) {
+    bond_weight
+    amount
+    denom
+    staker_addr
+    val_addr
+  }
+  locks_count_by_denom(args: {denom: $denom}) {
+    count
+  }
+}
+
+query AssetUndelegations($denom: String!, $offset: Int = 0, $limit: Int = 10) {
+  ms_unlocks(limit: $limit, offset: $offset, where: {denom: {_eq: $denom}}) {
+    bond_weight
+    amount
+    denom
+    creation_height
+    staker_addr
+    val_addr
+  }
+  unlocks_count_by_denom(args: {denom: $denom}) {
+    count
+  }
+}
+
+
+query AssetHolders($denom: String!, $offset: Int = 0, $limit: Int = 10, $order_by: String = "desc") {
+  balance(limit: $limit, offset: $offset, where: {denom: {_eq: $denom}}, order_by: {amount: desc}) {
+    address
+    amount
+    denom
+  }
+}
