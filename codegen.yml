@@ -6,7 +6,7 @@ generates:
   ./src/graphql/types/general_types.ts:
     documents:
       - 'src/graphql/general/*'
-    schema: http://localhost:8080/v1/graphql
+    schema: http://37.27.71.120/v1/graphql
     plugins:
       - "typescript"
       - "typescript-operations"

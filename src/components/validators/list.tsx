@@ -194,7 +194,13 @@ const ValidatorItem = ({ item, idx }) => {
         <Link asChild>
           {/* <NextLink href={ADDRESS_DETAILS(item?.validator.address)}> */}
             <Button bg={"#707D8A"} size="sm" disabled={item.status !== 3}>
-              <DelegateDialog/>
+              <DelegateDialog 
+              denom={asset?.denom}
+              denomSymbol={asset?.symbol}
+              decimal={asset?.decimals}
+              operatorAddress={item.validator.address}
+              operatorName={item.validator.name}
+              />
             </Button>
           {/* </NextLink> */}
         </Link>
