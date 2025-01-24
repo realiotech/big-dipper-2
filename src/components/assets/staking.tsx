@@ -19,12 +19,12 @@ export default function Staking({ denom }) {
       defaultValue={1}
       variant="subtle"
     >
-      <TabsList mb={5}>
+      <TabsList>
         <TabsTrigger value={1}>Delegations ({delegations.count ?? 0})</TabsTrigger>
         <TabsTrigger value={2}>Unbondings ({unbondings.count ?? 0})</TabsTrigger>
       </TabsList>
       {delegations?.data ? (
-        <Box bg="#FAFBFC" p={6} borderRadius="md" boxShadow="sm" mb={8}>
+        <Box bg="#FAFBFC" px={6} borderRadius="md" mb={8}>
           <TabsContent value={1}>
             <Delegations data={delegations} page={delegationsPage} setPage={setDelegationsPage} displayMode={0} />
           </TabsContent>

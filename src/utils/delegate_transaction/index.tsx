@@ -19,7 +19,9 @@ export const createDelegateTx = async ({
     fees,
     gas,
     memo,
+    accounts,
     signer, 
+    offlineSigner,
     decimal,
     chainId,
     rpcEndpoint,
@@ -37,8 +39,8 @@ export const createDelegateTx = async ({
         throw new Error("Invalid amount");
       }
   
-      const offlineSigner = window.keplr.getOfflineSigner(chainId);
-      const accounts = await offlineSigner.getAccounts();
+    //   const offlineSigner = window.keplr.getOfflineSigner(chainId);
+    //   const accounts = await offlineSigner.getAccounts();
   
       if (!accounts || accounts.length === 0) {
         throw new Error("Failed to retrieve accounts from Keplr");
@@ -52,7 +54,7 @@ export const createDelegateTx = async ({
         throw new Error("Account does not have a public key");
       }
   
-      const signingClient = await SigningStargateClient.connectWithSigner(rpcEndpoint, offlineSigner);
+    //   const signingClient = await SigningStargateClient.connectWithSigner(rpcEndpoint, offlineSigner);
   
       const delegateMsg = {
         typeUrl: "/cosmos.staking.v1beta1.MsgDelegate",
@@ -85,7 +87,7 @@ export const createDelegateTx = async ({
         value: { messages: [delegateMsg], memo },
       };
   
-      const txBodyBytes = signingClient.registry.encode(txBody);
+      const txBodyBytes = signer.registry.encode(txBody);
       const gasLimit = Int53.fromString(fee.gas).toNumber();
       const authInfoBytes = makeAuthInfoBytes(
         [{ pubkey: pubKey, sequence }],
@@ -102,7 +104,7 @@ export const createDelegateTx = async ({
         signatures: [fromBase64(signature.signature)],
       }).finish();
   
-      const result = await signingClient.broadcastTx(txBytes);
+      const result = await signer.broadcastTx(txBytes);
   
       if (result.code !== 0) {
         throw new Error(result.rawLog);
