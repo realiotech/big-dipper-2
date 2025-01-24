@@ -18,7 +18,7 @@ import {
   ADDITIONAL_META_TAGS,
   SEO_TITLE,
   SEO_DESCRIPTION,
-} from './utils';
+} from '../utils/utils';
 
 function App({
   Component, pageProps,
