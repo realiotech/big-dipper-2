@@ -20,6 +20,14 @@
     "ario": {
       "display": "rio",
       "exponent": 18
+    },
+    "arst": {
+      "display": "rst",
+      "exponent": 18
+    },
+    "almx": {
+      "display": "lmx",
+      "exponent": 18
     }
   },
   "extra": {
