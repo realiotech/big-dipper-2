@@ -14,7 +14,9 @@ export interface AtomState {
   walletAddress: string | null; // New field for the wallet address
   chainId: string | null; // New field for the chain ID
   signer: any | null; // New field for the signer object
+  accounts: any | null; // New field for the accounts object
   balances: Record<string, string> | null; 
+  offlineSigner: any | null; // New field for the offline signer object
 }
 
 const initialState: AtomState = {
@@ -31,7 +33,9 @@ const initialState: AtomState = {
   walletAddress: null, // Default to null
   chainId: null, // Default to null
   signer: null, // Default to null
+  accounts: null, // Default to null
   balances: null,
+  offlineSigner: null, // Default to null
 };
 
 export const atomState = atom<AtomState>({

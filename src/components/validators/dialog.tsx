@@ -46,7 +46,7 @@ export const DelegateDialog = ({
     denom: denom || "",
     amount: "",
     fees: "2000",
-    gas: "250000",
+    gas: "300000",
     memo: "realio.network",
   });
 
@@ -72,6 +72,8 @@ export const DelegateDialog = ({
         fees: formData.fees,
         gas: formData.gas,
         memo: formData.memo,
+        accounts: wallet.accounts,
+        offlineSigner: wallet.offlineSigner,
         signer: wallet.signer, // Ensure signer is correctly passed
         decimal: decimal,
         chainId: "realionetwork_3301-1",
@@ -182,7 +184,7 @@ export const DelegateDialog = ({
                 </Box>
 
                 {/* Fees */}
-                <Box>
+                <Box display="none">
                   <Text fontSize="sm" mb={1}>
                     Fees
                   </Text>
