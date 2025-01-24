@@ -6,7 +6,7 @@
     "dev": "RECOIL_DUPLICATE_ATOM_KEY_CHECKING_ENABLED=false next dev",
     "build": "npm run build:next",
     "build:next": "next build",
-    "start": "node dist/index.js",
+    "start": "next start",
     "type-check": "tsc",
     "lint": "eslint . --ext .ts,.tsx,.js,.jsx",
     "test": "NODE_ENV=test jest",
