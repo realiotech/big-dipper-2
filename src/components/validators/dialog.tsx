@@ -18,13 +18,18 @@ import {
   DialogTitle,
   DialogTrigger,
 } from "@/components/ui/dialog";
-import {PopoverTrigger} from "@/components/ui/popover";
+import { PopoverTrigger } from "@/components/ui/popover";
 import { IoCloseOutline } from "react-icons/io5";
 import { useState } from "react";
 import { createDelegateTx } from "@/utils/delegate_transaction";
 import { useRecoilValue } from "recoil";
 import { atomState } from "@/recoil/wallet/atom";
 import { useKeplrConnect } from "@/recoil/wallet/hooks";
+import { AiOutlineLoading } from "react-icons/ai";
+import styles from "../layout/wallet-popover.module.css";
+import openNotification from "@/utils/notifications";
+import { ToastContainer } from "react-toastify";
+
 
 export const DelegateDialog = ({
   denom,
@@ -33,10 +38,10 @@ export const DelegateDialog = ({
   operatorName,
   operatorAddress,
 }) => {
-  const wallet = useRecoilValue(atomState); 
-  const { triggerWalletConnectPopover } = useKeplrConnect();
+  const wallet = useRecoilValue(atomState);
+  const { triggerWalletConnectPopover, reloadBalances } = useKeplrConnect();
   const [formData, setFormData] = useState({
-    sender: wallet.walletAddress || "",
+    sender: wallet?.walletAddress || "",
     validator: operatorAddress || "",
     denom: denom || "",
     amount: "",
@@ -57,7 +62,7 @@ export const DelegateDialog = ({
 
     try {
       setLoading(true);
-      console.log("Sending transaction with data:", formData);
+    //   console.log("Sending transaction with data:", formData);
 
       const txResult = await createDelegateTx({
         sender: wallet.walletAddress,
@@ -73,10 +78,11 @@ export const DelegateDialog = ({
         rpcEndpoint: "https://realio.rpc.decentrio.ventures:443",
         apiEndpoint: "https://realio.api.decentrio.ventures:443",
       });
-      console.log("Transaction Result:", txResult);
+      reloadBalances();
+      openNotification("success", `Transaction success: ${txResult.transactionHash}` )
       setLoading(false);
     } catch (err) {
-      console.error("Transaction failed:", err);
+        openNotification("error", `Transaction failed: ${err.message}` )
       setLoading(false);
     }
   };
@@ -105,21 +111,19 @@ export const DelegateDialog = ({
               </Text>
               <DialogTrigger style={{ cursor: "pointer" }}>
                 <PopoverRoot>
-
-              <PopoverTrigger asChild>
-
-              <Button
-                onClick={triggerWalletConnectPopover}
-                w="full"
-                colorScheme="blue"
-                bg={"#707D8A"}
-                _hover={{ bg: "#505D6A" }}
-              >
-                Connect Wallet
-              </Button>
-      </PopoverTrigger>
+                  <PopoverTrigger asChild>
+                    <Button
+                      onClick={triggerWalletConnectPopover}
+                      w="full"
+                      colorScheme="blue"
+                      bg={"#707D8A"}
+                      _hover={{ bg: "#505D6A" }}
+                    >
+                      Connect Wallet
+                    </Button>
+                  </PopoverTrigger>
                 </PopoverRoot>
-            </DialogTrigger>
+              </DialogTrigger>
             </VStack>
           </DialogBody>
         ) : (
@@ -158,7 +162,13 @@ export const DelegateDialog = ({
                     <Text fontSize="sm" mb={1}>
                       Amount
                     </Text>
-                    <Text fontSize="xs">Available: {(parseFloat(wallet.balance) / (10 ** decimal)).toFixed(2).toString()} {denomSymbol}</Text>
+                    <Text fontSize="xs">
+                      Available:{" "}
+                      {(parseFloat(wallet.balances[`${denom}`]) / 10 ** decimal)
+                        .toFixed(2)
+                        .toString()}{" "}
+                      {denomSymbol}
+                    </Text>
                   </Flex>
                   <Group w={"full"} attached>
                     <Input
@@ -217,11 +227,16 @@ export const DelegateDialog = ({
                 bg={"#707D8A"}
                 w={"full"}
                 colorScheme="blue"
-                isLoading={loading}
+                disabled={loading}
               >
-                Send
+                {loading ? (
+                  <AiOutlineLoading className={styles.spin} />
+                ) : (
+                  "Delegate"
+                )}
               </Button>
             </DialogFooter>
+            <ToastContainer closeOnClick={false} draggable={false} />
           </form>
         )}
       </DialogContent>

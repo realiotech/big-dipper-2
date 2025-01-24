@@ -19,7 +19,7 @@ export const createDelegateTx = async ({
     fees,
     gas,
     memo,
-    signer, // Ensure this is an Amino signer
+    signer, 
     decimal,
     chainId,
     rpcEndpoint,
@@ -43,8 +43,6 @@ export const createDelegateTx = async ({
       if (!accounts || accounts.length === 0) {
         throw new Error("Failed to retrieve accounts from Keplr");
       }
-  
-      console.log("Accounts:", accounts); // Debugging: Verify account details
   
       const account = accounts.find((acc) => acc.address === sender);
       if (!account) {
