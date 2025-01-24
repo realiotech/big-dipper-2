@@ -69,7 +69,7 @@ const FeaturedBlockchains = () => {
                       <Asset
                         name={blockchain.symbol}
                         image={blockchain.image}
-                        denom={blockchain.symbol.toLowerCase()}
+                        denom={blockchain.denom}
                         />
                     </HStack>
                   </Table.Cell>

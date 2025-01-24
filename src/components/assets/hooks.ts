@@ -4,13 +4,6 @@ import { useRouter } from "next/router";
 import { OverviewState, HolderState, Holder } from "./type";
 import { PageInfo } from "../layout/pagination";
 import * as R from 'ramda';
-import { formatToken } from '@/utils/format_token';
-
-const denomMap = {
-  "rio": "ario",
-  "rst": "arst",
-  "lmx": "almx",
-}
 
 export function useOverview() {
   const router = useRouter()
@@ -26,10 +19,9 @@ export function useOverview() {
     }
 }, [state])
 
-  const qdenom = denomMap[denom]
   useAssetOverviewQuery({
     variables: {
-      denom: qdenom
+      denom
     },
     onCompleted: (data) => {
       setState({
@@ -42,7 +34,7 @@ export function useOverview() {
   return {
     state,
     maxHolders,
-    qdenom,
+    denom,
   }
 }
 
@@ -58,7 +50,7 @@ const formatHolders = (data: AssetHoldersQuery): Holder[] => {
 export const useHolders = (maxHolder: number) => {
   const router = useRouter()
   const denom = router?.query?.denom as string
-  const qDenom = denomMap[denom]
+
   const [holderState, setHolderState] = useState<HolderState>({ loading: false,  holders: [] })
   const [pageInfo, SetPageInfo] = useState<PageInfo>({
     count: 0,
@@ -90,7 +82,7 @@ export const useHolders = (maxHolder: number) => {
 
   const holderQuery = useAssetHoldersQuery({
     variables: {
-      denom: qDenom,
+      denom,
       limit: 20,
       offset: 0,
     },
@@ -136,7 +128,6 @@ export const useHolders = (maxHolder: number) => {
   ) => {
     const [delegationsPage, setDelegationsPage] = useState(0)
     const [unbondingsPage, setUnboningsPage] = useState(0)
-    const qDenom = denomMap[denom]
 
     // =====================================
     // delegations
@@ -148,7 +139,7 @@ export const useHolders = (maxHolder: number) => {
       refetch: delegationsRefetch,
     } = useAssetDelegationsQuery({
       variables: {
-        denom: qDenom,
+        denom,
         limit: 10,
         offset: delegationsPage * 10,
       },
@@ -170,7 +161,7 @@ export const useHolders = (maxHolder: number) => {
       refetch: undelegationsRefetch,
     } = useAssetUndelegationsQuery({
       variables: {
-        denom: qDenom,
+        denom,
         limit: 10,
         offset: unbondingsPage * 10,
       },

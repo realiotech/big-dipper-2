@@ -27,12 +27,6 @@ import numeral from "numeral";
 import { formatTokenByExponent } from "@/utils";
 import { Avatar } from "../ui/avatar";
 
-const denomToTokenMap = {
-  rio: "Realio Network",
-  rst: "Realio Security Token",
-  lmx: "Liquid Mining Token",
-};
-
 const HolderItem = ({ item, denom }) => {
   const assetDetail = useRecoilValue(readAsset(denom));
 
@@ -75,10 +69,10 @@ const SkeletonBlockItem = ({ index }) => {
 
 const AssetDetails = () => {
   const router = useRouter();
-  const { state, maxHolders, qdenom } = useOverview();
+  const { state, maxHolders, denom } = useOverview();
   const { holderState, pageInfo, handlePageChange } = useHolders(maxHolders);
   const [selectedTab, setSelectedTab] = useState("staking");
-  const assetDetail = useRecoilValue(readAsset(qdenom));
+  const assetDetail = useRecoilValue(readAsset(denom));
 
   return (
     <Grid templateColumns="repeat(6, 1fr)" gap={"1.5rem"} minH="auto">
@@ -96,9 +90,9 @@ const AssetDetails = () => {
         <Flex justify="space-between">
           <HStack>
             <Avatar src={assetDetail?.image} size="xl" />
-            <VStack align="flex-start" spacing={0}>
+            <VStack align="flex-start" gap={0}>
               <Text fontSize="lg" fontWeight="bold">
-                {`${denomToTokenMap[state?.denom]} (${state?.denom.toUpperCase()})`}
+                {`${assetDetail?.name} (${assetDetail?.symbol})`}
               </Text>
               <Text color="gray.500">Token Overview</Text>
             </VStack>
@@ -194,7 +188,7 @@ const AssetDetails = () => {
                           </Center>
                         ) : (
                           holderState.holders.map((item, index) => (
-                            <HolderItem item={item} denom={qdenom} key={`holder-${index}`} />
+                            <HolderItem item={item} denom={denom} key={`holder-${index}`} />
                           ))
                         )
                       ) : (
