@@ -15,6 +15,7 @@ export default function SearchBar() {
                 <Input
                     h="60px"
                     borderRadius="60px"
+                    border={{base: '1px solid #707D8A', _dark: '1px solid white'}}
                     fontSize={"16px"}
                     w={{ base: "full", lg: "550px" }}
                     onChange={e => handleOnChange(e)}

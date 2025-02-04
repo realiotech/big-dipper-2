@@ -63,7 +63,7 @@ const BlockItem = ({ item }) => {
   const { name, address, imageUrl } = useProfileRecoil(item.proposer);
 
   return (
-    <Table.Row>
+    <Table.Row bg={{ base: "white", _dark: "#262626" }}>
       <Table.Cell>
         <ChakraLink asChild colorPalette="blue">
           <Link href={`/blocks/${item.height}`}>
@@ -110,7 +110,7 @@ const Blocks = () => {
             divideY={"1px"}
             divideStyle={"ridge"}
             borderRadius="10px"
-            bg={"white"}
+            bg={{ base: "white", _dark: "#262626" }}
             gap={0}
           >
             {state.items.map((item, index) => (
@@ -122,7 +122,7 @@ const Blocks = () => {
             ))}
           </VStack>
         ) : (
-          <Table.Root  color={{ base: "black", _dark: "white" }}  bgColor="inherit" size="sm" showColumnBorder={false}>
+          <Table.Root  color={{ base: "black", _dark:  "white" }}  bgColor="inherit" size="sm" showColumnBorder={false}>
             <Table.Header>
               <Table.Row bgColor="inherit">
                 <Table.ColumnHeader>Height</Table.ColumnHeader>

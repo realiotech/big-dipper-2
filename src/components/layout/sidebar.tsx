@@ -9,13 +9,17 @@ import { Proposal } from "../icons/proposal";
 import { Params } from "../icons/params";
 import { useRouter } from "next/router";
 import { ColorModeButton } from "../ui/color-mode";
+import { useColorMode } from "../ui/color-mode";
+
 export default function Sidebar() {
     const { pathname } = useRouter()
+    const { colorMode } = useColorMode()
+
     return (
         <VStack hideBelow='lg' pr='50px'>
             <Link asChild outline='none'>
                 <NextLink href="/">
-                    <Image w='60px' src="/images/logo.svg" />
+                {colorMode == 'light' ? <Image w='60px' src="/images/logo.svg" /> : <Image w='60px' src="/images/logo_white.svg" />}
                 </NextLink>
             </Link>
             <Center position='relative' top='200px'>

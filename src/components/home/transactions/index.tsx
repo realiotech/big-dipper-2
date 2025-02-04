@@ -78,7 +78,8 @@ const Transactions = () => {
           <Link href="/transactions">See more</Link>
         </ChakraLink>
       </Flex>
-      {isMobile?     <Box bg={{ base: "white", _dark: "black" }} borderRadius="md" overflowY="auto" maxH="auto">
+      {isMobile?     <Box             bg={{ base: "white", _dark: "#262626" }}
+ borderRadius="md" overflowY="auto" maxH="auto">
       <VStack px={3} separator={<StackSeparator />} align="stretch">
         {state.items.map((item, index) => (
           <TxItemMobile item={item} rowIndex={index} />
@@ -96,7 +97,7 @@ const Transactions = () => {
         <Table.Body bg={{ base: "white", _dark: "#262626" }}>
           <For each={state.items}>
             {(item, index) => (
-              <Table.Row key={`transaction-${index}`}>
+              <Table.Row bg={{ base: "white", _dark: "#262626" }} key={`transaction-${index}`}>
                 <Table.Cell height={"54px"}>
                   <ChakraLink asChild colorPalette="blue">
                     <Link href={`/blocks/${item.height}`}>

@@ -60,9 +60,9 @@ const FeaturedBlockchains = () => {
                 </TableColumnHeader>
               </Table.Row>
             </Table.Header>
-            <Table.Body bg={{ base: "white", _dark: "#262626" }}>
+            <Table.Body >
               {blockchains.map((blockchain, index) => (
-                <Table.Row key={index}>
+                <Table.Row bg={{ base: "white", _dark: "#262626" }} key={index}>
                   {/* Token with Image */}
                   <Table.Cell>
                     <HStack>

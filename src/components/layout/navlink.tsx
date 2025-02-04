@@ -11,8 +11,8 @@ export default function NavLink({ children, href, selected }) {
                     borderRadius='60px'
                     border='1px solid #707D8A'
                     fontSize='25px'
-                    bgColor={selected ? '#707D8A' : 'white'}
-                    color={selected ? 'white' : '#707D8A'}
+                    bgColor={{base: selected ? '#707D8A' : 'white', _dark: selected ? '#F5F8F9' : 'black'}}
+                    color={{base: selected ? 'white' : '#707D8A', _dark: selected ? 'black' : '#707D8A'}}
                 >
                     {children}
                 </Center>
