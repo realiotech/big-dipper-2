@@ -145,7 +145,7 @@ export default function TransactionDetails() {
         </Text>
         {logs && (
           <Box
-            bg="white"
+            bg={{ base: "white", _dark: "black" }}
             p={4}
             borderRadius="md"
             overflowY="auto"

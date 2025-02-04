@@ -96,9 +96,9 @@ export default function Delegations({ data, page, setPage, displayMode }) {
   return (
     <VStack w="full">
       <Box w="full" overflowX="auto">
-        <Table.Root showColumnBorder={false} h="full" w="full">
+        <Table.Root  color={{ base: "black", _dark: "white" }}  showColumnBorder={false} h="full" w="full">
           <Table.Header>
-            <Table.Row bg="#FAFBFC">
+            <Table.Row bg={{ base: "#FAFBFC", _dark: "#0F0F0F" }}>
               {getDisplayHeaders(displayMode)}
               <Table.ColumnHeader display={{ base: "none", md: "table-cell" }}>
                 Bond Weight
@@ -110,14 +110,14 @@ export default function Delegations({ data, page, setPage, displayMode }) {
               <Table.ColumnHeader />
             </Table.Row>
           </Table.Header>
-          <Table.Body>
+          <Table.Body bg={{ base: "white", _dark: "#262626" }}>
             {!data?.loading ? (
               data?.data.length === 0 ? (
                 <Table.Row>
                   <Table.Cell colSpan={5} textAlign="center">
                     <Center
                       borderRadius="20px"
-                      bgColor="#FAFBFC"
+                               bgColor={{ base: "#FAFBFC", _dark: "#0F0F0F" }}
                       py="5"
                       px="8"
                       minH="65vh"
@@ -141,7 +141,7 @@ export default function Delegations({ data, page, setPage, displayMode }) {
               Array.from({ length: 10 }).map((_, index) => <SkeletonItem key={`delegation-skele-${index}`} index={index} />)
             )}
           </Table.Body>
-        </Table.Root>
+        </Table.Root >
       </Box>
       <PaginationRoot
         count={data?.count}

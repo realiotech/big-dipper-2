@@ -30,10 +30,10 @@ export default function AssetOverview() {
     <>
       <GridItem
         colSpan={{ base: 6, md: 2 }}
-        bg="white"
+        bg={{ base: "white", _dark: "black" }}
         p={6}
         borderRadius="lg"
-        bgColor="#FAFBFC"
+                 bgColor={{ base: "#FAFBFC", _dark: "#0F0F0F" }}
       >
         <Text>Overview</Text>
         <Flex direction={"column"} gap={10}>
@@ -57,10 +57,10 @@ export default function AssetOverview() {
       </GridItem>
       <GridItem
         colSpan={{ base: 6, md: 2 }}
-        bg="white"
+        bg={{ base: "white", _dark: "black" }}
         p={6}
         borderRadius="lg"
-        bgColor="#FAFBFC"
+                 bgColor={{ base: "#FAFBFC", _dark: "#0F0F0F" }}
       >
         <Text>Market</Text>
 
@@ -85,10 +85,10 @@ export default function AssetOverview() {
       </GridItem>
       <GridItem
         colSpan={{ base: 6, md: 2 }}
-        bg="white"
+        bg={{ base: "white", _dark: "black" }}
         p={6}
         borderRadius="lg"
-        bgColor="#FAFBFC"
+                 bgColor={{ base: "#FAFBFC", _dark: "#0F0F0F" }}
       >
         <Text>Other Info</Text>
 

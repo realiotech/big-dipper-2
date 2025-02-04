@@ -45,14 +45,14 @@ const FeaturedBlockchains = () => {
 
   return (
     <GridItem colSpan={2} h={"full"}>
-      <Box bg="#FAFBFC" p={6} borderRadius="20px" h={"full"}>
+      <Box bg={{ base: "#FAFBFC", _dark: "#0F0F0F" }} p={6} borderRadius="20px" h={"full"}>
         <Text fontSize="lg" fontWeight="bold" mb={4}>
           Featured Blockchains
         </Text>
         <Table.ScrollArea border={"none"} rounded="lg">
-          <Table.Root bg="white" borderRadius="md">
+          <Table.Root  color={{ base: "black", _dark: "white" }}  bg={{ base: "white", _dark: "black" }} borderRadius="md">
             <Table.Header>
-              <Table.Row bg="#FAFBFC">
+              <Table.Row bg={{ base: "#FAFBFC", _dark: "#0F0F0F" }}>
                 <TableColumnHeader>Token</TableColumnHeader>
                 <TableColumnHeader>Price</TableColumnHeader>
                 <TableColumnHeader textAlign={"right"}>
@@ -60,7 +60,7 @@ const FeaturedBlockchains = () => {
                 </TableColumnHeader>
               </Table.Row>
             </Table.Header>
-            <Table.Body>
+            <Table.Body bg={{ base: "white", _dark: "#262626" }}>
               {blockchains.map((blockchain, index) => (
                 <Table.Row key={index}>
                   {/* Token with Image */}
@@ -96,7 +96,7 @@ const FeaturedBlockchains = () => {
                 </Table.Row>
               ))}
             </Table.Body>
-          </Table.Root>
+          </Table.Root >
         </Table.ScrollArea>
       </Box>
     </GridItem>

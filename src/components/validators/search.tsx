@@ -9,7 +9,7 @@ export default function SearchValidator({ callback }) {
             <Input
                 placeholder="Search Validator"
                 w={{ base: "full", lg: '300px' }}
-                bg="white"
+                bg={{ base: "white", _dark: "black" }}
                 borderRadius="full"
                 onChange={handleOnChange}
                 onKeyDown={handleKeyDown}

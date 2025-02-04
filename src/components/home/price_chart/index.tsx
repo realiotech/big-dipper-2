@@ -98,7 +98,7 @@ const PriceChart = () => {
   };
 
   return (
-    <GridItem borderRadius="20px" bgColor="#FAFBFC" py="5" px="8" colSpan={2}>
+    <GridItem borderRadius="20px" bgColor={{ base: "#FAFBFC", _dark: "#0F0F0F" }} py="5" px="8" colSpan={2}>
       <Text fontSize="24px" fontWeight="bold" pb="6">
         Price (~24h)
       </Text>

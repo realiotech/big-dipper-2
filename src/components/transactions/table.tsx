@@ -62,10 +62,10 @@ export default function TxTable({ transactions, isLoading }) {
   const isMobile = useBreakpointValue({ base: true, md: false });
   
   return !isMobile ? (
-    <Box bg="white" borderRadius="md" overflowY="auto" maxH="auto">
-      <Table.Root showColumnBorder={false} h="full" w="full">
+    <Box bg={{ base: "white", _dark: "black" }} borderRadius="md" overflowY="auto" maxH="auto">
+      <Table.Root  color={{ base: "black", _dark: "white" }}  showColumnBorder={false} h="full" w="full">
         <Table.Header>
-          <Table.Row bg="#FAFBFC">
+          <Table.Row bg={{ base: "#FAFBFC", _dark: "#0F0F0F" }}>
             <Table.ColumnHeader>Block</Table.ColumnHeader>
             <Table.ColumnHeader>Hash</Table.ColumnHeader>
             <Table.ColumnHeader>Messages</Table.ColumnHeader>
@@ -73,12 +73,12 @@ export default function TxTable({ transactions, isLoading }) {
             <Table.ColumnHeader>Time</Table.ColumnHeader>
           </Table.Row>
         </Table.Header>
-        <Table.Body>
+        <Table.Body bg={{ base: "white", _dark: "#262626" }}>
           {
             !isLoading ? transactions.length === 0 ? (
                 <Table.Row>
                 <Table.Cell colSpan={5} textAlign="center">
-                  <Center borderRadius="20px" bgColor="#FAFBFC" py="5" px="8" minH="65vh" w="full">
+                  <Center borderRadius="20px" bgColor={{ base: "#FAFBFC", _dark: "#0F0F0F" }} py="5" px="8" minH="65vh" w="full">
                     <NoData />
                   </Center>
                 </Table.Cell>
@@ -96,10 +96,10 @@ export default function TxTable({ transactions, isLoading }) {
             )
           }
         </Table.Body>
-      </Table.Root>
+      </Table.Root >
     </Box>
   ) : (
-    <Box bg="white" borderRadius="md" overflowY="auto" maxH="auto">
+    <Box bg={{ base: "white", _dark: "black" }} borderRadius="md" overflowY="auto" maxH="auto">
       <VStack px={3} separator={<StackSeparator />} align="stretch">
         {transactions.map((item, index) => (
           <TxItemMobile item={item} rowIndex={index} />

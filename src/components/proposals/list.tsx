@@ -19,7 +19,7 @@ const ProposalItem = ({ proposal }) => {
   const statusInfo = getStatusInfo(proposal.status, t);
   const isMobile = useBreakpointValue({ base: true, md: false });
   return isMobile ? (
-    <Box bg="white" p={4}>
+    <Box bg={{ base: "white", _dark: "black" }} p={4}>
       <Flex justify="space-between" direction="column" align="center" gap={4} w={"full"}>
         <Flex justify="space-between" w="full">
           <Link
@@ -51,7 +51,7 @@ const ProposalItem = ({ proposal }) => {
       </Flex>
     </Box>
   ) : (
-    <Box bg="white" p={4}>
+    <Box bg={{ base: "white", _dark: "black" }} p={4}>
       <Flex justify="space-between" align="center" mb={2} w={"full"}>
         <Flex direction={"column"} w="80%">
           <Link
@@ -86,7 +86,7 @@ const ProposalItem = ({ proposal }) => {
 const SkeletonItem = () => {
   const isMobile = useBreakpointValue({ base: true, md: false });
   return isMobile ? (
-    <Box bg="white" p={4}>
+    <Box bg={{ base: "white", _dark: "black" }} p={4}>
       <Flex justify="space-between" direction="column" align="center" gap={4} w={"full"}>
         <Flex justify="space-between" w="full">
           <Skeleton h={"20px"} w="full" mb="4" />
@@ -95,7 +95,7 @@ const SkeletonItem = () => {
       </Flex>
     </Box>
   ) : (
-    <Box bg="white" p={4}>
+    <Box bg={{ base: "white", _dark: "black" }} p={4}>
       <Flex justify="space-between" align="center" mb={2} w={"full"}>
         <Flex direction={"column"} w="80%">
           <Skeleton h={"20px"} w="full" mb="4" />
@@ -110,7 +110,7 @@ const ProposalList = () => {
   const { state } = useProposals();
   return (
     <Box
-      bg="#FAFBFC"
+      bg={{ base: "#FAFBFC", _dark: "#0F0F0F" }}
       py={5}
       px={8}
       overflowY="hidden"

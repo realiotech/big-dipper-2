@@ -10,7 +10,7 @@ const config = defineConfig({
                 },
                 fg: {
                     DEFAULT: {
-                        value: { _light: "{colors.black}", _dark: "{colors.black}" },
+                        value: { _light: "{colors.black}", _dark: "{colors.white}" },
                     },
                 },
             },

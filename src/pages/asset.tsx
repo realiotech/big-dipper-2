@@ -130,7 +130,7 @@ const AssetPage = () => {
         colSpan={6}
         direction={"row"}
         align="center"
-        bg="white"
+        bg={{ base: "white", _dark: "black" }}
         p={6}
         height={"auto"}
         borderRadius="lg"
@@ -166,10 +166,10 @@ const AssetPage = () => {
 
       <GridItem
         colSpan={2}
-        bg="white"
+        bg={{ base: "white", _dark: "black" }}
         p={6}
         borderRadius="lg"
-        bgColor="#FAFBFC"
+                 bgColor={{ base: "#FAFBFC", _dark: "#0F0F0F" }}
       >
         <Text>Overview</Text>
         <Flex direction={"column"} gap={10}>
@@ -196,10 +196,10 @@ const AssetPage = () => {
       </GridItem>
       <GridItem
         colSpan={2}
-        bg="white"
+        bg={{ base: "white", _dark: "black" }}
         p={6}
         borderRadius="lg"
-        bgColor="#FAFBFC"
+                 bgColor={{ base: "#FAFBFC", _dark: "#0F0F0F" }}
       >
         <Text>Market</Text>
 
@@ -227,10 +227,10 @@ const AssetPage = () => {
       </GridItem>
       <GridItem
         colSpan={2}
-        bg="white"
+        bg={{ base: "white", _dark: "black" }}
         p={6}
         borderRadius="lg"
-        bgColor="#FAFBFC"
+                 bgColor={{ base: "#FAFBFC", _dark: "#0F0F0F" }}
       >
         <Text>Other Info</Text>
 
@@ -262,7 +262,7 @@ const AssetPage = () => {
           size="md"
           variant="subtle"
         >
-          <Tabs.List bg="white">
+          <Tabs.List bg={{ base: "white", _dark: "black" }}>
             <Tabs.Trigger
               _selected={{
                 bg: "#707D8A",
@@ -306,7 +306,7 @@ const AssetPage = () => {
                   <Text fontSize="md" mb={4}>
                     A total of 6,732 transactions found
                   </Text>
-                  <Table.Root variant="simple" colorScheme="gray">
+                  <Table.Root color={{ base: "black", _dark: "white" }}  variant="simple" colorScheme="gray">
                     <Table.Header>
                       <Table.Row>
                         <Table.ColumnHeader>Hash</Table.ColumnHeader>
@@ -318,7 +318,7 @@ const AssetPage = () => {
                         <Table.ColumnHeader>Amount</Table.ColumnHeader>
                       </Table.Row>
                     </Table.Header>
-                    <Table.Body bg="white">
+                    <Table.Body bg={{ base: "white", _dark: "#262626" }}>
                       <>
                         {mockTransactions.map((tx, index) => (
                           <Table.Row key={index}>
@@ -341,7 +341,7 @@ const AssetPage = () => {
                         ))}
                       </>
                     </Table.Body>
-                  </Table.Root>
+                  </Table.Root >
                 </Box>
               </Tabs.Content>
 
@@ -351,7 +351,7 @@ const AssetPage = () => {
                   <Text fontSize="md" mb={4}>
                     Top 1000 holders (from a total of 31,309 holders)
                   </Text>
-                  <Table.Root variant="simple" colorScheme="gray">
+                  <Table.Root  color={{ base: "black", _dark: "white" }}  variant="simple" colorScheme="gray">
                     <Table.Header>
                       <Table.Row>
                         <Table.ColumnHeader>Rank</Table.ColumnHeader>
@@ -361,7 +361,7 @@ const AssetPage = () => {
                         <Table.ColumnHeader>Value</Table.ColumnHeader>
                       </Table.Row>
                     </Table.Header>
-                    <Table.Body bg="white">
+                    <Table.Body bg={{ base: "white", _dark: "#262626" }}>
                       {mockHolders.map((holder, index) => (
                         <Table.Row key={index}>
                           <Table.Cell>{holder.rank}</Table.Cell>
@@ -374,7 +374,7 @@ const AssetPage = () => {
                         </Table.Row>
                       ))}
                     </Table.Body>
-                  </Table.Root>
+                  </Table.Root >
                 </Box>
               </Tabs.Content>
             </Tabs.ContentGroup>

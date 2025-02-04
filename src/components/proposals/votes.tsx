@@ -90,7 +90,7 @@ export default function VotesTable() {
           variant="plain"
           onValueChange={(e) => handleTabChange(e, e.value - 1)}
         >
-          <Tabs.List w="full" bg="white" rounded="l3" p="1">
+          <Tabs.List w="full" bg={{ base: "white", _dark: "black" }} rounded="l3" p="1">
             <Grid
               templateColumns={{ base: "repeat(3, 1fr)", md: "repeat(6, 1fr)" }}
               w={{ base: "90vw", md: "full" }}
@@ -160,32 +160,32 @@ export default function VotesTable() {
           </Tabs.List>
         </Tabs.Root>
       </Flex>
-      <Box bg="#FAFBFC" py={6} px={3} borderRadius="md" boxShadow="sm">
+      <Box bg={{ base: "#FAFBFC", _dark: "#0F0F0F" }} py={6} px={3} borderRadius="md" boxShadow="sm">
         { items?.length ? isMobile ? (
-          <Stack borderRadius={'2xl'} overflowY={'auto'} separator={<StackSeparator/>} bg="white" py={4} px={6} mb={3}>
+          <Stack borderRadius={'2xl'} overflowY={'auto'} separator={<StackSeparator/>} bg={{ base: "white", _dark: "black" }} py={4} px={6} mb={3}>
             {items.map((item, index) => (
               <VoteItemMobile vote={item} key={`vote-${index}`} />
             ))}
           </Stack>
         ) : (
-          <Table.Root>
+          <Table.Root  color={{ base: "black", _dark: "white" }} >
             <Table.Header>
               {isMobile ? (
                 <></>
               ) : (
-                <Table.Row  bg="#FAFBFC">
+                <Table.Row  bg={{ base: "#FAFBFC", _dark: "#0F0F0F" }}>
                   <Table.ColumnHeader>Block</Table.ColumnHeader>
                   <Table.ColumnHeader>Vote</Table.ColumnHeader>
                 </Table.Row>
               )}
             </Table.Header>
-            <Table.Body>
+            <Table.Body bg={{ base: "white", _dark: "#262626" }}>
               {items?.length &&
                 items.map((item, index) => (
                   <VoteItem vote={item} key={`vote-${index}`} />
                 ))}
             </Table.Body>
-          </Table.Root>
+          </Table.Root >
         ) : <NoData />}
         <Show when={state?.data?.length > 10}>
           <PaginationRoot

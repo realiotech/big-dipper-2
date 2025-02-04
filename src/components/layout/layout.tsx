@@ -14,9 +14,9 @@ export default function Layout({ children }) {
   const isMobile = useBreakpointValue({ base: true, lg: false });
   return (
     <Flex
-      bgColor="white"
+      bgColor={{base: "white", _dark: "black"}}
       minH="100vh"
-      color="black"
+      color={{base: "black", _dark: "white"}}
       pt={{ base: "15px", md: "50px" }}
       px={{ base: "15px", md: "50px" }}
     >

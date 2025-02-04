@@ -53,7 +53,7 @@ const ValidatorItemMobile = ({ item }) => {
 
   return (
     <Box
-      bg="white"
+      bg={{ base: "white", _dark: "black" }}
       p={4}
       //   boxShadow="sm"
       w="full"
@@ -285,7 +285,7 @@ const ValidatorList = () => {
           <SearchValidator callback={handleSearch} />
         </Center>
       </Flex>
-      <Box bg="#FAFBFC" py={"5"} px={"8"} h={"100vh"} rounded={"2xl"}>
+      <Box bg={{ base: "#FAFBFC", _dark: "#0F0F0F" }} py={"5"} px={"8"} h={"100vh"} rounded={"2xl"}>
         {isMobile ? (
           <VStack
             bg={"white"}
@@ -301,9 +301,9 @@ const ValidatorList = () => {
           </VStack>
         ) : (
           <Table.ScrollArea maxH={"100vh"} h={"95vh"} rounded="lg">
-            <Table.Root borderRadius="3xl" stickyHeader>
+            <Table.Root  color={{ base: "black", _dark: "white" }}  color={{ base: "black", _dark: "white" }} borderRadius="3xl" stickyHeader>
               <Table.Header>
-                <Table.Row bg="#FAFBFC">
+                <Table.Row bg={{ base: "#FAFBFC", _dark: "#0F0F0F" }}>
                   {columns.map((item, index) => (
                     <ColumnHeader
                       key={`column-${index}`}
@@ -320,7 +320,7 @@ const ValidatorList = () => {
                   )}
                 </Table.Row>
               </Table.Header>
-              <Table.Body
+              <Table.Body bg={{ base: "white", _dark: "#262626" }}
                 style={{
                   borderRadius: "xl",
                 }}
@@ -339,7 +339,7 @@ const ValidatorList = () => {
                   ))
                 )}
               </Table.Body>
-            </Table.Root>
+            </Table.Root >
           </Table.ScrollArea>
         )}
       </Box>

@@ -41,7 +41,7 @@ export default function VotesGraph({ statusInfo }) {
   }, "yes");
 
   return (
-    <Box bg="#FAFBFC" py={6} px = {3} borderRadius="md" boxShadow="sm" >
+    <Box bg={{ base: "#FAFBFC", _dark: "#0F0F0F" }} py={6} px = {3} borderRadius="md" boxShadow="sm" >
       <Flex direction={{base: 'column', md:'row'}} align={{base: 'left', md:'center'}} mb={4} gap={10}>
         <Box >
           <Text fontSize="lg">

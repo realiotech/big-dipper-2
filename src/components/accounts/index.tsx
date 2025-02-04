@@ -23,7 +23,7 @@ export default function AccountDetail() {
         {/* Portfolio Balance */}
         <Flex flex={1} gap={6} flexDirection="column">
           <Box
-            bg="#FAFBFC"
+            bg={{ base: "#FAFBFC", _dark: "#0F0F0F" }}
             p={6}
             borderRadius="md"
             boxShadow="sm"

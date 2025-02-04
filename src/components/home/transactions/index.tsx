@@ -63,13 +63,13 @@ const Transactions = () => {
   
   if (!state?.items?.length)
     return (
-      <GridItem borderRadius="20px" bgColor="#FAFBFC" py="5" px="8" colSpan={2}>
+      <GridItem borderRadius="20px" bgColor={{ base: "#FAFBFC", _dark: "#0F0F0F" }} py="5" px="8" colSpan={2}>
         <Loading />
       </GridItem>
     );
 
   return (
-    <GridItem borderRadius="20px" bgColor="#FAFBFC" py="5" px="8" colSpan={2}>
+    <GridItem borderRadius="20px" bgColor={{ base: "#FAFBFC", _dark: "#0F0F0F" }} py="5" px="8" colSpan={2}>
       <Flex w="full" justifyContent={"space-between"} pb="4">
         <Text fontSize="24px" fontWeight={400}>
           Latest Transactions
@@ -78,13 +78,13 @@ const Transactions = () => {
           <Link href="/transactions">See more</Link>
         </ChakraLink>
       </Flex>
-      {isMobile?     <Box bg="white" borderRadius="md" overflowY="auto" maxH="auto">
+      {isMobile?     <Box bg={{ base: "white", _dark: "black" }} borderRadius="md" overflowY="auto" maxH="auto">
       <VStack px={3} separator={<StackSeparator />} align="stretch">
         {state.items.map((item, index) => (
           <TxItemMobile item={item} rowIndex={index} />
         ))}
       </VStack>
-    </Box> :<Table.Root size={"sm"} bgColor="inherit" showColumnBorder={false}>
+    </Box> :<Table.Root  color={{ base: "black", _dark: "white" }}  size={"sm"} bgColor="inherit" showColumnBorder={false}>
         <Table.Header>
           <Table.Row bgColor="inherit">
             <Table.ColumnHeader>Block</Table.ColumnHeader>
@@ -93,7 +93,7 @@ const Transactions = () => {
             <Table.ColumnHeader>Time</Table.ColumnHeader>
           </Table.Row>
         </Table.Header>
-        <Table.Body>
+        <Table.Body bg={{ base: "white", _dark: "#262626" }}>
           <For each={state.items}>
             {(item, index) => (
               <Table.Row key={`transaction-${index}`}>
@@ -124,7 +124,7 @@ const Transactions = () => {
             )}
           </For>
         </Table.Body>
-      </Table.Root>}
+      </Table.Root >}
     </GridItem>
   );
 };

@@ -20,7 +20,7 @@ export default function ValidatorDetails() {
     useValidatorVotingPowerDetails();
 
   return (
-    <Box bg="white" w={'auto'} minH="100vh">
+    <Box bg={{ base: "white", _dark: "black" }} w={'auto'} minH="100vh">
       <Flex gap={6} mb={8} flexWrap="wrap">
         <Overview state={validatorOverviewState} />
         <VotingPower

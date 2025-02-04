@@ -44,7 +44,7 @@ export default function Overview({ state }) {
 
   return (
     <Box
-      bg="#FAFBFC"
+      bg={{ base: "#FAFBFC", _dark: "#0F0F0F" }}
       p={6}
       borderRadius="md"
       boxShadow="sm"
@@ -134,7 +134,7 @@ export default function Overview({ state }) {
           w={{ base: "full", md: "200" }}
           borderRadius={"lg"}
           padding="10px"
-          bg="white"
+          bg={{ base: "white", _dark: "black" }}
         >
           <Flex direction="column">
             <Text>Commission</Text>
@@ -145,7 +145,7 @@ export default function Overview({ state }) {
           w={{ base: "full", md: "200" }}
           borderRadius={"lg"}
           padding="10px"
-          bg="white"
+          bg={{ base: "white", _dark: "black" }}
         >
           <Flex direction="column">
             <Text>Condition</Text>
@@ -156,7 +156,7 @@ export default function Overview({ state }) {
           w={{ base: "full", md: "200" }}
           borderRadius={"lg"}
           padding="10px"
-          bg="white"
+          bg={{ base: "white", _dark: "black" }}
         >
           <Flex direction="column">
             <Text>Max Commission Rate</Text>

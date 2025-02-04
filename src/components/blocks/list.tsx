@@ -69,7 +69,7 @@ const BlockItemWindow = ({ item, isItemLoaded, rowIndex }) => {
   }
 
   return (
-    <Table.Row key={`block-${rowIndex}`}>
+    <Table.Row bg={{ base: "white", _dark: "#262626" }} key={`block-${rowIndex}`}>
       <Table.Cell>
         <HelpLink
           href={`/blocks/${item.height}`}
@@ -117,7 +117,7 @@ export function BlockList() {
   return (
     <Box
       borderRadius="20px"
-      bgColor="#FAFBFC"
+               bgColor={{ base: "#FAFBFC", _dark: "#0F0F0F" }}
       py="5"
       px="8"
       minH="85vh"
@@ -145,7 +145,7 @@ export function BlockList() {
             ))}
           </VStack>
         ) : (
-          <Table.Root
+          <Table.Root  color={{ base: "black", _dark: "white" }} 
             bgColor="inherit"
             showColumnBorder={false}
             h="full"
@@ -160,11 +160,11 @@ export function BlockList() {
                 <Table.ColumnHeader>Time</Table.ColumnHeader>
               </Table.Row>
             </Table.Header>
-            <Table.Body>
+            <Table.Body bg={{ base: "white", _dark: "#262626" }}>
               {!state.loading ? state.items.length === 0 ? (
                 <Center
                   borderRadius="20px"
-                  bgColor="#FAFBFC"
+                           bgColor={{ base: "#FAFBFC", _dark: "#0F0F0F" }}
                   py="5"
                   px="8"
                   minH="65vh"
@@ -188,7 +188,7 @@ export function BlockList() {
               )
               }
             </Table.Body>
-          </Table.Root>
+          </Table.Root >
         ))}
       <Center w="full" py="4">
         <Pagination
