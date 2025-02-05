@@ -85,8 +85,6 @@ export default function StakingChart() {
         <Box w={{ base: "full", md: "70%" }}>
           <Text fontSize="24px" fontWeight="bold" pb="6">
             Staking
-            <Button onClick={() => {console.log(stakingData);
-            }}>test</Button>
           </Text>
           <Center>
             <Bar data={stakingData} options={stakingOptions} height={200} />
