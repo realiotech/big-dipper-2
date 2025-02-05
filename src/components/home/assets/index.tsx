@@ -64,7 +64,7 @@ const FeaturedBlockchains = () => {
               {blockchains.map((blockchain, index) => (
                 <Table.Row bg={{ base: "white", _dark: "#262626" }} key={index}>
                   {/* Token with Image */}
-                  <Table.Cell>
+                  <Table.Cell borderBottomColor={{base: 'gray.200', _dark: 'gray.700'}}>
                     <HStack>
                       <Asset
                         name={blockchain.symbol}
@@ -75,7 +75,7 @@ const FeaturedBlockchains = () => {
                   </Table.Cell>
 
                   {/* Price */}
-                  <Table.Cell>
+                  <Table.Cell borderBottomColor={{base: 'gray.200', _dark: 'gray.700'}}>
                     <VStack align="flex-start">
                       <Text fontWeight="bold">{blockchain.price}</Text>
                       <Text fontSize="sm" color="green.500">
@@ -85,7 +85,7 @@ const FeaturedBlockchains = () => {
                   </Table.Cell>
 
                   {/* Total Supply */}
-                  <Table.Cell>
+                  <Table.Cell borderBottomColor={{base: 'gray.200', _dark: 'gray.700'}}>
                     <VStack align="flex-end">
                       <Text fontWeight="bold">{blockchain.totalSupply}</Text>
                       <Text fontSize="sm" color="gray.500">

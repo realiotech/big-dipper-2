@@ -66,11 +66,11 @@ export default function TxTable({ transactions, isLoading }) {
       <Table.Root  color={{ base: "black", _dark: "white" }}  showColumnBorder={false} h="full" w="full">
         <Table.Header>
           <Table.Row bg={{ base: "#FAFBFC", _dark: "#0F0F0F" }}>
-            <Table.ColumnHeader>Block</Table.ColumnHeader>
-            <Table.ColumnHeader>Hash</Table.ColumnHeader>
-            <Table.ColumnHeader>Messages</Table.ColumnHeader>
-            <Table.ColumnHeader>Result</Table.ColumnHeader>
-            <Table.ColumnHeader>Time</Table.ColumnHeader>
+            <Table.ColumnHeader borderBottomColor={{base: 'gray.200', _dark: 'gray.700'}}>Block</Table.ColumnHeader>
+            <Table.ColumnHeader borderBottomColor={{base: 'gray.200', _dark: 'gray.700'}}>Hash</Table.ColumnHeader>
+            <Table.ColumnHeader borderBottomColor={{base: 'gray.200', _dark: 'gray.700'}}>Messages</Table.ColumnHeader>
+            <Table.ColumnHeader borderBottomColor={{base: 'gray.200', _dark: 'gray.700'}}>Result</Table.ColumnHeader>
+            <Table.ColumnHeader borderBottomColor={{base: 'gray.200', _dark: 'gray.700'}}>Time</Table.ColumnHeader>
           </Table.Row>
         </Table.Header>
         <Table.Body bg={{ base: "white", _dark: "#262626" }}>
@@ -100,7 +100,7 @@ export default function TxTable({ transactions, isLoading }) {
     </Box>
   ) : (
     <Box bg={{ base: "white", _dark: "black" }} borderRadius="md" overflowY="auto" maxH="auto">
-      <VStack px={3} separator={<StackSeparator />} align="stretch">
+      <VStack  bg={{ base: "white", _dark: "#262626" }} px={3} separator={<StackSeparator borderTopColor={{base: 'gray.100', _dark: 'gray.700'}} />} align="stretch">
         {transactions.map((item, index) => (
           <TxItemMobile item={item} rowIndex={index} />
         ))}

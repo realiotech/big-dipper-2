@@ -20,7 +20,7 @@ import {
 } from "@/components/ui/dialog";
 import { PopoverTrigger } from "@/components/ui/popover";
 import { IoCloseOutline } from "react-icons/io5";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { createDelegateTx } from "@/utils/delegate_transaction";
 import { useRecoilValue } from "recoil";
 import { atomState } from "@/recoil/wallet/atom";
@@ -49,6 +49,12 @@ export const DelegateDialog = ({
     gas: "300000",
     memo: "realio.network",
   });
+
+  useEffect(() => {
+    if (operatorAddress) {
+      setFormData((prev) => ({ ...prev, validator: operatorAddress }));
+    }
+  }, [operatorAddress]);
 
   const [loading, setLoading] = useState(false);
 
@@ -90,9 +96,9 @@ export const DelegateDialog = ({
   };
 
   return (
-    <DialogRoot size="md" placement={"center"} motionPreset="slide-in-bottom">
+    <DialogRoot size="md"  placement={"center"} motionPreset="slide-in-bottom">
       <DialogTrigger asChild>
-        <Button bg={"#707D8A"} size="sm" colorScheme="blue">
+        <Button bg={{base: "#707D8A", _dark: "#242323"}} color="white" w='full' size="sm">
           Delegate
         </Button>
       </DialogTrigger>

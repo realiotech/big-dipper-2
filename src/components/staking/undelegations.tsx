@@ -33,22 +33,22 @@ const getDisplayHeaders = (displayMode) => {
 const getDisplayData = (displayMode, staker_addr, name, address, imageUrl) => {
   if (displayMode === 1)
     return (
-      <Table.Cell>
+      <Table.Cell borderBottomColor={{base: 'gray.200', _dark: 'gray.700'}}>
         <HelpLink href={ADDRESS_DETAILS(staker_addr)} value={staker_addr} />
       </Table.Cell>
     );
   if (displayMode === 2)
     return (
-      <Table.Cell>
+      <Table.Cell borderBottomColor={{base: 'gray.200', _dark: 'gray.700'}}>
         <Proposer name={name} address={address} image={imageUrl} />
       </Table.Cell>
     );
   return (
     <>
-      <Table.Cell>
+      <Table.Cell borderBottomColor={{base: 'gray.200', _dark: 'gray.700'}}>
         <HelpLink href={ADDRESS_DETAILS(staker_addr)} value={staker_addr} />
       </Table.Cell>
-      <Table.Cell>
+      <Table.Cell borderBottomColor={{base: 'gray.200', _dark: 'gray.700'}}>
         <Proposer name={name} address={address} image={imageUrl} />
       </Table.Cell>
     </>
@@ -60,23 +60,23 @@ const UndelegationItem = ({ item, asset, displayMode }) => {
   const { name, address, imageUrl } = useProfileRecoil(item?.val_addr)
   
   return (
-    <Table.Row>
+    <Table.Row bg={{ base: "white", _dark: "#262626" }}>
       {getDisplayData(displayMode, item.staker_addr, name, address, imageUrl)}
-      <Table.Cell display={{ base: "none", md: "table-cell" }}>
+      <Table.Cell borderBottomColor={{base: 'gray.200', _dark: 'gray.700'}} display={{ base: "none", md: "table-cell" }}>
         <HelpLink
           href={BLOCK_DETAILS(item.creation_height)}
           value={numeral(item.creation_height).format("0,0")}
         />
       </Table.Cell>
-      <Table.Cell display={{ base: "none", lg: "table-cell" }}>
+      <Table.Cell borderBottomColor={{base: 'gray.200', _dark: 'gray.700'}} display={{ base: "none", lg: "table-cell" }}>
         {numeral(item.bond_weight).format("0.0")}
       </Table.Cell>
-      <Table.Cell>
+      <Table.Cell borderBottomColor={{base: 'gray.200', _dark: 'gray.700'}}>
         {numeral(
           formatTokenByExponent(item.amount, assetDetail?.decimals)
         ).format("0,0.00")}{" "}
       </Table.Cell>
-      <Table.Cell>
+      <Table.Cell borderBottomColor={{base: 'gray.200', _dark: 'gray.700'}}>
         <Asset
           name={assetDetail?.symbol}
           image={assetDetail?.image}

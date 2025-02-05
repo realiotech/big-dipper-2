@@ -32,15 +32,15 @@ const HolderItem = ({ item, denom }) => {
 
   return (
     <Table.Row>
-      <Table.Cell>
+      <Table.Cell borderBottomColor={{base: 'gray.200', _dark: 'gray.700'}}>
         <HelpLink href={`/accounts/${item.address}`} value={item.address} />
       </Table.Cell>
-      <Table.Cell>
+      <Table.Cell borderBottomColor={{base: 'gray.200', _dark: 'gray.700'}}>
         {numeral(
           formatTokenByExponent(item.balance, assetDetail?.decimals)
         ).input()}
       </Table.Cell>
-      <Table.Cell>
+      <Table.Cell borderBottomColor={{base: 'gray.200', _dark: 'gray.700'}}>
         <Asset
           name={assetDetail?.symbol}
           image={assetDetail?.image}
@@ -54,13 +54,13 @@ const HolderItem = ({ item, denom }) => {
 const SkeletonBlockItem = ({ index }) => {
   return (
     <Table.Row key={`transaction-${index}`}>
-      <Table.Cell>
+      <Table.Cell borderBottomColor={{base: 'gray.200', _dark: 'gray.700'}}>
         <Skeleton h={"10px"} w="full" mb="2" />
       </Table.Cell>
-      <Table.Cell>
+      <Table.Cell borderBottomColor={{base: 'gray.200', _dark: 'gray.700'}}>
         <Skeleton h={"10px"} w="full" mb="2" />
       </Table.Cell>
-      <Table.Cell>
+      <Table.Cell borderBottomColor={{base: 'gray.200', _dark: 'gray.700'}}>
         <Skeleton h={"10px"} w="full" mb="2" />
       </Table.Cell>
     </Table.Row>

@@ -30,29 +30,29 @@ const BlockItemMobile = ({ item, isItemLoaded, rowIndex }) => {
     <Box p="5" w="full">
       <VStack align="stretch">
         <Flex gap={1} direction="column">
-          <Text >Height</Text>
+          <Text>Height</Text>
           <HelpLink
             href={`/blocks/${item.height}`}
             value={numeral(item.height).format("0,0")}
           />
         </Flex>
         <Flex gap={1} direction="column">
-          <Text >Proposer</Text>
+          <Text>Proposer</Text>
           <Proposer address={address} image={imageUrl} name={name} />
         </Flex>
         <Flex gap={1} direction="column">
-          <Text >Hash</Text>
+          <Text>Hash</Text>
           <Text>
             {getMiddleEllipsis(item.hash, { beginning: 6, ending: 5 })}
           </Text>
         </Flex>
         <Flex justify="space-between">
           <Flex gap={1} direction="column">
-            <Text >Txs</Text>
+            <Text>Txs</Text>
             <Text>{numeral(item.txs).format("0,0")}</Text>
           </Flex>
           <Flex gap={1} direction="column">
-            <Text >Time</Text>
+            <Text>Time</Text>
             <Text>{dayjs.utc(item.timestamp).fromNow()}</Text>
           </Flex>
         </Flex>
@@ -69,46 +69,49 @@ const BlockItemWindow = ({ item, isItemLoaded, rowIndex }) => {
   }
 
   return (
-    <Table.Row bg={{ base: "white", _dark: "#262626" }} key={`block-${rowIndex}`}>
-      <Table.Cell>
+    <Table.Row
+      bg={{ base: "white", _dark: "#262626" }}
+      key={`block-${rowIndex}`}
+    >
+      <Table.Cell borderBottomColor={{base: 'gray.200', _dark: 'gray.700'}}>
         <HelpLink
           href={`/blocks/${item.height}`}
           value={numeral(item.height).format("0,0")}
         />
       </Table.Cell>
-      <Table.Cell>
+      <Table.Cell borderBottomColor={{base: 'gray.200', _dark: 'gray.700'}}>
         <Proposer address={address} image={imageUrl} name={name} />
       </Table.Cell>
-      <Table.Cell>
+      <Table.Cell borderBottomColor={{base: 'gray.200', _dark: 'gray.700'}}>
         {getMiddleEllipsis(item.hash, { beginning: 6, ending: 5 })}
       </Table.Cell>
-      <Table.Cell>{numeral(item.txs).format("0,0")}</Table.Cell>
-      <Table.Cell>{dayjs.utc(item.timestamp).fromNow()}</Table.Cell>
+      <Table.Cell borderBottomColor={{base: 'gray.200', _dark: 'gray.700'}}>{numeral(item.txs).format("0,0")}</Table.Cell>
+      <Table.Cell borderBottomColor={{base: 'gray.200', _dark: 'gray.700'}}>{dayjs.utc(item.timestamp).fromNow()}</Table.Cell>
     </Table.Row>
   );
 };
 
 const SkeletonBlockItem = ({ index }) => {
   return (
-    <Table.Row key={`block-${index}`}>
-      <Table.Cell>
+    <Table.Row bg={{ base: "white", _dark: "black" }} key={`block-${index}`}>
+      <Table.Cell borderBottomColor={{base: 'gray.200', _dark: 'gray.700'}}>
         <Skeleton key={`block-${index}`} h={"20px"} w="full" mb="4" />
       </Table.Cell>
-      <Table.Cell>
+      <Table.Cell borderBottomColor={{base: 'gray.200', _dark: 'gray.700'}}>
         <Skeleton key={`block-${index}`} h={"20px"} w="full" mb="4" />
       </Table.Cell>
-      <Table.Cell>
+      <Table.Cell borderBottomColor={{base: 'gray.200', _dark: 'gray.700'}}>
         <Skeleton key={`block-${index}`} h={"20px"} w="full" mb="4" />
       </Table.Cell>
-      <Table.Cell>
+      <Table.Cell borderBottomColor={{base: 'gray.200', _dark: 'gray.700'}}>
         <Skeleton key={`block-${index}`} h={"20px"} w="full" mb="4" />
       </Table.Cell>
-      <Table.Cell>
+      <Table.Cell borderBottomColor={{base: 'gray.200', _dark: 'gray.700'}}>
         <Skeleton key={`block-${index}`} h={"20px"} w="full" mb="4" />
       </Table.Cell>
     </Table.Row>
-  )
-}
+  );
+};
 
 export function BlockList() {
   const { state, isItemLoaded, pageInfo, handlePageChange } = useBlocks();
@@ -117,7 +120,7 @@ export function BlockList() {
   return (
     <Box
       borderRadius="20px"
-               bgColor={{ base: "#FAFBFC", _dark: "#0F0F0F" }}
+      bgColor={{ base: "#FAFBFC", _dark: "#0F0F0F" }}
       py="5"
       px="8"
       minH="85vh"
@@ -130,9 +133,10 @@ export function BlockList() {
         (isMobile ? (
           <VStack
             divideY={"1px"}
+            divideColor={{ base: "gray.200", _dark: "gray.700" }}
             divideStyle={"ridge"}
             borderRadius="10px"
-            bg={"white"}
+            bg={{ base: "white", _dark: "#262626" }}
             gap={0}
           >
             {state.items.map((item, index) => (
@@ -145,7 +149,8 @@ export function BlockList() {
             ))}
           </VStack>
         ) : (
-          <Table.Root  color={{ base: "black", _dark: "white" }} 
+          <Table.Root
+            color={{ base: "black", _dark: "white" }}
             bgColor="inherit"
             showColumnBorder={false}
             h="full"
@@ -161,40 +166,41 @@ export function BlockList() {
               </Table.Row>
             </Table.Header>
             <Table.Body bg={{ base: "white", _dark: "#262626" }}>
-              {!state.loading ? state.items.length === 0 ? (
-                <Center
-                  borderRadius="20px"
-                           bgColor={{ base: "#FAFBFC", _dark: "#0F0F0F" }}
-                  py="5"
-                  px="8"
-                  minH="65vh"
-                  w="full"
-                >
-                  <Text>Nothing to show</Text>
-                </Center>
-              ) : state.items.map((item, index) => (
-                <BlockItemWindow
-                  key={`block-${index}`}
-                  item={item}
-                  rowIndex={index}
-                  isItemLoaded={isItemLoaded}
-                />
-              )) : (
+              {!state.loading ? (
+                state.items.length === 0 ? (
+                  <Center
+                    borderRadius="20px"
+                    bgColor={{ base: "#FAFBFC", _dark: "#0F0F0F" }}
+                    py="5"
+                    px="8"
+                    minH="65vh"
+                    w="full"
+                  >
+                    <Text>Nothing to show</Text>
+                  </Center>
+                ) : (
+                  state.items.map((item, index) => (
+                    <BlockItemWindow
+                      key={`block-${index}`}
+                      item={item}
+                      rowIndex={index}
+                      isItemLoaded={isItemLoaded}
+                    />
+                  ))
+                )
+              ) : (
                 Array.from({ length: 20 }).map((_, index) => (
-                  <SkeletonBlockItem
-                    index={index}
-                  />
+                  <SkeletonBlockItem index={index} />
                 ))
-              )
-              }
+              )}
             </Table.Body>
-          </Table.Root >
+          </Table.Root>
         ))}
       <Center w="full" py="4">
         <Pagination
           pageInfo={pageInfo}
           pageChangeFunc={handlePageChange}
-          pageSizeChangeFunc={() => { }}
+          pageSizeChangeFunc={() => {}}
         />
       </Center>
     </Box>

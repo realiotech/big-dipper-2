@@ -27,16 +27,15 @@ export default function TransactionDetails() {
   return (
     <Box p={6} minHeight="85vh">
       {/* Overview Section */}
-      <Box bg="gray.50" p={6} borderRadius="md" boxShadow="sm" mb={8}>
+      <Box bg={{ base: "#FAFBFC", _dark: "#0F0F0F" }} p={6} borderRadius="md" boxShadow="sm" mb={8}>
         <Text fontSize="lg" fontWeight="bold" mb={4}>
           Overview
         </Text>
-        <Flex>
-          <Stack w={"full"} separator={<StackSeparator />}>
+        <Flex >
+          <Stack w={"full"} separator={<StackSeparator borderTopColor={{base: 'gray.200', _dark: 'gray.600'}}/>}>
             <Flex
               direction={{ base: "column", md: "row" }}
               justifyContent={"space-between"}
-              bg="gray.50"
             >
               <Text px={"0"} fontWeight="semibold">
                 Hash
@@ -53,7 +52,6 @@ export default function TransactionDetails() {
             <Flex
               direction={{ base: "column", md: "row" }}
               justifyContent={"space-between"}
-              bg="gray.50"
             >
               <Text px={"0"} fontWeight="semibold">
                 Height
@@ -69,7 +67,6 @@ export default function TransactionDetails() {
             <Flex
               direction={{ base: "column", md: "row" }}
               justifyContent={"space-between"}
-              bg="gray.50"
             >
               <Text px={"0"} fontWeight="semibold">
                 Time
@@ -85,7 +82,6 @@ export default function TransactionDetails() {
             <Flex
               direction={{ base: "column", md: "row" }}
               justifyContent={"space-between"}
-              bg="gray.50"
             >
               <Text px={"0"} fontWeight="semibold">
                 Fee
@@ -98,7 +94,6 @@ export default function TransactionDetails() {
             <Flex
               direction={{ base: "column", md: "row" }}
               justifyContent={"space-between"}
-              bg="gray.50"
             >
               <Text px={"0"} fontWeight="semibold">
                 Gas (used / wanted)
@@ -111,7 +106,6 @@ export default function TransactionDetails() {
             <Flex
               direction={{ base: "column", md: "row" }}
               justifyContent={"space-between"}
-              bg="gray.50"
             >
               <Text px={"0"} fontWeight="semibold">
                 Result
@@ -125,7 +119,6 @@ export default function TransactionDetails() {
             <Flex
               direction={{ base: "column", md: "row" }}
               justifyContent={"space-between"}
-              bg="gray.50"
             >
               <Text px={"0"} fontWeight="semibold">
                 Memo
@@ -139,13 +132,13 @@ export default function TransactionDetails() {
       </Box>
       <Messages messages={messages} />
 
-      <Box bg="gray.50" p={6} mb={8} borderRadius="md" boxShadow="sm">
+      <Box bg={{ base: "#FAFBFC", _dark: "#0F0F0F" }} p={6} mb={8} borderRadius="md" boxShadow="sm">
         <Text fontSize="lg" fontWeight="bold" mb={4}>
           Logs
         </Text>
         {logs && (
           <Box
-            bg={{ base: "white", _dark: "black" }}
+            bg={{ base: "white", _dark: "#262626" }}
             p={4}
             borderRadius="md"
             overflowY="auto"

@@ -64,21 +64,21 @@ const BlockItem = ({ item }) => {
 
   return (
     <Table.Row bg={{ base: "white", _dark: "#262626" }}>
-      <Table.Cell>
+      <Table.Cell borderBottomColor={{base: 'gray.200', _dark: 'gray.700'}}>
         <ChakraLink asChild colorPalette="blue">
           <Link href={`/blocks/${item.height}`}>
             {numeral(item.height).format("0,0")}
           </Link>
         </ChakraLink>
       </Table.Cell>
-      <Table.Cell h={"54px"}>
+      <Table.Cell borderBottomColor={{base: 'gray.200', _dark: 'gray.700'}} h={"54px"}>
         <Proposer address={address} image={imageUrl} name={name} />
       </Table.Cell>
-      <Table.Cell>
+      <Table.Cell borderBottomColor={{base: 'gray.200', _dark: 'gray.700'}}>
         {getMiddleEllipsis(item.hash, { beginning: 6, ending: 5 })}
       </Table.Cell>
-      <Table.Cell>{numeral(item.txs).format("0,0")}</Table.Cell>
-      <Table.Cell>{dayjs.utc(item.timestamp).fromNow()}</Table.Cell>
+      <Table.Cell borderBottomColor={{base: 'gray.200', _dark: 'gray.700'}}>{numeral(item.txs).format("0,0")}</Table.Cell>
+      <Table.Cell borderBottomColor={{base: 'gray.200', _dark: 'gray.700'}}>{dayjs.utc(item.timestamp).fromNow()}</Table.Cell>
     </Table.Row>
   );
 };

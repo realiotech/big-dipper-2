@@ -4,6 +4,7 @@ import { Telegram } from "../icons/telegram";
 import { Twitter } from "../icons/twitter";
 import { Github } from "../icons/github";
 import { useColorMode } from "../ui/color-mode";
+import { FaDiscord, FaDochub } from "react-icons/fa";
 export default function Footer() {
     const { colorMode } = useColorMode()
 
@@ -29,19 +30,19 @@ export default function Footer() {
             </GridItem>
             <GridItem py={{ base: '15px', lg: '0px' }}>
                 <VStack color={{base: "#707D8A", _dark: "#9DA7B0"}} align='left' gap='20px'>
-                    <Text color={{base: "#707D8A", _dark: "#9DA7B0"}} fontSize='16px' fontWeight={600}>Company</Text>
-                    <Link color={{base: 'black', _dark: 'white'}} href="https://www.realio.fund" _hover={{ color: "#173DA6" }} fontWeight={400} fontSize={'14px'}>Realio</Link>
-                    <Link href="https://www.realio.fund/rst" _hover={{ color: "#173DA6" }} fontWeight={400} color={{base: 'black', _dark: 'white'}} fontSize={'14px'}>RST</Link>
-                    <Link href="https://www.realio.fund/rst/#contact" _hover={{ color: "#173DA6" }} fontWeight={400} color={{base: 'black', _dark: 'white'}} fontSize={'14px'}>Contact Us</Link>
-                    <Link href="https://www.realio.fund/blog" _hover={{ color: "#173DA6" }} fontWeight={400} color={{base: 'black', _dark: 'white'}} fontSize={'14px'}>Blog</Link>
+                    <Text color={{base: "#707D8A", _dark: "#9DA7B0"}} fontSize='16px' fontWeight={600}>Realio Tokens</Text>
+                    <Link color={{base: 'black', _dark: 'white'}} href="" _hover={{ color: "#173DA6" }} fontWeight={400} fontSize={'14px'}>Liquid Mining Fund</Link>
+                    <Link href="" _hover={{ color: "#173DA6" }} fontWeight={400} color={{base: 'black', _dark: 'white'}} fontSize={'14px'}>Realio Network Token</Link>
+                    <Link href="" _hover={{ color: "#173DA6" }} fontWeight={400} color={{base: 'black', _dark: 'white'}} fontSize={'14px'}>Realio Network, LTD</Link>
                 </VStack>
             </GridItem>
             <GridItem py={{ base: '15px', lg: '0px' }}>
                 <VStack align='left' gap='20px'>
-                    <Text color={{base: "#707D8A", _dark: "#9DA7B0"}} fontSize='16px' fontWeight={600}>Application Links</Text>
-                    <Link href="https://app.realio.fund/login" _hover={{ color: "#173DA6" }} fontWeight={400} color={{base: 'black', _dark: 'white'}} fontSize={'14px'}>Realio Platform</Link>
+                    <Text color={{base: "#707D8A", _dark: "#9DA7B0"}} fontSize='16px' fontWeight={600}>Realio Websites</Text>
                     <Link href="https://realio.network" _hover={{ color: "#173DA6" }} fontWeight={400} color={{base: 'black', _dark: 'white'}} fontSize={'14px'}>Realio Network</Link>
-                    <Link href="https://defi.realio.network" _hover={{ color: "#173DA6" }} fontWeight={400} color={{base: 'black', _dark: 'white'}} fontSize={'14px'}>Realio DeFi</Link>
+                    <Link href="https://realio.fund/" _hover={{ color: "#173DA6" }} fontWeight={400} color={{base: 'black', _dark: 'white'}} fontSize={'14px'}>Realio Fund</Link>
+                    <Link href="https://liquidmining.fund/" _hover={{ color: "#173DA6" }} fontWeight={400} color={{base: 'black', _dark: 'white'}} fontSize={'14px'}>Liquid Mining Fund</Link>
+                    <Link href="https://freehold.finance/" _hover={{ color: "#173DA6" }} fontWeight={400} color={{base: 'black', _dark: 'white'}} fontSize={'14px'}>Freehold</Link>
                     <Link href="https://districts.xyz/" _hover={{ color: "#173DA6" }} fontWeight={400} color={{base: 'black', _dark: 'white'}} fontSize={'14px'}>Districts</Link>
                 </VStack>
             </GridItem>
@@ -49,10 +50,11 @@ export default function Footer() {
                 <VStack align='left' gap='20px'>
                     <Text color={{base: "#707D8A", _dark: "#9DA7B0"}} fontSize='16px' fontWeight={600}>Community</Text>
                     <HStack  gap='4' color={{base: "white", _dark: "black"}} >
-                        <Link href="https://t.me/realio_fund" fontSize={'20px'}><LinkedIn /></Link>
-                        <Link href="https://www.linkedin.com/company/realio/" fontSize={'20px'}><Telegram /></Link>
+                        <Link href="https://www.linkedin.com/company/realio" fontSize={'20px'}><LinkedIn /></Link>
+                        <Link href="https://discord.com/invite/WhRgHEfDF4" fontSize={'20px'}><FaDiscord /></Link>
                         <Link href="https://x.com/realio_network" fontSize={'20px'}><Twitter /></Link>
                         <Link href="https://github.com/realiotech" fontSize={'20px'}><Github /></Link>
+                        <Link href="https://docs.realio.network/" fontSize={'20px'}><FaDochub /></Link>
                     </HStack>
                 </VStack>
             </GridItem>

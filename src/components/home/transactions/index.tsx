@@ -98,14 +98,14 @@ const Transactions = () => {
           <For each={state.items}>
             {(item, index) => (
               <Table.Row bg={{ base: "white", _dark: "#262626" }} key={`transaction-${index}`}>
-                <Table.Cell height={"54px"}>
+                <Table.Cell borderBottomColor={{base: 'gray.200', _dark: 'gray.700'}} height={"54px"}>
                   <ChakraLink asChild colorPalette="blue">
                     <Link href={`/blocks/${item.height}`}>
                       {numeral(item.height).format("0,0")}
                     </Link>
                   </ChakraLink>
                 </Table.Cell>
-                <Table.Cell>
+                <Table.Cell borderBottomColor={{base: 'gray.200', _dark: 'gray.700'}}>
                   <ChakraLink asChild colorPalette="blue">
                     <Link href={`/transactions/${item.hash}`}>
                       {getMiddleEllipsis(item.hash, {
@@ -115,12 +115,12 @@ const Transactions = () => {
                     </Link>
                   </ChakraLink>
                 </Table.Cell>
-                <Table.Cell>
+                <Table.Cell borderBottomColor={{base: 'gray.200', _dark: 'gray.700'}}>
                   <Status value={item.success ? "success" : "error"}>
                     <Text>{item.success ? "Success" : "Failed"}</Text>
                   </Status>
                 </Table.Cell>
-                <Table.Cell>{dayjs.utc(item.timestamp).fromNow()}</Table.Cell>
+                <Table.Cell borderBottomColor={{base: 'gray.200', _dark: 'gray.700'}}>{dayjs.utc(item.timestamp).fromNow()}</Table.Cell>
               </Table.Row>
             )}
           </For>

@@ -19,15 +19,21 @@ const ProposalItem = ({ proposal }) => {
   const statusInfo = getStatusInfo(proposal.status, t);
   const isMobile = useBreakpointValue({ base: true, md: false });
   return isMobile ? (
-    <Box bg={{ base: "white", _dark: "black" }} p={4}>
-      <Flex justify="space-between" direction="column" align="center" gap={4} w={"full"}>
+    <Box p={4} bg={{ base: "white", _dark: "#262626" }}>
+      <Flex
+        justify="space-between"
+        direction="column"
+        align="center"
+        gap={4}
+        w={"full"}
+      >
         <Flex justify="space-between" w="full">
           <Link
-            w={'60%'}
-            fontSize={'sm'}
+            w={"60%"}
+            fontSize={"sm"}
             href={`/proposals/${proposal.id}`}
             fontWeight="bold"
-            color="gray.700"
+            color={{base: 'gray.700', _dark: 'white'}}
           >
             #{proposal.id} {proposal.title}
           </Link>
@@ -51,13 +57,13 @@ const ProposalItem = ({ proposal }) => {
       </Flex>
     </Box>
   ) : (
-    <Box bg={{ base: "white", _dark: "black" }} p={4}>
+    <Box bg={{ base: "white", _dark: "#262626" }} p={4}>
       <Flex justify="space-between" align="center" mb={2} w={"full"}>
         <Flex direction={"column"} w="80%">
           <Link
             href={`/proposals/${proposal.id}`}
             fontWeight="bold"
-            color="gray.700"
+            color={{base: 'gray.700', _dark: 'white'}}
           >
             #{proposal.id} {proposal.title}
           </Link>
@@ -87,7 +93,13 @@ const SkeletonItem = () => {
   const isMobile = useBreakpointValue({ base: true, md: false });
   return isMobile ? (
     <Box bg={{ base: "white", _dark: "black" }} p={4}>
-      <Flex justify="space-between" direction="column" align="center" gap={4} w={"full"}>
+      <Flex
+        justify="space-between"
+        direction="column"
+        align="center"
+        gap={4}
+        w={"full"}
+      >
         <Flex justify="space-between" w="full">
           <Skeleton h={"20px"} w="full" mb="4" />
         </Flex>
@@ -103,8 +115,8 @@ const SkeletonItem = () => {
         <Skeleton h={"20px"} w="full" mb="4" />
       </Flex>
     </Box>
-  )
-}
+  );
+};
 
 const ProposalList = () => {
   const { state } = useProposals();
@@ -125,20 +137,19 @@ const ProposalList = () => {
       <Stack
         borderRadius="md"
         boxShadow="sm"
-        border="1px solid"
-        borderColor="gray.200"
-        bg={"white"}
+        bg={{ base: "white", _dark: "#262626" }}
         gap={0}
-        separator={<StackSeparator />}
+        separator={<StackSeparator borderTopColor={{base: 'gray.200', _dark: 'gray.700'}}/>}
         px={3}
       >
-        {!state.loading ? state?.items?.length &&
-          state?.items.map((proposal, index) => (
-            <ProposalItem proposal={proposal} key={`proposal-${index}`} />
-          )) : Array.from({ length: 10 }).map((_, index) => (
-            <SkeletonItem key={`proposal-${index}`} />
-          ))
-        }
+        {!state.loading
+          ? state?.items?.length &&
+            state?.items.map((proposal, index) => (
+              <ProposalItem proposal={proposal} key={`proposal-${index}`} />
+            ))
+          : Array.from({ length: 10 }).map((_, index) => (
+              <SkeletonItem key={`proposal-${index}`} />
+            ))}
       </Stack>
     </Box>
   );

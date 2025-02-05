@@ -33,32 +33,32 @@ export default function BlockDetails() {
                 <Table.Root  color={{ base: "black", _dark: "white" }} >
                     <Table.Body bg={{ base: "white", _dark: "#262626" }} >
                         <Table.Row bg={{ base: "#FAFBFC", _dark: "#0F0F0F" }}>
-                            <Table.Cell px={0}  fontWeight="semibold" width="30%">
+                            <Table.Cell borderBottomColor={{base: 'gray.200', _dark: 'gray.700'}} px={0}  fontWeight="semibold" width="30%">
                                 Height
                             </Table.Cell>
-                            <Table.Cell textAlign="end" >{numeral(overview.height).format('0,0')}</Table.Cell>
+                            <Table.Cell borderBottomColor={{base: 'gray.200', _dark: 'gray.700'}} textAlign="end" >{numeral(overview.height).format('0,0')}</Table.Cell>
                         </Table.Row>
                         <Table.Row bg={{ base: "#FAFBFC", _dark: "#0F0F0F" }}>
-                            <Table.Cell px={0}  fontWeight="semibold">Hash</Table.Cell>
-                            <Table.Cell textAlign="end">
+                            <Table.Cell borderBottomColor={{base: 'gray.200', _dark: 'gray.700'}} px={0}  fontWeight="semibold">Hash</Table.Cell>
+                            <Table.Cell borderBottomColor={{base: 'gray.200', _dark: 'gray.700'}} textAlign="end">
                                 {isMobile ? getMiddleEllipsis(overview.hash, { beginning: 6, ending: 5 }) : overview.hash}
                             </Table.Cell>
                         </Table.Row>
                         <Table.Row bg={{ base: "#FAFBFC", _dark: "#0F0F0F" }}>
-                            <Table.Cell px={0}  fontWeight="semibold">Proposer</Table.Cell>
-                            <Table.Cell>
+                            <Table.Cell borderBottomColor={{base: 'gray.200', _dark: 'gray.700'}} px={0}  fontWeight="semibold">Proposer</Table.Cell>
+                            <Table.Cell borderBottomColor={{base: 'gray.200', _dark: 'gray.700'}}>
                                 <Flex justify='end' w='full'>
                                     <Proposer address={address} name={name} image={imageUrl} />
                                 </Flex>
                             </Table.Cell>
                         </Table.Row>
                         <Table.Row bg={{ base: "#FAFBFC", _dark: "#0F0F0F" }}>
-                            <Table.Cell px={0}  fontWeight="semibold">Time</Table.Cell>
-                            <Table.Cell textAlign="end" >{formatDayJs(dayjs.utc(overview.timestamp), 'locale')}</Table.Cell>
+                            <Table.Cell borderBottomColor={{base: 'gray.200', _dark: 'gray.700'}} px={0}  fontWeight="semibold">Time</Table.Cell>
+                            <Table.Cell borderBottomColor={{base: 'gray.200', _dark: 'gray.700'}} textAlign="end" >{formatDayJs(dayjs.utc(overview.timestamp), 'locale')}</Table.Cell>
                         </Table.Row>
                         <Table.Row bg={{ base: "#FAFBFC", _dark: "#0F0F0F" }}>
-                            <Table.Cell px={0}  fontWeight="semibold">Txs</Table.Cell>
-                            <Table.Cell textAlign="end">{overview.txs}</Table.Cell>
+                            <Table.Cell borderBottomColor={{base: 'gray.200', _dark: 'gray.700'}} px={0}  fontWeight="semibold">Txs</Table.Cell>
+                            <Table.Cell borderBottomColor={{base: 'gray.200', _dark: 'gray.700'}} textAlign="end">{overview.txs}</Table.Cell>
                         </Table.Row>
                     </Table.Body>
                 </Table.Root >
@@ -68,8 +68,8 @@ export default function BlockDetails() {
                     Validators
                 </Text>
                 {signatures?.length ?
-                    <Box bg='white' borderRadius='md' padding='3' overflowY="auto" maxH="200px">
-                        <Stack separator={<StackSeparator />} gap={2}>
+                    <Box bg={{ base: "white", _dark: "#262626" }} borderRadius='md' padding='3' overflowY="auto" maxH="200px">
+                        <Stack separator={<StackSeparator borderTopColor={{base: 'gray.200', _dark: 'gray.700'}}/>} gap={2}>
                             {signatures.map(
                                 (item, index) => (
                                     <ProposerItem key={`proposer-${index}`} proposer={item} />

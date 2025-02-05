@@ -322,21 +322,21 @@ const AssetPage = () => {
                       <>
                         {mockTransactions.map((tx, index) => (
                           <Table.Row key={index}>
-                            <Table.Cell>
+                            <Table.Cell borderBottomColor={{base: 'gray.200', _dark: 'gray.700'}}>
                               <Link color="blue.500">{tx.hash}</Link>
                             </Table.Cell>
-                            <Table.Cell>{tx.method}</Table.Cell>
-                            <Table.Cell>
+                            <Table.Cell borderBottomColor={{base: 'gray.200', _dark: 'gray.700'}}>{tx.method}</Table.Cell>
+                            <Table.Cell borderBottomColor={{base: 'gray.200', _dark: 'gray.700'}}>
                               <Link color="blue.500">{tx.block}</Link>
                             </Table.Cell>
-                            <Table.Cell>{tx.time}</Table.Cell>
-                            <Table.Cell>
+                            <Table.Cell borderBottomColor={{base: 'gray.200', _dark: 'gray.700'}}>{tx.time}</Table.Cell>
+                            <Table.Cell borderBottomColor={{base: 'gray.200', _dark: 'gray.700'}}>
                               <Link color="blue.500">{tx.from}</Link>
                             </Table.Cell>
-                            <Table.Cell>
+                            <Table.Cell borderBottomColor={{base: 'gray.200', _dark: 'gray.700'}}>
                               <Link color="blue.500">{tx.to}</Link>
                             </Table.Cell>
-                            <Table.Cell>{tx.amount}</Table.Cell>
+                            <Table.Cell borderBottomColor={{base: 'gray.200', _dark: 'gray.700'}}>{tx.amount}</Table.Cell>
                           </Table.Row>
                         ))}
                       </>
@@ -364,13 +364,13 @@ const AssetPage = () => {
                     <Table.Body bg={{ base: "white", _dark: "#262626" }}>
                       {mockHolders.map((holder, index) => (
                         <Table.Row key={index}>
-                          <Table.Cell>{holder.rank}</Table.Cell>
-                          <Table.Cell>
+                          <Table.Cell borderBottomColor={{base: 'gray.200', _dark: 'gray.700'}}>{holder.rank}</Table.Cell>
+                          <Table.Cell borderBottomColor={{base: 'gray.200', _dark: 'gray.700'}}>
                             <Link color="blue.500">{holder.address}</Link>
                           </Table.Cell>
-                          <Table.Cell>{holder.quantity}</Table.Cell>
-                          <Table.Cell>{holder.percentage}</Table.Cell>
-                          <Table.Cell>{holder.value}</Table.Cell>
+                          <Table.Cell borderBottomColor={{base: 'gray.200', _dark: 'gray.700'}}>{holder.quantity}</Table.Cell>
+                          <Table.Cell borderBottomColor={{base: 'gray.200', _dark: 'gray.700'}}>{holder.percentage}</Table.Cell>
+                          <Table.Cell borderBottomColor={{base: 'gray.200', _dark: 'gray.700'}}>{holder.value}</Table.Cell>
                         </Table.Row>
                       ))}
                     </Table.Body>

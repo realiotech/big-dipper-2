@@ -50,10 +50,10 @@ const VoteItem = ({ vote }) => {
   const { name, address, imageUrl } = useProfileRecoil(vote.user);
   return (
     <Table.Row>
-      <Table.Cell>
+      <Table.Cell borderBottomColor={{base: 'gray.200', _dark: 'gray.700'}}>
         <Proposer name={name} address={address} image={imageUrl} />
       </Table.Cell>
-      <Table.Cell>{getVoteKey(vote.vote)}</Table.Cell>
+      <Table.Cell borderBottomColor={{base: 'gray.200', _dark: 'gray.700'}}>{getVoteKey(vote.vote)}</Table.Cell>
     </Table.Row>
   );
 };
