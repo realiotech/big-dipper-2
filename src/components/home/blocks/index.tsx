@@ -109,9 +109,11 @@ const Blocks = () => {
           <VStack
             divideY={"1px"}
             divideStyle={"ridge"}
+            divideColor={{ base: "gray.200", _dark: "gray.700" }}
             borderRadius="10px"
             bg={{ base: "white", _dark: "#262626" }}
             gap={0}
+            px={3}
           >
             {state.items.map((item, index) => (
               <BlockItemMobile
