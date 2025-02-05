@@ -18,6 +18,8 @@ import { Stake } from "../icons/stake";
 import { Transaction } from "../icons/transaction";
 import { Proposal } from "../icons/proposal";
 import { Params } from "../icons/params";
+import { useColorMode } from "../ui/color-mode";
+import { ColorModeButton } from "../ui/color-mode";
 
 export default function MenuDrawer() {
   const menuItems = [
@@ -28,6 +30,7 @@ export default function MenuDrawer() {
     { label: "Proposals", href: "/proposals", image: <Proposal /> },
     { label: "Params", href: "/params", image: <Params /> },
   ];
+  const { colorMode } = useColorMode();
 
   return (
     <DrawerRoot>
@@ -42,11 +45,16 @@ export default function MenuDrawer() {
         <DrawerHeader>
           <Flex justify="space-between" align="center">
             <DrawerTitle>
-              <Flex gap={'1.5'} align={'center'}>
-                <Image w="35px" src="/images/logo.svg" />
+              <Flex gap={"1.5"} align={"center"}>
+                {colorMode == "light" ? (
+                  <Image w="35px" src="/images/logo.svg" />
+                ) : (
+                  <Image w="35px" src="/images/logo_white.svg" />
+                )}
                 <Text>Realio.</Text>{" "}
               </Flex>
             </DrawerTitle>
+            <ColorModeButton />
             <DrawerTrigger>
               <IoCloseOutline size={30} />
             </DrawerTrigger>

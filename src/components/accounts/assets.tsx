@@ -18,7 +18,7 @@ const AssetItem = ({metadata, asset}) => {
     const amountInUsd = numeral(parseFloat(formatTokenByExponent(asset?.amount, metadata?.decimals)) * metadata?.price).format('0,0.00')
     return (
         <Flex
-            bg="white"
+            bg={{ base: "white", _dark: "black" }}
             padding={2}
             borderRadius={4}
             justify="space-between"
@@ -53,7 +53,7 @@ export default function Assets({ balances }) {
 
     return (
         <Box
-            bg="#FAFBFC"
+            bg={{ base: "#FAFBFC", _dark: "#0F0F0F" }}
             p={6}
             borderRadius="md"
             boxShadow="sm"

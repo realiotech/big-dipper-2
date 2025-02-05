@@ -4,10 +4,6 @@ import {
     Text,
     Flex,
     VStack,
-    HStack,
-    Button,
-    Table,
-    Grid,
     Badge,
     Stack,
     useBreakpointValue
@@ -44,7 +40,7 @@ export default function ProposalDetail() {
     const statusInfo = getStatusInfo(overview.status, t);
     const isMobile = useBreakpointValue({base: true, md: false})
     return (
-        <Box bg="white" minHeight="85vh">
+        <Box bg={{ base: "white", _dark: "black" }} minHeight="85vh">
             <Flex gap={'10'} align="center" mb={4}>
                 <Text fontSize="xl" fontWeight="bold">
                     #{overview.id} {overview.title}
@@ -65,7 +61,7 @@ export default function ProposalDetail() {
             </Flex>
 
             {/* Proposal Details */}
-            <Box bg="#FAFBFC" py={6} px={3} borderRadius="md" boxShadow="sm" mb={8}>
+            <Box bg={{ base: "#FAFBFC", _dark: "#0F0F0F" }} py={6} px={3} borderRadius="md" boxShadow="sm" mb={8}>
                 <VStack align="stretch" w='full'>
                     <Stack direction={{base: 'column', md:'row'}}>
                         <Text fontWeight="bold" w="150px">

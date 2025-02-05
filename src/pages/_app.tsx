@@ -2,7 +2,8 @@ import Layout from '@/components/layout/layout';
 import { ThemeProvider } from 'next-themes';
 import { AppProps } from 'next/app';
 import {
-  ChakraProvider
+  ChakraProvider,
+  defaultSystem
 } from '@chakra-ui/react';
 import React from 'react';
 import { RecoilRoot } from 'recoil';
@@ -20,6 +21,7 @@ import {
   SEO_DESCRIPTION,
 } from '../utils/utils';
 import { system } from "@/theme";
+import { ColorModeProvider } from '@/components/ui/color-mode';
 
 function App({
   Component, pageProps,
@@ -51,12 +53,14 @@ function App({
         client={apolloClient}
       >
         <RecoilRoot>
-          <ChakraProvider value={system}>
+          <ChakraProvider value={defaultSystem}>
+            <ColorModeProvider>
             <ThemeProvider attribute="class" disableTransitionOnChange>
               <Layout>
                 <Component {...pageProps} />
               </Layout>
             </ThemeProvider>
+            </ColorModeProvider>
           </ChakraProvider>
         </RecoilRoot>
       </ApolloProvider>

@@ -7,6 +7,7 @@ import {
   VStack,
   Grid,
   GridItem,
+  Button,
 } from "@chakra-ui/react";
 import { useProfileRecoil } from "@/recoil/profiles";
 import Proposer from "@/components/helper/proposer";
@@ -25,6 +26,7 @@ import { formatValAddress } from "@/utils/format_address";
 import Asset from "@/components/helper/asset";
 import { useRecoilValue } from "recoil";
 import { readAsset } from "@/recoil/asset";
+import { DelegateDialog } from "../dialog";
 
 function shortenText(text, maxLength = 40) {
   return text?.length > maxLength ? `${text.slice(0, maxLength)}...` : text;
@@ -44,7 +46,7 @@ export default function Overview({ state }) {
 
   return (
     <Box
-      bg="#FAFBFC"
+      bg={{ base: "#FAFBFC", _dark: "#0F0F0F" }}
       p={6}
       borderRadius="md"
       boxShadow="sm"
@@ -58,21 +60,22 @@ export default function Overview({ state }) {
             {t(statusTheme.status)}
           </Status>
         </Flex>
-        <Box
-          as="button"
-          bg="blue.500"
-          color="white"
-          px={4}
-          py={1}
-          borderRadius="md"
-          fontWeight="medium"
-          _hover={{ bg: "blue.600" }}
+        <Button
           display={{ base: "none", md: "block" }}
+          bg={{ base: "#707D8A", _dark: "#242323" }}
+          border={{ base: "none", _dark: "1px solid white" }}
+          size="md"
         >
-          Delegate
-        </Box>
+          <DelegateDialog
+            denom={asset?.denom}
+            denomSymbol={asset?.symbol}
+            decimal={asset?.decimals}
+            operatorAddress={address}
+            operatorName={name}
+          />
+        </Button>
       </Flex>
-      <Text color="gray.600" mb={4}>
+      <Text color={{ base: "gray.600", _dark: "gray.100" }} mb={4}>
         {overview.description}
       </Text>
       <Box mb={4}>
@@ -134,7 +137,7 @@ export default function Overview({ state }) {
           w={{ base: "full", md: "200" }}
           borderRadius={"lg"}
           padding="10px"
-          bg="white"
+          bg={{ base: "white", _dark: "black" }}
         >
           <Flex direction="column">
             <Text>Commission</Text>
@@ -145,7 +148,7 @@ export default function Overview({ state }) {
           w={{ base: "full", md: "200" }}
           borderRadius={"lg"}
           padding="10px"
-          bg="white"
+          bg={{ base: "white", _dark: "black" }}
         >
           <Flex direction="column">
             <Text>Condition</Text>
@@ -156,7 +159,7 @@ export default function Overview({ state }) {
           w={{ base: "full", md: "200" }}
           borderRadius={"lg"}
           padding="10px"
-          bg="white"
+          bg={{ base: "white", _dark: "black" }}
         >
           <Flex direction="column">
             <Text>Max Commission Rate</Text>

@@ -36,7 +36,7 @@ export default function AssetChart({ balances }) {
     const { assetMap, loaded } = useRecoilValue(readAssets)
     if (!loaded) return (
         <Box
-            bg="#FAFBFC"
+            bg={{ base: "#FAFBFC", _dark: "#0F0F0F" }}
             p={6}
             borderRadius="md"
             boxShadow="sm"
@@ -49,7 +49,7 @@ export default function AssetChart({ balances }) {
 
     if (!assetMap || !balances?.length) return (
         <Box
-            bg="#FAFBFC"
+            bg={{ base: "#FAFBFC", _dark: "#0F0F0F" }}
             p={6}
             borderRadius="md"
             boxShadow="sm"
@@ -62,7 +62,7 @@ export default function AssetChart({ balances }) {
 
     return (
         <Box
-            bg="#FAFBFC"
+            bg={{ base: "#FAFBFC", _dark: "#0F0F0F" }}
             p={6}
             borderRadius="md"
             boxShadow="sm"

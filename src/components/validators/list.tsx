@@ -53,7 +53,7 @@ const ValidatorItemMobile = ({ item }) => {
 
   return (
     <Box
-      bg="white"
+      bg={{ base: "white", _dark: "#262626" }}
       p={4}
       //   boxShadow="sm"
       w="full"
@@ -116,22 +116,22 @@ const ValidatorItemMobile = ({ item }) => {
 const SkeletonItem = () => {
   return (
     <Table.Row>
-      <Table.Cell>
+      <Table.Cell borderBottomColor={{base: 'gray.200', _dark: 'gray.700'}}>
         <Skeleton h={"20px"} w="full" mb="4" />
       </Table.Cell>
-      <Table.Cell>
+      <Table.Cell borderBottomColor={{base: 'gray.200', _dark: 'gray.700'}}>
         <Skeleton h={"20px"} w="full" mb="4" />
       </Table.Cell>
-      <Table.Cell w={"30%"}>
+      <Table.Cell borderBottomColor={{base: 'gray.200', _dark: 'gray.700'}} w={"30%"}>
         <Skeleton h={"20px"} w="full" mb="4" />
       </Table.Cell>
-      <Table.Cell textAlign={"right"}>
+      <Table.Cell borderBottomColor={{base: 'gray.200', _dark: 'gray.700'}} textAlign={"right"}>
         <Skeleton h={"20px"} w="full" mb="4" />
       </Table.Cell>
-      <Table.Cell textAlign={"left"} pl={6}>
+      <Table.Cell borderBottomColor={{base: 'gray.200', _dark: 'gray.700'}} textAlign={"left"} pl={6}>
         <Skeleton h={"20px"} w="full" mb="4" />
       </Table.Cell>
-      <Table.Cell width={'10%'} textAlign="left">
+      <Table.Cell borderBottomColor={{base: 'gray.200', _dark: 'gray.700'}} width={'10%'} textAlign="left">
         <Skeleton h={"20px"} w="full" mb="4" />
       </Table.Cell>
     </Table.Row>
@@ -148,23 +148,25 @@ const ValidatorItem = ({ item, idx }) => {
       : "0";
   const votingPower = numeral(item.votingPower).format("0,0");
   return (
-    <Table.Row>
-      <Table.Cell>#{idx + 1}</Table.Cell>
-      <Table.Cell>
+    <Table.Row 
+    bg={{ base: "white", _dark: "#262626" }}
+    >
+      <Table.Cell borderBottomColor={{base: 'gray.200', _dark: 'gray.700'}}>#{idx + 1}</Table.Cell>
+      <Table.Cell borderBottomColor={{base: 'gray.200', _dark: 'gray.700'}}>
         <Proposer
           name={item.validator.name}
           address={item.validator.address}
           image={item.validator.imageUrl}
         />
       </Table.Cell>
-      <Table.Cell>
+      <Table.Cell borderBottomColor={{base: 'gray.200', _dark: 'gray.700'}}>
         <Asset
           name={asset?.symbol}
           denom={asset?.denom}
           image={asset?.image}
         />
       </Table.Cell>
-      <Table.Cell w={"30%"}>
+      <Table.Cell borderBottomColor={{base: 'gray.200', _dark: 'gray.700'}} w={"30%"}>
         <Box>
           <Flex justify={"space-between"}>
             <Text>{votingPower}</Text>
@@ -182,18 +184,18 @@ const ValidatorItem = ({ item, idx }) => {
           </ProgressRoot>
         </Box>
       </Table.Cell>
-      <Table.Cell textAlign={"right"}>
+      <Table.Cell borderBottomColor={{base: 'gray.200', _dark: 'gray.700'}} textAlign={"right"}>
         {numeral(item.commission).format("0.[00]")}%
       </Table.Cell>
-      <Table.Cell textAlign={"left"} pl={6}>
+      <Table.Cell borderBottomColor={{base: 'gray.200', _dark: 'gray.700'}} textAlign={"left"} pl={6}>
         <Status colorPalette={status.theme} color={status.theme}>
           {t(status.status)}
         </Status>
       </Table.Cell>
-      <Table.Cell textAlign="left">
+      <Table.Cell borderBottomColor={{base: 'gray.200', _dark: 'gray.700'}} textAlign="left">
         <Link asChild>
           {/* <NextLink href={ADDRESS_DETAILS(item?.validator.address)}> */}
-            <Button bg={"#707D8A"} size="sm" disabled={item.status !== 3}>
+            <Button bg={{base: "#707D8A", _dark: "#242323"}} border={{base: 'none', _dark: '1px solid white'}} size="md" disabled={item.status !== 3}>
               <DelegateDialog 
               denom={asset?.denom}
               denomSymbol={asset?.symbol}
@@ -285,10 +287,10 @@ const ValidatorList = () => {
           <SearchValidator callback={handleSearch} />
         </Center>
       </Flex>
-      <Box bg="#FAFBFC" py={"5"} px={"8"} h={"100vh"} rounded={"2xl"}>
+      <Box bg={{ base: "#FAFBFC", _dark: "#0F0F0F" }} py={"5"} px={"8"} h={"100vh"} rounded={"2xl"}>
         {isMobile ? (
           <VStack
-            bg={"white"}
+          bg={{ base: "white", _dark: "#262626" }}
             borderRadius="10px"
             px={"3"}
             separator={<StackSeparator />}
@@ -301,9 +303,9 @@ const ValidatorList = () => {
           </VStack>
         ) : (
           <Table.ScrollArea maxH={"100vh"} h={"95vh"} rounded="lg">
-            <Table.Root borderRadius="3xl" stickyHeader>
+            <Table.Root  color={{ base: "black", _dark: "white" }} borderRadius="3xl" stickyHeader>
               <Table.Header>
-                <Table.Row bg="#FAFBFC">
+                <Table.Row bg={{ base: "#FAFBFC", _dark: "#0F0F0F" }}>
                   {columns.map((item, index) => (
                     <ColumnHeader
                       key={`column-${index}`}
@@ -320,7 +322,7 @@ const ValidatorList = () => {
                   )}
                 </Table.Row>
               </Table.Header>
-              <Table.Body
+              <Table.Body bg={{ base: "white", _dark: "#262626" }}
                 style={{
                   borderRadius: "xl",
                 }}
@@ -339,7 +341,7 @@ const ValidatorList = () => {
                   ))
                 )}
               </Table.Body>
-            </Table.Root>
+            </Table.Root >
           </Table.ScrollArea>
         )}
       </Box>

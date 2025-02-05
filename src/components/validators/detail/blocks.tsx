@@ -52,7 +52,7 @@ export default function Blocks({ address }) {
     const { state, loading } = useBlocks(address);
 
     return (
-        <Box bg="#FAFBFC" p={6} borderRadius="md" boxShadow="sm" mb={8}>
+        <Box bg={{ base: "#FAFBFC", _dark: "#0F0F0F" }} p={6} borderRadius="md" boxShadow="sm" mb={8}>
             <Text fontSize="lg" fontWeight="bold" mb={4}>
                 Last 100 Blocks
             </Text>

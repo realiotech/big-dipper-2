@@ -84,7 +84,7 @@ export default function Charts() {
   return (
     <Flex gap={6} wrap="wrap" p={6}>
       {/* Price Chart */}
-      <Box bg="#FAFBFC" p={6} borderRadius="md" boxShadow="sm" flex={1} minW="320px">
+      <Box bg={{ base: "#FAFBFC", _dark: "#0F0F0F" }} p={6} borderRadius="md" boxShadow="sm" flex={1} minW="320px">
         <Text fontSize="lg" fontWeight="bold" mb={4}>
           Price (24h)
         </Text>
@@ -92,7 +92,7 @@ export default function Charts() {
       </Box>
 
       {/* Staking Chart */}
-      <Box bg="#FAFBFC" p={6} borderRadius="md" boxShadow="sm" flex={1} minW="320px">
+      <Box bg={{ base: "#FAFBFC", _dark: "#0F0F0F" }} p={6} borderRadius="md" boxShadow="sm" flex={1} minW="320px">
         <Text fontSize="lg" fontWeight="bold" mb={4}>
           Staking
         </Text>

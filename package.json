@@ -14,7 +14,7 @@
   },
   "dependencies": {
     "@apollo/client": "^3.7.14",
-    "@chakra-ui/cli": "^3.5.0",
+    "@chakra-ui/cli": "^3.6.0",
     "@chakra-ui/progress": "^2.2.0",
     "@chakra-ui/react": "^3.5.0",
     "@cosmjs/launchpad": "^0.27.1",
@@ -33,6 +33,7 @@
     "big.js": "^6.2.1",
     "chart.js": "^4.4.7",
     "color": "^4.2.3",
+    "color-mode": "^0.1.0",
     "copy-to-clipboard": "^3.3.3",
     "cosmjs-types": "^0.9.0",
     "dayjs": "^1.11.7",

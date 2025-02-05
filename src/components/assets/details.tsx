@@ -32,15 +32,15 @@ const HolderItem = ({ item, denom }) => {
 
   return (
     <Table.Row>
-      <Table.Cell>
+      <Table.Cell borderBottomColor={{base: 'gray.200', _dark: 'gray.700'}}>
         <HelpLink href={`/accounts/${item.address}`} value={item.address} />
       </Table.Cell>
-      <Table.Cell>
+      <Table.Cell borderBottomColor={{base: 'gray.200', _dark: 'gray.700'}}>
         {numeral(
           formatTokenByExponent(item.balance, assetDetail?.decimals)
         ).input()}
       </Table.Cell>
-      <Table.Cell>
+      <Table.Cell borderBottomColor={{base: 'gray.200', _dark: 'gray.700'}}>
         <Asset
           name={assetDetail?.symbol}
           image={assetDetail?.image}
@@ -54,13 +54,13 @@ const HolderItem = ({ item, denom }) => {
 const SkeletonBlockItem = ({ index }) => {
   return (
     <Table.Row key={`transaction-${index}`}>
-      <Table.Cell>
+      <Table.Cell borderBottomColor={{base: 'gray.200', _dark: 'gray.700'}}>
         <Skeleton h={"10px"} w="full" mb="2" />
       </Table.Cell>
-      <Table.Cell>
+      <Table.Cell borderBottomColor={{base: 'gray.200', _dark: 'gray.700'}}>
         <Skeleton h={"10px"} w="full" mb="2" />
       </Table.Cell>
-      <Table.Cell>
+      <Table.Cell borderBottomColor={{base: 'gray.200', _dark: 'gray.700'}}>
         <Skeleton h={"10px"} w="full" mb="2" />
       </Table.Cell>
     </Table.Row>
@@ -80,7 +80,7 @@ const AssetDetails = () => {
         colSpan={6}
         direction={"row"}
         align="center"
-        bg="white"
+        bg={{ base: "white", _dark: "black" }}
         p={6}
         height={"auto"}
         borderRadius="lg"
@@ -120,7 +120,7 @@ const AssetDetails = () => {
         size="md"
         variant={"subtle"}
       >
-        <Tabs.List bg="white">
+        <Tabs.List bg={{ base: "white", _dark: "black" }}>
           <Tabs.Trigger
             _selected={{
               bg: "#707D8A",
@@ -165,20 +165,20 @@ const AssetDetails = () => {
                     Top {maxHolders} holders (from a total of{" "}
                     {`${state?.holders ?? 0}`} holders)
                   </Text>
-                  <Table.Root colorScheme="gray">
-                    <Table.Header bg="#FAFBFC">
+                  <Table.Root  color={{ base: "black", _dark: "white" }}  colorScheme="gray">
+                    <Table.Header bg={{ base: "#FAFBFC", _dark: "#0F0F0F" }}>
                       <Table.Row bgColor="inherit">
                         <Table.ColumnHeader>Address</Table.ColumnHeader>
                         <Table.ColumnHeader>Amount</Table.ColumnHeader>
                         <Table.ColumnHeader>Denom</Table.ColumnHeader>
                       </Table.Row>
                     </Table.Header>
-                    <Table.Body>
+                    <Table.Body bg={{ base: "white", _dark: "#262626" }}>
                       {!holderState.loading ? (
                         holderState.holders.length === 0 ? (
                           <Center
                             borderRadius="20px"
-                            bgColor="#FAFBFC"
+                                     bgColor={{ base: "#FAFBFC", _dark: "#0F0F0F" }}
                             py="5"
                             px="8"
                             minH="65vh"
@@ -197,7 +197,7 @@ const AssetDetails = () => {
                         ))
                       )}
                     </Table.Body>
-                  </Table.Root>
+                  </Table.Root >
                   <Center w="full" py="4">
                     <Pagination
                       pageInfo={pageInfo}

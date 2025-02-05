@@ -24,7 +24,7 @@ export default function Staking({ address }) {
         <TabsTrigger value={2}>Unbondings ({unbondings.count ?? 0})</TabsTrigger>
       </TabsList>
       {delegations?.data ? (
-        <Box bg="#FAFBFC" p={6} borderRadius="md" boxShadow="sm" mb={8}>
+        <Box bg={{ base: "#FAFBFC", _dark: "#0F0F0F" }} p={6} borderRadius="md" boxShadow="sm" mb={8}>
           <TabsContent value={1}>
             <Delegations data={delegations} page={delegationsPage} setPage={setDelegationsPage} displayMode={1} />
           </TabsContent>

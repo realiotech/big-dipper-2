@@ -8,13 +8,18 @@ import { Transaction } from "../icons/transaction";
 import { Proposal } from "../icons/proposal";
 import { Params } from "../icons/params";
 import { useRouter } from "next/router";
+import { ColorModeButton } from "../ui/color-mode";
+import { useColorMode } from "../ui/color-mode";
+
 export default function Sidebar() {
     const { pathname } = useRouter()
+    const { colorMode } = useColorMode()
+
     return (
         <VStack hideBelow='lg' pr='50px'>
             <Link asChild outline='none'>
                 <NextLink href="/">
-                    <Image w='60px' src="/images/logo.svg" />
+                {colorMode == 'light' ? <Image w='60px' src="/images/logo.svg" /> : <Image w='60px' src="/images/logo_white.svg" />}
                 </NextLink>
             </Link>
             <Center position='relative' top='200px'>
@@ -25,6 +30,7 @@ export default function Sidebar() {
                     <NavLink href="/transactions" selected={pathname.includes("transactions")} children={<Transaction />} />
                     <NavLink href="/proposals" selected={pathname.includes("proposals")} children={<Proposal />} />
                     <NavLink href="/params" selected={pathname.includes("params")} children={<Params />} />
+                    <ColorModeButton />
                 </VStack>
             </Center>
         </VStack>

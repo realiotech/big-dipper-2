@@ -21,6 +21,7 @@ import MenuDrawer from './menudrawer';
 import SearchBar from './search';
 import PageHeader from './page-header';
 import WalletPopover from './wallet-popover';
+import { useColorMode } from "../ui/color-mode";
 
 export default function Header() {
   const marketState = useRecoilValue(readMarket);
@@ -28,6 +29,7 @@ export default function Header() {
   const isMobile = useBreakpointValue({
     base: true, lg: false,
   });
+  const { colorMode } = useColorMode()
 
   return !isMobile ? (
     <Flex w="full" gap="20px" align="center" pb="10" direction="column">
@@ -57,7 +59,7 @@ export default function Header() {
           h="60px"
           borderRadius="60px"
           fontSize="16px"
-          border="1px solid #e4e4e7"
+          border={{base: '1px solid #707D8A', _dark: '1px solid white'}}
         >
           {chainConfig.network}
         </Center>
@@ -78,7 +80,7 @@ export default function Header() {
       <Flex w="full" gap="10px" align="center" pb="2">
         <Link asChild outline="none">
           <NextLink href="/">
-            <Image w="50px" src="/images/logo.svg" />
+          {colorMode == 'light' ? <Image w='50px' src="/images/logo.svg" /> : <Image w='50px' src="/images/logo_white.svg" />}
           </NextLink>
         </Link>
         <Text fontSize="20px" fontWeight={600} flex="1">
@@ -107,6 +109,8 @@ export default function Header() {
           h="50px"
           borderRadius="60px"
           fontSize="12px"
+          border={{base: '1px solid #707D8A', _dark: '1px solid white'}}
+          
           w={{
             base: 'full', lg: '550px',
           }}

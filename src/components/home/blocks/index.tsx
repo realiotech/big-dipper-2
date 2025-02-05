@@ -63,22 +63,22 @@ const BlockItem = ({ item }) => {
   const { name, address, imageUrl } = useProfileRecoil(item.proposer);
 
   return (
-    <Table.Row>
-      <Table.Cell>
+    <Table.Row bg={{ base: "white", _dark: "#262626" }}>
+      <Table.Cell borderBottomColor={{base: 'gray.200', _dark: 'gray.700'}}>
         <ChakraLink asChild colorPalette="blue">
           <Link href={`/blocks/${item.height}`}>
             {numeral(item.height).format("0,0")}
           </Link>
         </ChakraLink>
       </Table.Cell>
-      <Table.Cell h={"54px"}>
+      <Table.Cell borderBottomColor={{base: 'gray.200', _dark: 'gray.700'}} h={"54px"}>
         <Proposer address={address} image={imageUrl} name={name} />
       </Table.Cell>
-      <Table.Cell>
+      <Table.Cell borderBottomColor={{base: 'gray.200', _dark: 'gray.700'}}>
         {getMiddleEllipsis(item.hash, { beginning: 6, ending: 5 })}
       </Table.Cell>
-      <Table.Cell>{numeral(item.txs).format("0,0")}</Table.Cell>
-      <Table.Cell>{dayjs.utc(item.timestamp).fromNow()}</Table.Cell>
+      <Table.Cell borderBottomColor={{base: 'gray.200', _dark: 'gray.700'}}>{numeral(item.txs).format("0,0")}</Table.Cell>
+      <Table.Cell borderBottomColor={{base: 'gray.200', _dark: 'gray.700'}}>{dayjs.utc(item.timestamp).fromNow()}</Table.Cell>
     </Table.Row>
   );
 };
@@ -89,13 +89,13 @@ const Blocks = () => {
 
   if (state.loading)
     return (
-      <GridItem borderRadius="20px" bgColor="#FAFBFC" py="5" px="8" colSpan={2}>
+      <GridItem borderRadius="20px" bgColor={{ base: "#FAFBFC", _dark: "#0F0F0F" }} py="5" px="8" colSpan={2}>
         <Loading />
       </GridItem>
     );
 
   return (
-    <GridItem borderRadius="20px" bgColor="#FAFBFC" py="5" px="8" colSpan={2}>
+    <GridItem borderRadius="20px" bgColor={{ base: "#FAFBFC", _dark: "#0F0F0F" }} py="5" px="8" colSpan={2}>
       <Flex w="full" justifyContent={"space-between"} pb="4">
         <Text fontSize="24px" fontWeight={400}>
           Latest Blocks
@@ -110,7 +110,7 @@ const Blocks = () => {
             divideY={"1px"}
             divideStyle={"ridge"}
             borderRadius="10px"
-            bg={"white"}
+            bg={{ base: "white", _dark: "#262626" }}
             gap={0}
           >
             {state.items.map((item, index) => (
@@ -122,7 +122,7 @@ const Blocks = () => {
             ))}
           </VStack>
         ) : (
-          <Table.Root bgColor="inherit" size="sm" showColumnBorder={false}>
+          <Table.Root  color={{ base: "black", _dark:  "white" }}  bgColor="inherit" size="sm" showColumnBorder={false}>
             <Table.Header>
               <Table.Row bgColor="inherit">
                 <Table.ColumnHeader>Height</Table.ColumnHeader>
@@ -132,14 +132,14 @@ const Blocks = () => {
                 <Table.ColumnHeader>Time</Table.ColumnHeader>
               </Table.Row>
             </Table.Header>
-            <Table.Body>
+            <Table.Body bg={{ base: "white", _dark: "#262626" }}>
               <For each={state.items}>
                 {(item, index) => (
                   <BlockItem key={`block-${index}`} item={item} />
                 )}
               </For>
             </Table.Body>
-          </Table.Root>
+          </Table.Root >
         )
       ) : (
         <NoData />

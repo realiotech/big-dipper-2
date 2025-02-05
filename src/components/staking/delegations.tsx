@@ -40,22 +40,22 @@ const getDisplayHeaders = (displayMode) => {
 const getDisplayData = (displayMode, staker_addr, name, address, imageUrl) => {
   if (displayMode === 1)
     return (
-      <Table.Cell>
+      <Table.Cell borderBottomColor={{base: 'gray.200', _dark: 'gray.700'}}>
         <HelpLink href={ADDRESS_DETAILS(staker_addr)} value={staker_addr} />
       </Table.Cell>
     );
   if (displayMode === 2)
     return (
-      <Table.Cell>
+      <Table.Cell borderBottomColor={{base: 'gray.200', _dark: 'gray.700'}}>
         <Proposer name={name} address={address} image={imageUrl}/>
       </Table.Cell>
     );
   return (
     <>
-      <Table.Cell>
+      <Table.Cell borderBottomColor={{base: 'gray.200', _dark: 'gray.700'}}>
         <HelpLink href={ADDRESS_DETAILS(staker_addr)} value={staker_addr} />
       </Table.Cell>
-      <Table.Cell>
+      <Table.Cell borderBottomColor={{base: 'gray.200', _dark: 'gray.700'}}>
         <Proposer name={name} address={address} image={imageUrl} />
       </Table.Cell>
     </>
@@ -70,18 +70,18 @@ const DelegationItem = ({ item, asset, displayMode }) => {
     parseFloat(item.bond_weight);
   const { name, address, imageUrl } = useProfileRecoil(item?.val_addr)
   return (
-    <Table.Row>
+    <Table.Row bg={{ base: "white", _dark: "#262626" }}>
       {getDisplayData(displayMode, item.staker_addr, name, address, imageUrl)}
-      <Table.Cell display={{ base: "none", md: "table-cell" }}>
+      <Table.Cell borderBottomColor={{base: 'gray.200', _dark: 'gray.700'}} display={{ base: "none", md: "table-cell" }}>
         {numeral(item.bond_weight).format("0.0")}
       </Table.Cell>
-      <Table.Cell display={{ base: "none", lg: "table-cell" }}>
+      <Table.Cell borderBottomColor={{base: 'gray.200', _dark: 'gray.700'}} display={{ base: "none", lg: "table-cell" }}>
         {numeral(votingPower).format("0,0.00")}
       </Table.Cell>
-      <Table.Cell>
+      <Table.Cell borderBottomColor={{base: 'gray.200', _dark: 'gray.700'}}>
         {numeral(formatTokenByExponent(item.amount, assetDetail?.decimals)).format("0,0.00")}{" "}
       </Table.Cell>
-      <Table.Cell>
+      <Table.Cell borderBottomColor={{base: 'gray.200', _dark: 'gray.700'}}>
         <Asset
           name={assetDetail?.symbol}
           image={assetDetail?.image}
@@ -96,9 +96,9 @@ export default function Delegations({ data, page, setPage, displayMode }) {
   return (
     <VStack w="full">
       <Box w="full" overflowX="auto">
-        <Table.Root showColumnBorder={false} h="full" w="full">
+        <Table.Root  color={{ base: "black", _dark: "white" }}  showColumnBorder={false} h="full" w="full">
           <Table.Header>
-            <Table.Row bg="#FAFBFC">
+            <Table.Row bg={{ base: "#FAFBFC", _dark: "#0F0F0F" }}>
               {getDisplayHeaders(displayMode)}
               <Table.ColumnHeader display={{ base: "none", md: "table-cell" }}>
                 Bond Weight
@@ -110,14 +110,14 @@ export default function Delegations({ data, page, setPage, displayMode }) {
               <Table.ColumnHeader />
             </Table.Row>
           </Table.Header>
-          <Table.Body>
+          <Table.Body bg={{ base: "white", _dark: "#262626" }}>
             {!data?.loading ? (
               data?.data.length === 0 ? (
                 <Table.Row>
                   <Table.Cell colSpan={5} textAlign="center">
                     <Center
                       borderRadius="20px"
-                      bgColor="#FAFBFC"
+                               bgColor={{ base: "#FAFBFC", _dark: "#0F0F0F" }}
                       py="5"
                       px="8"
                       minH="65vh"
@@ -141,7 +141,7 @@ export default function Delegations({ data, page, setPage, displayMode }) {
               Array.from({ length: 10 }).map((_, index) => <SkeletonItem key={`delegation-skele-${index}`} index={index} />)
             )}
           </Table.Body>
-        </Table.Root>
+        </Table.Root >
       </Box>
       <PaginationRoot
         count={data?.count}

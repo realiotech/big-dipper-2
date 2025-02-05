@@ -63,13 +63,13 @@ const Transactions = () => {
   
   if (!state?.items?.length)
     return (
-      <GridItem borderRadius="20px" bgColor="#FAFBFC" py="5" px="8" colSpan={2}>
+      <GridItem borderRadius="20px" bgColor={{ base: "#FAFBFC", _dark: "#0F0F0F" }} py="5" px="8" colSpan={2}>
         <Loading />
       </GridItem>
     );
 
   return (
-    <GridItem borderRadius="20px" bgColor="#FAFBFC" py="5" px="8" colSpan={2}>
+    <GridItem borderRadius="20px" bgColor={{ base: "#FAFBFC", _dark: "#0F0F0F" }} py="5" px="8" colSpan={2}>
       <Flex w="full" justifyContent={"space-between"} pb="4">
         <Text fontSize="24px" fontWeight={400}>
           Latest Transactions
@@ -78,13 +78,14 @@ const Transactions = () => {
           <Link href="/transactions">See more</Link>
         </ChakraLink>
       </Flex>
-      {isMobile?     <Box bg="white" borderRadius="md" overflowY="auto" maxH="auto">
+      {isMobile?     <Box             bg={{ base: "white", _dark: "#262626" }}
+ borderRadius="md" overflowY="auto" maxH="auto">
       <VStack px={3} separator={<StackSeparator />} align="stretch">
         {state.items.map((item, index) => (
           <TxItemMobile item={item} rowIndex={index} />
         ))}
       </VStack>
-    </Box> :<Table.Root size={"sm"} bgColor="inherit" showColumnBorder={false}>
+    </Box> :<Table.Root  color={{ base: "black", _dark: "white" }}  size={"sm"} bgColor="inherit" showColumnBorder={false}>
         <Table.Header>
           <Table.Row bgColor="inherit">
             <Table.ColumnHeader>Block</Table.ColumnHeader>
@@ -93,18 +94,18 @@ const Transactions = () => {
             <Table.ColumnHeader>Time</Table.ColumnHeader>
           </Table.Row>
         </Table.Header>
-        <Table.Body>
+        <Table.Body bg={{ base: "white", _dark: "#262626" }}>
           <For each={state.items}>
             {(item, index) => (
-              <Table.Row key={`transaction-${index}`}>
-                <Table.Cell height={"54px"}>
+              <Table.Row bg={{ base: "white", _dark: "#262626" }} key={`transaction-${index}`}>
+                <Table.Cell borderBottomColor={{base: 'gray.200', _dark: 'gray.700'}} height={"54px"}>
                   <ChakraLink asChild colorPalette="blue">
                     <Link href={`/blocks/${item.height}`}>
                       {numeral(item.height).format("0,0")}
                     </Link>
                   </ChakraLink>
                 </Table.Cell>
-                <Table.Cell>
+                <Table.Cell borderBottomColor={{base: 'gray.200', _dark: 'gray.700'}}>
                   <ChakraLink asChild colorPalette="blue">
                     <Link href={`/transactions/${item.hash}`}>
                       {getMiddleEllipsis(item.hash, {
@@ -114,17 +115,17 @@ const Transactions = () => {
                     </Link>
                   </ChakraLink>
                 </Table.Cell>
-                <Table.Cell>
+                <Table.Cell borderBottomColor={{base: 'gray.200', _dark: 'gray.700'}}>
                   <Status value={item.success ? "success" : "error"}>
                     <Text>{item.success ? "Success" : "Failed"}</Text>
                   </Status>
                 </Table.Cell>
-                <Table.Cell>{dayjs.utc(item.timestamp).fromNow()}</Table.Cell>
+                <Table.Cell borderBottomColor={{base: 'gray.200', _dark: 'gray.700'}}>{dayjs.utc(item.timestamp).fromNow()}</Table.Cell>
               </Table.Row>
             )}
           </For>
         </Table.Body>
-      </Table.Root>}
+      </Table.Root >}
     </GridItem>
   );
 };
