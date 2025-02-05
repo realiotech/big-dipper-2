@@ -15,10 +15,12 @@ import { useRouter } from 'next/router';
 import numeral from 'numeral';
 import { toast } from 'react-toastify';
 import { useRecoilCallback } from 'recoil';
+import { ASSET_SEARCH } from '@/utils/utils';
 const { extra, prefix } = chainConfig;
 const consensusRegex = new RegExp(`^(${prefix.consensus})`);
 const validatorRegex = new RegExp(`^(${prefix.validator})`);
 const userRegex = new RegExp(`^(${prefix.account})`);
+const assetRegex = new RegExp(`^(a)`);
 
 export const useSearch = (callback: (value: string, clear?: () => void) => void) => {
     const [value, setValue] = useState('');
@@ -79,6 +81,14 @@ export const useSearchBar = (t: TFunction) => {
                     } else {
                         toast<string>(t('common:invalidAddress'));
                     }
+                } else if (ASSET_SEARCH.includes(parsedValue.toLocaleLowerCase())){
+                    let valueLower = parsedValue.toLocaleLowerCase()
+                    if (assetRegex.test(valueLower)) {
+                        router.push(`/assets/${valueLower}`);
+                    } else {
+                        router.push(`/assets/a${valueLower}`);
+                    }
+
                 } else if (/^@/.test(parsedValue)) {
                     const configProfile = extra.profile;
                     if (!configProfile) {

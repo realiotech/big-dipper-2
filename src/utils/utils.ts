@@ -71,3 +71,12 @@ export const ADDITIONAL_META_TAGS = [
 
 export const SEO_TITLE = "Realio Network Explorer"
 export const SEO_DESCRIPTION = "Official block explorer of The Realio Network powered by the Big Dipper open source explorer."
+
+export const ASSET_SEARCH = [
+    'ario',
+    'arst',
+    'almx',
+    'rio',
+    'lmx',
+    'rst'
+]
