@@ -31,16 +31,16 @@ const HolderItem = ({ item, denom }) => {
   const assetDetail = useRecoilValue(readAsset(denom));
 
   return (
-    <Table.Row>
-      <Table.Cell borderBottomColor={{base: 'gray.200', _dark: 'gray.700'}}>
+    <Table.Row bg={{ base: "white", _dark: "#262626" }}>
+      <Table.Cell borderBottomColor={{ base: "gray.200", _dark: "gray.700" }}>
         <HelpLink href={`/accounts/${item.address}`} value={item.address} />
       </Table.Cell>
-      <Table.Cell borderBottomColor={{base: 'gray.200', _dark: 'gray.700'}}>
+      <Table.Cell borderBottomColor={{ base: "gray.200", _dark: "gray.700" }}>
         {numeral(
           formatTokenByExponent(item.balance, assetDetail?.decimals)
         ).input()}
       </Table.Cell>
-      <Table.Cell borderBottomColor={{base: 'gray.200', _dark: 'gray.700'}}>
+      <Table.Cell borderBottomColor={{ base: "gray.200", _dark: "gray.700" }}>
         <Asset
           name={assetDetail?.symbol}
           image={assetDetail?.image}
@@ -54,13 +54,13 @@ const HolderItem = ({ item, denom }) => {
 const SkeletonBlockItem = ({ index }) => {
   return (
     <Table.Row key={`transaction-${index}`}>
-      <Table.Cell borderBottomColor={{base: 'gray.200', _dark: 'gray.700'}}>
+      <Table.Cell borderBottomColor={{ base: "gray.200", _dark: "gray.700" }}>
         <Skeleton h={"10px"} w="full" mb="2" />
       </Table.Cell>
-      <Table.Cell borderBottomColor={{base: 'gray.200', _dark: 'gray.700'}}>
+      <Table.Cell borderBottomColor={{ base: "gray.200", _dark: "gray.700" }}>
         <Skeleton h={"10px"} w="full" mb="2" />
       </Table.Cell>
-      <Table.Cell borderBottomColor={{base: 'gray.200', _dark: 'gray.700'}}>
+      <Table.Cell borderBottomColor={{ base: "gray.200", _dark: "gray.700" }}>
         <Skeleton h={"10px"} w="full" mb="2" />
       </Table.Cell>
     </Table.Row>
@@ -101,105 +101,118 @@ const AssetDetails = () => {
       </GridItem>
       <AssetOverview />
       <Center>
-
-      <Tabs.Root
-        value={selectedTab}
-        onValueChange={(e) => setSelectedTab(e.value)}
-        size="md"
-        variant={"subtle"}
-      >
-        <Tabs.List bg={{ base: "white", _dark: "black" }}>
-          <Tabs.Trigger
-            _selected={{
-              bg: "#707D8A",
-              color: "white",
-              borderRadius: "100px",
-              border: "none",
-            }}
-            p={4}
-            w={{ base: "full", lg: "150px" }}
-            value="holders"
-          >
-            <Center w={"full"}>Holders</Center>
-          </Tabs.Trigger>
-          <Tabs.Trigger
-            _selected={{
-              bg: "#707D8A",
-              color: "white",
-              borderRadius: "100px",
-              border: "none",
-            }}
-            p={4}
-            w={{ base: "full", lg: "150px" }}
-            value="staking"
-          >
-            <Center w={"full"}>Staking</Center>
-          </Tabs.Trigger>
-          <Tabs.Indicator bg="#707D8A" borderRadius="100px" />
-        </Tabs.List>
-      </Tabs.Root>
+        <Tabs.Root
+          value={selectedTab}
+          onValueChange={(e) => setSelectedTab(e.value)}
+          size="md"
+          variant={"subtle"}
+        >
+          <Tabs.List bg={{ base: "white", _dark: "black" }}>
+            <Tabs.Trigger
+              _selected={{
+                bg: "#707D8A",
+                color: "white",
+                borderRadius: "100px",
+                border: "none",
+              }}
+              p={4}
+              w={{ base: "full", lg: "150px" }}
+              value="holders"
+            >
+              <Center w={"full"}>Holders</Center>
+            </Tabs.Trigger>
+            <Tabs.Trigger
+              _selected={{
+                bg: "#707D8A",
+                color: "white",
+                borderRadius: "100px",
+                border: "none",
+              }}
+              p={4}
+              w={{ base: "full", lg: "150px" }}
+              value="staking"
+            >
+              <Center w={"full"}>Staking</Center>
+            </Tabs.Trigger>
+            <Tabs.Indicator bg="#707D8A" borderRadius="100px" />
+          </Tabs.List>
+        </Tabs.Root>
       </Center>
-      <GridItem borderRadius="lg" colSpan={6} bgColor={"#FAFBFC"}>
+      <GridItem
+        borderRadius="lg"
+        colSpan={6}
+        bg={{ base: "#FAFBFC", _dark: "#0F0F0F" }}
+      >
         <Tabs.Root
           value={selectedTab}
           onValueChange={(e) => setSelectedTab(e.value)}
           size="md"
         >
-          <Box>
-            <Tabs.ContentGroup>
-              <Tabs.Content value="holders">
-                <Box overflow={"auto"} p={6}>
-                  <Text fontSize="md" mb={4}>
-                    Top {maxHolders} holders (from a total of{" "}
-                    {`${state?.holders ?? 0}`} holders)
-                  </Text>
-                  <Table.Root  color={{ base: "black", _dark: "white" }}  colorScheme="gray">
-                    <Table.Header bg={{ base: "#FAFBFC", _dark: "#0F0F0F" }}>
-                      <Table.Row bgColor="inherit">
-                        <Table.ColumnHeader>Address</Table.ColumnHeader>
-                        <Table.ColumnHeader>Amount</Table.ColumnHeader>
-                        <Table.ColumnHeader>Denom</Table.ColumnHeader>
-                      </Table.Row>
-                    </Table.Header>
-                    <Table.Body bg={{ base: "white", _dark: "#262626" }}>
-                      {!holderState.loading ? (
-                        holderState.holders.length === 0 ? (
-                          <Center
-                            borderRadius="20px"
-                                     bgColor={{ base: "#FAFBFC", _dark: "#0F0F0F" }}
-                            py="5"
-                            px="8"
-                            minH="65vh"
-                            w="full"
-                          >
-                            <Text>Nothing to show</Text>
-                          </Center>
-                        ) : (
-                          holderState.holders.map((item, index) => (
-                            <HolderItem item={item} denom={denom} key={`holder-${index}`} />
-                          ))
-                        )
+          <Tabs.ContentGroup>
+            <Tabs.Content p={0} value="holders">
+              <Box
+                bg={{ base: "#FAFBFC", _dark: "#0F0F0F" }}
+                overflow={"auto"}
+                p={6}
+              >
+                <Text fontSize="md" mb={4}>
+                  Top {maxHolders} holders (from a total of{" "}
+                  {`${state?.holders ?? 0}`} holders)
+                </Text>
+                <Table.Root color={{ base: "black", _dark: "white" }}>
+                  <Table.Header bg={{ base: "#FAFBFC", _dark: "#0F0F0F" }}>
+                    <Table.Row bgColor="inherit">
+                      <Table.ColumnHeader>Address</Table.ColumnHeader>
+                      <Table.ColumnHeader>Amount</Table.ColumnHeader>
+                      <Table.ColumnHeader>Denom</Table.ColumnHeader>
+                    </Table.Row>
+                  </Table.Header>
+                  <Table.Body bg={{ base: "white", _dark: "#262626" }}>
+                    {!holderState.loading ? (
+                      holderState.holders.length === 0 ? (
+                        <Center
+                          borderRadius="20px"
+                          bgColor={{ base: "#FAFBFC", _dark: "#0F0F0F" }}
+                          py="5"
+                          px="8"
+                          minH="65vh"
+                          w="full"
+                        >
+                          <Text>Nothing to show</Text>
+                        </Center>
                       ) : (
-                        Array.from({ length: 20 }).map((_, index) => (
-                          <SkeletonBlockItem index={index} />
+                        holderState.holders.map((item, index) => (
+                          <HolderItem
+                            item={item}
+                            denom={denom}
+                            key={`holder-${index}`}
+                          />
                         ))
-                      )}
-                    </Table.Body>
-                  </Table.Root >
-                  <Center w="full" py="4">
-                    <Pagination
-                      pageInfo={pageInfo}
-                      pageChangeFunc={handlePageChange}
-                      pageSizeChangeFunc={() => {}}
-                    />
-                  </Center>
-                </Box>
-              </Tabs.Content>
-              <Tabs.Content value="staking">
-                <Staking denom={router?.query?.denom} />
-              </Tabs.Content>
-            </Tabs.ContentGroup>
-          </Box>
+                      )
+                    ) : (
+                      Array.from({ length: 20 }).map((_, index) => (
+                        <SkeletonBlockItem index={index} />
+                      ))
+                    )}
+                  </Table.Body>
+                </Table.Root>
+                <Center w="full" py="4">
+                  <Pagination
+                    pageInfo={pageInfo}
+                    pageChangeFunc={handlePageChange}
+                    pageSizeChangeFunc={() => {}}
+                  />
+                </Center>
+              </Box>
+            </Tabs.Content>
+            <Tabs.Content
+              bg={{ base: "#FAFBFC", _dark: "#0F0F0F" }}
+              p={0}
+              value="staking"
+            >
+              <Staking denom={router?.query?.denom} />
+            </Tabs.Content>
+          </Tabs.ContentGroup>
         </Tabs.Root>
       </GridItem>
     </Grid>

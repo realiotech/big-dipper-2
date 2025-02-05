@@ -64,7 +64,7 @@ export default function VotesGraph({ statusInfo }) {
       <Grid templateColumns={{base: "repeat(1, 1fr)", md:"repeat(4, 1fr)"}} gap={4}>
         <Box
           p={'10px 16px'}
-          bgColor={"white"}
+          bg={{ base: "white", _dark: "#262626" }}
           textAlign="center"
           borderRadius={"l3"}
           border={maxType === 'yes' ? '1px solid' : undefined}
@@ -82,7 +82,7 @@ export default function VotesGraph({ statusInfo }) {
         </Box>
         <Box
           p={'10px 16px'}
-          bgColor={"white"}
+          bg={{ base: "white", _dark: "#262626" }}
           textAlign="center"
           borderRadius={"l3"}
           border={maxType === 'no' ? '1px solid' : undefined}
@@ -100,7 +100,7 @@ export default function VotesGraph({ statusInfo }) {
         </Box>
         <Box
           p={'10px 16px'}
-          bgColor={"white"}
+          bg={{ base: "white", _dark: "#262626" }}
           textAlign="center"
           borderRadius={"l3"}
           border={maxType === 'veto' ? '1px solid' : undefined}
@@ -118,7 +118,7 @@ export default function VotesGraph({ statusInfo }) {
         </Box>
         <Box
           p={'10px 16px'}
-          bgColor={"white"}
+          bg={{ base: "white", _dark: "#262626" }}
           textAlign="center"
           borderRadius={"l3"}
           border={maxType === 'abstain' ? '1px solid' : undefined}

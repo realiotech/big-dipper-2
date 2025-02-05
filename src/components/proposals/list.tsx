@@ -51,7 +51,7 @@ const ProposalItem = ({ proposal }) => {
             {statusInfo.value}
           </Badge>
         </Flex>
-        <Text lineClamp="3" color="gray.500" fontSize="sm">
+        <Text lineClamp="2" color="gray.500" fontSize="sm">
           {proposal.description}
         </Text>
       </Flex>
@@ -67,7 +67,7 @@ const ProposalItem = ({ proposal }) => {
           >
             #{proposal.id} {proposal.title}
           </Link>
-          <Text color="gray.500" fontSize="sm">
+          <Text color="gray.500" lineClamp="2" fontSize="sm">
             {proposal.description}
           </Text>
         </Flex>
@@ -92,7 +92,7 @@ const ProposalItem = ({ proposal }) => {
 const SkeletonItem = () => {
   const isMobile = useBreakpointValue({ base: true, md: false });
   return isMobile ? (
-    <Box bg={{ base: "white", _dark: "black" }} p={4}>
+    <Box bg={{ base: "white", _dark: "#262626" }} p={4}>
       <Flex
         justify="space-between"
         direction="column"
@@ -101,18 +101,19 @@ const SkeletonItem = () => {
         w={"full"}
       >
         <Flex justify="space-between" w="full">
-          <Skeleton h={"20px"} w="full" mb="4" />
+          <Skeleton bg={'gray.400'} h={"20px"} w="full" mb="4" />
         </Flex>
-        <Skeleton h={"20px"} w="full" mb="4" />
+        <Skeleton bg={'gray.400'} h={"20px"} w="full"/>
       </Flex>
     </Box>
   ) : (
-    <Box bg={{ base: "white", _dark: "black" }} p={4}>
-      <Flex justify="space-between" align="center" mb={2} w={"full"}>
-        <Flex direction={"column"} w="80%">
-          <Skeleton h={"20px"} w="full" mb="4" />
+    <Box bg={{ base: "white", _dark: "#262626" }} p={4}>
+      <Flex justify="space-between" align="center"  w={"full"}>
+        <Flex direction={"column"} w="70%">
+          <Skeleton bg={'gray.400'} h={"20px"} w="full" mb="4" />
+          <Skeleton bg={'gray.400'} h={"20px"} w="full"/>
         </Flex>
-        <Skeleton h={"20px"} w="full" mb="4" />
+        <Skeleton bg={'gray.400'} h={"30px"} w="15%"/>
       </Flex>
     </Box>
   );
