@@ -47,7 +47,7 @@ const FeaturedBlockchains = () => {
     <GridItem colSpan={2} h={"full"}>
       <Box bg={{ base: "#FAFBFC", _dark: "#0F0F0F" }} p={6} borderRadius="20px" h={"full"}>
         <Text fontSize="lg" fontWeight="bold" mb={4}>
-          Featured Blockchains
+          Network Tokens
         </Text>
         <Table.ScrollArea border={"none"} rounded="lg">
           <Table.Root  color={{ base: "black", _dark: "white" }}  bg={{ base: "white", _dark: "black" }} borderRadius="md">

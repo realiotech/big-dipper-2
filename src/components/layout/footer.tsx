@@ -24,16 +24,16 @@ export default function Footer() {
                 <VStack align='left' gap='20px'>
                     {colorMode == 'light' ? <Image  src='/images/logo-full.svg' h='50px' fit='contain' w='min-content' /> : <Image  src='/images/logo-full-white.svg' h='50px' fit='contain' w='min-content' />}
                     <Text>
-                        Realio Network Explorer
+                        Realio Network Block Explorer
                     </Text>
                 </VStack>
             </GridItem>
             <GridItem py={{ base: '15px', lg: '0px' }}>
                 <VStack color={{base: "#707D8A", _dark: "#9DA7B0"}} align='left' gap='20px'>
                     <Text color={{base: "#707D8A", _dark: "#9DA7B0"}} fontSize='16px' fontWeight={600}>Realio Tokens</Text>
-                    <Link color={{base: 'black', _dark: 'white'}} href="" _hover={{ color: "#173DA6" }} fontWeight={400} fontSize={'14px'}>Liquid Mining Fund</Link>
-                    <Link href="" _hover={{ color: "#173DA6" }} fontWeight={400} color={{base: 'black', _dark: 'white'}} fontSize={'14px'}>Realio Network Token</Link>
-                    <Link href="" _hover={{ color: "#173DA6" }} fontWeight={400} color={{base: 'black', _dark: 'white'}} fontSize={'14px'}>Realio Network, LTD</Link>
+                    <Link color={{base: 'black', _dark: 'white'}} href="#" _hover={{ color: "#173DA6" }} fontWeight={400} fontSize={'14px'}>Liquid Mining Fund</Link>
+                    <Link href="#" _hover={{ color: "#173DA6" }} fontWeight={400} color={{base: 'black', _dark: 'white'}} fontSize={'14px'}>Realio Network Token</Link>
+                    <Link href="#" _hover={{ color: "#173DA6" }} fontWeight={400} color={{base: 'black', _dark: 'white'}} fontSize={'14px'}>Realio Network, LTD</Link>
                 </VStack>
             </GridItem>
             <GridItem py={{ base: '15px', lg: '0px' }}>

@@ -97,18 +97,6 @@ const AssetDetails = () => {
               <Text color="gray.500">Token Overview</Text>
             </VStack>
           </HStack>
-          <HStack spacing={4}>
-            <Button
-              leftIcon={<FiShoppingCart />}
-              colorScheme="blue"
-              variant="solid"
-            >
-              Buy
-            </Button>
-            <Button variant="outline" colorScheme="blue">
-              Exchange
-            </Button>
-          </HStack>
         </Flex>
       </GridItem>
       <AssetOverview />

@@ -17,7 +17,6 @@ import { Block } from "../icons/block";
 import { Stake } from "../icons/stake";
 import { Transaction } from "../icons/transaction";
 import { Proposal } from "../icons/proposal";
-import { Params } from "../icons/params";
 import { useColorMode } from "../ui/color-mode";
 import { ColorModeButton } from "../ui/color-mode";
 
@@ -28,7 +27,6 @@ export default function MenuDrawer() {
     { label: "Validators", href: "/validators", image: <Stake /> },
     { label: "Transactions", href: "/transactions", image: <Transaction /> },
     { label: "Proposals", href: "/proposals", image: <Proposal /> },
-    { label: "Params", href: "/params", image: <Params /> },
   ];
   const { colorMode } = useColorMode();
 

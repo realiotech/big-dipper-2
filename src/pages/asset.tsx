@@ -147,18 +147,6 @@ const AssetPage = () => {
               <Text color="gray.500">Token Overview</Text>
             </VStack>
           </HStack>
-          <HStack spacing={4}>
-            <Button
-              leftIcon={<FiShoppingCart />}
-              colorScheme="blue"
-              variant="solid"
-            >
-              Buy
-            </Button>
-            <Button variant="outline" colorScheme="blue">
-              Exchange
-            </Button>
-          </HStack>
         </Flex>
       </GridItem>
 
@@ -236,7 +224,7 @@ const AssetPage = () => {
 
         <Flex direction={"column"} gap={2}>
           <Text fontSize="md" color="gray.500">
-            Token Contract
+            Token URL
           </Text>
 
           <Flex  gap={2} align={"center"}>

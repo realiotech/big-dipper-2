@@ -6,7 +6,6 @@ import { Block } from "../icons/block";
 import { Stake } from "../icons/stake";
 import { Transaction } from "../icons/transaction";
 import { Proposal } from "../icons/proposal";
-import { Params } from "../icons/params";
 import { useRouter } from "next/router";
 import { ColorModeButton } from "../ui/color-mode";
 import { useColorMode } from "../ui/color-mode";
@@ -29,7 +28,6 @@ export default function Sidebar() {
                     <NavLink href="/validators" selected={pathname.includes("validators")} children={<Stake />} />
                     <NavLink href="/transactions" selected={pathname.includes("transactions")} children={<Transaction />} />
                     <NavLink href="/proposals" selected={pathname.includes("proposals")} children={<Proposal />} />
-                    <NavLink href="/params" selected={pathname.includes("params")} children={<Params />} />
                     <ColorModeButton />
                 </VStack>
             </Center>

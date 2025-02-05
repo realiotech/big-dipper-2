@@ -94,7 +94,7 @@ export default function AssetOverview() {
 
         <Flex direction={"column"} gap={2}>
           <Text fontSize="md" color="gray.500">
-            Token Contract
+            Token URL
           </Text>
 
           <Flex gap={2} align={"center"}>
