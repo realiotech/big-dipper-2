@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { Box, Center, Flex, For, GridItem, HStack, Text } from "@chakra-ui/react";
+import { Box, Button, Center, Flex, For, GridItem, HStack, Text } from "@chakra-ui/react";
 import { Bar } from "react-chartjs-2";
 import {
   Chart as ChartJS,
@@ -17,6 +17,7 @@ import { readAssets } from "@/recoil/asset";
 import { useHero } from "./hooks";
 import { formatStakingData } from "./utils";
 import numeral from "numeral";
+import { useColorModeValue } from "@/components/ui/color-mode";
 
 // Register ChartJS Components
 ChartJS.register(
@@ -30,6 +31,7 @@ ChartJS.register(
 );
 
 export default function StakingChart() {
+  const textColor = useColorModeValue("black", "white");
   const { state } = useHero()
   const { assetArr } = useRecoilValue(readAssets)
   const [stakingData, setStakingData] = useState({
@@ -54,6 +56,7 @@ export default function StakingChart() {
     if (!state.loading && assetArr.length > 0) {
       setStakingData(formatStakingData(state.bonded, state.unbonding, assetArr))
     }
+    
   }, [assetArr, state.loading])
 
 
@@ -65,11 +68,13 @@ export default function StakingChart() {
     scales: {
       x: {
         grid: { display: false },
-        ticks: { color: "black" },
+        ticks: { color: textColor },
+        border: { color: textColor },
       },
       y: {
         grid: { display: false },
-        ticks: { color: "black" },
+        ticks: { color: textColor },
+        border: { color: textColor },
       },
     },
   };
@@ -95,9 +100,6 @@ export default function StakingChart() {
                 <Text fontSize="md" fontWeight="bold" w={"full"}>
                   <Flex gap={2}>
                     <Center>
-                      <Box borderRadius={4} height={5} w={5} bg={"#38A169"} />
-                    </Center>
-                    <Center>
                       <Text fontWeight="bold" w={"full"}>
                         Bonded
                       </Text>
@@ -107,18 +109,16 @@ export default function StakingChart() {
                 <For each={assetArr}>
                   {(item) => 
                     <HStack>
+                      <Box borderRadius={4} height={5} w={5} bg={stakingData?.datasets[0].backgroundColor[item.idx]} />
                       <Text>{item.symbol}:</Text>
                       <Text>{numeral(stakingData?.datasets[0].data[item.idx]).format("0,0")}</Text>
-                    </HStack>
+                    </HStack> 
                   }
                 </For>
               </Box>
               <Box>
                 <Text fontSize="md" fontWeight="bold" w={"full"}>
                   <Flex gap={2}>
-                    <Center>
-                      <Box borderRadius={4} height={5} w={5} bg={"#6C63FF"} />
-                    </Center>
                     <Center>
                       <Text fontSize="lg" fontWeight="bold" w={"full"}>
                         Unbonding
@@ -129,6 +129,7 @@ export default function StakingChart() {
                 <For each={assetArr}>
                   {(item) =>
                     <HStack>
+                      <Box borderRadius={4} height={5} w={5} bg={stakingData?.datasets[1].backgroundColor[item.idx]} />
                       <Text>{item.symbol}:</Text>
                       <Text>{numeral(stakingData?.datasets[1].data[item.idx]).format("0,0")}</Text>
                     </HStack>

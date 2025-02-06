@@ -1,18 +1,19 @@
-import { AssetItem } from "@/recoil/asset/types";
-import { StakeValueMap } from "./types";
 import { formatTokenByExponent } from "@/utils";
 
-export function formatStakingData(bonded: StakeValueMap, unbonding: StakeValueMap, assetArr: AssetItem[]) {
-    var labels = assetArr.map(item => item.symbol)
-    var bondedData = assetArr.map(item => {
-        let bondedValue = bonded[item.denom] ?? '0' 
-        return parseFloat(formatTokenByExponent(bondedValue, item.decimals))
-    })
+export function formatStakingData(bonded, unbonding, assetArr) {
+    const labels = assetArr.map(item => item.symbol);
+    const colors = ["#57B888", "#8642E3", "#FF4C00", "#57B88880", "#8642E380", "#FF4C0080"]; 
+    const getColor = (index) => colors[index % colors.length];
 
-    var unbondingData = assetArr.map(item => {
-        let unbondingValue = unbonding[item.denom] ?? '0'
-        return parseFloat(formatTokenByExponent(unbondingValue, item.decimals))
-    })
+    const bondedData = assetArr.map(item => {
+        let bondedValue = bonded[item.denom] ?? '0';
+        return parseFloat(formatTokenByExponent(bondedValue, item.decimals));
+    });
+
+    const unbondingData = assetArr.map(item => {
+        let unbondingValue = unbonding[item.denom] ?? '0';
+        return parseFloat(formatTokenByExponent(unbondingValue, item.decimals));
+    });
 
     return {
         labels: labels,
@@ -20,15 +21,15 @@ export function formatStakingData(bonded: StakeValueMap, unbonding: StakeValueMa
             {
                 label: "Staked",
                 data: bondedData,
-                backgroundColor: "#38A169",
+                backgroundColor: bondedData.map((_, index) => getColor(index)),
                 borderRadius: 4,
             },
             {
                 label: "Unbonding",
                 data: unbondingData,
-                backgroundColor: "#6C63FF",
+                backgroundColor: unbondingData.map((_, index) => getColor(index + 3)),
                 borderRadius: 4,
             },
         ],
-    }
+    };
 }
