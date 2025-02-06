@@ -7,41 +7,49 @@ import {
   VStack,
   TableColumnHeader,
   GridItem,
-  Image,
 } from "@chakra-ui/react";
 import { useRecoilValue } from "recoil";
 import { readAssets } from "@/recoil/asset";
 import Asset from "@/components/helper/asset";
+import { useSupplies } from "./hooks";
+import Loading from "@/components/helper/loading";
+import numeral from "numeral";
+import { formatTokenByExponent } from "@/utils";
 
+const TokenItem = ({ data, metadata }) => {
+  const amtStr = formatTokenByExponent(data?.amount, metadata.decimals)
+  const amtInUsd = parseFloat(amtStr) * metadata.price
+  return (
+    <Table.Row bg={{ base: "white", _dark: "#262626" }}>
+      <Table.Cell borderBottomColor={{ base: 'gray.200', _dark: 'gray.700' }}>
+        <HStack>
+          <Asset
+            name={metadata.symbol}
+            image={metadata.image}
+            denom={metadata.denom}
+          />
+        </HStack>
+      </Table.Cell>
 
-const FeaturedBlockchains = () => {
+      <Table.Cell borderBottomColor={{ base: 'gray.200', _dark: 'gray.700' }}>
+        <Text fontWeight="bold">${numeral(metadata.price).format("0.0000")}</Text>
+      </Table.Cell>
+
+      <Table.Cell borderBottomColor={{ base: 'gray.200', _dark: 'gray.700' }}>
+        <VStack align="flex-end">
+          <Text fontWeight="bold">${numeral(amtInUsd).format("0,0.00")}</Text>
+          <Text fontSize="sm" color="gray.500">
+            {numeral(amtStr).format("0,0.00")}
+          </Text>
+        </VStack>
+      </Table.Cell>
+    </Table.Row>
+  )
+}
+
+const FeaturedTokens = () => {
+  const { items, loading } = useSupplies();
   const { assetMap, loaded } = useRecoilValue(readAssets);
-  
-  const supplementalData = {
-    ario: {
-      price: "$0.79",
-      priceChange: "0.4%",
-      totalSupply: "$421,706,688",
-      circulatingSupply: "777,844,219",
-    },
-    arst: {
-      price: "$0.70",
-      priceChange: "0.4%",
-      totalSupply: "$421,706,688",
-      circulatingSupply: "777,844,219",
-    },
-    almx: {
-      price: "$4.85",
-      priceChange: "0.4%",
-      totalSupply: "$421,706,688",
-      circulatingSupply: "777,844,219",
-    },
-  };
-
-  const blockchains = Object.keys(assetMap).map((key) => ({
-    ...assetMap[key],
-    ...supplementalData[key],
-  }));
 
   return (
     <GridItem colSpan={2} h={"full"}>
@@ -49,58 +57,29 @@ const FeaturedBlockchains = () => {
         <Text fontSize="lg" fontWeight="bold" mb={4}>
           Network Tokens
         </Text>
-        <Table.ScrollArea border={"none"} rounded="lg">
-          <Table.Root  color={{ base: "black", _dark: "white" }}  bg={{ base: "white", _dark: "black" }} borderRadius="md">
-            <Table.Header>
-              <Table.Row bg={{ base: "#FAFBFC", _dark: "#0F0F0F" }}>
-                <TableColumnHeader>Token</TableColumnHeader>
-                <TableColumnHeader>Price</TableColumnHeader>
-                <TableColumnHeader textAlign={"right"}>
-                  Total Supply
-                </TableColumnHeader>
-              </Table.Row>
-            </Table.Header>
-            <Table.Body >
-              {blockchains.map((blockchain, index) => (
-                <Table.Row bg={{ base: "white", _dark: "#262626" }} key={index}>
-                  {/* Token with Image */}
-                  <Table.Cell borderBottomColor={{base: 'gray.200', _dark: 'gray.700'}}>
-                    <HStack>
-                      <Asset
-                        name={blockchain.symbol}
-                        image={blockchain.image}
-                        denom={blockchain.denom}
-                        />
-                    </HStack>
-                  </Table.Cell>
-
-                  {/* Price */}
-                  <Table.Cell borderBottomColor={{base: 'gray.200', _dark: 'gray.700'}}>
-                    <VStack align="flex-start">
-                      <Text fontWeight="bold">{blockchain.price}</Text>
-                      <Text fontSize="sm" color="green.500">
-                        {blockchain.priceChange}
-                      </Text>
-                    </VStack>
-                  </Table.Cell>
-
-                  {/* Total Supply */}
-                  <Table.Cell borderBottomColor={{base: 'gray.200', _dark: 'gray.700'}}>
-                    <VStack align="flex-end">
-                      <Text fontWeight="bold">{blockchain.totalSupply}</Text>
-                      <Text fontSize="sm" color="gray.500">
-                        {blockchain.circulatingSupply}
-                      </Text>
-                    </VStack>
-                  </Table.Cell>
+        {(!loading && loaded) ?
+          <Table.ScrollArea border={"none"} rounded="lg">
+            <Table.Root color={{ base: "black", _dark: "white" }} bg={{ base: "white", _dark: "black" }} borderRadius="md">
+              <Table.Header>
+                <Table.Row bg={{ base: "#FAFBFC", _dark: "#0F0F0F" }}>
+                  <TableColumnHeader>Token</TableColumnHeader>
+                  <TableColumnHeader>Price</TableColumnHeader>
+                  <TableColumnHeader textAlign={"right"}>
+                    Total Supply
+                  </TableColumnHeader>
                 </Table.Row>
-              ))}
-            </Table.Body>
-          </Table.Root >
-        </Table.ScrollArea>
+              </Table.Header>
+              <Table.Body >
+                {items.map((item, index) =>
+                  <TokenItem data={item} key={`token-${index}`} metadata={assetMap[item.denom]} />)
+                }
+              </Table.Body>
+            </Table.Root >
+          </Table.ScrollArea> : <Loading />}
+
       </Box>
     </GridItem>
   );
 };
 
-export default FeaturedBlockchains;
+export default FeaturedTokens;
