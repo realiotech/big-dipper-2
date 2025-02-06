@@ -19,3 +19,9 @@ query MarketData ($denom: String) {
     params
   }
 }
+
+query Supplies {
+  supply {
+    coins
+  }
+}
