@@ -14,6 +14,7 @@ import {
 import dayjs, { formatDayJs } from "@/utils/dayjs";
 import { useHero, usePrice } from "./hooks";
 import numeral from "numeral";
+import { useColorModeValue } from "@/components/ui/color-mode";
 // import CustomToolTip from "../../helper/tooltip";
 
 ChartJS.register(
@@ -27,6 +28,8 @@ ChartJS.register(
 );
 
 const PriceChart = () => {
+  const textColor = useColorModeValue("black", "white");
+  const borderColor = useColorModeValue("rgba(57, 63, 70, 0.5)", "#e1ecf599");
   const { state } = useHero();
   const { tickPriceFormatter, formatTime } = usePrice();
   // Format the price history data
@@ -41,7 +44,7 @@ const PriceChart = () => {
       {
         label: "Price",
         data: formatItems.map((item) => item.value), // Price values
-        borderColor: "rgba(57, 63, 70, 0.5)",
+        borderColor: borderColor,
         backgroundColor: (context) => {
           const chart = context.chart;
           const { ctx, chartArea } = chart;
@@ -61,7 +64,7 @@ const PriceChart = () => {
         borderWidth: 3,
         tension: 0.4,
         pointBackgroundColor: "rgba(57, 63, 70, 1)",
-        pointBorderColor: "rgba(57, 63, 70, 0.5)",
+        pointBorderColor: borderColor,
         pointRadius: 5,
         pointHoverRadius: 7,
         fill: true,
@@ -85,20 +88,29 @@ const PriceChart = () => {
     scales: {
       x: {
         grid: { display: false },
-        ticks: { color: "balck" }, // X-axis label color
+        ticks: { color: textColor }, // X-axis label color
+        border: { color: textColor },
       },
       y: {
-        grid: { color: "#E2E8F0", lineWidth: 1, borderDash: [4, 4] }, // Dashed grid lines
+        grid: { color: "#E2E8F0"}, // Dashed grid lines
+        border: { color: textColor },
         ticks: {
-          color: "black",
+          color: textColor,
           callback: tickPriceFormatter, // Format Y-axis ticks
+          border: { color: textColor },
         },
       },
     },
   };
 
   return (
-    <GridItem borderRadius="20px" bgColor={{ base: "#FAFBFC", _dark: "#0F0F0F" }} py="5" px="8" colSpan={2}>
+    <GridItem
+      borderRadius="20px"
+      bgColor={{ base: "#FAFBFC", _dark: "#0F0F0F" }}
+      py="5"
+      px="8"
+      colSpan={2}
+    >
       <Text fontSize="24px" fontWeight="bold" pb="6">
         Price (~24h)
       </Text>

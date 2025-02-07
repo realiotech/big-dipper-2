@@ -18,7 +18,8 @@ import { Stake } from "../icons/stake";
 import { Transaction } from "../icons/transaction";
 import { Proposal } from "../icons/proposal";
 import { useColorMode } from "../ui/color-mode";
-import { ColorModeButton } from "../ui/color-mode";
+import { Switch } from "@/components/ui/switch";
+import { MdDarkMode, MdLightMode } from "react-icons/md";
 
 export default function MenuDrawer() {
   const menuItems = [
@@ -28,7 +29,7 @@ export default function MenuDrawer() {
     { label: "Transactions", href: "/transactions", image: <Transaction /> },
     { label: "Proposals", href: "/proposals", image: <Proposal /> },
   ];
-  const { colorMode } = useColorMode();
+  const { colorMode, toggleColorMode } = useColorMode();
 
   return (
     <DrawerRoot>
@@ -52,7 +53,14 @@ export default function MenuDrawer() {
                 <Text>Realio.</Text>{" "}
               </Flex>
             </DrawerTitle>
-            <ColorModeButton />
+            <Switch
+            theme="light"
+            colorPalette="gray"
+            checked={colorMode === "dark"}
+            onCheckedChange={() => toggleColorMode()}
+            size="lg"
+            thumbLabel={{ on: <MdDarkMode />, off: <MdLightMode /> }}
+          />
             <DrawerTrigger>
               <IoCloseOutline size={30} />
             </DrawerTrigger>
