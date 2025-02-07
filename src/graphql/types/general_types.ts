@@ -4530,6 +4530,24 @@ export type Genesis_Variance_Fields = {
   initial_height?: Maybe<Scalars['Float']>;
 };
 
+export type Get_Ms_Locks_Sorted_Args = {
+  p_denom?: InputMaybe<Scalars['String']>;
+  p_limit?: InputMaybe<Scalars['Int']>;
+  p_offset?: InputMaybe<Scalars['Int']>;
+  p_order_direction?: InputMaybe<Scalars['String']>;
+  p_staker_addr?: InputMaybe<Scalars['String']>;
+  p_val_addr?: InputMaybe<Scalars['String']>;
+};
+
+export type Get_Ms_Unlocks_Sorted_Args = {
+  p_denom?: InputMaybe<Scalars['String']>;
+  p_limit?: InputMaybe<Scalars['Int']>;
+  p_offset?: InputMaybe<Scalars['Int']>;
+  p_order_direction?: InputMaybe<Scalars['String']>;
+  p_staker_addr?: InputMaybe<Scalars['String']>;
+  p_val_addr?: InputMaybe<Scalars['String']>;
+};
+
 /** columns and relationships of "gov_params" */
 export type Gov_Params = {
   __typename?: 'gov_params';
@@ -6807,7 +6825,6 @@ export type Ms_Locks = {
   val_addr: Scalars['String'];
 };
 
-/** aggregated selection of "ms_locks" */
 export type Ms_Locks_Aggregate = {
   __typename?: 'ms_locks_aggregate';
   aggregate?: Maybe<Ms_Locks_Aggregate_Fields>;
@@ -7054,7 +7071,6 @@ export type Ms_Unlocks = {
   val_addr: Scalars['String'];
 };
 
-/** aggregated selection of "ms_unlocks" */
 export type Ms_Unlocks_Aggregate = {
   __typename?: 'ms_unlocks_aggregate';
   aggregate?: Maybe<Ms_Unlocks_Aggregate_Fields>;
@@ -13743,6 +13759,14 @@ export type Query_Root = {
   genesis_aggregate: Genesis_Aggregate;
   /** fetch data from the table: "genesis" using primary key columns */
   genesis_by_pk?: Maybe<Genesis>;
+  /** execute function "get_ms_locks_sorted" which returns "ms_locks" */
+  get_ms_locks_sorted: Array<Ms_Locks>;
+  /** execute function "get_ms_locks_sorted" and query aggregates on result of table type "ms_locks" */
+  get_ms_locks_sorted_aggregate: Ms_Locks_Aggregate;
+  /** execute function "get_ms_unlocks_sorted" which returns "ms_unlocks" */
+  get_ms_unlocks_sorted: Array<Ms_Unlocks>;
+  /** execute function "get_ms_unlocks_sorted" and query aggregates on result of table type "ms_unlocks" */
+  get_ms_unlocks_sorted_aggregate: Ms_Unlocks_Aggregate;
   /** fetch data from the table: "gov_params" */
   gov_params: Array<Gov_Params>;
   /** fetch aggregated fields from the table: "gov_params" */
@@ -14441,6 +14465,46 @@ export type Query_RootGenesis_AggregateArgs = {
 
 export type Query_RootGenesis_By_PkArgs = {
   one_row_id: Scalars['Boolean'];
+};
+
+
+export type Query_RootGet_Ms_Locks_SortedArgs = {
+  args?: InputMaybe<Get_Ms_Locks_Sorted_Args>;
+  distinct_on?: InputMaybe<Array<Ms_Locks_Select_Column>>;
+  limit?: InputMaybe<Scalars['Int']>;
+  offset?: InputMaybe<Scalars['Int']>;
+  order_by?: InputMaybe<Array<Ms_Locks_Order_By>>;
+  where?: InputMaybe<Ms_Locks_Bool_Exp>;
+};
+
+
+export type Query_RootGet_Ms_Locks_Sorted_AggregateArgs = {
+  args?: InputMaybe<Get_Ms_Locks_Sorted_Args>;
+  distinct_on?: InputMaybe<Array<Ms_Locks_Select_Column>>;
+  limit?: InputMaybe<Scalars['Int']>;
+  offset?: InputMaybe<Scalars['Int']>;
+  order_by?: InputMaybe<Array<Ms_Locks_Order_By>>;
+  where?: InputMaybe<Ms_Locks_Bool_Exp>;
+};
+
+
+export type Query_RootGet_Ms_Unlocks_SortedArgs = {
+  args?: InputMaybe<Get_Ms_Unlocks_Sorted_Args>;
+  distinct_on?: InputMaybe<Array<Ms_Unlocks_Select_Column>>;
+  limit?: InputMaybe<Scalars['Int']>;
+  offset?: InputMaybe<Scalars['Int']>;
+  order_by?: InputMaybe<Array<Ms_Unlocks_Order_By>>;
+  where?: InputMaybe<Ms_Unlocks_Bool_Exp>;
+};
+
+
+export type Query_RootGet_Ms_Unlocks_Sorted_AggregateArgs = {
+  args?: InputMaybe<Get_Ms_Unlocks_Sorted_Args>;
+  distinct_on?: InputMaybe<Array<Ms_Unlocks_Select_Column>>;
+  limit?: InputMaybe<Scalars['Int']>;
+  offset?: InputMaybe<Scalars['Int']>;
+  order_by?: InputMaybe<Array<Ms_Unlocks_Order_By>>;
+  where?: InputMaybe<Ms_Unlocks_Bool_Exp>;
 };
 
 
@@ -16821,6 +16885,14 @@ export type Subscription_Root = {
   genesis_by_pk?: Maybe<Genesis>;
   /** fetch data from the table in a streaming manner: "genesis" */
   genesis_stream: Array<Genesis>;
+  /** execute function "get_ms_locks_sorted" which returns "ms_locks" */
+  get_ms_locks_sorted: Array<Ms_Locks>;
+  /** execute function "get_ms_locks_sorted" and query aggregates on result of table type "ms_locks" */
+  get_ms_locks_sorted_aggregate: Ms_Locks_Aggregate;
+  /** execute function "get_ms_unlocks_sorted" which returns "ms_unlocks" */
+  get_ms_unlocks_sorted: Array<Ms_Unlocks>;
+  /** execute function "get_ms_unlocks_sorted" and query aggregates on result of table type "ms_unlocks" */
+  get_ms_unlocks_sorted_aggregate: Ms_Unlocks_Aggregate;
   /** fetch data from the table: "gov_params" */
   gov_params: Array<Gov_Params>;
   /** fetch aggregated fields from the table: "gov_params" */
@@ -17625,6 +17697,46 @@ export type Subscription_RootGenesis_StreamArgs = {
   batch_size: Scalars['Int'];
   cursor: Array<InputMaybe<Genesis_Stream_Cursor_Input>>;
   where?: InputMaybe<Genesis_Bool_Exp>;
+};
+
+
+export type Subscription_RootGet_Ms_Locks_SortedArgs = {
+  args?: InputMaybe<Get_Ms_Locks_Sorted_Args>;
+  distinct_on?: InputMaybe<Array<Ms_Locks_Select_Column>>;
+  limit?: InputMaybe<Scalars['Int']>;
+  offset?: InputMaybe<Scalars['Int']>;
+  order_by?: InputMaybe<Array<Ms_Locks_Order_By>>;
+  where?: InputMaybe<Ms_Locks_Bool_Exp>;
+};
+
+
+export type Subscription_RootGet_Ms_Locks_Sorted_AggregateArgs = {
+  args?: InputMaybe<Get_Ms_Locks_Sorted_Args>;
+  distinct_on?: InputMaybe<Array<Ms_Locks_Select_Column>>;
+  limit?: InputMaybe<Scalars['Int']>;
+  offset?: InputMaybe<Scalars['Int']>;
+  order_by?: InputMaybe<Array<Ms_Locks_Order_By>>;
+  where?: InputMaybe<Ms_Locks_Bool_Exp>;
+};
+
+
+export type Subscription_RootGet_Ms_Unlocks_SortedArgs = {
+  args?: InputMaybe<Get_Ms_Unlocks_Sorted_Args>;
+  distinct_on?: InputMaybe<Array<Ms_Unlocks_Select_Column>>;
+  limit?: InputMaybe<Scalars['Int']>;
+  offset?: InputMaybe<Scalars['Int']>;
+  order_by?: InputMaybe<Array<Ms_Unlocks_Order_By>>;
+  where?: InputMaybe<Ms_Unlocks_Bool_Exp>;
+};
+
+
+export type Subscription_RootGet_Ms_Unlocks_Sorted_AggregateArgs = {
+  args?: InputMaybe<Get_Ms_Unlocks_Sorted_Args>;
+  distinct_on?: InputMaybe<Array<Ms_Unlocks_Select_Column>>;
+  limit?: InputMaybe<Scalars['Int']>;
+  offset?: InputMaybe<Scalars['Int']>;
+  order_by?: InputMaybe<Array<Ms_Unlocks_Order_By>>;
+  where?: InputMaybe<Ms_Unlocks_Bool_Exp>;
 };
 
 
@@ -26085,19 +26197,21 @@ export type AccountDelegationsQueryVariables = Exact<{
   address: Scalars['String'];
   offset?: InputMaybe<Scalars['Int']>;
   limit?: InputMaybe<Scalars['Int']>;
+  order?: Scalars['String'];
 }>;
 
 
-export type AccountDelegationsQuery = { ms_locks: Array<{ __typename?: 'ms_locks', bond_weight?: string | null, amount?: string | null, denom?: string | null, staker_addr: string, val_addr: string }>, locks_count_by_del: Array<{ __typename?: 'count', count: any }> };
+export type AccountDelegationsQuery = { get_ms_locks_sorted: Array<{ __typename?: 'ms_locks', bond_weight?: string | null, amount?: string | null, denom?: string | null, staker_addr: string, val_addr: string }>, locks_count_by_del: Array<{ __typename?: 'count', count: any }> };
 
 export type AccountUndelegationsQueryVariables = Exact<{
   address: Scalars['String'];
   offset?: InputMaybe<Scalars['Int']>;
   limit?: InputMaybe<Scalars['Int']>;
+  order?: Scalars['String'];
 }>;
 
 
-export type AccountUndelegationsQuery = { ms_unlocks: Array<{ __typename?: 'ms_unlocks', bond_weight?: string | null, amount?: string | null, denom?: string | null, creation_height: any, staker_addr: string, val_addr: string }>, unlocks_count_by_del: Array<{ __typename?: 'count', count: any }> };
+export type AccountUndelegationsQuery = { get_ms_unlocks_sorted: Array<{ __typename?: 'ms_unlocks', bond_weight?: string | null, amount?: string | null, denom?: string | null, creation_height: any, staker_addr: string, val_addr: string }>, unlocks_count_by_del: Array<{ __typename?: 'count', count: any }> };
 
 export type AccountCommissionQueryVariables = Exact<{
   validatorAddress: Scalars['String'];
@@ -26157,19 +26271,21 @@ export type AssetDelegationsQueryVariables = Exact<{
   denom: Scalars['String'];
   offset?: InputMaybe<Scalars['Int']>;
   limit?: InputMaybe<Scalars['Int']>;
+  order?: Scalars['String'];
 }>;
 
 
-export type AssetDelegationsQuery = { ms_locks: Array<{ __typename?: 'ms_locks', bond_weight?: string | null, amount?: string | null, denom?: string | null, staker_addr: string, val_addr: string }>, locks_count_by_denom: Array<{ __typename?: 'count', count: any }> };
+export type AssetDelegationsQuery = { get_ms_locks_sorted: Array<{ __typename?: 'ms_locks', bond_weight?: string | null, amount?: string | null, denom?: string | null, staker_addr: string, val_addr: string }>, locks_count_by_denom: Array<{ __typename?: 'count', count: any }> };
 
 export type AssetUndelegationsQueryVariables = Exact<{
   denom: Scalars['String'];
   offset?: InputMaybe<Scalars['Int']>;
   limit?: InputMaybe<Scalars['Int']>;
+  order?: Scalars['String'];
 }>;
 
 
-export type AssetUndelegationsQuery = { ms_unlocks: Array<{ __typename?: 'ms_unlocks', bond_weight?: string | null, amount?: string | null, denom?: string | null, creation_height: any, staker_addr: string, val_addr: string }>, unlocks_count_by_denom: Array<{ __typename?: 'count', count: any }> };
+export type AssetUndelegationsQuery = { get_ms_unlocks_sorted: Array<{ __typename?: 'ms_unlocks', bond_weight?: string | null, amount?: string | null, denom?: string | null, creation_height: any, staker_addr: string, val_addr: string }>, unlocks_count_by_denom: Array<{ __typename?: 'count', count: any }> };
 
 export type AssetHoldersQueryVariables = Exact<{
   denom: Scalars['String'];
@@ -26419,29 +26535,21 @@ export type ValidatorDelegationsQueryVariables = Exact<{
   validatorAddress: Scalars['String'];
   offset?: InputMaybe<Scalars['Int']>;
   limit?: InputMaybe<Scalars['Int']>;
+  order?: Scalars['String'];
 }>;
 
 
-export type ValidatorDelegationsQuery = { ms_locks: Array<{ __typename?: 'ms_locks', bond_weight?: string | null, amount?: string | null, denom?: string | null, staker_addr: string, val_addr: string }>, locks_count_by_val: Array<{ __typename?: 'count', count: any }> };
-
-export type ValidatorRedelegationsQueryVariables = Exact<{
-  validatorAddress: Scalars['String'];
-  offset?: InputMaybe<Scalars['Int']>;
-  limit?: InputMaybe<Scalars['Int']>;
-  pagination?: Scalars['Boolean'];
-}>;
-
-
-export type ValidatorRedelegationsQuery = { redelegations?: { __typename?: 'ActionRedelegationResponse', redelegations?: Array<any | null> | null, pagination?: any | null } | null };
+export type ValidatorDelegationsQuery = { get_ms_locks_sorted: Array<{ __typename?: 'ms_locks', bond_weight?: string | null, amount?: string | null, denom?: string | null, staker_addr: string, val_addr: string }>, locks_count_by_val: Array<{ __typename?: 'count', count: any }> };
 
 export type ValidatorUndelegationsQueryVariables = Exact<{
   validatorAddress: Scalars['String'];
   offset?: InputMaybe<Scalars['Int']>;
   limit?: InputMaybe<Scalars['Int']>;
+  order?: Scalars['String'];
 }>;
 
 
-export type ValidatorUndelegationsQuery = { ms_unlocks: Array<{ __typename?: 'ms_unlocks', bond_weight?: string | null, amount?: string | null, denom?: string | null, creation_height: any, staker_addr: string, val_addr: string }>, unlocks_count_by_val: Array<{ __typename?: 'count', count: any }> };
+export type ValidatorUndelegationsQuery = { get_ms_unlocks_sorted: Array<{ __typename?: 'ms_unlocks', bond_weight?: string | null, amount?: string | null, denom?: string | null, creation_height: any, staker_addr: string, val_addr: string }>, unlocks_count_by_val: Array<{ __typename?: 'count', count: any }> };
 
 export type ValidatorsQueryVariables = Exact<{ [key: string]: never; }>;
 
@@ -26491,8 +26599,10 @@ export type BalancesByAddressQueryHookResult = ReturnType<typeof useBalancesByAd
 export type BalancesByAddressLazyQueryHookResult = ReturnType<typeof useBalancesByAddressLazyQuery>;
 export type BalancesByAddressQueryResult = Apollo.QueryResult<BalancesByAddressQuery, BalancesByAddressQueryVariables>;
 export const AccountDelegationsDocument = gql`
-    query AccountDelegations($address: String!, $offset: Int = 0, $limit: Int = 10) {
-  ms_locks(limit: $limit, offset: $offset, where: {staker_addr: {_eq: $address}}) {
+    query AccountDelegations($address: String!, $offset: Int = 0, $limit: Int = 10, $order: String! = "desc") {
+  get_ms_locks_sorted(
+    args: {p_order_direction: $order, p_limit: $limit, p_offset: $offset, p_staker_addr: $address}
+  ) {
     bond_weight
     amount
     denom
@@ -26520,6 +26630,7 @@ export const AccountDelegationsDocument = gql`
  *      address: // value for 'address'
  *      offset: // value for 'offset'
  *      limit: // value for 'limit'
+ *      order: // value for 'order'
  *   },
  * });
  */
@@ -26535,11 +26646,9 @@ export type AccountDelegationsQueryHookResult = ReturnType<typeof useAccountDele
 export type AccountDelegationsLazyQueryHookResult = ReturnType<typeof useAccountDelegationsLazyQuery>;
 export type AccountDelegationsQueryResult = Apollo.QueryResult<AccountDelegationsQuery, AccountDelegationsQueryVariables>;
 export const AccountUndelegationsDocument = gql`
-    query AccountUndelegations($address: String!, $offset: Int = 0, $limit: Int = 10) {
-  ms_unlocks(
-    limit: $limit
-    offset: $offset
-    where: {staker_addr: {_eq: $address}}
+    query AccountUndelegations($address: String!, $offset: Int = 0, $limit: Int = 10, $order: String! = "desc") {
+  get_ms_unlocks_sorted(
+    args: {p_order_direction: $order, p_limit: $limit, p_offset: $offset, p_staker_addr: $address}
   ) {
     bond_weight
     amount
@@ -26569,6 +26678,7 @@ export const AccountUndelegationsDocument = gql`
  *      address: // value for 'address'
  *      offset: // value for 'offset'
  *      limit: // value for 'limit'
+ *      order: // value for 'order'
  *   },
  * });
  */
@@ -26879,8 +26989,10 @@ export type AssetOverviewQueryHookResult = ReturnType<typeof useAssetOverviewQue
 export type AssetOverviewLazyQueryHookResult = ReturnType<typeof useAssetOverviewLazyQuery>;
 export type AssetOverviewQueryResult = Apollo.QueryResult<AssetOverviewQuery, AssetOverviewQueryVariables>;
 export const AssetDelegationsDocument = gql`
-    query AssetDelegations($denom: String!, $offset: Int = 0, $limit: Int = 10) {
-  ms_locks(limit: $limit, offset: $offset, where: {denom: {_eq: $denom}}) {
+    query AssetDelegations($denom: String!, $offset: Int = 0, $limit: Int = 10, $order: String! = "desc") {
+  get_ms_locks_sorted(
+    args: {p_order_direction: $order, p_limit: $limit, p_offset: $offset, p_denom: $denom}
+  ) {
     bond_weight
     amount
     denom
@@ -26908,6 +27020,7 @@ export const AssetDelegationsDocument = gql`
  *      denom: // value for 'denom'
  *      offset: // value for 'offset'
  *      limit: // value for 'limit'
+ *      order: // value for 'order'
  *   },
  * });
  */
@@ -26923,8 +27036,10 @@ export type AssetDelegationsQueryHookResult = ReturnType<typeof useAssetDelegati
 export type AssetDelegationsLazyQueryHookResult = ReturnType<typeof useAssetDelegationsLazyQuery>;
 export type AssetDelegationsQueryResult = Apollo.QueryResult<AssetDelegationsQuery, AssetDelegationsQueryVariables>;
 export const AssetUndelegationsDocument = gql`
-    query AssetUndelegations($denom: String!, $offset: Int = 0, $limit: Int = 10) {
-  ms_unlocks(limit: $limit, offset: $offset, where: {denom: {_eq: $denom}}) {
+    query AssetUndelegations($denom: String!, $offset: Int = 0, $limit: Int = 10, $order: String! = "desc") {
+  get_ms_unlocks_sorted(
+    args: {p_order_direction: $order, p_limit: $limit, p_offset: $offset, p_denom: $denom}
+  ) {
     bond_weight
     amount
     denom
@@ -26953,6 +27068,7 @@ export const AssetUndelegationsDocument = gql`
  *      denom: // value for 'denom'
  *      offset: // value for 'offset'
  *      limit: // value for 'limit'
+ *      order: // value for 'order'
  *   },
  * });
  */
@@ -28489,11 +28605,9 @@ export type ValidatorAddressQueryHookResult = ReturnType<typeof useValidatorAddr
 export type ValidatorAddressLazyQueryHookResult = ReturnType<typeof useValidatorAddressLazyQuery>;
 export type ValidatorAddressQueryResult = Apollo.QueryResult<ValidatorAddressQuery, ValidatorAddressQueryVariables>;
 export const ValidatorDelegationsDocument = gql`
-    query ValidatorDelegations($validatorAddress: String!, $offset: Int = 0, $limit: Int = 10) {
-  ms_locks(
-    limit: $limit
-    offset: $offset
-    where: {val_addr: {_eq: $validatorAddress}}
+    query ValidatorDelegations($validatorAddress: String!, $offset: Int = 0, $limit: Int = 10, $order: String! = "desc") {
+  get_ms_locks_sorted(
+    args: {p_order_direction: $order, p_limit: $limit, p_offset: $offset, p_val_addr: $validatorAddress}
   ) {
     bond_weight
     amount
@@ -28522,6 +28636,7 @@ export const ValidatorDelegationsDocument = gql`
  *      validatorAddress: // value for 'validatorAddress'
  *      offset: // value for 'offset'
  *      limit: // value for 'limit'
+ *      order: // value for 'order'
  *   },
  * });
  */
@@ -28536,56 +28651,10 @@ export function useValidatorDelegationsLazyQuery(baseOptions?: Apollo.LazyQueryH
 export type ValidatorDelegationsQueryHookResult = ReturnType<typeof useValidatorDelegationsQuery>;
 export type ValidatorDelegationsLazyQueryHookResult = ReturnType<typeof useValidatorDelegationsLazyQuery>;
 export type ValidatorDelegationsQueryResult = Apollo.QueryResult<ValidatorDelegationsQuery, ValidatorDelegationsQueryVariables>;
-export const ValidatorRedelegationsDocument = gql`
-    query ValidatorRedelegations($validatorAddress: String!, $offset: Int = 0, $limit: Int = 10, $pagination: Boolean! = true) {
-  redelegations: action_validator_redelegations_from(
-    address: $validatorAddress
-    limit: $limit
-    offset: $offset
-    count_total: $pagination
-  ) {
-    redelegations
-    pagination
-  }
-}
-    `;
-
-/**
- * __useValidatorRedelegationsQuery__
- *
- * To run a query within a React component, call `useValidatorRedelegationsQuery` and pass it any options that fit your needs.
- * When your component renders, `useValidatorRedelegationsQuery` returns an object from Apollo Client that contains loading, error, and data properties
- * you can use to render your UI.
- *
- * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
- *
- * @example
- * const { data, loading, error } = useValidatorRedelegationsQuery({
- *   variables: {
- *      validatorAddress: // value for 'validatorAddress'
- *      offset: // value for 'offset'
- *      limit: // value for 'limit'
- *      pagination: // value for 'pagination'
- *   },
- * });
- */
-export function useValidatorRedelegationsQuery(baseOptions: Apollo.QueryHookOptions<ValidatorRedelegationsQuery, ValidatorRedelegationsQueryVariables>) {
-        const options = {...defaultOptions, ...baseOptions}
-        return Apollo.useQuery<ValidatorRedelegationsQuery, ValidatorRedelegationsQueryVariables>(ValidatorRedelegationsDocument, options);
-      }
-export function useValidatorRedelegationsLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<ValidatorRedelegationsQuery, ValidatorRedelegationsQueryVariables>) {
-          const options = {...defaultOptions, ...baseOptions}
-          return Apollo.useLazyQuery<ValidatorRedelegationsQuery, ValidatorRedelegationsQueryVariables>(ValidatorRedelegationsDocument, options);
-        }
-export type ValidatorRedelegationsQueryHookResult = ReturnType<typeof useValidatorRedelegationsQuery>;
-export type ValidatorRedelegationsLazyQueryHookResult = ReturnType<typeof useValidatorRedelegationsLazyQuery>;
-export type ValidatorRedelegationsQueryResult = Apollo.QueryResult<ValidatorRedelegationsQuery, ValidatorRedelegationsQueryVariables>;
 export const ValidatorUndelegationsDocument = gql`
-    query ValidatorUndelegations($validatorAddress: String!, $offset: Int = 0, $limit: Int = 10) {
-  ms_unlocks(
-    limit: $limit
-    offset: $offset
-    where: {val_addr: {_eq: $validatorAddress}}
+    query ValidatorUndelegations($validatorAddress: String!, $offset: Int = 0, $limit: Int = 10, $order: String! = "desc") {
+  get_ms_unlocks_sorted(
+    args: {p_order_direction: $order, p_limit: $limit, p_offset: $offset, p_val_addr: $validatorAddress}
   ) {
     bond_weight
     amount
@@ -28615,6 +28684,7 @@ export const ValidatorUndelegationsDocument = gql`
  *      validatorAddress: // value for 'validatorAddress'
  *      offset: // value for 'offset'
  *      limit: // value for 'limit'
+ *      order: // value for 'order'
  *   },
  * });
  */

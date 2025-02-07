@@ -157,7 +157,7 @@ export const useStaking = (
 ) => {
   const [delegationsPage, setDelegationsPage] = useState(0)
   const [unbondingsPage, setUnboningsPage] = useState(0)
-
+  const [sortDirection, setSortDirection] = useState("desc")
   const router = useRouter();
 
   const accountAddr =
@@ -179,6 +179,7 @@ export const useStaking = (
       address: accountAddr,
       limit: 10,
       offset: delegationsPage * 10,
+      order: sortDirection
     },
   });
   useEffect(() => {
@@ -201,6 +202,7 @@ export const useStaking = (
       address: accountAddr,
       limit: 10,
       offset: unbondingsPage * 10,
+      order: sortDirection
     },
   });
   useEffect(() => {
@@ -209,22 +211,31 @@ export const useStaking = (
       undelegationsRefetch();
     }
   }, [undelegationsError, undelegationsLoading, undelegationsRefetch]);
+
+  const handleSort = (sortDirt) => {
+    setDelegationsPage(0)
+    setUnboningsPage(0)
+    setSortDirection(sortDirt)
+  }
+
   return {
     delegations: {
       loading: delegationsLoading,
       count: delegationsData?.locks_count_by_del?.[0].count ?? 0,
-      data: delegationsData?.ms_locks ?? [],
+      data: delegationsData?.get_ms_locks_sorted ?? [],
       error: delegationsError,
     },
     unbondings: {
       loading: undelegationsLoading,
       count: undelegationsData?.unlocks_count_by_del?.[0].count ?? 0,
-      data: undelegationsData?.ms_unlocks ?? [],
+      data: undelegationsData?.get_ms_unlocks_sorted ?? [],
       error: undelegationsError,
     },
     delegationsPage,
     unbondingsPage,
     setDelegationsPage,
-    setUnboningsPage
+    setUnboningsPage,
+    sortDirection,
+    handleSort
   };
 };
