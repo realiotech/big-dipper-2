@@ -192,8 +192,11 @@ export const SkeletonItem = ({ index }) => {
       <Table.Cell display={{ base: "none", md: "table-cell" }} py="26px">
         <Skeleton h={"10px"} w="full" />
       </Table.Cell>
-      <Table.Cell py="26px">
-        <Skeleton display={{ base: "none", lg: "table-cell" }} h={"10px"} w="full" />
+      <Table.Cell display={{ base: "none", lg: "table-cell" }} py="26px">
+        <Skeleton h={"10px"} w="full" />
+      </Table.Cell>
+      <Table.Cell display={{ base: "none", lg: "table-cell" }} py="10px">
+        <Skeleton h={"10px"} w="full" />
       </Table.Cell>
     </Table.Row>
   );

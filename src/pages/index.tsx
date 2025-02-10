@@ -13,8 +13,9 @@ export default function Home() {
     <SimpleGrid columns={{ base: 2, lg: 4 }} gap='10'>
       <FeaturedBlockchains/>
       <DataBlocks />
-      <PriceChart />
-      {/* <Tokenomics />
+      <DataBlocks />
+      {/* <PriceChart />
+      <Tokenomics />
       <Consensus /> */}
       <StakingChart/>
       <Blocks />

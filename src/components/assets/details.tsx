@@ -1,4 +1,4 @@
-import React, { use, useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
 import {
   Box,
   Flex,
@@ -54,14 +54,23 @@ const HolderItem = ({ item, denom }) => {
 const SkeletonBlockItem = ({ index }) => {
   return (
     <Table.Row key={`transaction-${index}`}>
-      <Table.Cell borderBottomColor={{ base: "gray.200", _dark: "gray.700" }}>
+      <Table.Cell
+        w="50%"
+        borderBottomColor={{ base: "gray.200", _dark: "gray.700" }}
+      >
         <Skeleton h={"10px"} w="full" mb="2" />
       </Table.Cell>
-      <Table.Cell borderBottomColor={{ base: "gray.200", _dark: "gray.700" }}>
+      <Table.Cell
+        w="40%"
+        borderBottomColor={{ base: "gray.200", _dark: "gray.700" }}
+      >
         <Skeleton h={"10px"} w="full" mb="2" />
       </Table.Cell>
-      <Table.Cell borderBottomColor={{ base: "gray.200", _dark: "gray.700" }}>
-        <Skeleton h={"10px"} w="full" mb="2" />
+      <Table.Cell
+        w="10%"
+        borderBottomColor={{ base: "gray.200", _dark: "gray.700" }}
+      >
+        <Skeleton columnFill={"3"} h={"10px"} w="full" mb="2" />
       </Table.Cell>
     </Table.Row>
   );
@@ -71,8 +80,11 @@ const AssetDetails = () => {
   const router = useRouter();
   const { state, maxHolders, denom } = useOverview();
   const { holderState, pageInfo, handlePageChange } = useHolders(maxHolders);
-  const [selectedTab, setSelectedTab] = useState("staking");
+  const [selectedTab, setSelectedTab] = useState("holders");
   const assetDetail = useRecoilValue(readAsset(denom));
+  useEffect(() => {
+    console.log(holderState.loading);
+  }, []);
 
   return (
     <Grid templateColumns="repeat(6, 1fr)" gap={"1.5rem"} minH="auto">
@@ -169,18 +181,7 @@ const AssetDetails = () => {
                   </Table.Header>
                   <Table.Body bg={{ base: "white", _dark: "#262626" }}>
                     {!holderState.loading ? (
-                      holderState.holders.length === 0 ? (
-                        <Center
-                          borderRadius="20px"
-                          bgColor={{ base: "#FAFBFC", _dark: "#0F0F0F" }}
-                          py="5"
-                          px="8"
-                          minH="65vh"
-                          w="full"
-                        >
-                          <Text>Nothing to show</Text>
-                        </Center>
-                      ) : (
+                      holderState.holders.length > 0 ? (
                         holderState.holders.map((item, index) => (
                           <HolderItem
                             item={item}
@@ -188,11 +189,25 @@ const AssetDetails = () => {
                             key={`holder-${index}`}
                           />
                         ))
+                      ) : (
+                        Array.from({ length: 20 }).map((_, index) => (
+                          <SkeletonBlockItem
+                            key={`skeleton-${index}`}
+                            index={index}
+                          />
+                        ))
                       )
                     ) : (
-                      Array.from({ length: 20 }).map((_, index) => (
-                        <SkeletonBlockItem index={index} />
-                      ))
+                      <Center
+                        borderRadius="20px"
+                        bgColor={{ base: "#FAFBFC", _dark: "#0F0F0F" }}
+                        py="5"
+                        px="8"
+                        minH="65vh"
+                        w="full"
+                      >
+                        <Text>Nothing to show</Text>
+                      </Center>
                     )}
                   </Table.Body>
                 </Table.Root>
