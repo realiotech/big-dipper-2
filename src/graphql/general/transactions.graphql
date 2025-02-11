@@ -23,3 +23,9 @@ query Transactions($limit: Int = 7, $offset: Int = 0) {
     logs
   }
 }
+
+query TransactionsCount {
+  txs_count {
+    count
+  }
+}

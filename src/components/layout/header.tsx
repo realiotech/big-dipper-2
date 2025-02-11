@@ -4,17 +4,12 @@ import {
   Link,
   Input,
   Center,
-  IconButton,
   Flex,
   useBreakpointValue,
   Image,
 } from '@chakra-ui/react';
 import NextLink from 'next/link';
-import { useRecoilValue } from 'recoil';
-import { readMarket } from '@/recoil/market';
 import { chainConfig } from '@/configs';
-import { formatMarket } from '@/utils/format_market';
-import { Wallet } from '../icons/wallet';
 import { Search } from '../icons/search';
 import { InputGroup } from '../ui/input-group';
 import MenuDrawer from './menudrawer';
@@ -24,8 +19,6 @@ import WalletPopover from './wallet-popover';
 import { useColorMode } from "../ui/color-mode";
 
 export default function Header() {
-  const marketState = useRecoilValue(readMarket);
-  const market = formatMarket(marketState);
   const isMobile = useBreakpointValue({
     base: true, lg: false,
   });
@@ -35,24 +28,6 @@ export default function Header() {
     <Flex w="full" gap="20px" align="center" pb="10" direction="column">
       <HStack w="full">
         <PageHeader />
-        {/* <HStack divideX="2px">
-          <Text fontSize="16px">
-            Supply:
-            {' '}
-            <Link fontWeight={600} color="black" textDecor="none">
-              {market.supply}
-            </Link>
-            {' '}
-          </Text>
-          <Text fontSize="16px" pl="2">
-            Community Pool:
-            {' '}
-            <Link fontWeight={600} color="black" textDecor="none">
-              {market.communityPool}
-            </Link>
-            {' '}
-          </Text>
-        </HStack> */}
         <SearchBar />
         <Center
           w="250px"

@@ -1,8 +1,6 @@
-import { GridItem, SimpleGrid, Text } from "@chakra-ui/react";
-import Consensus from "@/components/home/consensus";
+import { SimpleGrid } from "@chakra-ui/react";
 import DataBlocks from "@/components/home/data_blocks";
-import PriceChart from "@/components/home/price_chart";
-import Tokenomics from "@/components/home/tokenomics";
+import DataStaking from "@/components/home/data_staking";
 import Blocks from "@/components/home/blocks";
 import Transactions from "@/components/home/transactions";
 import StakingChart from "@/components/home/stake_chart";
@@ -13,10 +11,7 @@ export default function Home() {
     <SimpleGrid columns={{ base: 2, lg: 4 }} gap='10'>
       <FeaturedBlockchains/>
       <DataBlocks />
-      <DataBlocks />
-      {/* <PriceChart />
-      <Tokenomics />
-      <Consensus /> */}
+      <DataStaking />
       <StakingChart/>
       <Blocks />
       <Transactions />

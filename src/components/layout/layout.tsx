@@ -3,12 +3,10 @@ import Sidebar from "./sidebar";
 import Header from "./header";
 import Footer from "./footer";
 import { Skeleton } from "../ui/skeleton";
-import { useMarketRecoil } from "@/recoil/market";
 import { useValidatorRecoil } from "@/recoil/validators/hooks";
 import { useAssetRecoil } from "@/recoil/asset";
 
 export default function Layout({ children }) {
-  useMarketRecoil();
   useAssetRecoil();
   const { loading } = useValidatorRecoil();
   const isMobile = useBreakpointValue({ base: true, lg: false });
