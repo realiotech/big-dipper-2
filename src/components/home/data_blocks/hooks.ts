@@ -9,6 +9,7 @@ import {
   TokenPriceListenerSubscription,
   useActiveValidatorCountQuery,
   ActiveValidatorCountQuery,
+  useTransactionsCountQuery,
 } from '@/graphql/types/general_types';
 import { chainConfig } from '@/configs';
 
@@ -16,19 +17,11 @@ export const useDataBlocks = () => {
   const [state, setState] = useState<{
     blockHeight: number;
     blockTime: number;
-    price: number | null;
-    validators: {
-      active: number;
-      total: number;
-    }
+    txsCount: number;
   }>({
     blockHeight: 0,
     blockTime: 0,
-    price: null,
-    validators: {
-      active: 0,
-      total: 0,
-    },
+    txsCount: 0
   });
 
   // ====================================
@@ -59,47 +52,17 @@ export const useDataBlocks = () => {
   const formatAverageBlockTime = (data: AverageBlockTimeQuery) => {
     return data.averageBlockTime[0]?.averageTime ?? state.blockTime;
   };
-
-  // ====================================
-  // token price
-  // ====================================
-  useTokenPriceListenerSubscription({
-    variables: {
-      denom: chainConfig?.tokenUnits[chainConfig.primaryTokenUnit]?.display,
-    },
-    onSubscriptionData: (data) => {
-      setState((prevState) => ({
-        ...prevState,
-        price: formatTokenPrice(data.subscriptionData.data),
-      }));
-    },
-  });
-
-  const formatTokenPrice = (data: TokenPriceListenerSubscription) => {
-    if (data?.tokenPrice[0]?.price) {
-      return numeral(numeral(data?.tokenPrice[0]?.price).format('0.[00]', Math.floor)).value();
-    }
-    return state.price;
-  };
-
   // ====================================
   // validators
   // ====================================
-  useActiveValidatorCountQuery({
+  useTransactionsCountQuery({
     onCompleted: (data) => {
       setState((prevState) => ({
         ...prevState,
-        validators: formatActiveValidatorsCount(data),
+        txsCount: data.txs_count[0].count,
       }));
     },
   });
-
-  const formatActiveValidatorsCount = (data: ActiveValidatorCountQuery) => {
-    return {
-      active: data.activeTotal.aggregate.count,
-      total: data.total.aggregate.count,
-    };
-  };
 
   return {
     state,

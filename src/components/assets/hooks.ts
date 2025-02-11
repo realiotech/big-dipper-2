@@ -1,23 +1,12 @@
 import { useEffect, useState, useCallback } from "react";
-import { AssetHoldersQuery, useAssetDelegationsQuery, useAssetHoldersQuery, useAssetOverviewQuery, useAssetUndelegationsQuery } from "@/graphql/types/general_types";
+import { useAssetDelegationsQuery, useAssetHoldersQuery, useAssetOverviewQuery, useAssetUndelegationsQuery } from "@/graphql/types/general_types";
 import { useRouter } from "next/router";
-import { OverviewState, HolderState, Holder } from "./type";
-import { PageInfo } from "../layout/pagination";
-import * as R from 'ramda';
+import { OverviewState } from "./type";
 
 export function useOverview() {
   const router = useRouter()
   const denom = router?.query?.denom as string
   const [state, setState] = useState<OverviewState>({ denom, supply: '0', holders: 0 })
-  const [maxHolders, setMaxHolders] = useState(0)
-
-  useEffect(() => {
-    if (state?.holders > 1000) {
-        setMaxHolders(1000)
-    } else {
-        setMaxHolders(state?.holders)
-    }
-}, [state])
 
   useAssetOverviewQuery({
     variables: {
@@ -33,161 +22,124 @@ export function useOverview() {
   })
   return {
     state,
-    maxHolders,
     denom,
   }
 }
 
-const formatHolders = (data: AssetHoldersQuery): Holder[] => {
-  return data?.balance?.map((x) => {
-    return {
-      address: x?.address,
-      balance: x?.amount,
-    }
-  }) ?? []
-}
+export const useHolders = (denom: string) => {
+  const [page, setPage] = useState(0)
+  const [sortDirection, setSortDirection] = useState("desc")
 
-export const useHolders = (maxHolder: number) => {
-  const router = useRouter()
-  const denom = router?.query?.denom as string
-
-  const [holderState, setHolderState] = useState<HolderState>({ loading: false,  holders: [] })
-  const [pageInfo, SetPageInfo] = useState<PageInfo>({
-    count: 0,
-    pageSize: 20,
-    currentPage: 1,
-  })
-
-  useEffect(() => {
-    SetPageInfo({
-      ...pageInfo,
-      count: maxHolder,
-    })
-  }, [maxHolder])
-
-  const handleSetState = useCallback((stateChange: (prevState: HolderState) => HolderState) => {
-    setHolderState((prevState) => {
-      const newState = stateChange(prevState);
-      return R.equals(prevState, newState) ? prevState : newState;
-    });
-  }, []);
-
-  const handlePageChange = (e) => {
-    loadPage(e.page);
-    SetPageInfo({
-      ...pageInfo,
-      currentPage: e.page,
-    });
-  }
-
-  const holderQuery = useAssetHoldersQuery({
+  const {
+    data: balancesData,
+    loading: balancesLoading,
+    error: balancesErr,
+    refetch,
+  } = useAssetHoldersQuery({
     variables: {
       denom,
       limit: 20,
-      offset: 0,
+      offset: 20 * page,
+      order_by: sortDirection
     },
-    onCompleted: (data) => {
-      handleSetState((prevState) => ({
-        ...prevState,
-        loading: false,
-        holders: [...formatHolders(data)],
-      }));
-    },
-    onError: (e) => {
-      handleSetState((prevState) => ({ ...prevState, loading: false }));
-      console.log("error", e)
+  });
+  useEffect(() => {
+    if (balancesLoading) return;
+    if (balancesErr) {
+      refetch();
     }
-  })
+  }, [balancesErr, balancesLoading, refetch]);
 
-  const loadPage = (page: number) => {
-    handleSetState((prevState) => ({ ...prevState, loading: true}));
-
-    holderQuery.refetch({
-      limit: 20,
-      offset: (page - 1) * 20,
-    }).then(({ data }) => {
-      console.log(data, pageInfo)
-      handleSetState((prevState) => ({
-        ...prevState,
-        loading: false,
-        holders: [...formatHolders(data)],
-      }));
-    });
+  const handleSort = (sortDirt) => {
+    setPage(0)
+    setSortDirection(sortDirt)
   }
 
   return {
-    holderState,
-    loadPage,
-    pageInfo,
-    handlePageChange,
+    holderState: {
+      loading: balancesLoading,
+      count: balancesData?.balance_count?.[0].count ?? 0,
+      data: balancesData?.get_balance_sorted ?? [],
+      error: balancesErr,
+    },
+    page,
+    setPage,
+    sortDirection,
+    handleSort
   }
 }
 
-  export const useStaking = (
-    denom?: string
-  ) => {
-    const [delegationsPage, setDelegationsPage] = useState(0)
-    const [unbondingsPage, setUnboningsPage] = useState(0)
+export const useStaking = (
+  denom?: string
+) => {
+  const [delegationsPage, setDelegationsPage] = useState(0)
+  const [unbondingsPage, setUnboningsPage] = useState(0)
+  const [sortDirection, setSortDirection] = useState("desc")
 
-    // =====================================
-    // delegations
-    // =====================================
-    const {
-      data: delegationsData,
+  const {
+    data: delegationsData,
+    loading: delegationsLoading,
+    error: delegationsError,
+    refetch: delegationsRefetch,
+  } = useAssetDelegationsQuery({
+    variables: {
+      denom,
+      limit: 10,
+      offset: delegationsPage * 10,
+      order: sortDirection
+    },
+  });
+  useEffect(() => {
+    if (delegationsLoading) return;
+    if (delegationsError) {
+      delegationsRefetch();
+    }
+  }, [delegationsError, delegationsLoading, delegationsRefetch]);
+
+  const {
+    data: undelegationsData,
+    loading: undelegationsLoading,
+    error: undelegationsError,
+    refetch: undelegationsRefetch,
+  } = useAssetUndelegationsQuery({
+    variables: {
+      denom,
+      limit: 10,
+      offset: unbondingsPage * 10,
+      order: sortDirection
+    },
+  });
+  useEffect(() => {
+    if (undelegationsLoading) return;
+    if (undelegationsError) {
+      undelegationsRefetch();
+    }
+  }, [undelegationsError, undelegationsLoading, undelegationsRefetch]);
+
+  const handleSort = (sortDirt) => {
+    setDelegationsPage(0)
+    setUnboningsPage(0)
+    setSortDirection(sortDirt)
+  }
+
+  return {
+    delegations: {
       loading: delegationsLoading,
+      count: delegationsData?.locks_count_by_denom?.[0].count ?? 0,
+      data: delegationsData?.get_ms_locks_sorted ?? [],
       error: delegationsError,
-      refetch: delegationsRefetch,
-    } = useAssetDelegationsQuery({
-      variables: {
-        denom,
-        limit: 10,
-        offset: delegationsPage * 10,
-      },
-    });
-    useEffect(() => {
-      if (delegationsLoading) return;
-      if (delegationsError) {
-        delegationsRefetch();
-      }
-    }, [delegationsError, delegationsLoading, delegationsRefetch]);
-
-    // =====================================
-    // unbondings
-    // =====================================
-    const {
-      data: undelegationsData,
+    },
+    unbondings: {
       loading: undelegationsLoading,
+      count: undelegationsData?.unlocks_count_by_denom?.[0].count ?? 0,
+      data: undelegationsData?.get_ms_unlocks_sorted ?? [],
       error: undelegationsError,
-      refetch: undelegationsRefetch,
-    } = useAssetUndelegationsQuery({
-      variables: {
-        denom,
-        limit: 10,
-        offset: unbondingsPage * 10,
-      },
-    });
-    useEffect(() => {
-      if (undelegationsLoading) return;
-      if (undelegationsError) {
-        undelegationsRefetch();
-      }
-    }, [undelegationsError, undelegationsLoading, undelegationsRefetch]);
-    return {
-      delegations: {
-        loading: delegationsLoading,
-        count: delegationsData?.locks_count_by_denom?.[0].count ?? 0,
-        data: delegationsData?.ms_locks ?? [],
-        error: delegationsError,
-      },
-      unbondings: {
-        loading: undelegationsLoading,
-        count: undelegationsData?.unlocks_count_by_denom?.[0].count ?? 0,
-        data: undelegationsData?.ms_unlocks ?? [],
-        error: undelegationsError,
-      },
-      delegationsPage,
-      unbondingsPage,
-      setDelegationsPage,
-      setUnboningsPage
-    };
+    },
+    delegationsPage,
+    unbondingsPage,
+    setDelegationsPage,
+    setUnboningsPage,
+    sortDirection,
+    handleSort
   };
+};

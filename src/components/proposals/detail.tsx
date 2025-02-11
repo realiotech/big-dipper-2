@@ -10,13 +10,14 @@ import {
 } from "@chakra-ui/react";
 import { useProposalDetails } from "./hooks";
 import { useProfileRecoil } from "@/recoil/profiles";
-import { formatNumber, formatToken } from "@/utils";
+import { ADDRESS_DETAILS, formatNumber, formatToken } from "@/utils";
 import useTranslation from "next-translate/useTranslation";
 import { getStatusInfo } from "./utils";
 import dayjs, { formatDayJs } from "@/utils/dayjs";
 import VotesGraph from "./votes_graph";
 import VotesTable from "./votes";
 import { getMiddleEllipsis } from "@/utils";
+import HelpLink from "../helper/help_link";
 
 const dateFormat = 'locale'
 const timeFormat = '12-hour'
@@ -73,9 +74,7 @@ export default function ProposalDetail() {
                         <Text fontWeight="bold" w="150px">
                             Proposer:
                         </Text>
-                        <Text color="blue.500" cursor="pointer">
-                            {isMobile? getMiddleEllipsis(overview.proposer, {beginning: 9, ending: 5}): overview.proposer}
-                        </Text>
+                        <HelpLink href={ADDRESS_DETAILS(overview.proposer)} value={isMobile ? getMiddleEllipsis(overview.proposer, { beginning: 9, ending: 5 }) : overview.proposer}/>
                     </Stack>
                     <Stack direction={{base: 'column', md:'row'}}>
                         <Text fontWeight="bold" w="150px">

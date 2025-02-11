@@ -7,8 +7,8 @@ query AssetOverview($denom: String!) {
   }
 }
 
-query AssetDelegations($denom: String!, $offset: Int = 0, $limit: Int = 10) {
-  ms_locks(limit: $limit, offset: $offset, where: {denom: {_eq: $denom}}) {
+query AssetDelegations($denom: String!, $offset: Int = 0, $limit: Int = 10, $order: String! = "desc") {
+  get_ms_locks_sorted(args: {p_order_direction: $order, p_limit: $limit, p_offset: $offset, p_denom: $denom}) {
     bond_weight
     amount
     denom
@@ -20,8 +20,8 @@ query AssetDelegations($denom: String!, $offset: Int = 0, $limit: Int = 10) {
   }
 }
 
-query AssetUndelegations($denom: String!, $offset: Int = 0, $limit: Int = 10) {
-  ms_unlocks(limit: $limit, offset: $offset, where: {denom: {_eq: $denom}}) {
+query AssetUndelegations($denom: String!, $offset: Int = 0, $limit: Int = 10, $order: String! = "desc") {
+  get_ms_unlocks_sorted(args: {p_order_direction: $order, p_limit: $limit, p_offset: $offset, p_denom: $denom}) {
     bond_weight
     amount
     denom
@@ -36,9 +36,12 @@ query AssetUndelegations($denom: String!, $offset: Int = 0, $limit: Int = 10) {
 
 
 query AssetHolders($denom: String!, $offset: Int = 0, $limit: Int = 10, $order_by: String = "desc") {
-  balance(limit: $limit, offset: $offset, where: {denom: {_eq: $denom}}, order_by: {amount: desc}) {
+  get_balance_sorted(args: {p_order_direction: $order_by, p_limit: $limit, p_offset: $offset, p_denom: $denom}) {
     address
     amount
     denom
+  }
+  balance_count(args: {denom: $denom}) {
+    count
   }
 }

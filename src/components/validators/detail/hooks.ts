@@ -429,8 +429,6 @@ export function useTransactions() {
     };
 }
 
-const { primaryTokenUnit } = chainConfig;
-
 export const ROWS_PER_PAGE = 10;
 
 export const useStaking = (
@@ -438,10 +436,10 @@ export const useStaking = (
 ) => {
     const [delegationsPage, setDelegationsPage] = useState(0)
     const [unbondingsPage, setUnboningsPage] = useState(0)
-
+    const [sortDirection, setSortDirection] = useState("desc")
     const router = useRouter();
 
-    const validatorAddress =
+    const accountAddr =
         address ||
         (Array.isArray(router?.query?.address)
             ? router.query.address[0]
@@ -457,9 +455,10 @@ export const useStaking = (
         refetch: delegationsRefetch,
     } = useValidatorDelegationsQuery({
         variables: {
-            validatorAddress,
+            validatorAddress: accountAddr,
             limit: ROWS_PER_PAGE,
-            offset: delegationsPage * ROWS_PER_PAGE,
+            offset: delegationsPage * 10,
+            order: sortDirection
         },
     });
     useEffect(() => {
@@ -479,9 +478,10 @@ export const useStaking = (
         refetch: undelegationsRefetch,
     } = useValidatorUndelegationsQuery({
         variables: {
-            validatorAddress,
+            validatorAddress: accountAddr,
             limit: ROWS_PER_PAGE,
             offset: unbondingsPage * ROWS_PER_PAGE,
+            order: sortDirection
         },
     });
     useEffect(() => {
@@ -490,23 +490,32 @@ export const useStaking = (
             undelegationsRefetch();
         }
     }, [undelegationsError, undelegationsLoading, undelegationsRefetch]);
+
+    const handleSort = (sortDirt) => {
+        setDelegationsPage(0)
+        setUnboningsPage(0)
+        setSortDirection(sortDirt)
+    }
+
     return {
         delegations: {
             loading: delegationsLoading,
             count: delegationsData?.locks_count_by_val?.[0].count ?? 0,
-            data: delegationsData?.ms_locks ?? [],
+            data: delegationsData?.get_ms_locks_sorted ?? [],
             error: delegationsError,
         },
         unbondings: {
             loading: undelegationsLoading,
             count: undelegationsData?.unlocks_count_by_val?.[0].count ?? 0,
-            data: undelegationsData?.ms_unlocks,
+            data: undelegationsData?.get_ms_unlocks_sorted ?? [],
             error: undelegationsError,
         },
         delegationsPage,
         unbondingsPage,
         setDelegationsPage,
-        setUnboningsPage
+        setUnboningsPage,
+        sortDirection,
+        handleSort
     };
 };
 

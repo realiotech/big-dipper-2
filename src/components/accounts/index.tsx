@@ -4,19 +4,44 @@ import {
   ClipboardRoot,
   ClipboardIconButton,
 } from "@/components/ui/clipboard"
-import { IoCopyOutline } from "react-icons/io5";
-import { IoMdCheckmark } from "react-icons/io";
 import Transactions from "./transactions";
 import { useOverview } from "./hooks";
 import Assets from "./assets";
 import AssetChart from "./asset_chart";
 import Staking from "./staking";
-import { getMiddleEllipsis } from "@/utils";
+import { formatTokenByExponent, getMiddleEllipsis } from "@/utils";
+import { useStaking } from "./hooks";
+import { useMemo } from "react";
+import { DEFAULT_BALANCE_MAP } from "./utils";
+import { useRecoilValue } from "recoil";
+import { readAssets } from "@/recoil/asset";
 
 export default function AccountDetail() {
   const { balances, address, evmAddress, completed } = useOverview();
+  const { assetMap, loaded } = useRecoilValue(readAssets)
+  const { delegations, unbondings, handleSort, sortDirection } =
+    useStaking(address);
   const isMobile = useBreakpointValue({ base: true, lg: false });
 
+  const balancesMerged = useMemo(() => {
+    var balanceMap = DEFAULT_BALANCE_MAP
+    if (completed && !delegations.loading && loaded) {
+      balances.forEach(item => {
+        balanceMap[item.denom].spendable += parseFloat(formatTokenByExponent(item.amount, assetMap[item.denom].decimals))
+      })
+      delegations.data.forEach(item => {
+        balanceMap[item.denom].delegated += parseFloat(formatTokenByExponent(item.amount, assetMap[item.denom].decimals))
+      })
+      unbondings.data.forEach(item => {
+        balanceMap[item.denom].unbonding += parseFloat(formatTokenByExponent(item.amount, assetMap[item.denom].decimals))
+      })
+      return Object.entries(balanceMap).map(([denom, data]) => ({
+        denom,
+        ...data
+      }));
+    }
+    return []
+  }, [balances, delegations, unbondings, loaded, completed])
   return (
     <Box minH="100vh">
       <Flex gap={6} flexWrap="wrap" mb={8}>
@@ -28,7 +53,7 @@ export default function AccountDetail() {
             borderRadius="md"
             boxShadow="sm"
             flex="1"
-            w={"autp"}
+            w={"auto"}
           >
             <Text fontSize="lg" fontWeight="bold" mb={4}>
               Portfolio
@@ -38,7 +63,7 @@ export default function AccountDetail() {
                 <Text>Address: {" "}
                   <Text as="span">
                     {isMobile ? getMiddleEllipsis(address, { beginning: 9, ending: 20 }) : address}
-                  </Text> 
+                  </Text>
                 </Text>
                 <Center>
                   <ClipboardRoot value={address}>
@@ -52,7 +77,7 @@ export default function AccountDetail() {
                 <Text>EVM address: {" "}
                   <Text as="span">
                     {isMobile ? getMiddleEllipsis(evmAddress, { beginning: 9, ending: 20 }) : evmAddress}
-                  </Text> 
+                  </Text>
                 </Text>
                 <Center>
                   <ClipboardRoot value={evmAddress}>
@@ -62,12 +87,16 @@ export default function AccountDetail() {
               </Flex>
             </VStack>
           </Box>
-          <Assets balances={balances} />
+          <Assets balances={balancesMerged} />
         </Flex>
-
-        <AssetChart balances={balances} />
+        <AssetChart balances={balancesMerged} />
       </Flex>
-      <Staking address={address} />
+      <Staking 
+        delegations={delegations}
+        unbondings={unbondings}
+        handleSort={handleSort} 
+        sortDirection={sortDirection}
+      />
       <Transactions />
     </Box>
   );

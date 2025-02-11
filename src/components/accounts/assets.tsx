@@ -11,11 +11,11 @@ import { useRecoilValue } from "recoil";
 import NoData from "../helper/nodata";
 import { Avatar } from "../ui/avatar";
 import numeral from "numeral";
-import { formatTokenByExponent } from "@/utils";
 
 const AssetItem = ({metadata, asset}) => {
-    const amountStr = numeral(formatTokenByExponent(asset?.amount, metadata?.decimals)).format('0,0.000000')
-    const amountInUsd = numeral(parseFloat(formatTokenByExponent(asset?.amount, metadata?.decimals)) * metadata?.price).format('0,0.00')
+    const totalAmt = asset?.spendable + asset?.delegated + asset?.unbonding
+    const amountStr = numeral(totalAmt).format('0,0.000000')
+    const amountInUsd = numeral(totalAmt * metadata?.price).format('0,0.00')
     return (
         <Flex
             bg={{ base: "white", _dark: "black" }}

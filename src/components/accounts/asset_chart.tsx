@@ -5,34 +5,24 @@ import {
     Flex,
     VStack,
     HStack,
-    Link
+    Link,
+    Tabs,
+    For
 } from "@chakra-ui/react";
 import { useRecoilValue } from "recoil";
 import NoData from "../helper/nodata";
-import numeral from "numeral";
-import { formatTokenByExponent } from "@/utils";
 import { Doughnut } from "react-chartjs-2";
 import { Chart as ChartJS, ArcElement, Tooltip, Legend } from "chart.js";
 import { backgroundColors, convertToChartData } from "./utils";
 import Loading from "../helper/loading";
+import { AssetBalanceDetail } from "./types";
+import numeral from "numeral";
 ChartJS.register(ArcElement, Tooltip, Legend);
 
-const ItemNote = ({ metadata, asset, index }) => {
-    const amountInUsd = numeral(parseFloat(formatTokenByExponent(asset?.amount, metadata?.decimals)) * metadata?.price).format('0,0.00')
-    return (
-        <HStack>
-          <Box w='30px' h='30px' borderRadius={'5px'} bgColor={backgroundColors[index]}/>
-            <Text>
-                {metadata?.symbol} - {" "}
-                <Link fontWeight={600}>
-                    ${amountInUsd}
-                </Link>{" "}
-            </Text>
-        </HStack>
-    )
-}
-
-export default function AssetChart({ balances }) {
+type Props = {
+    balances: AssetBalanceDetail[]
+};
+const AssetChart: React.FC<Props> = ({ balances }) => {
     const { assetMap, loaded } = useRecoilValue(readAssets)
     if (!loaded) return (
         <Box
@@ -69,33 +59,76 @@ export default function AssetChart({ balances }) {
             flex="1"
             minW="320px"
         >
-            <Text fontSize="lg" fontWeight="bold" mb={4}>
-                Portfolio / USD
-            </Text>
-            <Flex
-                direction={{ base: "column", md: "row" }}
-                align="center"
-                gap={10}
-                h="100%"
-            >
-                <VStack align="stretch">
-                    <Flex justify="center" align="center" mb={4}>
-                        <Box w="350px" h="350px">
-                            <Doughnut data={convertToChartData(balances, assetMap)}
-                                options={{
-                                    plugins: {
-                                        legend: { display: false },
-                                    },
-                                }} />
-                        </Box>
-                    </Flex>
-                </VStack>
-                <VStack w="100%" align="center" gap={4}>
-                    {balances.map((item, index) => 
-                        <ItemNote metadata={assetMap?.[item.denom]} key={`chart-item-${item.denom}`} asset={item} index={index} />
+            <Tabs.Root defaultValue={'ario'} variant={'enclosed'}>
+                <Flex justifyContent={'space-between'} align={'center'}>
+                    <Text fontSize="lg" fontWeight="bold" mb={4}>
+                        Portfolio / USD
+                    </Text>
+                    <Tabs.List>
+                        <For each={balances}>
+                            {(item, index) => (
+                                <Tabs.Trigger key={`tab-${index}`} value={item?.denom}>{assetMap[item?.denom].symbol}</Tabs.Trigger>
+                            )}
+                        </For>
+                    </Tabs.List>
+                </Flex>
+                <For each={balances}>
+                    {(item, index) => (
+                        <Tabs.Content key={`tab-content-${index}`} value={item?.denom}>
+                            <Flex
+                                direction={{ base: "column", md: "row" }}
+                                align="center"
+                                gap={10}
+                                h="100%"
+                            >
+                                <VStack align="stretch">
+                                    <Flex justify="center" align="center" mb={4}>
+                                        <Box w="350px" h="350px">
+                                            <Doughnut data={convertToChartData(item)}
+                                                options={{
+                                                    plugins: {
+                                                        legend: { display: false },
+                                                    },
+                                                }} />
+                                        </Box>
+                                    </Flex>
+                                </VStack>
+                                <VStack w="100%" align="left" gap={4}>
+                                    <HStack>
+                                        <Box w='30px' h='30px' borderRadius={'5px'} bgColor={backgroundColors[0]} />
+                                        <Text>
+                                            Spendable - {" "}
+                                            <Link fontWeight={600}>
+                                                ${numeral(item.spendable * assetMap[item.denom].price).format('0,0.00')}
+                                            </Link>{" "}
+                                        </Text>
+                                    </HStack>
+                                    <HStack>
+                                        <Box w='30px' h='30px' borderRadius={'5px'} bgColor={backgroundColors[2]} />
+                                        <Text>
+                                            Delegated - {" "}
+                                            <Link fontWeight={600}>
+                                                ${numeral(item.delegated * assetMap[item.denom].price).format('0,0.00')}
+                                            </Link>{" "}
+                                        </Text>
+                                    </HStack>
+                                    <HStack>
+                                        <Box w='30px' h='30px' borderRadius={'5px'} bgColor={backgroundColors[3]} />
+                                        <Text>
+                                            Unbonding - {" "}
+                                            <Link fontWeight={600}>
+                                                ${numeral(item.unbonding * assetMap[item.denom].price).format('0,0.00')}
+                                            </Link>{" "}
+                                        </Text>
+                                    </HStack>
+                                </VStack>
+                            </Flex>
+                        </Tabs.Content>
                     )}
-                </VStack>
-            </Flex>
+                </For>
+            </Tabs.Root>
         </Box>
     )
 }
+
+export default AssetChart;

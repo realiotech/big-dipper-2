@@ -1,5 +1,5 @@
-import React from "react";
-import { Table, For, Center, VStack, HStack, Box } from "@chakra-ui/react";
+import React, { useState } from "react";
+import { Table, Button, Center, VStack, HStack, Box } from "@chakra-ui/react";
 import numeral from "numeral";
 import { useRecoilValue } from "recoil";
 import { readAsset } from "@/recoil/asset";
@@ -16,6 +16,7 @@ import {
 } from "../ui/pagination";
 import Proposer from "../helper/proposer";
 import { useProfileRecoil } from "@/recoil/profiles";
+import { FaCaretDown, FaCaretUp } from "react-icons/fa";
 
 const getDisplayHeaders = (displayMode) => {
   if (displayMode === 1)
@@ -33,22 +34,22 @@ const getDisplayHeaders = (displayMode) => {
 const getDisplayData = (displayMode, staker_addr, name, address, imageUrl) => {
   if (displayMode === 1)
     return (
-      <Table.Cell borderBottomColor={{base: 'gray.200', _dark: 'gray.700'}}>
+      <Table.Cell borderBottomColor={{ base: 'gray.200', _dark: 'gray.700' }}>
         <HelpLink href={ADDRESS_DETAILS(staker_addr)} value={staker_addr} />
       </Table.Cell>
     );
   if (displayMode === 2)
     return (
-      <Table.Cell borderBottomColor={{base: 'gray.200', _dark: 'gray.700'}}>
+      <Table.Cell borderBottomColor={{ base: 'gray.200', _dark: 'gray.700' }}>
         <Proposer name={name} address={address} image={imageUrl} />
       </Table.Cell>
     );
   return (
     <>
-      <Table.Cell borderBottomColor={{base: 'gray.200', _dark: 'gray.700'}}>
+      <Table.Cell borderBottomColor={{ base: 'gray.200', _dark: 'gray.700' }}>
         <HelpLink href={ADDRESS_DETAILS(staker_addr)} value={staker_addr} />
       </Table.Cell>
-      <Table.Cell borderBottomColor={{base: 'gray.200', _dark: 'gray.700'}}>
+      <Table.Cell borderBottomColor={{ base: 'gray.200', _dark: 'gray.700' }}>
         <Proposer name={name} address={address} image={imageUrl} />
       </Table.Cell>
     </>
@@ -58,25 +59,25 @@ const getDisplayData = (displayMode, staker_addr, name, address, imageUrl) => {
 const UndelegationItem = ({ item, asset, displayMode }) => {
   const assetDetail = useRecoilValue(readAsset(asset));
   const { name, address, imageUrl } = useProfileRecoil(item?.val_addr)
-  
+
   return (
     <Table.Row bg={{ base: "white", _dark: "#262626" }}>
       {getDisplayData(displayMode, item.staker_addr, name, address, imageUrl)}
-      <Table.Cell borderBottomColor={{base: 'gray.200', _dark: 'gray.700'}} display={{ base: "none", md: "table-cell" }}>
+      <Table.Cell borderBottomColor={{ base: 'gray.200', _dark: 'gray.700' }} display={{ base: "none", md: "table-cell" }}>
         <HelpLink
           href={BLOCK_DETAILS(item.creation_height)}
           value={numeral(item.creation_height).format("0,0")}
         />
       </Table.Cell>
-      <Table.Cell borderBottomColor={{base: 'gray.200', _dark: 'gray.700'}} display={{ base: "none", lg: "table-cell" }}>
+      <Table.Cell borderBottomColor={{ base: 'gray.200', _dark: 'gray.700' }} display={{ base: "none", lg: "table-cell" }}>
         {numeral(item.bond_weight).format("0.0")}
       </Table.Cell>
-      <Table.Cell borderBottomColor={{base: 'gray.200', _dark: 'gray.700'}}>
+      <Table.Cell borderBottomColor={{ base: 'gray.200', _dark: 'gray.700' }}>
         {numeral(
           formatTokenByExponent(item.amount, assetDetail?.decimals)
         ).format("0,0.00")}{" "}
       </Table.Cell>
-      <Table.Cell borderBottomColor={{base: 'gray.200', _dark: 'gray.700'}}>
+      <Table.Cell borderBottomColor={{ base: 'gray.200', _dark: 'gray.700' }}>
         <Asset
           name={assetDetail?.symbol}
           image={assetDetail?.image}
@@ -87,11 +88,17 @@ const UndelegationItem = ({ item, asset, displayMode }) => {
   );
 };
 
-export default function Undelegations({ data, displayMode, page, setPage }) {
+export default function Undelegations({ data, page, setPage, displayMode, handleSort, sort }) {
+  const [sortingKey, setSortingKey] = useState('')
+
+  const handleSortWithKey = (key) => {
+    setSortingKey(key)
+    handleSort(sort == 'asc' ? 'desc' : 'asc')
+  }
   return (
     <VStack w={"full"} overflowX={"auto"}>
       <Box w="full" overflowX="auto">
-        <Table.Root  color={{ base: "black", _dark: "white" }}  showColumnBorder={false} h="full" w="full">
+        <Table.Root color={{ base: "black", _dark: "white" }} showColumnBorder={false} h="full" w="full">
           <Table.Header>
             <Table.Row bg={{ base: "#FAFBFC", _dark: "#0F0F0F" }}>
               {getDisplayHeaders(displayMode)}
@@ -101,7 +108,13 @@ export default function Undelegations({ data, displayMode, page, setPage }) {
               <Table.ColumnHeader display={{ base: "none", lg: "table-cell" }}>
                 Bond Weight
               </Table.ColumnHeader>
-              <Table.ColumnHeader>Amount</Table.ColumnHeader>
+              <Table.ColumnHeader onClick={() => handleSortWithKey('amount')}>
+                <Button variant='plain' w='full' textAlign={'left'} p={0} justifyContent={'left'}>
+                  Amount {sortingKey == 'amount' ?
+                    sort == 'asc' ? <FaCaretUp /> : <FaCaretDown /> : ''
+                  }
+                </Button>
+              </Table.ColumnHeader>
               <Table.ColumnHeader />
             </Table.Row>
           </Table.Header>
@@ -112,7 +125,7 @@ export default function Undelegations({ data, displayMode, page, setPage }) {
                   <Table.Cell colSpan={5} textAlign="center">
                     <Center
                       borderRadius="20px"
-                               bgColor={{ base: "#FAFBFC", _dark: "#0F0F0F" }}
+                      bgColor={{ base: "#FAFBFC", _dark: "#0F0F0F" }}
                       py="5"
                       px="8"
                       minH="65vh"
@@ -140,19 +153,19 @@ export default function Undelegations({ data, displayMode, page, setPage }) {
           </Table.Body>
         </Table.Root >
       </Box>
-        <PaginationRoot
-          count={data?.count}
-          pageSize={10}
-          value={page + 1}
-          onPageChange={(e) => setPage(e.page - 1)}
-          size={{ base: "xs", md: "lg" }}
-        >
-          <HStack gap={0}>
-            <PaginationPrevTrigger />
-            <PaginationItems />
-            <PaginationNextTrigger />
-          </HStack>
-        </PaginationRoot>
+      <PaginationRoot
+        count={data?.count}
+        pageSize={10}
+        value={page + 1}
+        onPageChange={(e) => setPage(e.page - 1)}
+        size={{ base: "xs", md: "lg" }}
+      >
+        <HStack gap={0}>
+          <PaginationPrevTrigger />
+          <PaginationItems />
+          <PaginationNextTrigger />
+        </HStack>
+      </PaginationRoot>
     </VStack>
   );
 }

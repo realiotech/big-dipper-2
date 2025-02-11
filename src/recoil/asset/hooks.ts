@@ -10,7 +10,8 @@ export const useAssetRecoil = () => {
   ];
 
   useEffect(() => {
-    fetchAssets()
+    fetch("/api/assets")
+      .then(data => data.json())
       .then(data => {
         var assetMap = {}
         var newData = []
@@ -27,37 +28,4 @@ export const useAssetRecoil = () => {
         setAssets({ assetArr: [], assetMap: {}, loaded: true })
       })
   }, [])
-}
-
-async function fetchAssets() {
-  await new Promise((resolve) => setTimeout(resolve, 400))
-  return [
-    {
-      denom: 'ario',
-      symbol: 'RIO',
-      name: 'Realio Network',
-      description: 'Realio Network Token',
-      image: '/images/assets/RIO.png',
-      decimals: 18,
-      price: 1
-    },
-    {
-      denom: 'arst',
-      symbol: 'RST',
-      name: 'Realio Staking Token',
-      description: 'Realio Network Staking Token',
-      image: '/images/assets/RST.png',
-      decimals: 18,
-      price: 1
-    },
-    {
-      denom: 'almx',
-      symbol: 'LMX',
-      name: 'LMX Token',
-      description: 'LMX Token',
-      image: '/images/assets/LMX.png',
-      decimals: 18,
-      price: 1
-    },
-  ]
 }
