@@ -110,12 +110,8 @@ export default function Delegations({ data, page, setPage, displayMode, handleSo
               <Table.ColumnHeader display={{ base: "none", md: "table-cell" }}>
                 Bond Weight
               </Table.ColumnHeader>
-              <Table.ColumnHeader onClick={() => handleSortWithKey('voting')}>
-                <Button variant='plain' w='full' textAlign={'left'} p={0} justifyContent={'left'}>
-                  Voting Power {sortingKey == 'voting' ?
-                    sort == 'asc' ? <FaCaretUp /> : <FaCaretDown /> : ''
-                  }
-                </Button>
+              <Table.ColumnHeader display={{ base: "none", md: "table-cell" }}>
+                Voting Power
               </Table.ColumnHeader>
               <Table.ColumnHeader onClick={() => handleSortWithKey('amount')}>
                 <Button variant='plain' w='full' textAlign={'left'} p={0} justifyContent={'left'}>

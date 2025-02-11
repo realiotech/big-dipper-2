@@ -10,7 +10,7 @@ import {
 import { toValidatorAddress } from '@/utils/prefix_convert';
 import { bech32 } from 'bech32';
 import { keccak256 } from 'ethereumjs-util';
-import type { Balance } from './types';
+import type { AssetBalance, AssetBalanceDetail, AssetBalanceMap, Balance } from './types';
 import { AssetMap } from '@/recoil/asset/types';
 import { formatTokenByExponent } from '@/utils';
 
@@ -168,18 +168,35 @@ export function convertToEvmAddress(address: string) {
   }
 }
 
-export function convertToChartData(balances: Balance[], assetMap: AssetMap) {
-  const labels = balances.map(item => assetMap?.[item.denom]?.symbol)
-  const datasets = balances.map(item => formatTokenByExponent(item.amount, assetMap?.[item.denom]?.decimals))
-  
+export function convertToChartData(data: AssetBalanceDetail) {
+  const labels = ['Spendable, Delegated, Unbondings']
+  const datasets = [data.spendable, data.delegated, data.unbonding]
+
   return {
     labels: labels,
     datasets: [
       {
         data: datasets,
-        backgroundColor: backgroundColors.slice(0, balances.length),
+        backgroundColor: ["#364FC7","#5C7CFA","#63E6BE"],
       },
     ],
   };
 }
 
+export const DEFAULT_BALANCE_MAP: AssetBalanceMap = {
+  "ario": {
+    spendable: 0.0,
+    delegated: 0.0,
+    unbonding: 0.0
+  },
+  "arst": {
+    spendable: 0.0,
+    delegated: 0.0,
+    unbonding: 0.0
+  },
+  "almx": {
+    spendable: 0.0,
+    delegated: 0.0,
+    unbonding: 0.0
+  }
+}

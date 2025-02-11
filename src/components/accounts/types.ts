@@ -56,3 +56,24 @@ export type Balance = {
   amount: string;
   denom: string;
 }
+
+export type AssetBalance = {
+  spendable: number,
+  delegated: number,
+  unbonding: number,
+}
+
+export type AssetBalanceDetail = {
+  denom: string,
+  spendable: number,
+  delegated: number,
+  unbonding: number,
+}
+
+export type AssetBalanceMap = {
+  [key: string]: AssetBalance
+}
+
+export type AssetBalanceMergedMap = {
+  [key: string]: AssetBalanceDetail
+}

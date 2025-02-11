@@ -82,16 +82,12 @@ const AssetDetails = () => {
   const { holderState, pageInfo, handlePageChange } = useHolders(maxHolders);
   const [selectedTab, setSelectedTab] = useState("holders");
   const assetDetail = useRecoilValue(readAsset(denom));
-  useEffect(() => {
-    console.log(holderState.loading);
-  }, []);
 
   return (
     <Grid templateColumns="repeat(6, 1fr)" gap={"1.5rem"} minH="auto">
       <GridItem
         colSpan={6}
         direction={"row"}
-        align="center"
         bg={{ base: "white", _dark: "black" }}
         p={6}
         height={"auto"}

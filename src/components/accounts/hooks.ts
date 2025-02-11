@@ -155,8 +155,6 @@ export function useOverview(): OverviewType {
 export const useStaking = (
   address?: string
 ) => {
-  const [delegationsPage, setDelegationsPage] = useState(0)
-  const [unbondingsPage, setUnboningsPage] = useState(0)
   const [sortDirection, setSortDirection] = useState("desc")
   const router = useRouter();
 
@@ -177,8 +175,8 @@ export const useStaking = (
   } = useAccountDelegationsQuery({
     variables: {
       address: accountAddr,
-      limit: 10,
-      offset: delegationsPage * 10,
+      limit: 100,
+      offset: 0,
       order: sortDirection
     },
   });
@@ -200,8 +198,8 @@ export const useStaking = (
   } = useAccountUndelegationsQuery({
     variables: {
       address: accountAddr,
-      limit: 10,
-      offset: unbondingsPage * 10,
+      limit: 100,
+      offset: 0,
       order: sortDirection
     },
   });
@@ -213,8 +211,6 @@ export const useStaking = (
   }, [undelegationsError, undelegationsLoading, undelegationsRefetch]);
 
   const handleSort = (sortDirt) => {
-    setDelegationsPage(0)
-    setUnboningsPage(0)
     setSortDirection(sortDirt)
   }
 
@@ -231,10 +227,6 @@ export const useStaking = (
       data: undelegationsData?.get_ms_unlocks_sorted ?? [],
       error: undelegationsError,
     },
-    delegationsPage,
-    unbondingsPage,
-    setDelegationsPage,
-    setUnboningsPage,
     sortDirection,
     handleSort
   };

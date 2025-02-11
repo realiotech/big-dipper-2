@@ -5,14 +5,11 @@ import {
   TabsTrigger,
   TabsContent
 } from "@chakra-ui/react";
-import { useStaking } from "./hooks";
 import NoData from "@/components/helper/nodata";
 import Delegations from "@/components/staking/delegations";
 import Undelegations from "@/components/staking/undelegations";
 
-export default function Staking({ address }) {
-  const { delegations, unbondings, delegationsPage, unbondingsPage, setDelegationsPage, setUnboningsPage, handleSort, sortDirection } =
-    useStaking(address);
+export default function Staking({ delegations, unbondings, handleSort, sortDirection }) {
   return (
     <Tabs.Root
       defaultValue={1}
@@ -25,10 +22,10 @@ export default function Staking({ address }) {
       {delegations?.data ? (
         <Box bg={{ base: "#FAFBFC", _dark: "#0F0F0F" }} p={6} borderRadius="md" boxShadow="sm" mb={8}>
           <TabsContent value={1}>
-            <Delegations data={delegations} page={delegationsPage} setPage={setDelegationsPage} displayMode={2} handleSort={handleSort} sort={sortDirection} />
+            <Delegations data={delegations} page={1} setPage={()=> {}} displayMode={2} handleSort={handleSort} sort={sortDirection} />
           </TabsContent>
           <TabsContent value={2}>
-            <Undelegations data={unbondings} page={unbondingsPage} setPage={setUnboningsPage} displayMode={2} handleSort={handleSort} sort={sortDirection} />
+            <Undelegations data={unbondings} page={1} setPage={() => { }} displayMode={2} handleSort={handleSort} sort={sortDirection} />
           </TabsContent>
         </Box>
       ) : (
