@@ -1,85 +1,25 @@
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import {
-  Box,
   Flex,
   Text,
-  Button,
   VStack,
   HStack,
   Tabs,
-  Table,
   Center,
   Grid,
   GridItem,
-  Skeleton,
 } from "@chakra-ui/react";
-import { FiShoppingCart } from "react-icons/fi";
 import AssetOverview from "./overview";
-import { useOverview, useHolders } from "./hooks";
 import Staking from "./staking";
 import { useRouter } from "next/router";
-import Pagination from "../layout/pagination";
-import HelpLink from "../helper/help_link";
-import Asset from "../helper/asset";
 import { useRecoilValue } from "recoil";
 import { readAsset } from "@/recoil/asset";
-import numeral from "numeral";
-import { formatTokenByExponent } from "@/utils";
 import { Avatar } from "../ui/avatar";
-
-const HolderItem = ({ item, denom }) => {
-  const assetDetail = useRecoilValue(readAsset(denom));
-
-  return (
-    <Table.Row bg={{ base: "white", _dark: "#262626" }}>
-      <Table.Cell borderBottomColor={{ base: "gray.200", _dark: "gray.700" }}>
-        <HelpLink href={`/accounts/${item.address}`} value={item.address} />
-      </Table.Cell>
-      <Table.Cell borderBottomColor={{ base: "gray.200", _dark: "gray.700" }}>
-        {numeral(
-          formatTokenByExponent(item.balance, assetDetail?.decimals)
-        ).input()}
-      </Table.Cell>
-      <Table.Cell borderBottomColor={{ base: "gray.200", _dark: "gray.700" }}>
-        <Asset
-          name={assetDetail?.symbol}
-          image={assetDetail?.image}
-          denom={assetDetail?.denom}
-        />
-      </Table.Cell>
-    </Table.Row>
-  );
-};
-
-const SkeletonBlockItem = ({ index }) => {
-  return (
-    <Table.Row key={`transaction-${index}`}>
-      <Table.Cell
-        w="50%"
-        borderBottomColor={{ base: "gray.200", _dark: "gray.700" }}
-      >
-        <Skeleton h={"10px"} w="full" mb="2" />
-      </Table.Cell>
-      <Table.Cell
-        w="40%"
-        borderBottomColor={{ base: "gray.200", _dark: "gray.700" }}
-      >
-        <Skeleton h={"10px"} w="full" mb="2" />
-      </Table.Cell>
-      <Table.Cell
-        w="10%"
-        borderBottomColor={{ base: "gray.200", _dark: "gray.700" }}
-      >
-        <Skeleton columnFill={"3"} h={"10px"} w="full" mb="2" />
-      </Table.Cell>
-    </Table.Row>
-  );
-};
+import Holders from "./holders";
 
 const AssetDetails = () => {
   const router = useRouter();
-  const { state, maxHolders, denom } = useOverview();
-  const { holderState, pageInfo, handlePageChange } = useHolders(maxHolders);
+  const denom = router?.query?.denom as string
   const [selectedTab, setSelectedTab] = useState("holders");
   const assetDetail = useRecoilValue(readAsset(denom));
 
@@ -158,70 +98,14 @@ const AssetDetails = () => {
         >
           <Tabs.ContentGroup>
             <Tabs.Content p={0} value="holders">
-              <Box
-                bg={{ base: "#FAFBFC", _dark: "#0F0F0F" }}
-                overflow={"auto"}
-                p={6}
-              >
-                <Text fontSize="md" mb={4}>
-                  Top {maxHolders} holders (from a total of{" "}
-                  {`${state?.holders ?? 0}`} holders)
-                </Text>
-                <Table.Root color={{ base: "black", _dark: "white" }}>
-                  <Table.Header bg={{ base: "#FAFBFC", _dark: "#0F0F0F" }}>
-                    <Table.Row bgColor="inherit">
-                      <Table.ColumnHeader>Address</Table.ColumnHeader>
-                      <Table.ColumnHeader>Amount</Table.ColumnHeader>
-                      <Table.ColumnHeader>Denom</Table.ColumnHeader>
-                    </Table.Row>
-                  </Table.Header>
-                  <Table.Body bg={{ base: "white", _dark: "#262626" }}>
-                    {!holderState.loading ? (
-                      holderState.holders.length > 0 ? (
-                        holderState.holders.map((item, index) => (
-                          <HolderItem
-                            item={item}
-                            denom={denom}
-                            key={`holder-${index}`}
-                          />
-                        ))
-                      ) : (
-                        Array.from({ length: 20 }).map((_, index) => (
-                          <SkeletonBlockItem
-                            key={`skeleton-${index}`}
-                            index={index}
-                          />
-                        ))
-                      )
-                    ) : (
-                      <Center
-                        borderRadius="20px"
-                        bgColor={{ base: "#FAFBFC", _dark: "#0F0F0F" }}
-                        py="5"
-                        px="8"
-                        minH="65vh"
-                        w="full"
-                      >
-                        <Text>Nothing to show</Text>
-                      </Center>
-                    )}
-                  </Table.Body>
-                </Table.Root>
-                <Center w="full" py="4">
-                  <Pagination
-                    pageInfo={pageInfo}
-                    pageChangeFunc={handlePageChange}
-                    pageSizeChangeFunc={() => {}}
-                  />
-                </Center>
-              </Box>
+              <Holders denom={denom} />
             </Tabs.Content>
             <Tabs.Content
               bg={{ base: "#FAFBFC", _dark: "#0F0F0F" }}
               p={0}
               value="staking"
             >
-              <Staking denom={router?.query?.denom} />
+              <Staking denom={denom} />
             </Tabs.Content>
           </Tabs.ContentGroup>
         </Tabs.Root>

@@ -36,9 +36,12 @@ query AssetUndelegations($denom: String!, $offset: Int = 0, $limit: Int = 10, $o
 
 
 query AssetHolders($denom: String!, $offset: Int = 0, $limit: Int = 10, $order_by: String = "desc") {
-  balance(limit: $limit, offset: $offset, where: {denom: {_eq: $denom}}, order_by: {amount: desc}) {
+  get_balance_sorted(args: {p_order_direction: $order_by, p_limit: $limit, p_offset: $offset, p_denom: $denom}) {
     address
     amount
     denom
+  }
+  balance_count(args: {denom: $denom}) {
+    count
   }
 }

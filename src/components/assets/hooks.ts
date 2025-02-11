@@ -1,23 +1,12 @@
 import { useEffect, useState, useCallback } from "react";
-import { AssetHoldersQuery, useAssetDelegationsQuery, useAssetHoldersQuery, useAssetOverviewQuery, useAssetUndelegationsQuery } from "@/graphql/types/general_types";
+import { useAssetDelegationsQuery, useAssetHoldersQuery, useAssetOverviewQuery, useAssetUndelegationsQuery } from "@/graphql/types/general_types";
 import { useRouter } from "next/router";
-import { OverviewState, HolderState, Holder } from "./type";
-import { PageInfo } from "../layout/pagination";
-import * as R from 'ramda';
+import { OverviewState } from "./type";
 
 export function useOverview() {
   const router = useRouter()
   const denom = router?.query?.denom as string
   const [state, setState] = useState<OverviewState>({ denom, supply: '0', holders: 0 })
-  const [maxHolders, setMaxHolders] = useState(0)
-
-  useEffect(() => {
-    if (state?.holders > 1000) {
-      setMaxHolders(1000)
-    } else {
-      setMaxHolders(state?.holders)
-    }
-  }, [state])
 
   useAssetOverviewQuery({
     variables: {
@@ -33,93 +22,50 @@ export function useOverview() {
   })
   return {
     state,
-    maxHolders,
     denom,
   }
 }
 
-const formatHolders = (data: AssetHoldersQuery): Holder[] => {
-  return data?.balance?.map((x) => {
-    return {
-      address: x?.address,
-      balance: x?.amount,
-    }
-  }) ?? []
-}
+export const useHolders = (denom: string) => {
+  const [page, setPage] = useState(0)
+  const [sortDirection, setSortDirection] = useState("desc")
 
-export const useHolders = (maxHolder: number) => {
-  const router = useRouter()
-  const denom = router?.query?.denom as string
-
-  const [holderState, setHolderState] = useState<HolderState>({ loading: false, holders: [] })
-  const [pageInfo, SetPageInfo] = useState<PageInfo>({
-    count: 0,
-    pageSize: 20,
-    currentPage: 1,
-  })
-
-  useEffect(() => {
-    SetPageInfo({
-      ...pageInfo,
-      count: maxHolder,
-    })
-  }, [maxHolder])
-
-  const handleSetState = useCallback((stateChange: (prevState: HolderState) => HolderState) => {
-    setHolderState((prevState) => {
-      const newState = stateChange(prevState);
-      return R.equals(prevState, newState) ? prevState : newState;
-    });
-  }, []);
-
-  const handlePageChange = (e) => {
-    loadPage(e.page);
-    SetPageInfo({
-      ...pageInfo,
-      currentPage: e.page,
-    });
-  }
-
-  const holderQuery = useAssetHoldersQuery({
+  const {
+    data: balancesData,
+    loading: balancesLoading,
+    error: balancesErr,
+    refetch,
+  } = useAssetHoldersQuery({
     variables: {
       denom,
       limit: 20,
-      offset: 0,
+      offset: 20 * page,
+      order_by: sortDirection
     },
-    onCompleted: (data) => {
-      handleSetState((prevState) => ({
-        ...prevState,
-        loading: false,
-        holders: [...formatHolders(data)],
-      }));
-    },
-    onError: (e) => {
-      handleSetState((prevState) => ({ ...prevState, loading: false }));
-      console.log("error", e)
+  });
+  useEffect(() => {
+    if (balancesLoading) return;
+    if (balancesErr) {
+      refetch();
     }
-  })
+  }, [balancesErr, balancesLoading, refetch]);
 
-  const loadPage = (page: number) => {
-    handleSetState((prevState) => ({ ...prevState, loading: true }));
-
-    holderQuery.refetch({
-      limit: 20,
-      offset: (page - 1) * 20,
-    }).then(({ data }) => {
-      console.log(data, pageInfo)
-      handleSetState((prevState) => ({
-        ...prevState,
-        loading: false,
-        holders: [...formatHolders(data)],
-      }));
-    });
+  const handleSort = (sortDirt) => {
+    setPage(0)
+    setSortDirection(sortDirt)
   }
 
   return {
-    holderState,
-    loadPage,
-    pageInfo,
-    handlePageChange,
+    holderState: {
+      loading: balancesLoading,
+      count: balancesData?.balance_count?.[0].count ?? 0,
+      data: balancesData?.get_balance_sorted ?? [],
+      error: balancesErr,
+    },
+    page,
+    setPage,
+    sortDirection,
+    handleSort
   }
 }
 
@@ -130,9 +76,6 @@ export const useStaking = (
   const [unbondingsPage, setUnboningsPage] = useState(0)
   const [sortDirection, setSortDirection] = useState("desc")
 
-  // =====================================
-  // delegations
-  // =====================================
   const {
     data: delegationsData,
     loading: delegationsLoading,
@@ -153,9 +96,6 @@ export const useStaking = (
     }
   }, [delegationsError, delegationsLoading, delegationsRefetch]);
 
-  // =====================================
-  // unbondings
-  // =====================================
   const {
     data: undelegationsData,
     loading: undelegationsLoading,
