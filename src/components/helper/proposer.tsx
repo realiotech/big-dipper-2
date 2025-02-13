@@ -15,7 +15,7 @@ const Proposer = ({
                 <Tooltip content={address}>
                     <Flex align={'center'} gap='2'>
                         <Avatar src={image} alt={name} size='xs' />
-                        <Text>{shortenString(name, 20)}</Text>
+                        <Text>{shortenString(name, 15)}</Text>
                     </Flex>
                 </Tooltip>
             </NextLink>

@@ -12,7 +12,7 @@ export default function DataStaking() {
           Inflation
         </Text>
         <Text fontSize="32px" fontWeight={600}>
-          {numeral(state.inflation).format("0.0")} %
+          {numeral(state.inflation).format("0.0")}% Unminted RIO
         </Text>
       </GridItem>
       <GridItem borderRadius="20px" bgColor={{ base: "#FAFBFC", _dark: "#0F0F0F" }} py="5" px="8" mb={3}>
