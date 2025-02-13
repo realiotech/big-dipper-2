@@ -27,6 +27,8 @@ export default function PageHeader() {
         if (pathname.startsWith('/validators/')) return 'Validator Details';
         if (pathname.startsWith('/transactions/')) return 'Transaction Details';
         if (pathname.startsWith('/proposals/')) return 'Proposal Details';
+        if (pathname.startsWith('/accounts/')) return 'Account Details';
+        if (pathname.startsWith('/assets/')) return 'Assets Details';
         return 'Dashboard';
     }
   }, [pathname]);
