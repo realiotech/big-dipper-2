@@ -52,22 +52,25 @@ export default function AccountDetail() {
 
     // Process balances with fresh starting values
     balances.forEach(item => {
-      balanceMap[item.denom].spendable = parseFloat(
-        formatTokenByExponent(item.amount, assetMap[item.denom].decimals)
-      );
+      if (balanceMap[item.denom]) {
+        balanceMap[item.denom].spendable = parseFloat(
+          formatTokenByExponent(item?.amount, assetMap[item.denom]?.decimals)
+        );
+      }
     });
+
 
     // Process delegations with fresh starting values
     delegations.data.forEach(item => {
       balanceMap[item.denom].delegated = parseFloat(
-        formatTokenByExponent(item.amount, assetMap[item.denom].decimals)
+        formatTokenByExponent(item?.amount, assetMap[item.denom]?.decimals)
       );
     });
 
     // Process unbondings with fresh starting values
     unbondings.data.forEach(item => {
       balanceMap[item.denom].unbonding = parseFloat(
-        formatTokenByExponent(item.amount, assetMap[item.denom].decimals)
+        formatTokenByExponent(item?.amount, assetMap[item.denom]?.decimals)
       );
     });
 
