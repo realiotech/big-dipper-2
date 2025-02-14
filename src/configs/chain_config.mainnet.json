@@ -14,6 +14,52 @@
     "time": "2023-04-07T17:00:00",
     "height": 1
   },
+  "moduleAccounts": [
+    {
+      "name": "Asset",
+      "address": "realio16kfcdc9wgd0zjta7p67dh92twhk4lvujazjs8w"
+    },
+    {
+      "name": "Bonded_tokens_pool",
+      "address": "realio1fl48vsnmsdzcv85q5d2q4z5ajdha8yu3uwd99d"
+    },
+    {
+      "name": "Bridge",
+      "address": "realio1zlefkpe3g0vvm9a4h0jf9000lmqutlh9jzcavp"
+    },
+    {
+      "name": "Distribution",
+      "address": "realio1jv65s3grqf6v6jl3dp4t6c9t9rk99cd8w2qk49"
+    },
+    {
+      "name": "Evm",
+      "address": "realio1vqu8rska6swzdmnhf90zuv0xmelej4lqy8p7gj"
+    },
+    {
+      "name": "Fee_collector",
+      "address": "realio17xpfvakm2amg962yls6f84z3kell8c5lev82h8"
+    },
+    {
+      "name": "Gov",
+      "address": "realio10d07y265gmmuvt4z0w9aw880jnsr700jnhh02f"
+    },
+    {
+      "name": "Mint",
+      "address": "realio1m3h30wlvsf8llruxtpukdvsy0km2kum8pyrjm6"
+    },
+    {
+      "name": "Multistaking",
+      "address": "realio1mgydlcxrwfn9kx9u6642t4l5fn5h5kydekwk47"
+    },
+    {
+      "name": "Not_bonded_tokens_pool",
+      "address": "realio1tygms3xhhs3yv487phx3dw4a95jn7t7lgw35ne"
+    },
+    {
+      "name": "Transfer",
+      "address": "realio1yl6hdjhmkf37639730gffanpzndzdpmh82jrte"
+    }
+  ],
   "primaryTokenUnit": "ario",
   "votingPowerTokenUnit": "ario",
   "tokenUnits": {

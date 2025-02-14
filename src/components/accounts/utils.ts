@@ -182,21 +182,3 @@ export function convertToChartData(data: AssetBalanceDetail) {
     ],
   };
 }
-
-export const DEFAULT_BALANCE_MAP: AssetBalanceMap = {
-  "ario": {
-    spendable: 0.0,
-    delegated: 0.0,
-    unbonding: 0.0
-  },
-  "arst": {
-    spendable: 0.0,
-    delegated: 0.0,
-    unbonding: 0.0
-  },
-  "almx": {
-    spendable: 0.0,
-    delegated: 0.0,
-    unbonding: 0.0
-  }
-}

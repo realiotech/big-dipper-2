@@ -15,7 +15,7 @@ export default function DataBlocks() {
           {numeral(state.blockHeight).format("0,0")}
         </Text>
       </GridItem>
-      <GridItem borderRadius="20px" bgColor={{ base: "#FAFBFC", _dark: "#0F0F0F" }} py="5" px="8">
+      <GridItem borderRadius="20px" bgColor={{ base: "#FAFBFC", _dark: "#0F0F0F" }} py="5" px="8" mb={3}>
         <Text fontSize="14px" pb="3">
           Total Transactions
         </Text>
@@ -23,7 +23,7 @@ export default function DataBlocks() {
           {numeral(state.txsCount).format("0,0")}
         </Text>
       </GridItem>
-      <GridItem borderRadius="20px" bgColor={{ base: "#FAFBFC", _dark: "#0F0F0F" }} py="5" px="8" mb={3}>
+      <GridItem borderRadius="20px" bgColor={{ base: "#FAFBFC", _dark: "#0F0F0F" }} py="5" px="8">
         <Text fontSize="14px" pb="3">
           Average Block Time
         </Text>

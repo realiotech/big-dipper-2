@@ -12,7 +12,6 @@ import Staking from "./staking";
 import { formatTokenByExponent, getMiddleEllipsis } from "@/utils";
 import { useStaking } from "./hooks";
 import { useMemo } from "react";
-import { DEFAULT_BALANCE_MAP } from "./utils";
 import { useRecoilValue } from "recoil";
 import { readAssets } from "@/recoil/asset";
 
@@ -23,25 +22,64 @@ export default function AccountDetail() {
     useStaking(address);
   const isMobile = useBreakpointValue({ base: true, lg: false });
 
+  const createFreshBalanceMap = () => {
+    return {
+      "ario": {
+        spendable: 0.0,
+        delegated: 0.0,
+        unbonding: 0.0
+      },
+      "arst": {
+        spendable: 0.0,
+        delegated: 0.0,
+        unbonding: 0.0
+      },
+      "almx": {
+        spendable: 0.0,
+        delegated: 0.0,
+        unbonding: 0.0
+      }
+    };
+  };
+
   const balancesMerged = useMemo(() => {
-    var balanceMap = DEFAULT_BALANCE_MAP
-    if (completed && !delegations.loading && loaded) {
-      balances.forEach(item => {
-        balanceMap[item.denom].spendable += parseFloat(formatTokenByExponent(item.amount, assetMap[item.denom].decimals))
-      })
-      delegations.data.forEach(item => {
-        balanceMap[item.denom].delegated += parseFloat(formatTokenByExponent(item.amount, assetMap[item.denom].decimals))
-      })
-      unbondings.data.forEach(item => {
-        balanceMap[item.denom].unbonding += parseFloat(formatTokenByExponent(item.amount, assetMap[item.denom].decimals))
-      })
-      return Object.entries(balanceMap).map(([denom, data]) => ({
-        denom,
-        ...data
-      }));
+    if (!completed || delegations.loading || !loaded) {
+      return [];
     }
-    return []
-  }, [balances, delegations, unbondings, loaded, completed])
+
+    // Create a completely new balance map each time
+    const balanceMap = createFreshBalanceMap();
+
+    // Process balances with fresh starting values
+    balances.forEach(item => {
+      if (balanceMap[item.denom]) {
+        balanceMap[item.denom].spendable = parseFloat(
+          formatTokenByExponent(item?.amount, assetMap[item.denom]?.decimals)
+        );
+      }
+    });
+
+
+    // Process delegations with fresh starting values
+    delegations.data.forEach(item => {
+      balanceMap[item.denom].delegated = parseFloat(
+        formatTokenByExponent(item?.amount, assetMap[item.denom]?.decimals)
+      );
+    });
+
+    // Process unbondings with fresh starting values
+    unbondings.data.forEach(item => {
+      balanceMap[item.denom].unbonding = parseFloat(
+        formatTokenByExponent(item?.amount, assetMap[item.denom]?.decimals)
+      );
+    });
+
+    return Object.entries(balanceMap).map(([denom, data]) => ({
+      denom,
+      ...data
+    }));
+  }, [balances, delegations, unbondings, loaded, completed]);
+
   return (
     <Box minH="100vh">
       <Flex gap={6} flexWrap="wrap" mb={8}>

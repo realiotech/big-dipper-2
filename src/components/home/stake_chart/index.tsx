@@ -26,7 +26,6 @@ ChartJS.register(
   BarElement,
   LineElement,
   PointElement,
-  Tooltip,
   Legend
 );
 
@@ -40,12 +39,14 @@ export default function StakingChart() {
       {
         label: "Staked",
         data: [],
+        dataWithoutWeight: [],
         backgroundColor: "#38A169",
         borderRadius: 4,
       },
       {
         label: "Unbonding",
         data: [],
+        dataWithoutWeight: [],
         backgroundColor: "#6C63FF",
         borderRadius: 4,
       },
@@ -59,10 +60,12 @@ export default function StakingChart() {
     
   }, [assetArr, state.loading])
 
-
   const stakingOptions = {
     plugins: {
       legend: { display: false },
+      tooltip: {
+        events: ['none']
+      }
     },
     responsive: true,
     scales: {
@@ -81,12 +84,12 @@ export default function StakingChart() {
 
   return (
     <GridItem borderRadius="20px" bgColor={{ base: "#FAFBFC", _dark: "#0F0F0F" }} py="5" px="8" colSpan={2}>
-      <Flex h={"full"} direction={{ base: "column", md: "row" }}>
-        <Box w={{ base: "full", md: "70%" }}>
+      <Flex justify={"space-between"} h={"full"} direction={{ base: "column", md: "row" }}>
+        <Box w={{ base: "full", md: "65%" }}>
           <Text fontSize="24px" fontWeight="bold" pb="6">
             Staking
           </Text>
-          <Center>
+          <Center height={'80%'}>
             <Bar data={stakingData} options={stakingOptions} height={200} />
           </Center>
         </Box>
@@ -111,7 +114,7 @@ export default function StakingChart() {
                     <HStack>
                       <Box borderRadius={4} height={5} w={5} bg={stakingData?.datasets[0].backgroundColor[item.idx]} />
                       <Text>{item.symbol}:</Text>
-                      <Text>{numeral(stakingData?.datasets[0].data[item.idx]).format("0,0")}</Text>
+                      <Text>{numeral(stakingData?.datasets[0].dataWithoutWeight[item.idx]).format("0,0")}</Text>
                     </HStack> 
                   }
                 </For>
@@ -131,7 +134,7 @@ export default function StakingChart() {
                     <HStack>
                       <Box borderRadius={4} height={5} w={5} bg={stakingData?.datasets[1].backgroundColor[item.idx]} />
                       <Text>{item.symbol}:</Text>
-                      <Text>{numeral(stakingData?.datasets[1].data[item.idx]).format("0,0")}</Text>
+                      <Text>{numeral(stakingData?.datasets[1].dataWithoutWeight[item.idx]).format("0,0")}</Text>
                     </HStack>
                   }
                 </For>
