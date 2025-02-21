@@ -18,7 +18,5 @@ RUN npx browserslist@latest --update-db
 COPY . .
 
 RUN npm run build:next
-
 EXPOSE ${PORT}
-
 ENTRYPOINT ["./bin/docker_run.sh"]
