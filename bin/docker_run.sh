@@ -3,4 +3,5 @@
 ls -lha /app/.next
 ls -lha /app/dist
 
-exec node /app/dist/index.js
+# exec node /app/dist/index.js
+npm run start
