@@ -43,7 +43,7 @@ jobs:
         with:
           push: true
           tags: ${{ secrets.IMAGE_REGISTRY_URL }}/${{ secrets.IMAGE_REPO }}/${{ secrets.IMAGE_NAME }}:${{ github.sha }}
-          file: Dockerfile.mainnet
+          file: Dockerfile
           cache-from: type=gha
           cache-to: type=gha,mode=max
   update-gitops:
