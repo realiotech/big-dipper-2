@@ -7,13 +7,6 @@ ARG NEXT_PUBLIC_RPC_WEBSOCKET
 ARG NEXT_PUBLIC_CHAIN_TYPE
 ARG PRICE_API_URL
 ARG PRICE_API_KEY
-ENV PORT $PORT
-ENV NEXT_PUBLIC_GRAPHQL_WS $NEXT_PUBLIC_GRAPHQL_WS
-ENV NEXT_PUBLIC_GRAPHQL_URL $NEXT_PUBLIC_GRAPHQL_URL
-ENV NEXT_PUBLIC_RPC_WEBSOCKET $NEXT_PUBLIC_RPC_WEBSOCKET
-ENV NEXT_PUBLIC_CHAIN_TYPE $NEXT_PUBLIC_CHAIN_TYPE
-ENV PRICE_API_URL $PRICE_API_URL
-ENV PRICE_API_KEY $PRICE_API_KEY
 
 # Install git for ui and internal packages
 RUN apk add --no-cache git
@@ -22,14 +15,14 @@ RUN apk add --no-cache git
 WORKDIR /app
 
 # Installing dependencies
-COPY package*.json ./
 RUN mkdir node_modules
+COPY package*.json ./
 RUN npm ci
 RUN npx browserslist@latest --update-db
 
 # Copying source files
 COPY . .
 
-RUN npm run build:next
+# RUN npm run build:next
 EXPOSE ${PORT}
 ENTRYPOINT ["npm", "run", "start"]
