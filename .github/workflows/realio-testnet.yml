@@ -38,11 +38,37 @@ jobs:
             ${{ github.workflow }}-buildx-${{ github.sha }}
             ${{ github.workflow }}-buildx-
             ${{ github.workflow }}
+      - uses: 1password/install-cli-action@v1
+      - name: Load REALIO_PUBLIC vars
+        env:
+          OP_VAULT: gitops-stage
+          OP_ITEM: bigdipper-envvars
+          OP_SERVICE_ACCOUNT_TOKEN: ${{ secrets.OP_SERVICE_ACCOUNT_TOKEN }}
+        run: |
+          op item get $OP_ITEM --vault $OP_VAULT --reveal --format json | jq '.fields[].label' | tail -n +3 | while IFS= read -r line; do
+            value=$(op item get $OP_ITEM --vault $OP_VAULT --fields $line --reveal)
+            if [ $? -ne 0 ]; then
+              echo "Failed to retrieve $line"
+              exit 1
+            fi
+            echo "::add-mask::$value"
+            echo "$line=$value" | tr -d '"' >> $GITHUB_ENV
+            echo "$line set" | tr -d '"'
+          done
       - name: Build and push
         uses: docker/build-push-action@v5
         with:
           push: true
           tags: ${{ secrets.IMAGE_REGISTRY_URL }}/${{ secrets.IMAGE_REPO }}/${{ secrets.IMAGE_NAME }}:${{ github.sha }}
+          build-args: |
+            PORT
+            NEXT_PUBLIC_GRAPHQL_WS
+            NEXT_PUBLIC_GRAPHQL_URL
+            NEXT_PUBLIC_RPC_WEBSOCKET
+            NEXT_PUBLIC_CHAIN_TYPE
+            NODE_ENV
+            PRICE_API_URL
+            PRICE_API_KEY
           file: Dockerfile
           cache-from: type=gha
           cache-to: type=gha,mode=max
