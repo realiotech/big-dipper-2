@@ -32,4 +32,4 @@ COPY . .
 
 RUN npm run build:next
 EXPOSE ${PORT}
-ENTRYPOINT ["./bin/docker_run.sh"]
+ENTRYPOINT ["npm", "run", "start"]
