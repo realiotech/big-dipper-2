@@ -7,6 +7,7 @@ ARG NEXT_PUBLIC_RPC_WEBSOCKET
 ARG NEXT_PUBLIC_CHAIN_TYPE
 ARG PRICE_API_URL
 ARG PRICE_API_KEY
+ARG NODE_ENV
 
 # Install git for ui and internal packages
 RUN apk add --no-cache git
