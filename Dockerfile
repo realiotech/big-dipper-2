@@ -24,5 +24,6 @@ RUN npx browserslist@latest --update-db
 COPY . .
 
 # RUN npm run build:next
+RUN npm run build:next
 EXPOSE ${PORT}
 ENTRYPOINT ["npm", "run", "start"]
