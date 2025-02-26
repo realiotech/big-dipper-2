@@ -69,9 +69,6 @@ jobs:
             NODE_ENV
             PRICE_API_URL
             PRICE_API_KEY
-          file: Dockerfile
-          cache-from: type=gha
-          cache-to: type=gha,mode=max
   update-gitops:
     needs: build
     environment: realio-testnet
