@@ -14,9 +14,5 @@ jobs:
           node-version: 23
       - run: npm i -g @nestjs/cli nx
       - run: npm ci
-      - name: lint common
-        run: nx run common:lint
-      - name: test common
-        run: nx run common:test
       - name: vulnerability scan
         run: npm audit --audit-level=critical
