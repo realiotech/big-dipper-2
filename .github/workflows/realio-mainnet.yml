@@ -38,23 +38,23 @@ jobs:
             ${{ github.workflow }}-buildx-${{ github.sha }}
             ${{ github.workflow }}-buildx-
             ${{ github.workflow }}
-            - uses: 1password/install-cli-action@v1
-            - name: Load REALIO_PUBLIC vars
-              env:
-                OP_VAULT: gitops-prod
-                OP_ITEM: bigdipper-envvars
-                OP_SERVICE_ACCOUNT_TOKEN: ${{ secrets.OP_SERVICE_ACCOUNT_TOKEN }}
-              run: |
-                op item get $OP_ITEM --vault $OP_VAULT --reveal --format json | jq '.fields[].label' | tail -n +3 | while IFS= read -r line; do
-                  value=$(op item get $OP_ITEM --vault $OP_VAULT --fields $line --reveal)
-                  if [ $? -ne 0 ]; then
-                    echo "Failed to retrieve $line"
-                    exit 1
-                  fi
-                  echo "::add-mask::$value"
-                  echo "$line=$value" | tr -d '"' >> $GITHUB_ENV
-                  echo "$line set" | tr -d '"'
-                done
+      - uses: 1password/install-cli-action@v1
+      - name: Load REALIO_PUBLIC vars
+        env:
+          OP_VAULT: gitops-prod
+          OP_ITEM: bigdipper-envvars
+          OP_SERVICE_ACCOUNT_TOKEN: ${{ secrets.OP_SERVICE_ACCOUNT_TOKEN }}
+        run: |
+          op item get $OP_ITEM --vault $OP_VAULT --reveal --format json | jq '.fields[].label' | tail -n +3 | while IFS= read -r line; do
+            value=$(op item get $OP_ITEM --vault $OP_VAULT --fields $line --reveal)
+            if [ $? -ne 0 ]; then
+              echo "Failed to retrieve $line"
+              exit 1
+            fi
+            echo "::add-mask::$value"
+            echo "$line=$value" | tr -d '"' >> $GITHUB_ENV
+            echo "$line set" | tr -d '"'
+          done
       - name: Build and push
         uses: docker/build-push-action@v5
         with:
