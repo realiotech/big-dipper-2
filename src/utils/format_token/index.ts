@@ -50,6 +50,9 @@ export const formatTokenByExponent = (value: number | string | undefined, expone
   if (typeof value !== 'string' && typeof value !== 'number') {
     value = '0';
   }
+  if (value == 'NaN') {
+    value = '0';
+  }
 
   if (typeof value === 'number') {
     value = `${value}`;
