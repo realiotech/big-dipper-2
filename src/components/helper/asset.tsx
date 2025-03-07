@@ -9,7 +9,7 @@ const Asset = ({
 }) => {
     return (
         <Link asChild colorPalette='blue'>
-            <NextLink href={`/assets/${denom}`}>
+            <NextLink href={`/assets/${denom?.substring(1)}`}>
                 <Tooltip content={denom}>
                     <Flex align={'center'} gap='2'>
                         <Avatar src={image} alt={name} size='xs' />
