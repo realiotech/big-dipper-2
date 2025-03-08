@@ -1,0 +1,98 @@
+name: realio-testnet
+
+on:
+  push:
+    branches:
+      - chains/realio-testnet
+    paths:
+      - '*'
+      - '**'
+      - '!.github/**'
+      - '!README.md'
+      - '!.gitignore'
+  workflow_dispatch:
+
+jobs:
+  build:
+    runs-on: [ubuntu-latest]
+    environment: realio-testnet
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+      - name: Set up QEMU
+        uses: docker/setup-qemu-action@v3
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v3
+      - name: Login to Registry
+        uses: docker/login-action@v3
+        with:
+          registry: ${{ secrets.IMAGE_REGISTRY_URL }}
+          username: ${{ secrets.IMAGE_REGISTRY_USER }}
+          password: ${{ secrets.ACCESS_TOKEN }}
+      - name: GitHub Actions Cache Docker layers
+        uses: actions/cache@v3
+        with:
+          path: /tmp/.buildx-cache
+          key: ${{ github.workflow }}-buildx-${{ github.sha }}
+          restore-keys: |
+            ${{ github.workflow }}-buildx-${{ github.sha }}
+            ${{ github.workflow }}
+      - uses: 1password/install-cli-action@v1
+      - name: Load REALIO_PUBLIC vars
+        env:
+          OP_VAULT: gitops-stage
+          OP_ITEM: bigdipper-envvars
+          OP_SERVICE_ACCOUNT_TOKEN: ${{ secrets.OP_SERVICE_ACCOUNT_TOKEN }}
+        run: |
+          op item get $OP_ITEM --vault $OP_VAULT --reveal --format json | jq '.fields[].label' | tail -n +3 | while IFS= read -r line; do
+            value=$(op item get $OP_ITEM --vault $OP_VAULT --fields $line --reveal)
+            if [ $? -ne 0 ]; then
+              echo "Failed to retrieve $line"
+              exit 1
+            fi
+            echo "::add-mask::$value"
+            echo "$line=$value" | tr -d '"' >> $GITHUB_ENV
+            echo "$line set" | tr -d '"'
+          done
+      - name: Build and push
+        uses: docker/build-push-action@v5
+        with:
+          push: true
+          tags: ${{ secrets.IMAGE_REGISTRY_URL }}/${{ secrets.IMAGE_REPO }}/${{ secrets.IMAGE_NAME }}:${{ github.sha }}-${{ github.run_number }}-${{ github.run_attempt }}
+          build-args: |
+            PORT
+            NEXT_PUBLIC_GRAPHQL_WS
+            NEXT_PUBLIC_GRAPHQL_URL
+            NEXT_PUBLIC_RPC_WEBSOCKET
+            NEXT_PUBLIC_CHAIN_TYPE
+            NODE_ENV
+            PRICE_API_URL
+            PRICE_API_KEY
+          file: Dockerfile
+          cache-from: type=gha
+          cache-to: type=gha,mode=max
+  update-gitops:
+    needs: build
+    environment: realio-testnet
+    runs-on: [ubuntu-latest]
+    steps:
+    - name: Checkout gitops repository
+      uses: actions/checkout@v4
+      with:
+        token: ${{ secrets.GITOPS_PAT }}
+        repository: ${{ secrets.GITOPS_REPO }}
+        ref: main
+    - name: Update manifest
+      run: |
+        if cat ${{ secrets.MANIFEST_PATH }} | grep ${{ github.sha }}-${{ github.run_number }}-${{ github.run_attempt }}; then
+          echo "Image tag already exists in the manifest"
+          exit 0
+        fi
+        sed -i 's|image: .*$|image: '"${{ secrets.IMAGE_REGISTRY_URL }}/${{ secrets.IMAGE_REPO }}/${{ secrets.IMAGE_NAME }}:${{ github.sha }}-${{ github.run_number }}-${{ github.run_attempt }}"'|' ${{ secrets.MANIFEST_PATH }}
+        git config user.name 'github-actions-bot'
+        git config user.email '${{ secrets.IMAGE_REGISTRY_USER }}'
+        git add .
+        git commit -m 'Update image tag to ${{ github.sha }}-${{ github.run_number }}-${{ github.run_attempt }}'
+        git push
+    env:
+      GITHUB_TOKEN: ${{ secrets.GITOPS_PAT }}
