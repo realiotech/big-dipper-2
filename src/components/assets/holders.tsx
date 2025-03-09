@@ -87,8 +87,6 @@ export default function Holders({ denom }) {
     setSortingKey(key);
     handleSort(sortDirection == "asc" ? "desc" : "asc");
   };
-  console.log(holderState);
-  console.log(chainConfig);
 
   return (
     <Box bg={{ base: "#FAFBFC", _dark: "#0F0F0F" }} overflow={"auto"} p={6}>

@@ -9,6 +9,7 @@ import { TxRaw } from "cosmjs-types/cosmos/tx/v1beta1/tx";
 import { Int53 } from "@cosmjs/math";
 import { fromBase64 } from "@cosmjs/encoding";
 import { SigningStargateClient, StargateClient } from "@cosmjs/stargate";
+import Big from "big.js";
 
 
 export const createDelegateTx = async ({
@@ -63,7 +64,7 @@ export const createDelegateTx = async ({
           validatorAddress: validator,
           amount: {
             denom: denom,
-            amount: (parseFloat(amount) * 10 ** decimal).toString(),
+            amount: Big(amount).times(Big(10).pow(decimal)).toFixed(0), 
           },
         }),
       };

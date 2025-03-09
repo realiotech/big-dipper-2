@@ -68,7 +68,7 @@ export default function Footer() {
           </Text>
           <Link
             color={{ base: "black", _dark: "white" }}
-            href="#"
+            href="/assets/lmx"
             _hover={{ color: "#173DA6" }}
             fontWeight={400}
             fontSize={"14px"}
@@ -76,7 +76,7 @@ export default function Footer() {
             Liquid Mining Fund
           </Link>
           <Link
-            href="#"
+            href="/assets/rio"
             _hover={{ color: "#173DA6" }}
             fontWeight={400}
             color={{ base: "black", _dark: "white" }}
@@ -85,7 +85,7 @@ export default function Footer() {
             Realio Network Token
           </Link>
           <Link
-            href="#"
+            href="/assets/rst"
             _hover={{ color: "#173DA6" }}
             fontWeight={400}
             color={{ base: "black", _dark: "white" }}
