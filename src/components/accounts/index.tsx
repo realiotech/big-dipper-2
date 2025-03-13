@@ -1,9 +1,6 @@
 import { Box, Text, Flex, VStack, Center } from "@chakra-ui/react";
 import { useBreakpointValue } from "@chakra-ui/react";
-import {
-  ClipboardRoot,
-  ClipboardIconButton,
-} from "@/components/ui/clipboard"
+import { ClipboardRoot, ClipboardIconButton } from "@/components/ui/clipboard";
 import Transactions from "./transactions";
 import { useOverview } from "./hooks";
 import Assets from "./assets";
@@ -14,31 +11,32 @@ import { useStaking } from "./hooks";
 import { useMemo } from "react";
 import { useRecoilValue } from "recoil";
 import { readAssets } from "@/recoil/asset";
+import Big from "big.js";
 
 export default function AccountDetail() {
   const { balances, address, evmAddress, completed } = useOverview();
-  const { assetMap, loaded } = useRecoilValue(readAssets)
+  const { assetMap, loaded } = useRecoilValue(readAssets);
   const { delegations, unbondings, handleSort, sortDirection } =
     useStaking(address);
   const isMobile = useBreakpointValue({ base: true, lg: false });
 
   const createFreshBalanceMap = () => {
     return {
-      "ario": {
+      ario: {
         spendable: 0.0,
         delegated: 0.0,
-        unbonding: 0.0
+        unbonding: 0.0,
       },
-      "arst": {
+      arst: {
         spendable: 0.0,
         delegated: 0.0,
-        unbonding: 0.0
+        unbonding: 0.0,
       },
-      "almx": {
+      almx: {
         spendable: 0.0,
         delegated: 0.0,
-        unbonding: 0.0
-      }
+        unbonding: 0.0,
+      },
     };
   };
 
@@ -47,36 +45,54 @@ export default function AccountDetail() {
       return [];
     }
 
-    // Create a completely new balance map each time
     const balanceMap = createFreshBalanceMap();
 
-    // Process balances with fresh starting values
-    balances.forEach(item => {
+    balances.forEach((item) => {
       if (balanceMap[item.denom]) {
-        balanceMap[item.denom].spendable = parseFloat(
-          formatTokenByExponent(item?.amount, assetMap[item.denom]?.decimals)
+        balanceMap[item.denom].spendable = formatTokenByExponent(
+          item?.amount,
+          assetMap[item.denom]?.decimals
         );
       }
     });
 
-
-    // Process delegations with fresh starting values
-    delegations.data.forEach(item => {
-      balanceMap[item.denom].delegated = parseFloat(
-        formatTokenByExponent(item?.amount, assetMap[item.denom]?.decimals)
-      );
+    delegations.data.forEach((item) => {
+      if (balanceMap[item.denom]) {
+        balanceMap[item.denom].delegated = new Big(
+          balanceMap[item.denom].delegated || "0"
+        )
+          .plus(
+            new Big(
+              formatTokenByExponent(
+                item?.amount,
+                assetMap[item.denom]?.decimals
+              ) || "0"
+            )
+          )
+          .toString();
+      }
     });
 
-    // Process unbondings with fresh starting values
-    unbondings.data.forEach(item => {
-      balanceMap[item.denom].unbonding = parseFloat(
-        formatTokenByExponent(item?.amount, assetMap[item.denom]?.decimals)
-      );
+    unbondings.data.forEach((item) => {
+      if (balanceMap[item.denom]) {
+        balanceMap[item.denom].unbonding = new Big(
+          balanceMap[item.denom].unbonding || "0"
+        )
+          .plus(
+            new Big(
+              formatTokenByExponent(
+                item?.amount,
+                assetMap[item.denom]?.decimals
+              ) || "0"
+            )
+          )
+          .toString();
+      }
     });
-
+    
     return Object.entries(balanceMap).map(([denom, data]) => ({
       denom,
-      ...data
+      ...data,
     }));
   }, [balances, delegations, unbondings, loaded, completed]);
 
@@ -97,29 +113,38 @@ export default function AccountDetail() {
               Portfolio
             </Text>
             <VStack gap={0} align={"left"}>
-              <Flex gap={2} alignItems={'center'}>
-                <Text>Address: {" "}
+              <Flex gap={2} alignItems={"center"}>
+                <Text>
+                  Address:{" "}
                   <Text as="span">
-                    {isMobile ? getMiddleEllipsis(address, { beginning: 9, ending: 20 }) : address}
+                    {isMobile
+                      ? getMiddleEllipsis(address, { beginning: 9, ending: 20 })
+                      : address}
                   </Text>
                 </Text>
                 <Center>
                   <ClipboardRoot value={address}>
-                    <ClipboardIconButton variant={'plain'} />
+                    <ClipboardIconButton variant={"plain"} />
                   </ClipboardRoot>
                 </Center>
               </Flex>
             </VStack>
             <VStack gap={0} align={"left"} mb={3}>
-              <Flex gap={2} alignItems={'center'}>
-                <Text>EVM address: {" "}
+              <Flex gap={2} alignItems={"center"}>
+                <Text>
+                  EVM address:{" "}
                   <Text as="span">
-                    {isMobile ? getMiddleEllipsis(evmAddress, { beginning: 9, ending: 20 }) : evmAddress}
+                    {isMobile
+                      ? getMiddleEllipsis(evmAddress, {
+                          beginning: 9,
+                          ending: 20,
+                        })
+                      : evmAddress}
                   </Text>
                 </Text>
                 <Center>
                   <ClipboardRoot value={evmAddress}>
-                    <ClipboardIconButton variant={'plain'} />
+                    <ClipboardIconButton variant={"plain"} />
                   </ClipboardRoot>
                 </Center>
               </Flex>
@@ -129,13 +154,13 @@ export default function AccountDetail() {
         </Flex>
         <AssetChart balances={balancesMerged} />
       </Flex>
-      <Staking 
+      <Transactions />
+      <Staking
         delegations={delegations}
         unbondings={unbondings}
-        handleSort={handleSort} 
+        handleSort={handleSort}
         sortDirection={sortDirection}
       />
-      <Transactions />
     </Box>
   );
 }

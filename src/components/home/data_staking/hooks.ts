@@ -9,7 +9,7 @@ import numeral from 'numeral';
 import { formatToken, formatTokenByExponent } from '@/utils';
 
 export const useDataStaking = () => {
-  const [state, setState] = useState<{
+  const [stakingState, setState] = useState<{
     inflation: number;
     communityPool: string;
     validators: {
@@ -60,6 +60,6 @@ export const useDataStaking = () => {
   };
 
   return {
-    state,
+    stakingState,
   };
 };

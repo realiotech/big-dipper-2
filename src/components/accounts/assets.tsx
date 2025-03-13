@@ -10,12 +10,18 @@ import {
 import { useRecoilValue } from "recoil";
 import NoData from "../helper/nodata";
 import { Avatar } from "../ui/avatar";
+import Big from "big.js";
 import numeral from "numeral";
 
-const AssetItem = ({metadata, asset}) => {
-    const totalAmt = asset?.spendable + asset?.delegated + asset?.unbonding
-    const amountStr = numeral(totalAmt).format('0,0.000000')
-    const amountInUsd = numeral(totalAmt * metadata?.price).format('0,0.00')
+const AssetItem = ({ metadata, asset }) => {
+    // Convert all values to numbers safely
+    const totalAmtBig = new Big(parseFloat(asset?.spendable || "0"))
+        .plus(parseFloat(asset?.delegated || "0"))
+        .plus(parseFloat(asset?.unbonding || "0"));
+
+    const amountStr = totalAmtBig.toFixed(6); // Fixed decimal format
+    const amountInUsd = totalAmtBig.times(new Big(metadata?.price || "0")).toFixed(2);
+
     return (
         <Flex
             bg={{ base: "white", _dark: "black" }}
@@ -31,7 +37,7 @@ const AssetItem = ({metadata, asset}) => {
                         {metadata?.symbol}
                     </Text>
                     <Text fontSize="sm" color="green.500">
-                        {amountStr} (${amountInUsd})
+                        {numeral(amountStr).format('0,0.00')} (${numeral(amountInUsd).format('0,0.00')})
                     </Text>
                 </Box>
             </HStack>
@@ -40,17 +46,16 @@ const AssetItem = ({metadata, asset}) => {
                     Price
                 </Text>
                 <Text fontWeight={600} fontSize={'16px'}>
-                    ${numeral(metadata?.price).format('0.00')}
+                    ${numeral(metadata?.price || 0).format('0.00')}
                 </Text>
             </Box>
-
         </Flex>
-    )
-}
+    );
+};
+
 
 export default function Assets({ balances }) {
     const { assetMap } = useRecoilValue(readAssets)
-
     return (
         <Box
             bg={{ base: "#FAFBFC", _dark: "#0F0F0F" }}

@@ -77,10 +77,10 @@ const DelegationItem = ({ item, asset, displayMode }) => {
         {numeral(item.bond_weight).format("0.0")}
       </Table.Cell>
       <Table.Cell borderBottomColor={{ base: 'gray.200', _dark: 'gray.700' }} display={{ base: "none", lg: "table-cell" }}>
-        {numeral(votingPower).format("0,0.00")}
+        {numeral(votingPower).format("0,0.00") === "NaN" ? "0.00" : numeral(votingPower).format("0,0.00")} 
       </Table.Cell>
       <Table.Cell borderBottomColor={{ base: 'gray.200', _dark: 'gray.700' }}>
-        {numeral(formatTokenByExponent(item.amount, assetDetail?.decimals)).format("0,0.00")}{" "}
+        {numeral(formatTokenByExponent(item.amount, assetDetail?.decimals)).format("0,0.00") === "NaN" ? "0.00" : numeral(formatTokenByExponent(item.amount, assetDetail?.decimals)).format("0,0.00") }{" "}
       </Table.Cell>
       <Table.Cell borderBottomColor={{ base: 'gray.200', _dark: 'gray.700' }}>
         <Asset
