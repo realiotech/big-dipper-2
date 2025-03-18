@@ -1,34 +1,60 @@
-import { GridItem, Text } from "@chakra-ui/react";
+import { Flex, GridItem, Text } from "@chakra-ui/react";
 import { useDataBlocks } from "./hooks";
+import { useDataStaking } from "../data_staking/hooks";
+import { IoMdInformationCircleOutline } from "react-icons/io";
+import { Tooltip } from "@/components/ui/tooltip";
 import numeral from "numeral";
 
 export default function DataBlocks() {
-  const { state } = useDataBlocks();
+  const { blockState } = useDataBlocks();
+  const { stakingState } = useDataStaking();
 
   return (
     <GridItem colSpan={2}>
-      <GridItem borderRadius="20px" bgColor={{ base: "#FAFBFC", _dark: "#0F0F0F" }} py="5" px="8" mb={3}>
+      <GridItem
+        borderRadius="20px"
+        bgColor={{ base: "#FAFBFC", _dark: "#0F0F0F" }}
+        py="5"
+        px="8"
+        mb={3}
+      >
         <Text fontSize="14px" pb="3">
           Latest Block
         </Text>
         <Text fontSize="32px" fontWeight={600}>
-          {numeral(state.blockHeight).format("0,0")}
+          {numeral(blockState.blockHeight).format("0,0")}
         </Text>
       </GridItem>
-      <GridItem borderRadius="20px" bgColor={{ base: "#FAFBFC", _dark: "#0F0F0F" }} py="5" px="8" mb={3}>
+      <GridItem
+        borderRadius="20px"
+        bgColor={{ base: "#FAFBFC", _dark: "#0F0F0F" }}
+        py="5"
+        px="8"
+        mb={3}
+      >
         <Text fontSize="14px" pb="3">
-          Total Transactions
+          Active Validators
         </Text>
         <Text fontSize="32px" fontWeight={600}>
-          {numeral(state.txsCount).format("0,0")}
+          {numeral(stakingState.validators.active).format("0,0")}
         </Text>
       </GridItem>
-      <GridItem borderRadius="20px" bgColor={{ base: "#FAFBFC", _dark: "#0F0F0F" }} py="5" px="8">
+      <GridItem
+        borderRadius="20px"
+        bgColor={{ base: "#FAFBFC", _dark: "#0F0F0F" }}
+        py="5"
+        px="8"
+      >
         <Text fontSize="14px" pb="3">
-          Average Block Time
+          <Flex gap='2' align="center">
+          Inflation
+          <Tooltip positioning={{ placement: "right-end" }} showArrow content={`${numeral(stakingState.inflation).format("0.0")}% of unminted RIO supply`}>
+                <IoMdInformationCircleOutline />
+              </Tooltip>
+          </Flex>
         </Text>
         <Text fontSize="32px" fontWeight={600}>
-          {numeral(state.blockTime).format("0.00")} s
+            {numeral(stakingState.inflation).format("0.0")}%
         </Text>
       </GridItem>
     </GridItem>
