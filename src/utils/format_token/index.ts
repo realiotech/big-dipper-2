@@ -47,20 +47,29 @@ export const formatToken = (value: number | string | null | undefined, denom = '
  * @returns string value of formatted
  */
 export const formatTokenByExponent = (value: number | string | undefined, exponent = 0): string => {
-  if (typeof value !== 'string' && typeof value !== 'number') {
-    value = '0';
+  if (value === undefined || value === null || value === '' || isNaN(Number(value))) {
+    return '0';
   }
   if (value == 'NaN') {
     value = '0';
   }
 
-  if (typeof value === 'number') {
-    value = `${value}`;
-  }
+  try {
+    const bigValue = new Big(value);
+    const ratio = new Big(10).pow(exponent);
 
-  const ratio = Big(10 ** exponent);
-  const results = !ratio.eq(0) ? Big(value).div(ratio).toFixed(exponent) : '0';
-  return results;
+    if (ratio.eq(0)) {
+      return '0';
+    }
+
+    // Divide and format to prevent scientific notation
+    const result = bigValue.div(ratio).toFixed(exponent);
+
+    return result.replace(/\.?0+$/, ''); // Removes trailing zeros
+  } catch (error) {
+    console.error(`Invalid number format: ${value}`, error);
+    return '0';
+  }
 };
 
 /**

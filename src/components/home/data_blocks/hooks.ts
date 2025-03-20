@@ -14,7 +14,7 @@ import {
 import { chainConfig } from '@/configs';
 
 export const useDataBlocks = () => {
-  const [state, setState] = useState<{
+  const [blockState, setState] = useState<{
     blockHeight: number;
     blockTime: number;
     txsCount: number;
@@ -50,7 +50,7 @@ export const useDataBlocks = () => {
   });
 
   const formatAverageBlockTime = (data: AverageBlockTimeQuery) => {
-    return data.averageBlockTime[0]?.averageTime ?? state.blockTime;
+    return data.averageBlockTime[0]?.averageTime ?? blockState.blockTime;
   };
   // ====================================
   // validators
@@ -65,6 +65,6 @@ export const useDataBlocks = () => {
   });
 
   return {
-    state,
+    blockState,
   };
 };

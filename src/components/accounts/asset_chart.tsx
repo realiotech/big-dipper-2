@@ -17,6 +17,7 @@ import { backgroundColors, convertToChartData } from "./utils";
 import Loading from "../helper/loading";
 import { AssetBalanceDetail } from "./types";
 import numeral from "numeral";
+import Big from "big.js";
 ChartJS.register(ArcElement, Tooltip, Legend);
 
 type Props = {
@@ -36,7 +37,22 @@ const AssetChart: React.FC<Props> = ({ balances }) => {
             <Loading />
         </Box>
     )
-
+    const calculateSafeValue = (value: string | number | undefined, price: number | undefined, decimalPlaces = 2): string => {
+        if (!value || isNaN(Number(value)) || !price || isNaN(Number(price))) {
+            return "0.00"; 
+        }
+    
+        try {
+            const bigValue = new Big(value);
+            const bigPrice = new Big(price);
+            const result = bigValue.times(bigPrice); 
+            return result.toFixed(decimalPlaces);
+        } catch (error) {
+            console.error("Error in calculateSafeValue:", error);
+            return "0.00"; 
+        }
+    };
+    
     if (!assetMap || !balances?.length) return (
         <Box
             bg={{ base: "#FAFBFC", _dark: "#0F0F0F" }}
@@ -99,7 +115,7 @@ const AssetChart: React.FC<Props> = ({ balances }) => {
                                         <Text>
                                             Spendable - {" "}
                                             <Link fontWeight={600}>
-                                                ${numeral(item.spendable * assetMap[item.denom].price).format('0,0.00')}
+                                            ${numeral(calculateSafeValue(item.spendable, assetMap[item.denom]?.price)).format('0,0.00')}
                                             </Link>{" "}
                                         </Text>
                                     </HStack>
@@ -108,7 +124,7 @@ const AssetChart: React.FC<Props> = ({ balances }) => {
                                         <Text>
                                             Delegated - {" "}
                                             <Link fontWeight={600}>
-                                                ${numeral(item.delegated * assetMap[item.denom].price).format('0,0.00')}
+                                            ${numeral(calculateSafeValue(item.delegated, assetMap[item.denom]?.price)).format('0,0.00')}
                                             </Link>{" "}
                                         </Text>
                                     </HStack>
@@ -117,7 +133,7 @@ const AssetChart: React.FC<Props> = ({ balances }) => {
                                         <Text>
                                             Unbonding - {" "}
                                             <Link fontWeight={600}>
-                                                ${numeral(item.unbonding * assetMap[item.denom].price).format('0,0.00')}
+                                            ${numeral(calculateSafeValue(item.unbonding, assetMap[item.denom]?.price)).format('0,0.00')}
                                             </Link>{" "}
                                         </Text>
                                     </HStack>

@@ -19,7 +19,8 @@ import Holders from "./holders";
 
 const AssetDetails = () => {
   const router = useRouter();
-  const denom = router?.query?.denom as string
+  const routerName = router?.query?.denom as string;
+  const denom = ("a"+routerName) as string;
   const [selectedTab, setSelectedTab] = useState("holders");
   const assetDetail = useRecoilValue(readAsset(denom));
 

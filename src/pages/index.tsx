@@ -11,10 +11,10 @@ export default function Home() {
     <SimpleGrid columns={{ base: 2, lg: 4 }} gap='10'>
       <FeaturedBlockchains/>
       <DataBlocks />
-      <DataStaking />
+      <Transactions />
       <StakingChart/>
       <Blocks />
-      <Transactions />
+      <DataStaking />
     </SimpleGrid>
   );
 }

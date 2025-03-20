@@ -5,7 +5,7 @@ import { OverviewState } from "./type";
 
 export function useOverview() {
   const router = useRouter()
-  const denom = router?.query?.denom as string
+  const denom = ("a"+router?.query?.denom) as string
   const [state, setState] = useState<OverviewState>({ denom, supply: '0', holders: 0 })
 
   useAssetOverviewQuery({

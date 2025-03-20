@@ -29,6 +29,7 @@ import { AiOutlineLoading } from "react-icons/ai";
 import styles from "../layout/wallet-popover.module.css";
 import openNotification from "@/utils/notifications";
 import { ToastContainer } from "react-toastify";
+import Big from "big.js";
 
 
 export const DelegateDialog = ({
@@ -49,6 +50,8 @@ export const DelegateDialog = ({
     gas: "300000",
     memo: "realio.network",
   });
+    const GAS_PRICE = Big(0.000000005); // Adjust this if needed    
+    const estimatedFee = formData.gas ? Big(formData.gas).times(GAS_PRICE).toFixed(6) : "0.000000";
 
   useEffect(() => {
     if (operatorAddress) {
@@ -204,16 +207,19 @@ export const DelegateDialog = ({
 
                 {/* Gas */}
                 <Box>
-                  <Text fontSize="sm" mb={1}>
-                    Gas
-                  </Text>
-                  <Input
-                    name="gas"
-                    placeholder="200000"
-                    value={formData.gas}
-                    onChange={handleChange}
-                  />
-                </Box>
+  <Text fontSize="sm" mb={1}>
+    Gas
+  </Text>
+  <Input
+    name="gas"
+    placeholder="300000"
+    value={formData.gas}
+    onChange={handleChange}
+  />
+  <Text fontSize="xs" mt={1} color="gray.500">
+    Estimated Fee: {estimatedFee.toString()} RIO (Gas Price: {GAS_PRICE.toFixed(10).toString()} RIO per unit)
+  </Text>
+</Box>
 
                 {/* Memo */}
                 <Box>
