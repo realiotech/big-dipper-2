@@ -91,8 +91,7 @@ export const useSearchBar = (t: TFunction) => {
                     } else {
                         toast<string>(t('common:invalidAddress'));
                     }
-                }
-                else if (ASSET_SEARCH.includes(parsedValue.toLocaleLowerCase())) {
+                } else if (ASSET_SEARCH.includes(parsedValue.toLocaleLowerCase())) {
                     let valueLower = parsedValue.toLocaleLowerCase()
                     if (assetRegex.test(valueLower)) {
                         router.push(`/assets/${valueLower}`);
