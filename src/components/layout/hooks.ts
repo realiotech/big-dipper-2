@@ -16,10 +16,13 @@ import numeral from 'numeral';
 import { toast } from 'react-toastify';
 import { useRecoilCallback } from 'recoil';
 import { ASSET_SEARCH } from '@/utils/utils';
+import { ethToRealionetwork } from '@realiotech/address-generator';
 const { extra, prefix } = chainConfig;
 const consensusRegex = new RegExp(`^(${prefix.consensus})`);
 const validatorRegex = new RegExp(`^(${prefix.validator})`);
 const userRegex = new RegExp(`^(${prefix.account})`);
+const evmUserRegex = new RegExp(`^(0x)`);
+
 const assetRegex = new RegExp(`^(a)`);
 
 export const useSearch = (callback: (value: string, clear?: () => void) => void) => {
@@ -81,7 +84,14 @@ export const useSearchBar = (t: TFunction) => {
                     } else {
                         toast<string>(t('common:invalidAddress'));
                     }
-                } else if (ASSET_SEARCH.includes(parsedValue.toLocaleLowerCase())){
+                } else if (evmUserRegex.test(parsedValue)) {
+                    let realioAddr = ethToRealionetwork(parsedValue)
+                    if (isValidAddress(realioAddr)) {
+                        router.push(ACCOUNT_DETAILS(realioAddr));
+                    } else {
+                        toast<string>(t('common:invalidAddress'));
+                    }
+                } else if (ASSET_SEARCH.includes(parsedValue.toLocaleLowerCase())) {
                     let valueLower = parsedValue.toLocaleLowerCase()
                     if (assetRegex.test(valueLower)) {
                         router.push(`/assets/${valueLower}`);
