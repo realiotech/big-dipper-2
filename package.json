@@ -24,6 +24,7 @@
     "@emotion/styled": "^11.11.0",
     "@keplr-wallet/types": "^0.12.192",
     "@keplr-wallet/wc-client": "^0.12.192",
+    "@realiotech/address-generator": "^1.0.1",
     "@socialgouv/matomo-next": "^1.6.1",
     "@yarnpkg/pnpify": "^4.0.0-rc.43",
     "add": "^2.0.6",

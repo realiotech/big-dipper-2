@@ -16,8 +16,7 @@ import { convertMsgType } from '@/utils/convert_msg_type';
 import { useRecoilValue } from 'recoil';
 import { readFilter } from '@/recoil/transactions_filter';
 import type { OverviewType } from './types';
-import { convertToEvmAddress } from './utils';
-
+import { realioNetworkToEth } from "@realiotech/address-generator"
 const LIMIT = 50;
 
 const formatTransactions = (data: GetMessagesByAddressQuery): Transactions[] => {
@@ -148,7 +147,7 @@ export function useOverview(): OverviewType {
     address,
     balances,
     completed,
-    evmAddress: convertToEvmAddress(address)
+    evmAddress: realioNetworkToEth(address)
   }
 }
 
