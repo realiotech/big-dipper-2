@@ -21,9 +21,11 @@ const { extra, prefix } = chainConfig;
 const consensusRegex = new RegExp(`^(${prefix.consensus})`);
 const validatorRegex = new RegExp(`^(${prefix.validator})`);
 const userRegex = new RegExp(`^(${prefix.account})`);
-const evmUserRegex = new RegExp(`^(0x)`);
-
+const evmRegex = new RegExp(`^(0x)`);
 const assetRegex = new RegExp(`^(a)`);
+import {
+    useEvmTransactionQuery
+} from '@/graphql/types/general_types';
 
 export const useSearch = (callback: (value: string, clear?: () => void) => void) => {
     const [value, setValue] = useState('');
@@ -59,6 +61,21 @@ export const useSearch = (callback: (value: string, clear?: () => void) => void)
 
 export const useSearchBar = (t: TFunction) => {
     const router = useRouter();
+    const [evmTxHash, setEvmTxHash] = useState<string | null>(null);
+
+    // Handle EVM transaction query
+    useEvmTransactionQuery({
+        variables: { ehash: evmTxHash ?? '' },
+        skip: !evmTxHash,
+        onCompleted: (data) => {
+            if (data?.etransaction?.length === 1) {
+                router.push(TRANSACTION_DETAILS(data.etransaction[0].transaction_hash));
+            } else if (evmTxHash) {
+                toast<string>(t('common:invalidTx'));
+            }
+            setEvmTxHash(null);
+        },
+    });
 
     const handleOnSubmit = useRecoilCallback(
         ({ snapshot }) =>
@@ -84,13 +101,15 @@ export const useSearchBar = (t: TFunction) => {
                     } else {
                         toast<string>(t('common:invalidAddress'));
                     }
-                } else if (evmUserRegex.test(parsedValue)) {
+                } else if (parsedValue.length === 42 && evmRegex.test(parsedValue)) {
                     let realioAddr = ethToRealionetwork(parsedValue)
                     if (isValidAddress(realioAddr)) {
                         router.push(ACCOUNT_DETAILS(realioAddr));
                     } else {
                         toast<string>(t('common:invalidAddress'));
                     }
+                } else if (parsedValue.length === 66 && evmRegex.test(parsedValue)) {
+                    setEvmTxHash(parsedValue); // This will trigger the useEvmTransactionQuery
                 } else if (ASSET_SEARCH.includes(parsedValue.toLocaleLowerCase())) {
                     let valueLower = parsedValue.toLocaleLowerCase()
                     if (assetRegex.test(valueLower)) {
@@ -98,7 +117,6 @@ export const useSearchBar = (t: TFunction) => {
                     } else {
                         router.push(`/assets/a${valueLower}`);
                     }
-
                 } else if (/^@/.test(parsedValue)) {
                     const configProfile = extra.profile;
                     if (!configProfile) {
