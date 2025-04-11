@@ -1,4 +1,4 @@
-query AssetOverview($address: ID!) {
+query EvmAssetOverview($address: ID!) {
   erc20Contract(id: $address) {
     id
     name
@@ -10,7 +10,7 @@ query AssetOverview($address: ID!) {
   }
 }
 
-query AssetHolders($offset: Int = 1, $limit: Int = 10) {
+query EvmAssetHolders($offset: Int = 1, $limit: Int = 10) {
   erc20Balances(orderBy: value, orderDirection: desc, first: $limit, skip: $offset) {
     account {
       id
@@ -19,7 +19,7 @@ query AssetHolders($offset: Int = 1, $limit: Int = 10) {
   }
 }
 
-query AssetTransfers($offset: Int = 0, $limit: Int = 10) {
+query EvmAssetTransfers($offset: Int = 0, $limit: Int = 10) {
   erc20Transfers(where: {
       from_not: null,
       to_not: null
@@ -38,7 +38,7 @@ query AssetTransfers($offset: Int = 0, $limit: Int = 10) {
   }
 }
 
-query AssetMints($offset: Int = 0, $limit: Int = 10) {
+query EvmAssetMints($offset: Int = 0, $limit: Int = 10) {
   erc20Transfers(where: {
       from: null,
       to_not: null
@@ -54,7 +54,7 @@ query AssetMints($offset: Int = 0, $limit: Int = 10) {
   }
 }
 
-query AssetBurns($offset: Int = 0, $limit: Int = 10) {
+query EvmAssetBurns($offset: Int = 0, $limit: Int = 10) {
   erc20Transfers(where: {
       from_not: null,
       to: null

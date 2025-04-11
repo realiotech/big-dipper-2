@@ -1083,48 +1083,48 @@ export enum _SubgraphErrorPolicy_ {
   Deny = 'deny'
 }
 
-export type AssetOverviewQueryVariables = Exact<{
+export type EvmAssetOverviewQueryVariables = Exact<{
   address: Scalars['ID'];
 }>;
 
 
-export type AssetOverviewQuery = { erc20Contract?: { __typename?: 'ERC20Contract', id: any, name?: string | null, symbol?: string | null, decimals: number, totalSupply: { __typename?: 'ERC20Balance', value: any } } | null };
+export type EvmAssetOverviewQuery = { erc20Contract?: { __typename?: 'ERC20Contract', id: any, name?: string | null, symbol?: string | null, decimals: number, totalSupply: { __typename?: 'ERC20Balance', value: any } } | null };
 
-export type AssetHoldersQueryVariables = Exact<{
+export type EvmAssetHoldersQueryVariables = Exact<{
   offset?: InputMaybe<Scalars['Int']>;
   limit?: InputMaybe<Scalars['Int']>;
 }>;
 
 
-export type AssetHoldersQuery = { erc20Balances: Array<{ __typename?: 'ERC20Balance', value: any, account?: { __typename?: 'Account', id: any } | null }> };
+export type EvmAssetHoldersQuery = { erc20Balances: Array<{ __typename?: 'ERC20Balance', value: any, account?: { __typename?: 'Account', id: any } | null }> };
 
-export type AssetTransfersQueryVariables = Exact<{
+export type EvmAssetTransfersQueryVariables = Exact<{
   offset?: InputMaybe<Scalars['Int']>;
   limit?: InputMaybe<Scalars['Int']>;
 }>;
 
 
-export type AssetTransfersQuery = { erc20Transfers: Array<{ __typename?: 'ERC20Transfer', value: any, timestamp: any, from?: { __typename?: 'Account', id: any } | null, to?: { __typename?: 'Account', id: any } | null, transaction: { __typename?: 'Transaction', id: string } }> };
+export type EvmAssetTransfersQuery = { erc20Transfers: Array<{ __typename?: 'ERC20Transfer', value: any, timestamp: any, from?: { __typename?: 'Account', id: any } | null, to?: { __typename?: 'Account', id: any } | null, transaction: { __typename?: 'Transaction', id: string } }> };
 
-export type AssetMintsQueryVariables = Exact<{
+export type EvmAssetMintsQueryVariables = Exact<{
   offset?: InputMaybe<Scalars['Int']>;
   limit?: InputMaybe<Scalars['Int']>;
 }>;
 
 
-export type AssetMintsQuery = { erc20Transfers: Array<{ __typename?: 'ERC20Transfer', value: any, timestamp: any, to?: { __typename?: 'Account', id: any } | null, transaction: { __typename?: 'Transaction', id: string } }> };
+export type EvmAssetMintsQuery = { erc20Transfers: Array<{ __typename?: 'ERC20Transfer', value: any, timestamp: any, to?: { __typename?: 'Account', id: any } | null, transaction: { __typename?: 'Transaction', id: string } }> };
 
-export type AssetBurnsQueryVariables = Exact<{
+export type EvmAssetBurnsQueryVariables = Exact<{
   offset?: InputMaybe<Scalars['Int']>;
   limit?: InputMaybe<Scalars['Int']>;
 }>;
 
 
-export type AssetBurnsQuery = { erc20Transfers: Array<{ __typename?: 'ERC20Transfer', value: any, timestamp: any, from?: { __typename?: 'Account', id: any } | null, transaction: { __typename?: 'Transaction', id: string } }> };
+export type EvmAssetBurnsQuery = { erc20Transfers: Array<{ __typename?: 'ERC20Transfer', value: any, timestamp: any, from?: { __typename?: 'Account', id: any } | null, transaction: { __typename?: 'Transaction', id: string } }> };
 
 
-export const AssetOverviewDocument = gql`
-    query AssetOverview($address: ID!) {
+export const EvmAssetOverviewDocument = gql`
+    query EvmAssetOverview($address: ID!) {
   erc20Contract(id: $address) {
     id
     name
@@ -1138,34 +1138,34 @@ export const AssetOverviewDocument = gql`
     `;
 
 /**
- * __useAssetOverviewQuery__
+ * __useEvmAssetOverviewQuery__
  *
- * To run a query within a React component, call `useAssetOverviewQuery` and pass it any options that fit your needs.
- * When your component renders, `useAssetOverviewQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * To run a query within a React component, call `useEvmAssetOverviewQuery` and pass it any options that fit your needs.
+ * When your component renders, `useEvmAssetOverviewQuery` returns an object from Apollo Client that contains loading, error, and data properties
  * you can use to render your UI.
  *
  * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
  *
  * @example
- * const { data, loading, error } = useAssetOverviewQuery({
+ * const { data, loading, error } = useEvmAssetOverviewQuery({
  *   variables: {
  *      address: // value for 'address'
  *   },
  * });
  */
-export function useAssetOverviewQuery(baseOptions: Apollo.QueryHookOptions<AssetOverviewQuery, AssetOverviewQueryVariables>) {
+export function useEvmAssetOverviewQuery(baseOptions: Apollo.QueryHookOptions<EvmAssetOverviewQuery, EvmAssetOverviewQueryVariables>) {
         const options = {...defaultOptions, ...baseOptions}
-        return Apollo.useQuery<AssetOverviewQuery, AssetOverviewQueryVariables>(AssetOverviewDocument, options);
+        return Apollo.useQuery<EvmAssetOverviewQuery, EvmAssetOverviewQueryVariables>(EvmAssetOverviewDocument, options);
       }
-export function useAssetOverviewLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<AssetOverviewQuery, AssetOverviewQueryVariables>) {
+export function useEvmAssetOverviewLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<EvmAssetOverviewQuery, EvmAssetOverviewQueryVariables>) {
           const options = {...defaultOptions, ...baseOptions}
-          return Apollo.useLazyQuery<AssetOverviewQuery, AssetOverviewQueryVariables>(AssetOverviewDocument, options);
+          return Apollo.useLazyQuery<EvmAssetOverviewQuery, EvmAssetOverviewQueryVariables>(EvmAssetOverviewDocument, options);
         }
-export type AssetOverviewQueryHookResult = ReturnType<typeof useAssetOverviewQuery>;
-export type AssetOverviewLazyQueryHookResult = ReturnType<typeof useAssetOverviewLazyQuery>;
-export type AssetOverviewQueryResult = Apollo.QueryResult<AssetOverviewQuery, AssetOverviewQueryVariables>;
-export const AssetHoldersDocument = gql`
-    query AssetHolders($offset: Int = 1, $limit: Int = 10) {
+export type EvmAssetOverviewQueryHookResult = ReturnType<typeof useEvmAssetOverviewQuery>;
+export type EvmAssetOverviewLazyQueryHookResult = ReturnType<typeof useEvmAssetOverviewLazyQuery>;
+export type EvmAssetOverviewQueryResult = Apollo.QueryResult<EvmAssetOverviewQuery, EvmAssetOverviewQueryVariables>;
+export const EvmAssetHoldersDocument = gql`
+    query EvmAssetHolders($offset: Int = 1, $limit: Int = 10) {
   erc20Balances(
     orderBy: value
     orderDirection: desc
@@ -1181,35 +1181,35 @@ export const AssetHoldersDocument = gql`
     `;
 
 /**
- * __useAssetHoldersQuery__
+ * __useEvmAssetHoldersQuery__
  *
- * To run a query within a React component, call `useAssetHoldersQuery` and pass it any options that fit your needs.
- * When your component renders, `useAssetHoldersQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * To run a query within a React component, call `useEvmAssetHoldersQuery` and pass it any options that fit your needs.
+ * When your component renders, `useEvmAssetHoldersQuery` returns an object from Apollo Client that contains loading, error, and data properties
  * you can use to render your UI.
  *
  * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
  *
  * @example
- * const { data, loading, error } = useAssetHoldersQuery({
+ * const { data, loading, error } = useEvmAssetHoldersQuery({
  *   variables: {
  *      offset: // value for 'offset'
  *      limit: // value for 'limit'
  *   },
  * });
  */
-export function useAssetHoldersQuery(baseOptions?: Apollo.QueryHookOptions<AssetHoldersQuery, AssetHoldersQueryVariables>) {
+export function useEvmAssetHoldersQuery(baseOptions?: Apollo.QueryHookOptions<EvmAssetHoldersQuery, EvmAssetHoldersQueryVariables>) {
         const options = {...defaultOptions, ...baseOptions}
-        return Apollo.useQuery<AssetHoldersQuery, AssetHoldersQueryVariables>(AssetHoldersDocument, options);
+        return Apollo.useQuery<EvmAssetHoldersQuery, EvmAssetHoldersQueryVariables>(EvmAssetHoldersDocument, options);
       }
-export function useAssetHoldersLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<AssetHoldersQuery, AssetHoldersQueryVariables>) {
+export function useEvmAssetHoldersLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<EvmAssetHoldersQuery, EvmAssetHoldersQueryVariables>) {
           const options = {...defaultOptions, ...baseOptions}
-          return Apollo.useLazyQuery<AssetHoldersQuery, AssetHoldersQueryVariables>(AssetHoldersDocument, options);
+          return Apollo.useLazyQuery<EvmAssetHoldersQuery, EvmAssetHoldersQueryVariables>(EvmAssetHoldersDocument, options);
         }
-export type AssetHoldersQueryHookResult = ReturnType<typeof useAssetHoldersQuery>;
-export type AssetHoldersLazyQueryHookResult = ReturnType<typeof useAssetHoldersLazyQuery>;
-export type AssetHoldersQueryResult = Apollo.QueryResult<AssetHoldersQuery, AssetHoldersQueryVariables>;
-export const AssetTransfersDocument = gql`
-    query AssetTransfers($offset: Int = 0, $limit: Int = 10) {
+export type EvmAssetHoldersQueryHookResult = ReturnType<typeof useEvmAssetHoldersQuery>;
+export type EvmAssetHoldersLazyQueryHookResult = ReturnType<typeof useEvmAssetHoldersLazyQuery>;
+export type EvmAssetHoldersQueryResult = Apollo.QueryResult<EvmAssetHoldersQuery, EvmAssetHoldersQueryVariables>;
+export const EvmAssetTransfersDocument = gql`
+    query EvmAssetTransfers($offset: Int = 0, $limit: Int = 10) {
   erc20Transfers(
     where: {from_not: null, to_not: null}
     orderBy: timestamp
@@ -1233,35 +1233,35 @@ export const AssetTransfersDocument = gql`
     `;
 
 /**
- * __useAssetTransfersQuery__
+ * __useEvmAssetTransfersQuery__
  *
- * To run a query within a React component, call `useAssetTransfersQuery` and pass it any options that fit your needs.
- * When your component renders, `useAssetTransfersQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * To run a query within a React component, call `useEvmAssetTransfersQuery` and pass it any options that fit your needs.
+ * When your component renders, `useEvmAssetTransfersQuery` returns an object from Apollo Client that contains loading, error, and data properties
  * you can use to render your UI.
  *
  * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
  *
  * @example
- * const { data, loading, error } = useAssetTransfersQuery({
+ * const { data, loading, error } = useEvmAssetTransfersQuery({
  *   variables: {
  *      offset: // value for 'offset'
  *      limit: // value for 'limit'
  *   },
  * });
  */
-export function useAssetTransfersQuery(baseOptions?: Apollo.QueryHookOptions<AssetTransfersQuery, AssetTransfersQueryVariables>) {
+export function useEvmAssetTransfersQuery(baseOptions?: Apollo.QueryHookOptions<EvmAssetTransfersQuery, EvmAssetTransfersQueryVariables>) {
         const options = {...defaultOptions, ...baseOptions}
-        return Apollo.useQuery<AssetTransfersQuery, AssetTransfersQueryVariables>(AssetTransfersDocument, options);
+        return Apollo.useQuery<EvmAssetTransfersQuery, EvmAssetTransfersQueryVariables>(EvmAssetTransfersDocument, options);
       }
-export function useAssetTransfersLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<AssetTransfersQuery, AssetTransfersQueryVariables>) {
+export function useEvmAssetTransfersLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<EvmAssetTransfersQuery, EvmAssetTransfersQueryVariables>) {
           const options = {...defaultOptions, ...baseOptions}
-          return Apollo.useLazyQuery<AssetTransfersQuery, AssetTransfersQueryVariables>(AssetTransfersDocument, options);
+          return Apollo.useLazyQuery<EvmAssetTransfersQuery, EvmAssetTransfersQueryVariables>(EvmAssetTransfersDocument, options);
         }
-export type AssetTransfersQueryHookResult = ReturnType<typeof useAssetTransfersQuery>;
-export type AssetTransfersLazyQueryHookResult = ReturnType<typeof useAssetTransfersLazyQuery>;
-export type AssetTransfersQueryResult = Apollo.QueryResult<AssetTransfersQuery, AssetTransfersQueryVariables>;
-export const AssetMintsDocument = gql`
-    query AssetMints($offset: Int = 0, $limit: Int = 10) {
+export type EvmAssetTransfersQueryHookResult = ReturnType<typeof useEvmAssetTransfersQuery>;
+export type EvmAssetTransfersLazyQueryHookResult = ReturnType<typeof useEvmAssetTransfersLazyQuery>;
+export type EvmAssetTransfersQueryResult = Apollo.QueryResult<EvmAssetTransfersQuery, EvmAssetTransfersQueryVariables>;
+export const EvmAssetMintsDocument = gql`
+    query EvmAssetMints($offset: Int = 0, $limit: Int = 10) {
   erc20Transfers(
     where: {from: null, to_not: null}
     orderBy: timestamp
@@ -1282,35 +1282,35 @@ export const AssetMintsDocument = gql`
     `;
 
 /**
- * __useAssetMintsQuery__
+ * __useEvmAssetMintsQuery__
  *
- * To run a query within a React component, call `useAssetMintsQuery` and pass it any options that fit your needs.
- * When your component renders, `useAssetMintsQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * To run a query within a React component, call `useEvmAssetMintsQuery` and pass it any options that fit your needs.
+ * When your component renders, `useEvmAssetMintsQuery` returns an object from Apollo Client that contains loading, error, and data properties
  * you can use to render your UI.
  *
  * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
  *
  * @example
- * const { data, loading, error } = useAssetMintsQuery({
+ * const { data, loading, error } = useEvmAssetMintsQuery({
  *   variables: {
  *      offset: // value for 'offset'
  *      limit: // value for 'limit'
  *   },
  * });
  */
-export function useAssetMintsQuery(baseOptions?: Apollo.QueryHookOptions<AssetMintsQuery, AssetMintsQueryVariables>) {
+export function useEvmAssetMintsQuery(baseOptions?: Apollo.QueryHookOptions<EvmAssetMintsQuery, EvmAssetMintsQueryVariables>) {
         const options = {...defaultOptions, ...baseOptions}
-        return Apollo.useQuery<AssetMintsQuery, AssetMintsQueryVariables>(AssetMintsDocument, options);
+        return Apollo.useQuery<EvmAssetMintsQuery, EvmAssetMintsQueryVariables>(EvmAssetMintsDocument, options);
       }
-export function useAssetMintsLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<AssetMintsQuery, AssetMintsQueryVariables>) {
+export function useEvmAssetMintsLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<EvmAssetMintsQuery, EvmAssetMintsQueryVariables>) {
           const options = {...defaultOptions, ...baseOptions}
-          return Apollo.useLazyQuery<AssetMintsQuery, AssetMintsQueryVariables>(AssetMintsDocument, options);
+          return Apollo.useLazyQuery<EvmAssetMintsQuery, EvmAssetMintsQueryVariables>(EvmAssetMintsDocument, options);
         }
-export type AssetMintsQueryHookResult = ReturnType<typeof useAssetMintsQuery>;
-export type AssetMintsLazyQueryHookResult = ReturnType<typeof useAssetMintsLazyQuery>;
-export type AssetMintsQueryResult = Apollo.QueryResult<AssetMintsQuery, AssetMintsQueryVariables>;
-export const AssetBurnsDocument = gql`
-    query AssetBurns($offset: Int = 0, $limit: Int = 10) {
+export type EvmAssetMintsQueryHookResult = ReturnType<typeof useEvmAssetMintsQuery>;
+export type EvmAssetMintsLazyQueryHookResult = ReturnType<typeof useEvmAssetMintsLazyQuery>;
+export type EvmAssetMintsQueryResult = Apollo.QueryResult<EvmAssetMintsQuery, EvmAssetMintsQueryVariables>;
+export const EvmAssetBurnsDocument = gql`
+    query EvmAssetBurns($offset: Int = 0, $limit: Int = 10) {
   erc20Transfers(
     where: {from_not: null, to: null}
     orderBy: timestamp
@@ -1331,30 +1331,30 @@ export const AssetBurnsDocument = gql`
     `;
 
 /**
- * __useAssetBurnsQuery__
+ * __useEvmAssetBurnsQuery__
  *
- * To run a query within a React component, call `useAssetBurnsQuery` and pass it any options that fit your needs.
- * When your component renders, `useAssetBurnsQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * To run a query within a React component, call `useEvmAssetBurnsQuery` and pass it any options that fit your needs.
+ * When your component renders, `useEvmAssetBurnsQuery` returns an object from Apollo Client that contains loading, error, and data properties
  * you can use to render your UI.
  *
  * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
  *
  * @example
- * const { data, loading, error } = useAssetBurnsQuery({
+ * const { data, loading, error } = useEvmAssetBurnsQuery({
  *   variables: {
  *      offset: // value for 'offset'
  *      limit: // value for 'limit'
  *   },
  * });
  */
-export function useAssetBurnsQuery(baseOptions?: Apollo.QueryHookOptions<AssetBurnsQuery, AssetBurnsQueryVariables>) {
+export function useEvmAssetBurnsQuery(baseOptions?: Apollo.QueryHookOptions<EvmAssetBurnsQuery, EvmAssetBurnsQueryVariables>) {
         const options = {...defaultOptions, ...baseOptions}
-        return Apollo.useQuery<AssetBurnsQuery, AssetBurnsQueryVariables>(AssetBurnsDocument, options);
+        return Apollo.useQuery<EvmAssetBurnsQuery, EvmAssetBurnsQueryVariables>(EvmAssetBurnsDocument, options);
       }
-export function useAssetBurnsLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<AssetBurnsQuery, AssetBurnsQueryVariables>) {
+export function useEvmAssetBurnsLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<EvmAssetBurnsQuery, EvmAssetBurnsQueryVariables>) {
           const options = {...defaultOptions, ...baseOptions}
-          return Apollo.useLazyQuery<AssetBurnsQuery, AssetBurnsQueryVariables>(AssetBurnsDocument, options);
+          return Apollo.useLazyQuery<EvmAssetBurnsQuery, EvmAssetBurnsQueryVariables>(EvmAssetBurnsDocument, options);
         }
-export type AssetBurnsQueryHookResult = ReturnType<typeof useAssetBurnsQuery>;
-export type AssetBurnsLazyQueryHookResult = ReturnType<typeof useAssetBurnsLazyQuery>;
-export type AssetBurnsQueryResult = Apollo.QueryResult<AssetBurnsQuery, AssetBurnsQueryVariables>;
+export type EvmAssetBurnsQueryHookResult = ReturnType<typeof useEvmAssetBurnsQuery>;
+export type EvmAssetBurnsLazyQueryHookResult = ReturnType<typeof useEvmAssetBurnsLazyQuery>;
+export type EvmAssetBurnsQueryResult = Apollo.QueryResult<EvmAssetBurnsQuery, EvmAssetBurnsQueryVariables>;

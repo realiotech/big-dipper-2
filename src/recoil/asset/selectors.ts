@@ -5,7 +5,12 @@ import { mergeStateChange } from '@/utils/merge_state_change';
 
 const getAssets: ReadOnlySelectorOptions<AtomState>['get'] = ({ get }) => {
   const state = get(atomState);
-  return state;
+  const filterState = {
+    assetArr: state.assetArr.filter(item => item.denom != "DSTRX"),
+    assetMap: state.assetMap,
+    loaded: state.loaded
+  }
+  return filterState;
 };
 
 export const writeAssets = selector({

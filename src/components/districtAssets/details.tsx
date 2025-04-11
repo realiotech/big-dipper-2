@@ -10,20 +10,16 @@ import {
   GridItem,
 } from "@chakra-ui/react";
 import AssetOverview from "./overview";
-import Transactions from "./transactions";
-import { useRouter } from "next/router";
-import { useRecoilValue } from "recoil";
-import { readAsset } from "@/recoil/asset";
+import Activities from "./activities";
 import { Avatar } from "../ui/avatar";
 import Holders from "./holders";
+import { useRecoilValue } from "recoil";
+import { readAsset } from "@/recoil/asset";
 
 const DistrictAssetDetails = () => {
-  const router = useRouter();
-  const routerName = router?.query?.denom as string;
-  const denom = ("a"+routerName) as string;
+  const denom = "DSTRX"
   const [selectedTab, setSelectedTab] = useState("holders");
-  const assetDetail = useRecoilValue(readAsset(denom));
-
+  const assetDetail = useRecoilValue(readAsset("DSTRX"));
   return (
     <Grid templateColumns="repeat(6, 1fr)" gap={"1.5rem"} minH="auto">
       <GridItem
@@ -99,14 +95,14 @@ const DistrictAssetDetails = () => {
         >
           <Tabs.ContentGroup>
             <Tabs.Content p={0} value="holders">
-              <Holders denom={denom} />
+              <Holders />
             </Tabs.Content>
             <Tabs.Content
               bg={{ base: "#FAFBFC", _dark: "#0F0F0F" }}
               p={0}
               value="staking"
             >
-              <Transactions denom={denom} />
+              <Activities denom={denom} />
             </Tabs.Content>
           </Tabs.ContentGroup>
         </Tabs.Root>

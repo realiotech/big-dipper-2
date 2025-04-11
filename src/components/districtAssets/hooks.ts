@@ -1,46 +1,46 @@
-import { useEffect, useState, useCallback } from "react";
-import { useAssetDelegationsQuery, useAssetHoldersQuery, useAssetOverviewQuery, useAssetUndelegationsQuery } from "@/graphql/types/general_types";
-import { useRouter } from "next/router";
+import { useEffect, useState } from "react";
 import { OverviewState } from "./type";
+import { useEvmAssetBurnsQuery, useEvmAssetHoldersQuery, useEvmAssetMintsQuery, useEvmAssetOverviewQuery, useEvmAssetTransfersQuery } from "@/graphql/types/subgraph_types";
 
 export function useOverview() {
-  const router = useRouter()
-  const denom = ("a"+router?.query?.denom) as string
-  const [state, setState] = useState<OverviewState>({ denom, supply: '0', holders: 0 })
-
-  useAssetOverviewQuery({
+  const [state, setState] = useState<OverviewState>({ id: "", name: "", denom: "", supply: '0', holders: 0, decimals: 18 })
+  useEvmAssetOverviewQuery({
+    context: {
+      apiName: "subgraph"
+    },
     variables: {
-      denom
+      address: "0xcc2bcda0674252bc65b185eb25c31fe7157ad30a"
     },
     onCompleted: (data) => {
       setState({
-        denom,
-        supply: data.supply_by_denom?.[0].amount,
-        holders: data.token_holder?.[0].num_holder
+        id: data.erc20Contract.id,
+        name: data.erc20Contract.name,
+        denom: data.erc20Contract.symbol,
+        decimals: data.erc20Contract.decimals,
+        supply: data.erc20Contract.totalSupply.value,
+        holders: 100
       })
     },
   })
   return {
     state,
-    denom,
   }
 }
 
-export const useHolders = (denom: string) => {
+export const useHolders = () => {
   const [page, setPage] = useState(0)
-  const [sortDirection, setSortDirection] = useState("desc")
-
   const {
     data: balancesData,
     loading: balancesLoading,
     error: balancesErr,
     refetch,
-  } = useAssetHoldersQuery({
+  } = useEvmAssetHoldersQuery({
+    context: {
+      apiName: "subgraph"
+    },
     variables: {
-      denom,
       limit: 20,
       offset: 20 * page,
-      order_by: sortDirection
     },
   });
   useEffect(() => {
@@ -48,98 +48,112 @@ export const useHolders = (denom: string) => {
     if (balancesErr) {
       refetch();
     }
+
   }, [balancesErr, balancesLoading, refetch]);
-
-  const handleSort = (sortDirt) => {
-    setPage(0)
-    setSortDirection(sortDirt)
-  }
-
   return {
     holderState: {
       loading: balancesLoading,
-      count: balancesData?.balance_count?.[0].count ?? 0,
-      data: balancesData?.get_balance_sorted ?? [],
+      count: 100,
+      data: balancesData?.erc20Balances ?? [],
       error: balancesErr,
     },
     page,
     setPage,
-    sortDirection,
-    handleSort
   }
 }
 
-export const useStaking = (
-  denom?: string
-) => {
-  const [delegationsPage, setDelegationsPage] = useState(0)
-  const [unbondingsPage, setUnboningsPage] = useState(0)
-  const [sortDirection, setSortDirection] = useState("desc")
+export const useActivities = () => {
+  const [transferPage, setTransferPage] = useState(0)
+  const [mintPage, setMintPage] = useState(0)
+  const [burnPage, setBurnPage] = useState(0)
 
   const {
-    data: delegationsData,
-    loading: delegationsLoading,
-    error: delegationsError,
-    refetch: delegationsRefetch,
-  } = useAssetDelegationsQuery({
+    data: transferData,
+    loading: transferLoading,
+    error: transferError,
+    refetch: transferRefetch,
+  } = useEvmAssetTransfersQuery({
+    context: {
+      apiName: "subgraph"
+    },
     variables: {
-      denom,
-      limit: 10,
-      offset: delegationsPage * 10,
-      order: sortDirection
+      offset: transferPage * 10,
+      limit: 20
     },
   });
   useEffect(() => {
-    if (delegationsLoading) return;
-    if (delegationsError) {
-      delegationsRefetch();
+    if (transferLoading) return;
+    if (transferError) {
+      transferRefetch();
     }
-  }, [delegationsError, delegationsLoading, delegationsRefetch]);
+  }, [transferError, transferLoading, transferRefetch]);
 
   const {
-    data: undelegationsData,
-    loading: undelegationsLoading,
-    error: undelegationsError,
-    refetch: undelegationsRefetch,
-  } = useAssetUndelegationsQuery({
+    data: mintData,
+    loading: mintLoading,
+    error: mintError,
+    refetch: mintRefetch,
+  } = useEvmAssetMintsQuery({
+    context: {
+      apiName: "subgraph"
+    },
     variables: {
-      denom,
-      limit: 10,
-      offset: unbondingsPage * 10,
-      order: sortDirection
+      offset: mintPage * 10,
+      limit: 20
     },
   });
   useEffect(() => {
-    if (undelegationsLoading) return;
-    if (undelegationsError) {
-      undelegationsRefetch();
+    if (mintLoading) return;
+    if (mintError) {
+      mintRefetch();
     }
-  }, [undelegationsError, undelegationsLoading, undelegationsRefetch]);
+  }, [mintError, mintLoading, mintRefetch]);
 
-  const handleSort = (sortDirt) => {
-    setDelegationsPage(0)
-    setUnboningsPage(0)
-    setSortDirection(sortDirt)
-  }
+  const {
+    data: burnData,
+    loading: burnLoading,
+    error: burnError,
+    refetch: burnRefetch,
+  } = useEvmAssetBurnsQuery({
+    context: {
+      apiName: "subgraph"
+    },
+    variables: {
+      offset: burnPage * 10,
+      limit: 20
+    },
+  });
+  useEffect(() => {
+    if (burnLoading) return;
+    if (burnError) {
+      burnRefetch();
+    }
+  }, [burnError, burnLoading, burnRefetch]);
 
   return {
-    delegations: {
-      loading: delegationsLoading,
-      count: delegationsData?.locks_count_by_denom?.[0].count ?? 0,
-      data: delegationsData?.get_ms_locks_sorted ?? [],
-      error: delegationsError,
+    transfer: {
+      loading: transferLoading,
+      count: 100,
+      data: transferData?.erc20Transfers ?? [],
+      error: transferError,
     },
-    unbondings: {
-      loading: undelegationsLoading,
-      count: undelegationsData?.unlocks_count_by_denom?.[0].count ?? 0,
-      data: undelegationsData?.get_ms_unlocks_sorted ?? [],
-      error: undelegationsError,
+    mint: {
+      loading: mintLoading,
+      count: 100,
+      data: mintData?.erc20Transfers ?? [],
+      error: mintError,
     },
-    delegationsPage,
-    unbondingsPage,
-    setDelegationsPage,
-    setUnboningsPage,
-    sortDirection,
-    handleSort
+    burn: {
+      loading: burnLoading,
+      count: 100,
+      data: burnData?.erc20Transfers ?? [],
+      error: burnError,
+    },
+    transferPage,
+    mintPage,
+    burnPage,
+    setTransferPage,
+    setMintPage,
+    setBurnPage,
   };
 };

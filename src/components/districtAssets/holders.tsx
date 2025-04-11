@@ -6,14 +6,9 @@ import {
   Skeleton,
   HStack,
   Button,
-  For,
 } from "@chakra-ui/react";
 import HelpLink from "../helper/help_link";
-import Asset from "../helper/asset";
-import { useRecoilValue } from "recoil";
-import { readAsset } from "@/recoil/asset";
 import numeral from "numeral";
-import { formatTokenByExponent } from "@/utils";
 import { useHolders } from "./hooks";
 import {
   PaginationItems,
@@ -21,22 +16,20 @@ import {
   PaginationPrevTrigger,
   PaginationRoot,
 } from "../ui/pagination";
-import { useState } from "react";
-import { FaCaretDown, FaCaretUp } from "react-icons/fa";
-import  NoData  from "../helper/nodata";
+import NoData  from "../helper/nodata";
 import { BiLogoCodepen } from "react-icons/bi";
-
+import { ethToRealionetwork } from "@realiotech/address-generator";
 
 const HolderItem = ({ item, denom }) => {
-  const assetDetail = useRecoilValue(readAsset(denom));
-  return (
+  if (!item.account) return <></>
+    return (
     <Table.Row bg={{ base: "white", _dark: "#262626" }}>
       <Table.Cell borderBottomColor={{ base: "gray.200", _dark: "gray.700" }}>
-        <HelpLink href={`/accounts/${item.address}`} value={item.address} />
+          <HelpLink href={`/accounts/${ethToRealionetwork(item.account.id)}`} value={item.account.id} />
       </Table.Cell>
       <Table.Cell borderBottomColor={{ base: "gray.200", _dark: "gray.700" }}>
         {numeral(
-          formatTokenByExponent(item.amount, assetDetail?.decimals)
+          item.value
         ).format("0,0.00")}
       </Table.Cell>
       <Table.Cell borderBottomColor={{ base: "gray.200", _dark: "gray.700" }}>
@@ -70,14 +63,8 @@ const SkeletonBlockItem = ({ index }) => {
     </Table.Row>
   );
 };
-export default function Holders({ denom }) {
-  const { holderState, page, setPage, handleSort, sortDirection } =
-    useHolders(denom);
-  const [sortingKey, setSortingKey] = useState("");
-  const handleSortWithKey = (key) => {
-    setSortingKey(key);
-    handleSort(sortDirection == "asc" ? "desc" : "asc");
-  };
+export default function Holders() {
+  const { holderState, page, setPage} = useHolders();
 
   return (
     <Box bg={{ base: "#FAFBFC", _dark: "#0F0F0F" }} overflow={"auto"} p={6}>
@@ -85,7 +72,7 @@ export default function Holders({ denom }) {
         <Table.Header bg={{ base: "#FAFBFC", _dark: "#0F0F0F" }}>
           <Table.Row bgColor="inherit">
             <Table.ColumnHeader>Address</Table.ColumnHeader>
-            <Table.ColumnHeader onClick={() => handleSortWithKey("amount")}>
+            <Table.ColumnHeader>
               <Button
                 variant="plain"
                 w="full"
@@ -93,26 +80,17 @@ export default function Holders({ denom }) {
                 p={0}
                 justifyContent={"left"}
               >
-                Amount{" "}
-                {sortingKey == "amount" ? (
-                  sortDirection == "asc" ? (
-                    <FaCaretUp />
-                  ) : (
-                    <FaCaretDown />
-                  )
-                ) : (
-                  ""
-                )}
+                Amount
               </Button>
             </Table.ColumnHeader>
-            <Table.ColumnHeader>Denom</Table.ColumnHeader>
+            <Table.ColumnHeader>Token</Table.ColumnHeader>
           </Table.Row>
         </Table.Header>
         <Table.Body bg={{ base: "white", _dark: "#262626" }}>
           {!holderState.loading ? (
             holderState.data.length > 0 ? (
               holderState.data.map((item, index) => (
-                <HolderItem item={item} denom={denom} key={`holder-${index}`} />
+                <HolderItem item={item} denom={"DSTRX"} key={`holder-${index}`} />
               ))
             ) : (
               <Table.Row>

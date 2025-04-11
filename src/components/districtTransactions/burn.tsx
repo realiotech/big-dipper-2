@@ -6,7 +6,6 @@ import {
   Center,
   HStack,
 } from "@chakra-ui/react";
-import { FaCaretDown, FaCaretUp } from "react-icons/fa";
 import { Skeleton } from "../ui/skeleton";
 import NoData from "../helper/nodata";
 import {
@@ -15,17 +14,25 @@ import {
   PaginationPrevTrigger,
   PaginationRoot,
 } from "../ui/pagination";
+import HelpLink from "../helper/help_link";
+import { ethToRealionetwork } from "@realiotech/address-generator";
+import { dayjs, TRANSACTION_DETAILS } from "@/utils";
+import numeral from "numeral";
 
-const BurnRow = ({ address, from, amount }) => (
+const BurnRow = ({ hash, from, amount, time }) => (
   <Table.Row bg={{ base: "white", _dark: "#262626" }}>
-    <Table.Cell borderBottomColor={{ base: 'gray.200', _dark: 'gray.700' }}>{address}</Table.Cell>
-    <Table.Cell borderBottomColor={{ base: 'gray.200', _dark: 'gray.700' }}>{from}</Table.Cell>
-    <Table.Cell borderBottomColor={{ base: 'gray.200', _dark: 'gray.700' }}>{amount}</Table.Cell>
+    <Table.Cell borderBottomColor={{ base: 'gray.200', _dark: 'gray.700' }}>
+      <HelpLink href={TRANSACTION_DETAILS(hash)} value={hash} />
+    </Table.Cell>
+    <Table.Cell borderBottomColor={{ base: 'gray.200', _dark: 'gray.700' }}>          
+      <HelpLink href={`/accounts/${ethToRealionetwork(from)}`} value={from} />
+    </Table.Cell>
+    <Table.Cell borderBottomColor={{ base: 'gray.200', _dark: 'gray.700' }}>{numeral(amount).format('0.00')}</Table.Cell>
+    <Table.Cell borderBottomColor={{ base: 'gray.200', _dark: 'gray.700' }}>{dayjs.utc(time * 1000).fromNow()}</Table.Cell>
   </Table.Row>
 );
 
-const BurnTable = ({ data, page, setPage, sort, setSort }) => {
-  const handleSort = () => setSort(sort === 'asc' ? 'desc' : 'asc');
+const BurnTable = ({ data, page, setPage }) => {
 
   return (
     <VStack w="full">
@@ -35,9 +42,10 @@ const BurnTable = ({ data, page, setPage, sort, setSort }) => {
             <Table.Row bg={{ base: "#FAFBFC", _dark: "#0F0F0F" }}>
               <Table.ColumnHeader>Hash</Table.ColumnHeader>
               <Table.ColumnHeader>From</Table.ColumnHeader>
-              <Table.ColumnHeader onClick={handleSort}>
-                Amount {sort === 'asc' ? <FaCaretUp /> : <FaCaretDown />}
+              <Table.ColumnHeader>
+                Amount
               </Table.ColumnHeader>
+              <Table.ColumnHeader>Time</Table.ColumnHeader>
             </Table.Row>
           </Table.Header>
           <Table.Body bg={{ base: "white", _dark: "#262626" }}>
@@ -53,7 +61,7 @@ const BurnTable = ({ data, page, setPage, sort, setSort }) => {
               </Table.Row>
             ) : (
               data.data.map((item, index) => (
-                <BurnRow key={`burn-${index}`} address={item.to} from={item.from} amount={item.amount} />
+                <BurnRow key={`burn-${index}`} hash={item.transaction.id} from={item.from?.id} amount={item.value} time={item.timestamp} />
               ))
             )}
           </Table.Body>

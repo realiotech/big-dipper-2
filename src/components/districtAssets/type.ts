@@ -1,4 +1,7 @@
 export interface OverviewState {
+    id: string;
+    name: string;
+    decimals: number;
     denom: string;
     supply: string;
     holders: number;

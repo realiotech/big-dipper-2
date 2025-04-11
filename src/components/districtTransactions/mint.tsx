@@ -15,18 +15,25 @@ import {
   PaginationPrevTrigger,
   PaginationRoot,
 } from "../ui/pagination";
+import { ethToRealionetwork } from "@realiotech/address-generator";
+import HelpLink from "../helper/help_link";
+import { dayjs, TRANSACTION_DETAILS } from "@/utils";
+import numeral from "numeral";
 
-const MintRow = ({ address, to, amount }) => (
+const MintRow = ({ hash, to, amount, time }) => (
   <Table.Row bg={{ base: "white", _dark: "#262626" }}>
-    <Table.Cell borderBottomColor={{ base: 'gray.200', _dark: 'gray.700' }}>{address}</Table.Cell>
-    <Table.Cell borderBottomColor={{ base: 'gray.200', _dark: 'gray.700' }}>{to}</Table.Cell>
-    <Table.Cell borderBottomColor={{ base: 'gray.200', _dark: 'gray.700' }}>{amount}</Table.Cell>
+    <Table.Cell borderBottomColor={{ base: 'gray.200', _dark: 'gray.700' }}>
+      <HelpLink href={TRANSACTION_DETAILS(hash)} value={hash} />
+    </Table.Cell>
+    <Table.Cell borderBottomColor={{ base: 'gray.200', _dark: 'gray.700' }}>          
+      <HelpLink href={`/accounts/${ethToRealionetwork(to)}`} value={to} />
+    </Table.Cell>    
+    <Table.Cell borderBottomColor={{ base: 'gray.200', _dark: 'gray.700' }}>{numeral(amount).format('0.00')}</Table.Cell>
+    <Table.Cell borderBottomColor={{ base: 'gray.200', _dark: 'gray.700' }}>{dayjs.utc(time * 1000).fromNow()}</Table.Cell>
   </Table.Row>
 );
 
-const MintTable = ({ data, page, setPage, sort, setSort }) => {
-  const handleSort = () => setSort(sort === 'asc' ? 'desc' : 'asc');
-
+const MintTable = ({ data, page, setPage }) => {
   return (
     <VStack w="full">
       <Box w="full" overflowX="auto">
@@ -35,9 +42,10 @@ const MintTable = ({ data, page, setPage, sort, setSort }) => {
             <Table.Row bg={{ base: "#FAFBFC", _dark: "#0F0F0F" }}>
               <Table.ColumnHeader>Hash</Table.ColumnHeader>
               <Table.ColumnHeader>To</Table.ColumnHeader>
-              <Table.ColumnHeader onClick={handleSort}>
-                Amount {sort === 'asc' ? <FaCaretUp /> : <FaCaretDown />}
+              <Table.ColumnHeader>
+                Amount
               </Table.ColumnHeader>
+              <Table.ColumnHeader>Time</Table.ColumnHeader>
             </Table.Row>
           </Table.Header>
           <Table.Body bg={{ base: "white", _dark: "#262626" }}>
@@ -53,7 +61,7 @@ const MintTable = ({ data, page, setPage, sort, setSort }) => {
               </Table.Row>
             ) : (
               data.data.map((item, index) => (
-                <MintRow key={`mint-${index}`} address={item.from} to={item.to} amount={item.amount} />
+                <MintRow key={`mint-${index}`} hash={item.transaction.id} to={item.to.id} amount={item.value} time={item.timestamp} />
               ))
             )}
           </Table.Body>

@@ -6,17 +6,12 @@ import {
   GridItem,
 } from "@chakra-ui/react";
 import { useOverview } from "./hooks";
-import { useRecoilValue } from "recoil";
-import { readAsset } from "@/recoil/asset";
 import numeral from "numeral";
-import { formatTokenByExponent } from "@/utils";
 
 export default function AssetOverview() {
   const { state } = useOverview();
-  const metadata = useRecoilValue(readAsset(state.denom));
-
-  const supplyAmt = formatTokenByExponent(state.supply, metadata?.decimals);
-  const supplyInUsd = parseFloat(supplyAmt) * metadata?.price;
+  const supplyAmt = state.supply;
+  const supplyInUsd = parseFloat(supplyAmt) * 1.27;
   return (
     <>
       <GridItem
@@ -33,7 +28,7 @@ export default function AssetOverview() {
               Total Supply
             </Text>
             <Text fontSize="32px" fontWeight="bold" color={'#522B61'}>
-              {numeral(supplyAmt).format("0,0")} {metadata?.symbol}
+              {numeral(supplyAmt).format("0,0")} {state.denom}
             </Text>
           </Box>
           <Box>
@@ -60,7 +55,7 @@ export default function AssetOverview() {
               Price
             </Text>
             <Text fontSize="32px" fontWeight="bold" color={'#522B61'}>
-              ${numeral(metadata?.price).format("0.00")}
+              ${numeral(1.27).format("0.00")}
             </Text>
           </Box>
           <Box>
@@ -86,16 +81,16 @@ export default function AssetOverview() {
             More Information
           </Text>
           <Text fontSize="md" color="gray.500">
-            Denom: {metadata?.denom}
+            Contract: {state.id}
           </Text>
           <Text fontSize="md" color="gray.500">
-            Symbol: {metadata?.symbol}
+            Symbol: {state.denom}
           </Text>
           <Text fontSize="md" color="gray.500">
-            Name: {metadata?.name}
+            Name: {state.name}
           </Text>
           <Text fontSize="md" color="gray.500">
-            Decimals: {metadata?.decimals}
+            Decimals: {state.decimals}
           </Text>
         </Flex>
       </GridItem>

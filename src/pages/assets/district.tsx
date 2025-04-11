@@ -1,9 +1,9 @@
 import DistrictAssetDetails from "@/components/districtAssets/details";
 
-const AssetPage = () => {
+const DistrictPage = () => {
   return (
     <DistrictAssetDetails />
   );
 };
 
-export default AssetPage;
+export default DistrictPage;
