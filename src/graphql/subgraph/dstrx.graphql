@@ -1,0 +1,33 @@
+query AssetOverview($address: ID!) {
+  erc20Contract(id: $address) {
+    id
+    name
+    symbol
+    decimals
+    totalSupply {
+      value
+    }
+  }
+}
+
+query AssetHolders($offset: Int = 1, $limit: Int = 10) {
+  erc20Balances(orderBy: value, orderDirection: desc, first: $limit, skip: $offset) {
+    account {
+      id
+    }
+    value
+  }
+}
+
+query AssetTransfers($offset: Int = 0, $limit: Int = 10) {
+  erc20Transfers(orderBy: timestamp, orderDirection: desc, first: $limit, skip: $offset) {
+    from {
+      id
+    }
+    to {
+      id
+    }
+    value
+    timestamp
+  }
+}

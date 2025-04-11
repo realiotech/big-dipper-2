@@ -3,7 +3,7 @@ import {
   ApolloClient,
   InMemoryCache,
   split,
-  HttpLink,
+  createHttpLink,
   ApolloLink,
   concat,
 } from '@apollo/client';
@@ -27,8 +27,14 @@ const defaultOptions:any = {
 
 let apolloClient;
 
-const httpLink = new HttpLink({
-  uri: process.env.NEXT_PUBLIC_GRAPHQL_URL,
+const httpLink = createHttpLink({
+  uri: ({ getContext }) => {
+    const { apiName } = getContext();
+
+    if (apiName === 'subgraph') return process.env.NEXT_PUBLIC_SUBGRAPHQL_URL;
+
+    return process.env.NEXT_PUBLIC_GRAPHQL_URL
+  }
 });
 
 const wsLink = new WebSocketLink({
