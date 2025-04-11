@@ -20,7 +20,10 @@ query AssetHolders($offset: Int = 1, $limit: Int = 10) {
 }
 
 query AssetTransfers($offset: Int = 0, $limit: Int = 10) {
-  erc20Transfers(orderBy: timestamp, orderDirection: desc, first: $limit, skip: $offset) {
+  erc20Transfers(where: {
+      from_not: null,
+      to_not: null
+    }, orderBy: timestamp, orderDirection: desc, first: $limit, skip: $offset) {
     from {
       id
     }
@@ -29,5 +32,40 @@ query AssetTransfers($offset: Int = 0, $limit: Int = 10) {
     }
     value
     timestamp
+    transaction {
+      id
+    }
+  }
+}
+
+query AssetMints($offset: Int = 0, $limit: Int = 10) {
+  erc20Transfers(where: {
+      from: null,
+      to_not: null
+    }, orderBy: timestamp, orderDirection: desc, first: $limit, skip: $offset) {
+    to {
+      id
+    }
+    value
+    timestamp
+    transaction {
+      id
+    }
+  }
+}
+
+query AssetBurns($offset: Int = 0, $limit: Int = 10) {
+  erc20Transfers(where: {
+      from_not: null,
+      to: null
+    }, orderBy: timestamp, orderDirection: desc, first: $limit, skip: $offset) {
+    from {
+      id
+    }
+    value
+    timestamp
+    transaction {
+      id
+    }
   }
 }
