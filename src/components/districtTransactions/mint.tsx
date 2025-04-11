@@ -53,7 +53,7 @@ const MintTable = ({ data, page, setPage }) => {
               Array.from({ length: 10 }).map((_, index) => <SkeletonItem key={`mint-skeleton-${index}`} />)
             ) : data?.data.length === 0 ? (
               <Table.Row>
-                <Table.Cell colSpan={3} textAlign="center">
+                <Table.Cell colSpan={4} textAlign="center">
                   <Center py="5" px="8" minH="65vh" w="full" bgColor={{ base: "#FAFBFC", _dark: "#0F0F0F" }}>
                     <NoData />
                   </Center>
