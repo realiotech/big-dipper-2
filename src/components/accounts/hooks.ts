@@ -17,6 +17,7 @@ import { useRecoilValue } from 'recoil';
 import { readFilter } from '@/recoil/transactions_filter';
 import type { OverviewType } from './types';
 import { realioNetworkToEth } from "@realiotech/address-generator"
+import { useEvmBalancesQuery } from '@/graphql/types/subgraph';
 const LIMIT = 50;
 
 const formatTransactions = (data: GetMessagesByAddressQuery): Transactions[] => {
@@ -229,4 +230,26 @@ export const useStaking = (
     sortDirection,
     handleSort
   };
+};
+
+export const useErc20Balances = (
+  evmAddress?: string
+) => {
+  const [balances, setBalances] = useState([])
+
+  useEvmBalancesQuery({
+    context: {
+      apiName: "subgraph"
+    },
+    variables: {
+      address: evmAddress
+    },
+    onCompleted: (data) => {
+      setBalances(data.erc20Balances)
+    },
+    onError: (e) => {
+      console.error(e)
+    }
+  })
+  return balances;
 };

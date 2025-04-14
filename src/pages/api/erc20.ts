@@ -6,7 +6,7 @@ const ERC20_METADATA = [
         symbol: 'DSTRX',
         name: 'District token',
         description: 'District token for LandBank',
-        image: '/images/assets/LMX.png',
+        image: '/images/assets/DSTRX.png',
         decimals: 18,
         price: 0
     },

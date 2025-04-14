@@ -82,3 +82,12 @@ query EvmAssetBurns($address: ID!, $offset: Int = 0, $limit: Int = 10) {
     burnCount
   }
 }
+
+query EvmBalances($address: String) {
+  erc20Balances(where: {account: $address}) {
+    value
+    contract {
+      id
+    }
+  }
+}
