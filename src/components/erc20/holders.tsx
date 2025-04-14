@@ -1,6 +1,5 @@
 import {
   Box,
-  Text,
   Table,
   Center,
   Skeleton,
@@ -16,16 +15,18 @@ import {
   PaginationPrevTrigger,
   PaginationRoot,
 } from "../ui/pagination";
-import NoData  from "../helper/nodata";
-import { BiLogoCodepen } from "react-icons/bi";
+import NoData from "../helper/nodata";
 import { ethToRealionetwork } from "@realiotech/address-generator";
+import { useRecoilValue } from "recoil";
+import { readToken } from "@/recoil/erc20";
+import Erc20 from "../helper/erc20";
 
-const HolderItem = ({ item, denom }) => {
+const HolderItem = ({ item, metadata }) => {
   if (!item.account) return <></>
-    return (
+  return (
     <Table.Row bg={{ base: "white", _dark: "#262626" }}>
       <Table.Cell borderBottomColor={{ base: "gray.200", _dark: "gray.700" }}>
-          <HelpLink href={`/accounts/${ethToRealionetwork(item.account.id)}`} value={item.account.id} />
+        <HelpLink href={`/accounts/${ethToRealionetwork(item.account.id)}`} value={item.account.id} />
       </Table.Cell>
       <Table.Cell borderBottomColor={{ base: "gray.200", _dark: "gray.700" }}>
         {numeral(
@@ -33,7 +34,11 @@ const HolderItem = ({ item, denom }) => {
         ).format("0,0.00")}
       </Table.Cell>
       <Table.Cell borderBottomColor={{ base: "gray.200", _dark: "gray.700" }}>
-        <BiLogoCodepen/>
+        <Erc20
+          name={metadata?.symbol}
+          image={metadata?.image}
+          address={metadata?.address}
+        />
       </Table.Cell>
     </Table.Row>
   );
@@ -63,8 +68,10 @@ const SkeletonBlockItem = ({ index }) => {
     </Table.Row>
   );
 };
-export default function Holders() {
-  const { holderState, page, setPage} = useHolders();
+
+export default function Holders({ address }) {
+  const { holderState, page, setPage } = useHolders(address);
+  const erc20Detail = useRecoilValue(readToken(address));
 
   return (
     <Box bg={{ base: "#FAFBFC", _dark: "#0F0F0F" }} overflow={"auto"} p={6}>
@@ -90,7 +97,7 @@ export default function Holders() {
           {!holderState.loading ? (
             holderState.data.length > 0 ? (
               holderState.data.map((item, index) => (
-                <HolderItem item={item} denom={"DSTRX"} key={`holder-${index}`} />
+                <HolderItem item={item} key={`holder-${index}`} metadata={erc20Detail} />
               ))
             ) : (
               <Table.Row>
@@ -103,7 +110,7 @@ export default function Holders() {
                     minH="65vh"
                     w="full"
                   >
-                    <NoData/>
+                    <NoData />
                   </Center>
                 </Table.Cell>
               </Table.Row>
@@ -117,10 +124,10 @@ export default function Holders() {
       </Table.Root>
       <Center w="full" py="4">
         <PaginationRoot
-          count={holderState?.count}
-          pageSize={20}
+          count={holderState.count}
+          pageSize={10}
           value={page + 1}
-          onPageChange={(e) => setPage(e.page - 1)}
+          onPageChange={(e) => setPage(e.page)}
           size={{ base: "xs", md: "lg" }}
         >
           <HStack gap={0}>

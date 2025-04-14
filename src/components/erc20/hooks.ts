@@ -2,14 +2,14 @@ import { useEffect, useState } from "react";
 import { OverviewState } from "./type";
 import { useEvmAssetBurnsQuery, useEvmAssetHoldersQuery, useEvmAssetMintsQuery, useEvmAssetOverviewQuery, useEvmAssetTransfersQuery } from "@/graphql/types/subgraph_types";
 
-export function useOverview() {
+export function useOverview(address: string) {
   const [state, setState] = useState<OverviewState>({ id: "", name: "", denom: "", supply: '0', holders: 0, decimals: 18 })
   useEvmAssetOverviewQuery({
     context: {
       apiName: "subgraph"
     },
     variables: {
-      address: "0xcc2bcda0674252bc65b185eb25c31fe7157ad30a"
+      address: address
     },
     onCompleted: (data) => {
       setState({
@@ -18,7 +18,7 @@ export function useOverview() {
         denom: data.erc20Contract.symbol,
         decimals: data.erc20Contract.decimals,
         supply: data.erc20Contract.totalSupply.value,
-        holders: 100
+        holders: data.erc20Contract.holders
       })
     },
   })
@@ -27,8 +27,9 @@ export function useOverview() {
   }
 }
 
-export const useHolders = () => {
+export const useHolders = (address) => {
   const [page, setPage] = useState(0)
+  console.log(page)
   const {
     data: balancesData,
     loading: balancesLoading,
@@ -39,8 +40,9 @@ export const useHolders = () => {
       apiName: "subgraph"
     },
     variables: {
-      limit: 20,
-      offset: 20 * page,
+      address,
+      limit: 10,
+      offset: 10 * page,
     },
   });
   useEffect(() => {
@@ -53,7 +55,7 @@ export const useHolders = () => {
   return {
     holderState: {
       loading: balancesLoading,
-      count: 100,
+      count: balancesData?.erc20Contract.holders,
       data: balancesData?.erc20Balances ?? [],
       error: balancesErr,
     },
@@ -62,7 +64,7 @@ export const useHolders = () => {
   }
 }
 
-export const useActivities = () => {
+export const useActivities = (address) => {
   const [transferPage, setTransferPage] = useState(0)
   const [mintPage, setMintPage] = useState(0)
   const [burnPage, setBurnPage] = useState(0)
@@ -77,6 +79,7 @@ export const useActivities = () => {
       apiName: "subgraph"
     },
     variables: {
+      address,
       offset: transferPage * 10,
       limit: 20
     },
@@ -98,6 +101,7 @@ export const useActivities = () => {
       apiName: "subgraph"
     },
     variables: {
+      address,
       offset: mintPage * 10,
       limit: 20
     },
@@ -119,6 +123,7 @@ export const useActivities = () => {
       apiName: "subgraph"
     },
     variables: {
+      address,
       offset: burnPage * 10,
       limit: 20
     },
@@ -133,19 +138,19 @@ export const useActivities = () => {
   return {
     transfer: {
       loading: transferLoading,
-      count: 100,
+      count: transferData?.erc20Contract.transfersCount,
       data: transferData?.erc20Transfers ?? [],
       error: transferError,
     },
     mint: {
       loading: mintLoading,
-      count: 100,
+      count: mintData?.erc20Contract.mintCount,
       data: mintData?.erc20Transfers ?? [],
       error: mintError,
     },
     burn: {
       loading: burnLoading,
-      count: 100,
+      count: burnData?.erc20Contract.burnCount,
       data: burnData?.erc20Transfers ?? [],
       error: burnError,
     },

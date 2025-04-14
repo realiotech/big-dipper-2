@@ -6,11 +6,11 @@ import {
   TabsContent,
 } from "@chakra-ui/react";
 import { useActivities } from "./hooks";
-import TransferTable from "../districtTransactions/transfer";
-import MintTable from "../districtTransactions/mint";
-import BurnTable from "../districtTransactions/burn";
+import TransferTable from "./activity/transfer";
+import MintTable from "./activity/mint";
+import BurnTable from "./activity/burn";
 
-export default function Activities({ denom }) {
+export default function Activities({address}) {
   const {
     transfer,
     mint,
@@ -21,8 +21,7 @@ export default function Activities({ denom }) {
     setTransferPage,
     setMintPage,
     setBurnPage
-  } = useActivities();
-  console.log(mint.data)
+  } = useActivities(address);
   return (
     <Tabs.Root defaultValue={1} variant="subtle">
       <TabsList>

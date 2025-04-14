@@ -9,17 +9,19 @@ import {
   Grid,
   GridItem,
 } from "@chakra-ui/react";
-import AssetOverview from "./overview";
+import Erc20Overview from "./overview";
 import Activities from "./activities";
 import { Avatar } from "../ui/avatar";
 import Holders from "./holders";
 import { useRecoilValue } from "recoil";
-import { readAsset } from "@/recoil/asset";
+import { readToken } from "@/recoil/erc20";
+import { useRouter } from "next/router";
 
-const DistrictAssetDetails = () => {
-  const denom = "DSTRX"
+const Erc20Details = () => {
+  const router = useRouter();
+  const address = router.query.address as string
   const [selectedTab, setSelectedTab] = useState("holders");
-  const assetDetail = useRecoilValue(readAsset("DSTRX"));
+  const erc20Details = useRecoilValue(readToken(address));
   return (
     <Grid templateColumns="repeat(6, 1fr)" gap={"1.5rem"} minH="auto">
       <GridItem
@@ -34,17 +36,17 @@ const DistrictAssetDetails = () => {
       >
         <Flex justify="space-between">
           <HStack>
-            <Avatar src={assetDetail?.image} size="xl" />
+            <Avatar src={erc20Details?.image} size="xl" />
             <VStack align="flex-start" gap={0}>
               <Text fontSize="lg" fontWeight="bold">
-                {`${assetDetail?.name} (${assetDetail?.symbol})`}
+                {`${erc20Details?.name} (${erc20Details?.symbol})`}
               </Text>
               <Text color="gray.500">Token Overview</Text>
             </VStack>
           </HStack>
         </Flex>
       </GridItem>
-      <AssetOverview />
+      <Erc20Overview address={address} />
       <Center>
         <Tabs.Root
           value={selectedTab}
@@ -95,14 +97,14 @@ const DistrictAssetDetails = () => {
         >
           <Tabs.ContentGroup>
             <Tabs.Content p={0} value="holders">
-              <Holders />
+              <Holders address={address} />
             </Tabs.Content>
             <Tabs.Content
               bg={{ base: "#FAFBFC", _dark: "#0F0F0F" }}
               p={0}
               value="staking"
             >
-              <Activities denom={denom} />
+              <Activities address={address} />
             </Tabs.Content>
           </Tabs.ContentGroup>
         </Tabs.Root>
@@ -111,4 +113,4 @@ const DistrictAssetDetails = () => {
   );
 };
 
-export default DistrictAssetDetails;
+export default Erc20Details;

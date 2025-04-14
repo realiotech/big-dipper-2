@@ -6,36 +6,34 @@ import {
   Center,
   HStack,
 } from "@chakra-ui/react";
-import { Skeleton } from "../ui/skeleton";
-import NoData from "../helper/nodata";
+import { FaCaretDown, FaCaretUp } from "react-icons/fa";
+import { Skeleton } from "../../ui/skeleton";
+import NoData from "../../helper/nodata";
 import {
   PaginationItems,
   PaginationNextTrigger,
   PaginationPrevTrigger,
   PaginationRoot,
-} from "../ui/pagination";
-import HelpLink from "../helper/help_link";
+} from "../../ui/pagination";
 import { ethToRealionetwork } from "@realiotech/address-generator";
+import HelpLink from "../../helper/help_link";
 import { dayjs, TRANSACTION_DETAILS } from "@/utils";
 import numeral from "numeral";
 
-const TransferRow = ({ hash, from, to, amount, time }) => (
+const MintRow = ({ hash, to, amount, time }) => (
   <Table.Row bg={{ base: "white", _dark: "#262626" }}>
     <Table.Cell borderBottomColor={{ base: 'gray.200', _dark: 'gray.700' }}>
       <HelpLink href={TRANSACTION_DETAILS(hash)} value={hash} />
     </Table.Cell>
     <Table.Cell borderBottomColor={{ base: 'gray.200', _dark: 'gray.700' }}>
-      <HelpLink href={`/accounts/${ethToRealionetwork(from)}`} value={from} />
-    </Table.Cell>
-    <Table.Cell borderBottomColor={{ base: 'gray.200', _dark: 'gray.700' }}>          
       <HelpLink href={`/accounts/${ethToRealionetwork(to)}`} value={to} />
-    </Table.Cell>    
+    </Table.Cell>
     <Table.Cell borderBottomColor={{ base: 'gray.200', _dark: 'gray.700' }}>{numeral(amount).format('0.00')}</Table.Cell>
     <Table.Cell borderBottomColor={{ base: 'gray.200', _dark: 'gray.700' }}>{dayjs.utc(time * 1000).fromNow()}</Table.Cell>
   </Table.Row>
 );
 
-const TransferTable = ({ data, page, setPage}) => {
+const MintTable = ({ data, page, setPage }) => {
   return (
     <VStack w="full">
       <Box w="full" overflowX="auto">
@@ -43,7 +41,6 @@ const TransferTable = ({ data, page, setPage}) => {
           <Table.Header>
             <Table.Row bg={{ base: "#FAFBFC", _dark: "#0F0F0F" }}>
               <Table.ColumnHeader>Hash</Table.ColumnHeader>
-              <Table.ColumnHeader>From</Table.ColumnHeader>
               <Table.ColumnHeader>To</Table.ColumnHeader>
               <Table.ColumnHeader>
                 Amount
@@ -53,10 +50,10 @@ const TransferTable = ({ data, page, setPage}) => {
           </Table.Header>
           <Table.Body bg={{ base: "white", _dark: "#262626" }}>
             {data?.loading ? (
-              Array.from({ length: 10 }).map((_, index) => <SkeletonItem key={`transfer-skeleton-${index}`} />)
+              Array.from({ length: 10 }).map((_, index) => <SkeletonItem key={`mint-skeleton-${index}`} />)
             ) : data?.data.length === 0 ? (
               <Table.Row>
-                <Table.Cell colSpan={5} textAlign="center">
+                <Table.Cell colSpan={4} textAlign="center">
                   <Center py="5" px="8" minH="65vh" w="full" bgColor={{ base: "#FAFBFC", _dark: "#0F0F0F" }}>
                     <NoData />
                   </Center>
@@ -64,7 +61,7 @@ const TransferTable = ({ data, page, setPage}) => {
               </Table.Row>
             ) : (
               data.data.map((item, index) => (
-                <TransferRow key={`transfer-${index}`} hash={item.hash} from={item.from.id} to={item.to.id} amount={item.amount} time={item.timestamp} />
+                <MintRow key={`mint-${index}`} hash={item.transaction.id} to={item.to.id} amount={item.value} time={item.timestamp} />
               ))
             )}
           </Table.Body>
@@ -72,7 +69,7 @@ const TransferTable = ({ data, page, setPage}) => {
       </Box>
       <PaginationRoot
         count={data?.count}
-        pageSize={10}
+        pageSize={20}
         value={page + 1}
         onPageChange={(e) => setPage(e.page - 1)}
         size={{ base: "xs", md: "lg" }}
@@ -96,4 +93,4 @@ export const SkeletonItem = () => (
   </Table.Row>
 );
 
-export default TransferTable;
+export default MintTable;

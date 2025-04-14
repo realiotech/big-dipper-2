@@ -27,16 +27,7 @@ const ASSET_METADATA = [
         image: '/images/assets/LMX.png',
         decimals: 18,
         price: 1
-    },
-    {
-        denom: 'DSTRX',
-        symbol: 'DSTRX',
-        name: 'District token',
-        description: 'District token for LandBank',
-        image: '/images/assets/LMX.png',
-        decimals: 18,
-        price: 1
-    },
+    }
 ]
 
 export default async function handler(

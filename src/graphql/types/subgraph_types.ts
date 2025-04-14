@@ -113,10 +113,14 @@ export enum Account_OrderBy {
   Erc20transferFromEvent = 'ERC20transferFromEvent',
   Erc20transferToEvent = 'ERC20transferToEvent',
   AsErc20 = 'asERC20',
+  AsErc20BurnCount = 'asERC20__burnCount',
   AsErc20Decimals = 'asERC20__decimals',
+  AsErc20Holders = 'asERC20__holders',
   AsErc20Id = 'asERC20__id',
+  AsErc20MintCount = 'asERC20__mintCount',
   AsErc20Name = 'asERC20__name',
   AsErc20Symbol = 'asERC20__symbol',
+  AsErc20TransfersCount = 'asERC20__transfersCount',
   Events = 'events',
   Id = 'id'
 }
@@ -244,13 +248,202 @@ export enum Erc20Balance_OrderBy {
   Account = 'account',
   AccountId = 'account__id',
   Contract = 'contract',
+  ContractBurnCount = 'contract__burnCount',
   ContractDecimals = 'contract__decimals',
+  ContractHolders = 'contract__holders',
   ContractId = 'contract__id',
+  ContractMintCount = 'contract__mintCount',
   ContractName = 'contract__name',
   ContractSymbol = 'contract__symbol',
+  ContractTransfersCount = 'contract__transfersCount',
   Id = 'id',
   TransferFromEvent = 'transferFromEvent',
   TransferToEvent = 'transferToEvent',
+  Value = 'value',
+  ValueExact = 'valueExact'
+}
+
+export type Erc20Burn = Event & {
+  __typename?: 'ERC20Burn';
+  contract: Erc20Contract;
+  emitter: Account;
+  from?: Maybe<Account>;
+  fromBalance?: Maybe<Erc20Balance>;
+  id: Scalars['ID'];
+  timestamp: Scalars['BigInt'];
+  transaction: Transaction;
+  value: Scalars['BigDecimal'];
+  valueExact: Scalars['BigInt'];
+};
+
+export type Erc20Burn_Filter = {
+  /** Filter for the block changed event. */
+  _change_block?: InputMaybe<BlockChangedFilter>;
+  and?: InputMaybe<Array<InputMaybe<Erc20Burn_Filter>>>;
+  contract?: InputMaybe<Scalars['String']>;
+  contract_?: InputMaybe<Erc20Contract_Filter>;
+  contract_contains?: InputMaybe<Scalars['String']>;
+  contract_contains_nocase?: InputMaybe<Scalars['String']>;
+  contract_ends_with?: InputMaybe<Scalars['String']>;
+  contract_ends_with_nocase?: InputMaybe<Scalars['String']>;
+  contract_gt?: InputMaybe<Scalars['String']>;
+  contract_gte?: InputMaybe<Scalars['String']>;
+  contract_in?: InputMaybe<Array<Scalars['String']>>;
+  contract_lt?: InputMaybe<Scalars['String']>;
+  contract_lte?: InputMaybe<Scalars['String']>;
+  contract_not?: InputMaybe<Scalars['String']>;
+  contract_not_contains?: InputMaybe<Scalars['String']>;
+  contract_not_contains_nocase?: InputMaybe<Scalars['String']>;
+  contract_not_ends_with?: InputMaybe<Scalars['String']>;
+  contract_not_ends_with_nocase?: InputMaybe<Scalars['String']>;
+  contract_not_in?: InputMaybe<Array<Scalars['String']>>;
+  contract_not_starts_with?: InputMaybe<Scalars['String']>;
+  contract_not_starts_with_nocase?: InputMaybe<Scalars['String']>;
+  contract_starts_with?: InputMaybe<Scalars['String']>;
+  contract_starts_with_nocase?: InputMaybe<Scalars['String']>;
+  emitter?: InputMaybe<Scalars['String']>;
+  emitter_?: InputMaybe<Account_Filter>;
+  emitter_contains?: InputMaybe<Scalars['String']>;
+  emitter_contains_nocase?: InputMaybe<Scalars['String']>;
+  emitter_ends_with?: InputMaybe<Scalars['String']>;
+  emitter_ends_with_nocase?: InputMaybe<Scalars['String']>;
+  emitter_gt?: InputMaybe<Scalars['String']>;
+  emitter_gte?: InputMaybe<Scalars['String']>;
+  emitter_in?: InputMaybe<Array<Scalars['String']>>;
+  emitter_lt?: InputMaybe<Scalars['String']>;
+  emitter_lte?: InputMaybe<Scalars['String']>;
+  emitter_not?: InputMaybe<Scalars['String']>;
+  emitter_not_contains?: InputMaybe<Scalars['String']>;
+  emitter_not_contains_nocase?: InputMaybe<Scalars['String']>;
+  emitter_not_ends_with?: InputMaybe<Scalars['String']>;
+  emitter_not_ends_with_nocase?: InputMaybe<Scalars['String']>;
+  emitter_not_in?: InputMaybe<Array<Scalars['String']>>;
+  emitter_not_starts_with?: InputMaybe<Scalars['String']>;
+  emitter_not_starts_with_nocase?: InputMaybe<Scalars['String']>;
+  emitter_starts_with?: InputMaybe<Scalars['String']>;
+  emitter_starts_with_nocase?: InputMaybe<Scalars['String']>;
+  from?: InputMaybe<Scalars['String']>;
+  fromBalance?: InputMaybe<Scalars['String']>;
+  fromBalance_?: InputMaybe<Erc20Balance_Filter>;
+  fromBalance_contains?: InputMaybe<Scalars['String']>;
+  fromBalance_contains_nocase?: InputMaybe<Scalars['String']>;
+  fromBalance_ends_with?: InputMaybe<Scalars['String']>;
+  fromBalance_ends_with_nocase?: InputMaybe<Scalars['String']>;
+  fromBalance_gt?: InputMaybe<Scalars['String']>;
+  fromBalance_gte?: InputMaybe<Scalars['String']>;
+  fromBalance_in?: InputMaybe<Array<Scalars['String']>>;
+  fromBalance_lt?: InputMaybe<Scalars['String']>;
+  fromBalance_lte?: InputMaybe<Scalars['String']>;
+  fromBalance_not?: InputMaybe<Scalars['String']>;
+  fromBalance_not_contains?: InputMaybe<Scalars['String']>;
+  fromBalance_not_contains_nocase?: InputMaybe<Scalars['String']>;
+  fromBalance_not_ends_with?: InputMaybe<Scalars['String']>;
+  fromBalance_not_ends_with_nocase?: InputMaybe<Scalars['String']>;
+  fromBalance_not_in?: InputMaybe<Array<Scalars['String']>>;
+  fromBalance_not_starts_with?: InputMaybe<Scalars['String']>;
+  fromBalance_not_starts_with_nocase?: InputMaybe<Scalars['String']>;
+  fromBalance_starts_with?: InputMaybe<Scalars['String']>;
+  fromBalance_starts_with_nocase?: InputMaybe<Scalars['String']>;
+  from_?: InputMaybe<Account_Filter>;
+  from_contains?: InputMaybe<Scalars['String']>;
+  from_contains_nocase?: InputMaybe<Scalars['String']>;
+  from_ends_with?: InputMaybe<Scalars['String']>;
+  from_ends_with_nocase?: InputMaybe<Scalars['String']>;
+  from_gt?: InputMaybe<Scalars['String']>;
+  from_gte?: InputMaybe<Scalars['String']>;
+  from_in?: InputMaybe<Array<Scalars['String']>>;
+  from_lt?: InputMaybe<Scalars['String']>;
+  from_lte?: InputMaybe<Scalars['String']>;
+  from_not?: InputMaybe<Scalars['String']>;
+  from_not_contains?: InputMaybe<Scalars['String']>;
+  from_not_contains_nocase?: InputMaybe<Scalars['String']>;
+  from_not_ends_with?: InputMaybe<Scalars['String']>;
+  from_not_ends_with_nocase?: InputMaybe<Scalars['String']>;
+  from_not_in?: InputMaybe<Array<Scalars['String']>>;
+  from_not_starts_with?: InputMaybe<Scalars['String']>;
+  from_not_starts_with_nocase?: InputMaybe<Scalars['String']>;
+  from_starts_with?: InputMaybe<Scalars['String']>;
+  from_starts_with_nocase?: InputMaybe<Scalars['String']>;
+  id?: InputMaybe<Scalars['ID']>;
+  id_gt?: InputMaybe<Scalars['ID']>;
+  id_gte?: InputMaybe<Scalars['ID']>;
+  id_in?: InputMaybe<Array<Scalars['ID']>>;
+  id_lt?: InputMaybe<Scalars['ID']>;
+  id_lte?: InputMaybe<Scalars['ID']>;
+  id_not?: InputMaybe<Scalars['ID']>;
+  id_not_in?: InputMaybe<Array<Scalars['ID']>>;
+  or?: InputMaybe<Array<InputMaybe<Erc20Burn_Filter>>>;
+  timestamp?: InputMaybe<Scalars['BigInt']>;
+  timestamp_gt?: InputMaybe<Scalars['BigInt']>;
+  timestamp_gte?: InputMaybe<Scalars['BigInt']>;
+  timestamp_in?: InputMaybe<Array<Scalars['BigInt']>>;
+  timestamp_lt?: InputMaybe<Scalars['BigInt']>;
+  timestamp_lte?: InputMaybe<Scalars['BigInt']>;
+  timestamp_not?: InputMaybe<Scalars['BigInt']>;
+  timestamp_not_in?: InputMaybe<Array<Scalars['BigInt']>>;
+  transaction?: InputMaybe<Scalars['String']>;
+  transaction_?: InputMaybe<Transaction_Filter>;
+  transaction_contains?: InputMaybe<Scalars['String']>;
+  transaction_contains_nocase?: InputMaybe<Scalars['String']>;
+  transaction_ends_with?: InputMaybe<Scalars['String']>;
+  transaction_ends_with_nocase?: InputMaybe<Scalars['String']>;
+  transaction_gt?: InputMaybe<Scalars['String']>;
+  transaction_gte?: InputMaybe<Scalars['String']>;
+  transaction_in?: InputMaybe<Array<Scalars['String']>>;
+  transaction_lt?: InputMaybe<Scalars['String']>;
+  transaction_lte?: InputMaybe<Scalars['String']>;
+  transaction_not?: InputMaybe<Scalars['String']>;
+  transaction_not_contains?: InputMaybe<Scalars['String']>;
+  transaction_not_contains_nocase?: InputMaybe<Scalars['String']>;
+  transaction_not_ends_with?: InputMaybe<Scalars['String']>;
+  transaction_not_ends_with_nocase?: InputMaybe<Scalars['String']>;
+  transaction_not_in?: InputMaybe<Array<Scalars['String']>>;
+  transaction_not_starts_with?: InputMaybe<Scalars['String']>;
+  transaction_not_starts_with_nocase?: InputMaybe<Scalars['String']>;
+  transaction_starts_with?: InputMaybe<Scalars['String']>;
+  transaction_starts_with_nocase?: InputMaybe<Scalars['String']>;
+  value?: InputMaybe<Scalars['BigDecimal']>;
+  valueExact?: InputMaybe<Scalars['BigInt']>;
+  valueExact_gt?: InputMaybe<Scalars['BigInt']>;
+  valueExact_gte?: InputMaybe<Scalars['BigInt']>;
+  valueExact_in?: InputMaybe<Array<Scalars['BigInt']>>;
+  valueExact_lt?: InputMaybe<Scalars['BigInt']>;
+  valueExact_lte?: InputMaybe<Scalars['BigInt']>;
+  valueExact_not?: InputMaybe<Scalars['BigInt']>;
+  valueExact_not_in?: InputMaybe<Array<Scalars['BigInt']>>;
+  value_gt?: InputMaybe<Scalars['BigDecimal']>;
+  value_gte?: InputMaybe<Scalars['BigDecimal']>;
+  value_in?: InputMaybe<Array<Scalars['BigDecimal']>>;
+  value_lt?: InputMaybe<Scalars['BigDecimal']>;
+  value_lte?: InputMaybe<Scalars['BigDecimal']>;
+  value_not?: InputMaybe<Scalars['BigDecimal']>;
+  value_not_in?: InputMaybe<Array<Scalars['BigDecimal']>>;
+};
+
+export enum Erc20Burn_OrderBy {
+  Contract = 'contract',
+  ContractBurnCount = 'contract__burnCount',
+  ContractDecimals = 'contract__decimals',
+  ContractHolders = 'contract__holders',
+  ContractId = 'contract__id',
+  ContractMintCount = 'contract__mintCount',
+  ContractName = 'contract__name',
+  ContractSymbol = 'contract__symbol',
+  ContractTransfersCount = 'contract__transfersCount',
+  Emitter = 'emitter',
+  EmitterId = 'emitter__id',
+  From = 'from',
+  FromBalance = 'fromBalance',
+  FromBalanceId = 'fromBalance__id',
+  FromBalanceValue = 'fromBalance__value',
+  FromBalanceValueExact = 'fromBalance__valueExact',
+  FromId = 'from__id',
+  Id = 'id',
+  Timestamp = 'timestamp',
+  Transaction = 'transaction',
+  TransactionBlockNumber = 'transaction__blockNumber',
+  TransactionId = 'transaction__id',
+  TransactionTimestamp = 'transaction__timestamp',
   Value = 'value',
   ValueExact = 'valueExact'
 }
@@ -259,12 +452,16 @@ export type Erc20Contract = {
   __typename?: 'ERC20Contract';
   asAccount: Account;
   balances: Array<Erc20Balance>;
+  burnCount: Scalars['Int'];
   decimals: Scalars['Int'];
+  holders: Scalars['Int'];
   id: Scalars['Bytes'];
+  mintCount: Scalars['Int'];
   name?: Maybe<Scalars['String']>;
   symbol?: Maybe<Scalars['String']>;
   totalSupply: Erc20Balance;
   transfers: Array<Erc20Transfer>;
+  transfersCount: Scalars['Int'];
 };
 
 
@@ -311,6 +508,14 @@ export type Erc20Contract_Filter = {
   asAccount_starts_with?: InputMaybe<Scalars['String']>;
   asAccount_starts_with_nocase?: InputMaybe<Scalars['String']>;
   balances_?: InputMaybe<Erc20Balance_Filter>;
+  burnCount?: InputMaybe<Scalars['Int']>;
+  burnCount_gt?: InputMaybe<Scalars['Int']>;
+  burnCount_gte?: InputMaybe<Scalars['Int']>;
+  burnCount_in?: InputMaybe<Array<Scalars['Int']>>;
+  burnCount_lt?: InputMaybe<Scalars['Int']>;
+  burnCount_lte?: InputMaybe<Scalars['Int']>;
+  burnCount_not?: InputMaybe<Scalars['Int']>;
+  burnCount_not_in?: InputMaybe<Array<Scalars['Int']>>;
   decimals?: InputMaybe<Scalars['Int']>;
   decimals_gt?: InputMaybe<Scalars['Int']>;
   decimals_gte?: InputMaybe<Scalars['Int']>;
@@ -319,6 +524,14 @@ export type Erc20Contract_Filter = {
   decimals_lte?: InputMaybe<Scalars['Int']>;
   decimals_not?: InputMaybe<Scalars['Int']>;
   decimals_not_in?: InputMaybe<Array<Scalars['Int']>>;
+  holders?: InputMaybe<Scalars['Int']>;
+  holders_gt?: InputMaybe<Scalars['Int']>;
+  holders_gte?: InputMaybe<Scalars['Int']>;
+  holders_in?: InputMaybe<Array<Scalars['Int']>>;
+  holders_lt?: InputMaybe<Scalars['Int']>;
+  holders_lte?: InputMaybe<Scalars['Int']>;
+  holders_not?: InputMaybe<Scalars['Int']>;
+  holders_not_in?: InputMaybe<Array<Scalars['Int']>>;
   id?: InputMaybe<Scalars['Bytes']>;
   id_contains?: InputMaybe<Scalars['Bytes']>;
   id_gt?: InputMaybe<Scalars['Bytes']>;
@@ -329,6 +542,14 @@ export type Erc20Contract_Filter = {
   id_not?: InputMaybe<Scalars['Bytes']>;
   id_not_contains?: InputMaybe<Scalars['Bytes']>;
   id_not_in?: InputMaybe<Array<Scalars['Bytes']>>;
+  mintCount?: InputMaybe<Scalars['Int']>;
+  mintCount_gt?: InputMaybe<Scalars['Int']>;
+  mintCount_gte?: InputMaybe<Scalars['Int']>;
+  mintCount_in?: InputMaybe<Array<Scalars['Int']>>;
+  mintCount_lt?: InputMaybe<Scalars['Int']>;
+  mintCount_lte?: InputMaybe<Scalars['Int']>;
+  mintCount_not?: InputMaybe<Scalars['Int']>;
+  mintCount_not_in?: InputMaybe<Array<Scalars['Int']>>;
   name?: InputMaybe<Scalars['String']>;
   name_contains?: InputMaybe<Scalars['String']>;
   name_contains_nocase?: InputMaybe<Scalars['String']>;
@@ -391,6 +612,14 @@ export type Erc20Contract_Filter = {
   totalSupply_not_starts_with_nocase?: InputMaybe<Scalars['String']>;
   totalSupply_starts_with?: InputMaybe<Scalars['String']>;
   totalSupply_starts_with_nocase?: InputMaybe<Scalars['String']>;
+  transfersCount?: InputMaybe<Scalars['Int']>;
+  transfersCount_gt?: InputMaybe<Scalars['Int']>;
+  transfersCount_gte?: InputMaybe<Scalars['Int']>;
+  transfersCount_in?: InputMaybe<Array<Scalars['Int']>>;
+  transfersCount_lt?: InputMaybe<Scalars['Int']>;
+  transfersCount_lte?: InputMaybe<Scalars['Int']>;
+  transfersCount_not?: InputMaybe<Scalars['Int']>;
+  transfersCount_not_in?: InputMaybe<Array<Scalars['Int']>>;
   transfers_?: InputMaybe<Erc20Transfer_Filter>;
 };
 
@@ -398,15 +627,204 @@ export enum Erc20Contract_OrderBy {
   AsAccount = 'asAccount',
   AsAccountId = 'asAccount__id',
   Balances = 'balances',
+  BurnCount = 'burnCount',
   Decimals = 'decimals',
+  Holders = 'holders',
   Id = 'id',
+  MintCount = 'mintCount',
   Name = 'name',
   Symbol = 'symbol',
   TotalSupply = 'totalSupply',
   TotalSupplyId = 'totalSupply__id',
   TotalSupplyValue = 'totalSupply__value',
   TotalSupplyValueExact = 'totalSupply__valueExact',
-  Transfers = 'transfers'
+  Transfers = 'transfers',
+  TransfersCount = 'transfersCount'
+}
+
+export type Erc20Mint = Event & {
+  __typename?: 'ERC20Mint';
+  contract: Erc20Contract;
+  emitter: Account;
+  id: Scalars['ID'];
+  timestamp: Scalars['BigInt'];
+  to?: Maybe<Account>;
+  toBalance?: Maybe<Erc20Balance>;
+  transaction: Transaction;
+  value: Scalars['BigDecimal'];
+  valueExact: Scalars['BigInt'];
+};
+
+export type Erc20Mint_Filter = {
+  /** Filter for the block changed event. */
+  _change_block?: InputMaybe<BlockChangedFilter>;
+  and?: InputMaybe<Array<InputMaybe<Erc20Mint_Filter>>>;
+  contract?: InputMaybe<Scalars['String']>;
+  contract_?: InputMaybe<Erc20Contract_Filter>;
+  contract_contains?: InputMaybe<Scalars['String']>;
+  contract_contains_nocase?: InputMaybe<Scalars['String']>;
+  contract_ends_with?: InputMaybe<Scalars['String']>;
+  contract_ends_with_nocase?: InputMaybe<Scalars['String']>;
+  contract_gt?: InputMaybe<Scalars['String']>;
+  contract_gte?: InputMaybe<Scalars['String']>;
+  contract_in?: InputMaybe<Array<Scalars['String']>>;
+  contract_lt?: InputMaybe<Scalars['String']>;
+  contract_lte?: InputMaybe<Scalars['String']>;
+  contract_not?: InputMaybe<Scalars['String']>;
+  contract_not_contains?: InputMaybe<Scalars['String']>;
+  contract_not_contains_nocase?: InputMaybe<Scalars['String']>;
+  contract_not_ends_with?: InputMaybe<Scalars['String']>;
+  contract_not_ends_with_nocase?: InputMaybe<Scalars['String']>;
+  contract_not_in?: InputMaybe<Array<Scalars['String']>>;
+  contract_not_starts_with?: InputMaybe<Scalars['String']>;
+  contract_not_starts_with_nocase?: InputMaybe<Scalars['String']>;
+  contract_starts_with?: InputMaybe<Scalars['String']>;
+  contract_starts_with_nocase?: InputMaybe<Scalars['String']>;
+  emitter?: InputMaybe<Scalars['String']>;
+  emitter_?: InputMaybe<Account_Filter>;
+  emitter_contains?: InputMaybe<Scalars['String']>;
+  emitter_contains_nocase?: InputMaybe<Scalars['String']>;
+  emitter_ends_with?: InputMaybe<Scalars['String']>;
+  emitter_ends_with_nocase?: InputMaybe<Scalars['String']>;
+  emitter_gt?: InputMaybe<Scalars['String']>;
+  emitter_gte?: InputMaybe<Scalars['String']>;
+  emitter_in?: InputMaybe<Array<Scalars['String']>>;
+  emitter_lt?: InputMaybe<Scalars['String']>;
+  emitter_lte?: InputMaybe<Scalars['String']>;
+  emitter_not?: InputMaybe<Scalars['String']>;
+  emitter_not_contains?: InputMaybe<Scalars['String']>;
+  emitter_not_contains_nocase?: InputMaybe<Scalars['String']>;
+  emitter_not_ends_with?: InputMaybe<Scalars['String']>;
+  emitter_not_ends_with_nocase?: InputMaybe<Scalars['String']>;
+  emitter_not_in?: InputMaybe<Array<Scalars['String']>>;
+  emitter_not_starts_with?: InputMaybe<Scalars['String']>;
+  emitter_not_starts_with_nocase?: InputMaybe<Scalars['String']>;
+  emitter_starts_with?: InputMaybe<Scalars['String']>;
+  emitter_starts_with_nocase?: InputMaybe<Scalars['String']>;
+  id?: InputMaybe<Scalars['ID']>;
+  id_gt?: InputMaybe<Scalars['ID']>;
+  id_gte?: InputMaybe<Scalars['ID']>;
+  id_in?: InputMaybe<Array<Scalars['ID']>>;
+  id_lt?: InputMaybe<Scalars['ID']>;
+  id_lte?: InputMaybe<Scalars['ID']>;
+  id_not?: InputMaybe<Scalars['ID']>;
+  id_not_in?: InputMaybe<Array<Scalars['ID']>>;
+  or?: InputMaybe<Array<InputMaybe<Erc20Mint_Filter>>>;
+  timestamp?: InputMaybe<Scalars['BigInt']>;
+  timestamp_gt?: InputMaybe<Scalars['BigInt']>;
+  timestamp_gte?: InputMaybe<Scalars['BigInt']>;
+  timestamp_in?: InputMaybe<Array<Scalars['BigInt']>>;
+  timestamp_lt?: InputMaybe<Scalars['BigInt']>;
+  timestamp_lte?: InputMaybe<Scalars['BigInt']>;
+  timestamp_not?: InputMaybe<Scalars['BigInt']>;
+  timestamp_not_in?: InputMaybe<Array<Scalars['BigInt']>>;
+  to?: InputMaybe<Scalars['String']>;
+  toBalance?: InputMaybe<Scalars['String']>;
+  toBalance_?: InputMaybe<Erc20Balance_Filter>;
+  toBalance_contains?: InputMaybe<Scalars['String']>;
+  toBalance_contains_nocase?: InputMaybe<Scalars['String']>;
+  toBalance_ends_with?: InputMaybe<Scalars['String']>;
+  toBalance_ends_with_nocase?: InputMaybe<Scalars['String']>;
+  toBalance_gt?: InputMaybe<Scalars['String']>;
+  toBalance_gte?: InputMaybe<Scalars['String']>;
+  toBalance_in?: InputMaybe<Array<Scalars['String']>>;
+  toBalance_lt?: InputMaybe<Scalars['String']>;
+  toBalance_lte?: InputMaybe<Scalars['String']>;
+  toBalance_not?: InputMaybe<Scalars['String']>;
+  toBalance_not_contains?: InputMaybe<Scalars['String']>;
+  toBalance_not_contains_nocase?: InputMaybe<Scalars['String']>;
+  toBalance_not_ends_with?: InputMaybe<Scalars['String']>;
+  toBalance_not_ends_with_nocase?: InputMaybe<Scalars['String']>;
+  toBalance_not_in?: InputMaybe<Array<Scalars['String']>>;
+  toBalance_not_starts_with?: InputMaybe<Scalars['String']>;
+  toBalance_not_starts_with_nocase?: InputMaybe<Scalars['String']>;
+  toBalance_starts_with?: InputMaybe<Scalars['String']>;
+  toBalance_starts_with_nocase?: InputMaybe<Scalars['String']>;
+  to_?: InputMaybe<Account_Filter>;
+  to_contains?: InputMaybe<Scalars['String']>;
+  to_contains_nocase?: InputMaybe<Scalars['String']>;
+  to_ends_with?: InputMaybe<Scalars['String']>;
+  to_ends_with_nocase?: InputMaybe<Scalars['String']>;
+  to_gt?: InputMaybe<Scalars['String']>;
+  to_gte?: InputMaybe<Scalars['String']>;
+  to_in?: InputMaybe<Array<Scalars['String']>>;
+  to_lt?: InputMaybe<Scalars['String']>;
+  to_lte?: InputMaybe<Scalars['String']>;
+  to_not?: InputMaybe<Scalars['String']>;
+  to_not_contains?: InputMaybe<Scalars['String']>;
+  to_not_contains_nocase?: InputMaybe<Scalars['String']>;
+  to_not_ends_with?: InputMaybe<Scalars['String']>;
+  to_not_ends_with_nocase?: InputMaybe<Scalars['String']>;
+  to_not_in?: InputMaybe<Array<Scalars['String']>>;
+  to_not_starts_with?: InputMaybe<Scalars['String']>;
+  to_not_starts_with_nocase?: InputMaybe<Scalars['String']>;
+  to_starts_with?: InputMaybe<Scalars['String']>;
+  to_starts_with_nocase?: InputMaybe<Scalars['String']>;
+  transaction?: InputMaybe<Scalars['String']>;
+  transaction_?: InputMaybe<Transaction_Filter>;
+  transaction_contains?: InputMaybe<Scalars['String']>;
+  transaction_contains_nocase?: InputMaybe<Scalars['String']>;
+  transaction_ends_with?: InputMaybe<Scalars['String']>;
+  transaction_ends_with_nocase?: InputMaybe<Scalars['String']>;
+  transaction_gt?: InputMaybe<Scalars['String']>;
+  transaction_gte?: InputMaybe<Scalars['String']>;
+  transaction_in?: InputMaybe<Array<Scalars['String']>>;
+  transaction_lt?: InputMaybe<Scalars['String']>;
+  transaction_lte?: InputMaybe<Scalars['String']>;
+  transaction_not?: InputMaybe<Scalars['String']>;
+  transaction_not_contains?: InputMaybe<Scalars['String']>;
+  transaction_not_contains_nocase?: InputMaybe<Scalars['String']>;
+  transaction_not_ends_with?: InputMaybe<Scalars['String']>;
+  transaction_not_ends_with_nocase?: InputMaybe<Scalars['String']>;
+  transaction_not_in?: InputMaybe<Array<Scalars['String']>>;
+  transaction_not_starts_with?: InputMaybe<Scalars['String']>;
+  transaction_not_starts_with_nocase?: InputMaybe<Scalars['String']>;
+  transaction_starts_with?: InputMaybe<Scalars['String']>;
+  transaction_starts_with_nocase?: InputMaybe<Scalars['String']>;
+  value?: InputMaybe<Scalars['BigDecimal']>;
+  valueExact?: InputMaybe<Scalars['BigInt']>;
+  valueExact_gt?: InputMaybe<Scalars['BigInt']>;
+  valueExact_gte?: InputMaybe<Scalars['BigInt']>;
+  valueExact_in?: InputMaybe<Array<Scalars['BigInt']>>;
+  valueExact_lt?: InputMaybe<Scalars['BigInt']>;
+  valueExact_lte?: InputMaybe<Scalars['BigInt']>;
+  valueExact_not?: InputMaybe<Scalars['BigInt']>;
+  valueExact_not_in?: InputMaybe<Array<Scalars['BigInt']>>;
+  value_gt?: InputMaybe<Scalars['BigDecimal']>;
+  value_gte?: InputMaybe<Scalars['BigDecimal']>;
+  value_in?: InputMaybe<Array<Scalars['BigDecimal']>>;
+  value_lt?: InputMaybe<Scalars['BigDecimal']>;
+  value_lte?: InputMaybe<Scalars['BigDecimal']>;
+  value_not?: InputMaybe<Scalars['BigDecimal']>;
+  value_not_in?: InputMaybe<Array<Scalars['BigDecimal']>>;
+};
+
+export enum Erc20Mint_OrderBy {
+  Contract = 'contract',
+  ContractBurnCount = 'contract__burnCount',
+  ContractDecimals = 'contract__decimals',
+  ContractHolders = 'contract__holders',
+  ContractId = 'contract__id',
+  ContractMintCount = 'contract__mintCount',
+  ContractName = 'contract__name',
+  ContractSymbol = 'contract__symbol',
+  ContractTransfersCount = 'contract__transfersCount',
+  Emitter = 'emitter',
+  EmitterId = 'emitter__id',
+  Id = 'id',
+  Timestamp = 'timestamp',
+  To = 'to',
+  ToBalance = 'toBalance',
+  ToBalanceId = 'toBalance__id',
+  ToBalanceValue = 'toBalance__value',
+  ToBalanceValueExact = 'toBalance__valueExact',
+  ToId = 'to__id',
+  Transaction = 'transaction',
+  TransactionBlockNumber = 'transaction__blockNumber',
+  TransactionId = 'transaction__id',
+  TransactionTimestamp = 'transaction__timestamp',
+  Value = 'value',
+  ValueExact = 'valueExact'
 }
 
 export type Erc20Transfer = Event & {
@@ -612,10 +1030,14 @@ export type Erc20Transfer_Filter = {
 
 export enum Erc20Transfer_OrderBy {
   Contract = 'contract',
+  ContractBurnCount = 'contract__burnCount',
   ContractDecimals = 'contract__decimals',
+  ContractHolders = 'contract__holders',
   ContractId = 'contract__id',
+  ContractMintCount = 'contract__mintCount',
   ContractName = 'contract__name',
   ContractSymbol = 'contract__symbol',
+  ContractTransfersCount = 'contract__transfersCount',
   Emitter = 'emitter',
   EmitterId = 'emitter__id',
   From = 'from',
@@ -737,8 +1159,12 @@ export type Query = {
   accounts: Array<Account>;
   erc20Balance?: Maybe<Erc20Balance>;
   erc20Balances: Array<Erc20Balance>;
+  erc20Burn?: Maybe<Erc20Burn>;
+  erc20Burns: Array<Erc20Burn>;
   erc20Contract?: Maybe<Erc20Contract>;
   erc20Contracts: Array<Erc20Contract>;
+  erc20Mint?: Maybe<Erc20Mint>;
+  erc20Mints: Array<Erc20Mint>;
   erc20Transfer?: Maybe<Erc20Transfer>;
   erc20Transfers: Array<Erc20Transfer>;
   event?: Maybe<Event>;
@@ -789,6 +1215,24 @@ export type QueryErc20BalancesArgs = {
 };
 
 
+export type QueryErc20BurnArgs = {
+  block?: InputMaybe<Block_Height>;
+  id: Scalars['ID'];
+  subgraphError?: _SubgraphErrorPolicy_;
+};
+
+
+export type QueryErc20BurnsArgs = {
+  block?: InputMaybe<Block_Height>;
+  first?: InputMaybe<Scalars['Int']>;
+  orderBy?: InputMaybe<Erc20Burn_OrderBy>;
+  orderDirection?: InputMaybe<OrderDirection>;
+  skip?: InputMaybe<Scalars['Int']>;
+  subgraphError?: _SubgraphErrorPolicy_;
+  where?: InputMaybe<Erc20Burn_Filter>;
+};
+
+
 export type QueryErc20ContractArgs = {
   block?: InputMaybe<Block_Height>;
   id: Scalars['ID'];
@@ -804,6 +1248,24 @@ export type QueryErc20ContractsArgs = {
   skip?: InputMaybe<Scalars['Int']>;
   subgraphError?: _SubgraphErrorPolicy_;
   where?: InputMaybe<Erc20Contract_Filter>;
+};
+
+
+export type QueryErc20MintArgs = {
+  block?: InputMaybe<Block_Height>;
+  id: Scalars['ID'];
+  subgraphError?: _SubgraphErrorPolicy_;
+};
+
+
+export type QueryErc20MintsArgs = {
+  block?: InputMaybe<Block_Height>;
+  first?: InputMaybe<Scalars['Int']>;
+  orderBy?: InputMaybe<Erc20Mint_OrderBy>;
+  orderDirection?: InputMaybe<OrderDirection>;
+  skip?: InputMaybe<Scalars['Int']>;
+  subgraphError?: _SubgraphErrorPolicy_;
+  where?: InputMaybe<Erc20Mint_Filter>;
 };
 
 
@@ -868,8 +1330,12 @@ export type Subscription = {
   accounts: Array<Account>;
   erc20Balance?: Maybe<Erc20Balance>;
   erc20Balances: Array<Erc20Balance>;
+  erc20Burn?: Maybe<Erc20Burn>;
+  erc20Burns: Array<Erc20Burn>;
   erc20Contract?: Maybe<Erc20Contract>;
   erc20Contracts: Array<Erc20Contract>;
+  erc20Mint?: Maybe<Erc20Mint>;
+  erc20Mints: Array<Erc20Mint>;
   erc20Transfer?: Maybe<Erc20Transfer>;
   erc20Transfers: Array<Erc20Transfer>;
   event?: Maybe<Event>;
@@ -920,6 +1386,24 @@ export type SubscriptionErc20BalancesArgs = {
 };
 
 
+export type SubscriptionErc20BurnArgs = {
+  block?: InputMaybe<Block_Height>;
+  id: Scalars['ID'];
+  subgraphError?: _SubgraphErrorPolicy_;
+};
+
+
+export type SubscriptionErc20BurnsArgs = {
+  block?: InputMaybe<Block_Height>;
+  first?: InputMaybe<Scalars['Int']>;
+  orderBy?: InputMaybe<Erc20Burn_OrderBy>;
+  orderDirection?: InputMaybe<OrderDirection>;
+  skip?: InputMaybe<Scalars['Int']>;
+  subgraphError?: _SubgraphErrorPolicy_;
+  where?: InputMaybe<Erc20Burn_Filter>;
+};
+
+
 export type SubscriptionErc20ContractArgs = {
   block?: InputMaybe<Block_Height>;
   id: Scalars['ID'];
@@ -935,6 +1419,24 @@ export type SubscriptionErc20ContractsArgs = {
   skip?: InputMaybe<Scalars['Int']>;
   subgraphError?: _SubgraphErrorPolicy_;
   where?: InputMaybe<Erc20Contract_Filter>;
+};
+
+
+export type SubscriptionErc20MintArgs = {
+  block?: InputMaybe<Block_Height>;
+  id: Scalars['ID'];
+  subgraphError?: _SubgraphErrorPolicy_;
+};
+
+
+export type SubscriptionErc20MintsArgs = {
+  block?: InputMaybe<Block_Height>;
+  first?: InputMaybe<Scalars['Int']>;
+  orderBy?: InputMaybe<Erc20Mint_OrderBy>;
+  orderDirection?: InputMaybe<OrderDirection>;
+  skip?: InputMaybe<Scalars['Int']>;
+  subgraphError?: _SubgraphErrorPolicy_;
+  where?: InputMaybe<Erc20Mint_Filter>;
 };
 
 
@@ -1088,39 +1590,43 @@ export type EvmAssetOverviewQueryVariables = Exact<{
 }>;
 
 
-export type EvmAssetOverviewQuery = { erc20Contract?: { __typename?: 'ERC20Contract', id: any, name?: string | null, symbol?: string | null, decimals: number, totalSupply: { __typename?: 'ERC20Balance', value: any } } | null };
+export type EvmAssetOverviewQuery = { erc20Contract?: { __typename?: 'ERC20Contract', id: any, name?: string | null, symbol?: string | null, decimals: number, holders: number, totalSupply: { __typename?: 'ERC20Balance', value: any } } | null };
 
 export type EvmAssetHoldersQueryVariables = Exact<{
+  address: Scalars['ID'];
   offset?: InputMaybe<Scalars['Int']>;
   limit?: InputMaybe<Scalars['Int']>;
 }>;
 
 
-export type EvmAssetHoldersQuery = { erc20Balances: Array<{ __typename?: 'ERC20Balance', value: any, account?: { __typename?: 'Account', id: any } | null }> };
+export type EvmAssetHoldersQuery = { erc20Balances: Array<{ __typename?: 'ERC20Balance', value: any, account?: { __typename?: 'Account', id: any } | null }>, erc20Contract?: { __typename?: 'ERC20Contract', holders: number } | null };
 
 export type EvmAssetTransfersQueryVariables = Exact<{
+  address: Scalars['ID'];
   offset?: InputMaybe<Scalars['Int']>;
   limit?: InputMaybe<Scalars['Int']>;
 }>;
 
 
-export type EvmAssetTransfersQuery = { erc20Transfers: Array<{ __typename?: 'ERC20Transfer', value: any, timestamp: any, from?: { __typename?: 'Account', id: any } | null, to?: { __typename?: 'Account', id: any } | null, transaction: { __typename?: 'Transaction', id: string } }> };
+export type EvmAssetTransfersQuery = { erc20Transfers: Array<{ __typename?: 'ERC20Transfer', value: any, timestamp: any, from?: { __typename?: 'Account', id: any } | null, to?: { __typename?: 'Account', id: any } | null, transaction: { __typename?: 'Transaction', id: string } }>, erc20Contract?: { __typename?: 'ERC20Contract', transfersCount: number } | null };
 
 export type EvmAssetMintsQueryVariables = Exact<{
+  address: Scalars['ID'];
   offset?: InputMaybe<Scalars['Int']>;
   limit?: InputMaybe<Scalars['Int']>;
 }>;
 
 
-export type EvmAssetMintsQuery = { erc20Transfers: Array<{ __typename?: 'ERC20Transfer', value: any, timestamp: any, to?: { __typename?: 'Account', id: any } | null, transaction: { __typename?: 'Transaction', id: string } }> };
+export type EvmAssetMintsQuery = { erc20Transfers: Array<{ __typename?: 'ERC20Transfer', value: any, timestamp: any, to?: { __typename?: 'Account', id: any } | null, transaction: { __typename?: 'Transaction', id: string } }>, erc20Contract?: { __typename?: 'ERC20Contract', mintCount: number } | null };
 
 export type EvmAssetBurnsQueryVariables = Exact<{
+  address: Scalars['ID'];
   offset?: InputMaybe<Scalars['Int']>;
   limit?: InputMaybe<Scalars['Int']>;
 }>;
 
 
-export type EvmAssetBurnsQuery = { erc20Transfers: Array<{ __typename?: 'ERC20Transfer', value: any, timestamp: any, from?: { __typename?: 'Account', id: any } | null, transaction: { __typename?: 'Transaction', id: string } }> };
+export type EvmAssetBurnsQuery = { erc20Transfers: Array<{ __typename?: 'ERC20Transfer', value: any, timestamp: any, from?: { __typename?: 'Account', id: any } | null, transaction: { __typename?: 'Transaction', id: string } }>, erc20Contract?: { __typename?: 'ERC20Contract', burnCount: number } | null };
 
 
 export const EvmAssetOverviewDocument = gql`
@@ -1133,6 +1639,7 @@ export const EvmAssetOverviewDocument = gql`
     totalSupply {
       value
     }
+    holders
   }
 }
     `;
@@ -1165,7 +1672,7 @@ export type EvmAssetOverviewQueryHookResult = ReturnType<typeof useEvmAssetOverv
 export type EvmAssetOverviewLazyQueryHookResult = ReturnType<typeof useEvmAssetOverviewLazyQuery>;
 export type EvmAssetOverviewQueryResult = Apollo.QueryResult<EvmAssetOverviewQuery, EvmAssetOverviewQueryVariables>;
 export const EvmAssetHoldersDocument = gql`
-    query EvmAssetHolders($offset: Int = 1, $limit: Int = 10) {
+    query EvmAssetHolders($address: ID!, $offset: Int = 1, $limit: Int = 10) {
   erc20Balances(
     orderBy: value
     orderDirection: desc
@@ -1176,6 +1683,9 @@ export const EvmAssetHoldersDocument = gql`
       id
     }
     value
+  }
+  erc20Contract(id: $address) {
+    holders
   }
 }
     `;
@@ -1192,12 +1702,13 @@ export const EvmAssetHoldersDocument = gql`
  * @example
  * const { data, loading, error } = useEvmAssetHoldersQuery({
  *   variables: {
+ *      address: // value for 'address'
  *      offset: // value for 'offset'
  *      limit: // value for 'limit'
  *   },
  * });
  */
-export function useEvmAssetHoldersQuery(baseOptions?: Apollo.QueryHookOptions<EvmAssetHoldersQuery, EvmAssetHoldersQueryVariables>) {
+export function useEvmAssetHoldersQuery(baseOptions: Apollo.QueryHookOptions<EvmAssetHoldersQuery, EvmAssetHoldersQueryVariables>) {
         const options = {...defaultOptions, ...baseOptions}
         return Apollo.useQuery<EvmAssetHoldersQuery, EvmAssetHoldersQueryVariables>(EvmAssetHoldersDocument, options);
       }
@@ -1209,7 +1720,7 @@ export type EvmAssetHoldersQueryHookResult = ReturnType<typeof useEvmAssetHolder
 export type EvmAssetHoldersLazyQueryHookResult = ReturnType<typeof useEvmAssetHoldersLazyQuery>;
 export type EvmAssetHoldersQueryResult = Apollo.QueryResult<EvmAssetHoldersQuery, EvmAssetHoldersQueryVariables>;
 export const EvmAssetTransfersDocument = gql`
-    query EvmAssetTransfers($offset: Int = 0, $limit: Int = 10) {
+    query EvmAssetTransfers($address: ID!, $offset: Int = 0, $limit: Int = 10) {
   erc20Transfers(
     where: {from_not: null, to_not: null}
     orderBy: timestamp
@@ -1229,6 +1740,9 @@ export const EvmAssetTransfersDocument = gql`
       id
     }
   }
+  erc20Contract(id: $address) {
+    transfersCount
+  }
 }
     `;
 
@@ -1244,12 +1758,13 @@ export const EvmAssetTransfersDocument = gql`
  * @example
  * const { data, loading, error } = useEvmAssetTransfersQuery({
  *   variables: {
+ *      address: // value for 'address'
  *      offset: // value for 'offset'
  *      limit: // value for 'limit'
  *   },
  * });
  */
-export function useEvmAssetTransfersQuery(baseOptions?: Apollo.QueryHookOptions<EvmAssetTransfersQuery, EvmAssetTransfersQueryVariables>) {
+export function useEvmAssetTransfersQuery(baseOptions: Apollo.QueryHookOptions<EvmAssetTransfersQuery, EvmAssetTransfersQueryVariables>) {
         const options = {...defaultOptions, ...baseOptions}
         return Apollo.useQuery<EvmAssetTransfersQuery, EvmAssetTransfersQueryVariables>(EvmAssetTransfersDocument, options);
       }
@@ -1261,7 +1776,7 @@ export type EvmAssetTransfersQueryHookResult = ReturnType<typeof useEvmAssetTran
 export type EvmAssetTransfersLazyQueryHookResult = ReturnType<typeof useEvmAssetTransfersLazyQuery>;
 export type EvmAssetTransfersQueryResult = Apollo.QueryResult<EvmAssetTransfersQuery, EvmAssetTransfersQueryVariables>;
 export const EvmAssetMintsDocument = gql`
-    query EvmAssetMints($offset: Int = 0, $limit: Int = 10) {
+    query EvmAssetMints($address: ID!, $offset: Int = 0, $limit: Int = 10) {
   erc20Transfers(
     where: {from: null, to_not: null}
     orderBy: timestamp
@@ -1278,6 +1793,9 @@ export const EvmAssetMintsDocument = gql`
       id
     }
   }
+  erc20Contract(id: $address) {
+    mintCount
+  }
 }
     `;
 
@@ -1293,12 +1811,13 @@ export const EvmAssetMintsDocument = gql`
  * @example
  * const { data, loading, error } = useEvmAssetMintsQuery({
  *   variables: {
+ *      address: // value for 'address'
  *      offset: // value for 'offset'
  *      limit: // value for 'limit'
  *   },
  * });
  */
-export function useEvmAssetMintsQuery(baseOptions?: Apollo.QueryHookOptions<EvmAssetMintsQuery, EvmAssetMintsQueryVariables>) {
+export function useEvmAssetMintsQuery(baseOptions: Apollo.QueryHookOptions<EvmAssetMintsQuery, EvmAssetMintsQueryVariables>) {
         const options = {...defaultOptions, ...baseOptions}
         return Apollo.useQuery<EvmAssetMintsQuery, EvmAssetMintsQueryVariables>(EvmAssetMintsDocument, options);
       }
@@ -1310,7 +1829,7 @@ export type EvmAssetMintsQueryHookResult = ReturnType<typeof useEvmAssetMintsQue
 export type EvmAssetMintsLazyQueryHookResult = ReturnType<typeof useEvmAssetMintsLazyQuery>;
 export type EvmAssetMintsQueryResult = Apollo.QueryResult<EvmAssetMintsQuery, EvmAssetMintsQueryVariables>;
 export const EvmAssetBurnsDocument = gql`
-    query EvmAssetBurns($offset: Int = 0, $limit: Int = 10) {
+    query EvmAssetBurns($address: ID!, $offset: Int = 0, $limit: Int = 10) {
   erc20Transfers(
     where: {from_not: null, to: null}
     orderBy: timestamp
@@ -1327,6 +1846,9 @@ export const EvmAssetBurnsDocument = gql`
       id
     }
   }
+  erc20Contract(id: $address) {
+    burnCount
+  }
 }
     `;
 
@@ -1342,12 +1864,13 @@ export const EvmAssetBurnsDocument = gql`
  * @example
  * const { data, loading, error } = useEvmAssetBurnsQuery({
  *   variables: {
+ *      address: // value for 'address'
  *      offset: // value for 'offset'
  *      limit: // value for 'limit'
  *   },
  * });
  */
-export function useEvmAssetBurnsQuery(baseOptions?: Apollo.QueryHookOptions<EvmAssetBurnsQuery, EvmAssetBurnsQueryVariables>) {
+export function useEvmAssetBurnsQuery(baseOptions: Apollo.QueryHookOptions<EvmAssetBurnsQuery, EvmAssetBurnsQueryVariables>) {
         const options = {...defaultOptions, ...baseOptions}
         return Apollo.useQuery<EvmAssetBurnsQuery, EvmAssetBurnsQueryVariables>(EvmAssetBurnsDocument, options);
       }

@@ -6,15 +6,15 @@ import {
   Center,
   HStack,
 } from "@chakra-ui/react";
-import { Skeleton } from "../ui/skeleton";
-import NoData from "../helper/nodata";
+import { Skeleton } from "../../ui/skeleton";
+import NoData from "../../helper/nodata";
 import {
   PaginationItems,
   PaginationNextTrigger,
   PaginationPrevTrigger,
   PaginationRoot,
-} from "../ui/pagination";
-import HelpLink from "../helper/help_link";
+} from "../../ui/pagination";
+import HelpLink from "../../helper/help_link";
 import { ethToRealionetwork } from "@realiotech/address-generator";
 import { dayjs, TRANSACTION_DETAILS } from "@/utils";
 import numeral from "numeral";
@@ -24,7 +24,7 @@ const BurnRow = ({ hash, from, amount, time }) => (
     <Table.Cell borderBottomColor={{ base: 'gray.200', _dark: 'gray.700' }}>
       <HelpLink href={TRANSACTION_DETAILS(hash)} value={hash} />
     </Table.Cell>
-    <Table.Cell borderBottomColor={{ base: 'gray.200', _dark: 'gray.700' }}>          
+    <Table.Cell borderBottomColor={{ base: 'gray.200', _dark: 'gray.700' }}>
       <HelpLink href={`/accounts/${ethToRealionetwork(from)}`} value={from} />
     </Table.Cell>
     <Table.Cell borderBottomColor={{ base: 'gray.200', _dark: 'gray.700' }}>{numeral(amount).format('0.00')}</Table.Cell>
@@ -69,7 +69,7 @@ const BurnTable = ({ data, page, setPage }) => {
       </Box>
       <PaginationRoot
         count={data?.count}
-        pageSize={10}
+        pageSize={20}
         value={page + 1}
         onPageChange={(e) => setPage(e.page - 1)}
         size={{ base: "xs", md: "lg" }}
@@ -86,6 +86,7 @@ const BurnTable = ({ data, page, setPage }) => {
 
 export const SkeletonItem = () => (
   <Table.Row>
+    <Table.Cell py="26px"><Skeleton h="10px" w="full" /></Table.Cell>
     <Table.Cell py="26px"><Skeleton h="10px" w="full" /></Table.Cell>
     <Table.Cell py="26px"><Skeleton h="10px" w="full" /></Table.Cell>
     <Table.Cell py="26px"><Skeleton h="10px" w="full" /></Table.Cell>

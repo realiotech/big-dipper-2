@@ -8,10 +8,9 @@ import {
 import { useOverview } from "./hooks";
 import numeral from "numeral";
 
-export default function AssetOverview() {
-  const { state } = useOverview();
+export default function Erc20Overview({address}) {
+  const { state } = useOverview(address);
   const supplyAmt = state.supply;
-  const supplyInUsd = parseFloat(supplyAmt) * 1.27;
   return (
     <>
       <GridItem
@@ -19,7 +18,7 @@ export default function AssetOverview() {
         bg={{ base: "white", _dark: "black" }}
         p={6}
         borderRadius="lg"
-                 bgColor={{ base: "#FAFBFC", _dark: "#0F0F0F" }}
+        bgColor={{ base: "#FAFBFC", _dark: "#0F0F0F" }}
       >
         <Text fontSize={'24px'} pb={'10px'}>Overview</Text>
         <Flex direction={"column"} gap={2}>
@@ -46,7 +45,7 @@ export default function AssetOverview() {
         bg={{ base: "white", _dark: "black" }}
         p={6}
         borderRadius="lg"
-                 bgColor={{ base: "#FAFBFC", _dark: "#0F0F0F" }}
+        bgColor={{ base: "#FAFBFC", _dark: "#0F0F0F" }}
       >
         <Text fontSize={'24px'} pb={'10px'}>Market</Text>
         <Flex direction={"column"} gap={2}>
@@ -55,7 +54,7 @@ export default function AssetOverview() {
               Price
             </Text>
             <Text fontSize="32px" fontWeight="bold" color={'#522B61'}>
-              ${numeral(1.27).format("0.00")}
+              N/A
             </Text>
           </Box>
           <Box>
@@ -63,7 +62,7 @@ export default function AssetOverview() {
               Circulating Supply Market Cap
             </Text>
             <Text fontSize="32px" fontWeight="bold" color={'#522B61'}>
-              ${numeral(supplyInUsd).format("0,0.00")}
+              N/A
             </Text>
           </Box>
         </Flex>
@@ -73,7 +72,7 @@ export default function AssetOverview() {
         bg={{ base: "white", _dark: "black" }}
         p={6}
         borderRadius="lg"
-                 bgColor={{ base: "#FAFBFC", _dark: "#0F0F0F" }}
+        bgColor={{ base: "#FAFBFC", _dark: "#0F0F0F" }}
       >
 
         <Flex direction={"column"} gap={2}>
