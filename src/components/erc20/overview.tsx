@@ -8,7 +8,7 @@ import {
 import { useOverview } from "./hooks";
 import numeral from "numeral";
 
-export default function Erc20Overview({address}) {
+export default function Erc20Overview({address, metadata}) {
   const { state } = useOverview(address);
   const supplyAmt = state.supply;
   return (
@@ -27,7 +27,7 @@ export default function Erc20Overview({address}) {
               Total Supply
             </Text>
             <Text fontSize="32px" fontWeight="bold" color={'#522B61'}>
-              {numeral(supplyAmt).format("0,0")} {state.denom}
+              {numeral(supplyAmt).format("0,0")} {metadata.symbol}
             </Text>
           </Box>
           <Box>
@@ -83,13 +83,13 @@ export default function Erc20Overview({address}) {
             Contract: {state.id}
           </Text>
           <Text fontSize="md" color="gray.500">
-            Symbol: {state.denom}
+            Symbol: {metadata.symbol}
           </Text>
           <Text fontSize="md" color="gray.500">
-            Name: {state.name}
+            Name: {metadata.name}
           </Text>
           <Text fontSize="md" color="gray.500">
-            Decimals: {state.decimals}
+            Decimals: {metadata.decimals}
           </Text>
         </Flex>
       </GridItem>

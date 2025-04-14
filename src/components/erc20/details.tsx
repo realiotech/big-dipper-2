@@ -46,7 +46,7 @@ const Erc20Details = () => {
           </HStack>
         </Flex>
       </GridItem>
-      <Erc20Overview address={address} />
+      <Erc20Overview address={address} metadata={erc20Details}/>
       <Center>
         <Tabs.Root
           value={selectedTab}
