@@ -33,7 +33,6 @@ const BurnRow = ({ hash, from, amount, time }) => (
 );
 
 const BurnTable = ({ data, page, setPage }) => {
-
   return (
     <VStack w="full">
       <Box w="full" overflowX="auto">

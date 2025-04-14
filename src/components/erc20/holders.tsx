@@ -124,10 +124,10 @@ export default function Holders({ address }) {
       </Table.Root>
       <Center w="full" py="4">
         <PaginationRoot
-          count={holderState.count}
-          pageSize={10}
+          count={holderState?.count}
+          pageSize={20}
           value={page + 1}
-          onPageChange={(e) => setPage(e.page)}
+          onPageChange={(e) => setPage(e.page - 1)}
           size={{ base: "xs", md: "lg" }}
         >
           <HStack gap={0}>

@@ -29,7 +29,6 @@ export function useOverview(address: string) {
 
 export const useHolders = (address) => {
   const [page, setPage] = useState(0)
-  console.log(page)
   const {
     data: balancesData,
     loading: balancesLoading,
@@ -41,8 +40,8 @@ export const useHolders = (address) => {
     },
     variables: {
       address,
-      limit: 10,
-      offset: 10 * page,
+      limit: 20,
+      offset: 20 * page,
     },
   });
   useEffect(() => {
@@ -55,7 +54,7 @@ export const useHolders = (address) => {
   return {
     holderState: {
       loading: balancesLoading,
-      count: balancesData?.erc20Contract.holders,
+      count: balancesData?.erc20Contract?.holders ?? 0,
       data: balancesData?.erc20Balances ?? [],
       error: balancesErr,
     },
@@ -80,7 +79,7 @@ export const useActivities = (address) => {
     },
     variables: {
       address,
-      offset: transferPage * 10,
+      offset: transferPage * 20,
       limit: 20
     },
   });
@@ -102,7 +101,7 @@ export const useActivities = (address) => {
     },
     variables: {
       address,
-      offset: mintPage * 10,
+      offset: mintPage * 20,
       limit: 20
     },
   });
@@ -124,7 +123,7 @@ export const useActivities = (address) => {
     },
     variables: {
       address,
-      offset: burnPage * 10,
+      offset: burnPage * 20,
       limit: 20
     },
   });
@@ -138,19 +137,19 @@ export const useActivities = (address) => {
   return {
     transfer: {
       loading: transferLoading,
-      count: transferData?.erc20Contract.transfersCount,
+      count: transferData?.erc20Contract?.transfersCount ?? 0,
       data: transferData?.erc20Transfers ?? [],
       error: transferError,
     },
     mint: {
       loading: mintLoading,
-      count: mintData?.erc20Contract.mintCount,
+      count: mintData?.erc20Contract?.mintCount ?? 0,
       data: mintData?.erc20Transfers ?? [],
       error: mintError,
     },
     burn: {
       loading: burnLoading,
-      count: burnData?.erc20Contract.burnCount,
+      count: burnData?.erc20Contract?.burnCount ?? 0,
       data: burnData?.erc20Transfers ?? [],
       error: burnError,
     },
