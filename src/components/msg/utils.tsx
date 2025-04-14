@@ -371,12 +371,12 @@ const customTypeToModel = {
     tagTheme: 'four',
     tagDisplay: 'txCreateRelationshipLabel',
   },
-  // '/realionetwork.asset.v1.MsgUnAuthorizeAddress': {
-  //   model: MODELS.MsgTransfer,
-  //   content: COMPONENTS.Transfer,
-  //   tagTheme: 'four',
-  //   tagDisplay: 'txRequestDTagTransferLabel',
-  // },
+  '/os.evm.v1.MsgEthereumTx': {
+    model: MODELS.MsgEthereumTx,
+    content: COMPONENTS.EthereumTx,
+    tagTheme: 'teal',
+    tagDisplay: 'txEthereumLabel',
+  },
   // '/realionetwork.asset.v1.MsgUpdateToken': {
   //   model: MODELS.MsgTransfer,
   //   content: COMPONENTS.Transfer,
