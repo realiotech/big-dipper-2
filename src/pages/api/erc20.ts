@@ -2,7 +2,7 @@ import type { NextApiRequest, NextApiResponse } from "next";
 
 const ERC20_METADATA = [
     {
-        address: '0xb841f365d5221bed66d60e69094418d8c2aa5a44',
+        address: '0xcc2bcda0674252bc65b185eb25c31fe7157ad30a',
         symbol: 'DSTRX',
         name: 'District token',
         description: 'District token for LandBank',
