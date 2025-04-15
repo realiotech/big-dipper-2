@@ -15,14 +15,15 @@ import { useRouter } from 'next/router';
 import numeral from 'numeral';
 import { toast } from 'react-toastify';
 import { useRecoilCallback } from 'recoil';
-import { ASSET_SEARCH } from '@/utils/utils';
 import { ethToRealionetwork } from '@realiotech/address-generator';
+import searchData from "@/configs/search_data.json";
+
 const { extra, prefix } = chainConfig;
 const consensusRegex = new RegExp(`^(${prefix.consensus})`);
 const validatorRegex = new RegExp(`^(${prefix.validator})`);
 const userRegex = new RegExp(`^(${prefix.account})`);
 const evmRegex = new RegExp(`^(0x)`);
-const assetRegex = new RegExp(`^(a)`);
+
 import {
     useEvmTransactionQuery
 } from '@/graphql/types/general_types';
@@ -63,7 +64,6 @@ export const useSearchBar = (t: TFunction) => {
     const router = useRouter();
     const [evmTxHash, setEvmTxHash] = useState<string | null>(null);
 
-    // Handle EVM transaction query
     useEvmTransactionQuery({
         variables: { ehash: evmTxHash ?? '' },
         skip: !evmTxHash,
@@ -81,8 +81,9 @@ export const useSearchBar = (t: TFunction) => {
         ({ snapshot }) =>
             async (value: string, clear?: () => void) => {
                 const parsedValue = value.replace(/\s+/g, '');
-
-                if (consensusRegex.test(parsedValue)) {
+                if (searchData.seeds.includes(parsedValue)) {
+                    router.push(`/${searchData[parsedValue].path}/${searchData[parsedValue].value}`)
+                } else if (consensusRegex.test(parsedValue)) {
                     const validatorAddress = await snapshot.getPromise(readValidator(parsedValue));
                     if (validatorAddress) {
                         router.push(VALIDATOR_DETAILS(validatorAddress.validator));
@@ -110,13 +111,6 @@ export const useSearchBar = (t: TFunction) => {
                     }
                 } else if (parsedValue.length === 66 && evmRegex.test(parsedValue)) {
                     setEvmTxHash(parsedValue); // This will trigger the useEvmTransactionQuery
-                } else if (ASSET_SEARCH.includes(parsedValue.toLocaleLowerCase())) {
-                    let valueLower = parsedValue.toLocaleLowerCase()
-                    if (assetRegex.test(valueLower)) {
-                        router.push(`/assets/${valueLower}`);
-                    } else {
-                        router.push(`/assets/a${valueLower}`);
-                    }
                 } else if (/^@/.test(parsedValue)) {
                     const configProfile = extra.profile;
                     if (!configProfile) {

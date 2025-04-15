@@ -1,0 +1,93 @@
+query EvmAssetOverview($address: ID!) {
+  erc20Contract(id: $address) {
+    id
+    name
+    symbol
+    decimals
+    totalSupply {
+      value
+    }
+    holders
+  }
+}
+
+query EvmAssetHolders($address: ID!, $offset: Int = 1, $limit: Int = 10) {
+  erc20Balances(orderBy: value, orderDirection: desc, first: $limit, skip: $offset) {
+    account {
+      id
+    }
+    value
+  }
+  erc20Contract(id: $address) {
+    holders
+  }
+}
+
+query EvmAssetTransfers($address: ID!, $offset: Int = 0, $limit: Int = 10) {
+  erc20Transfers(where: {
+      from_not: null,
+      to_not: null
+    }, orderBy: timestamp, orderDirection: desc, first: $limit, skip: $offset) {
+    from {
+      id
+    }
+    to {
+      id
+    }
+    value
+    timestamp
+    transaction {
+      id
+    }
+  }
+  erc20Contract(id: $address) {
+    transfersCount
+  }
+}
+
+query EvmAssetMints($address: ID!, $offset: Int = 0, $limit: Int = 10) {
+  erc20Transfers(where: {
+      from: null,
+      to_not: null
+    }, orderBy: timestamp, orderDirection: desc, first: $limit, skip: $offset) {
+    to {
+      id
+    }
+    value
+    timestamp
+    transaction {
+      id
+    }
+  }
+  erc20Contract(id: $address) {
+    mintCount
+  }
+}
+
+query EvmAssetBurns($address: ID!, $offset: Int = 0, $limit: Int = 10) {
+  erc20Transfers(where: {
+      from_not: null,
+      to: null
+    }, orderBy: timestamp, orderDirection: desc, first: $limit, skip: $offset) {
+    from {
+      id
+    }
+    value
+    timestamp
+    transaction {
+      id
+    }
+  }
+  erc20Contract(id: $address) {
+    burnCount
+  }
+}
+
+query EvmBalances($address: String) {
+  erc20Balances(where: {account: $address}) {
+    value
+    contract {
+      id
+    }
+  }
+}

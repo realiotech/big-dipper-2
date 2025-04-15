@@ -2,7 +2,7 @@ import { Box, Text, Flex, VStack, Center } from "@chakra-ui/react";
 import { useBreakpointValue } from "@chakra-ui/react";
 import { ClipboardRoot, ClipboardIconButton } from "@/components/ui/clipboard";
 import Transactions from "./transactions";
-import { useOverview } from "./hooks";
+import { useErc20Balances, useOverview } from "./hooks";
 import Assets from "./assets";
 import AssetChart from "./asset_chart";
 import Staking from "./staking";
@@ -12,12 +12,14 @@ import { useMemo } from "react";
 import { useRecoilValue } from "recoil";
 import { readAssets } from "@/recoil/asset";
 import Big from "big.js";
+import { readTokens } from "@/recoil/erc20";
 
 export default function AccountDetail() {
   const { balances, address, evmAddress, completed } = useOverview();
   const { assetMap, loaded } = useRecoilValue(readAssets);
   const { delegations, unbondings, handleSort, sortDirection } =
     useStaking(address);
+
   const isMobile = useBreakpointValue({ base: true, lg: false });
 
   const createFreshBalanceMap = () => {
@@ -93,13 +95,14 @@ export default function AccountDetail() {
     return Object.entries(balanceMap).map(([denom, data]) => ({
       denom,
       ...data,
-    }));
+    })).filter(item => item.spendable > 0 || item.delegated > 0 || item.unbonding > 0);
   }, [balances, delegations, unbondings, loaded, completed]);
+
+  const erc20Balances = useErc20Balances(evmAddress)
 
   return (
     <Box minH="100vh">
       <Flex gap={6} flexWrap="wrap" mb={8}>
-        {/* Portfolio Balance */}
         <Flex flex={1} gap={6} flexDirection="column">
           <Box
             bg={{ base: "#FAFBFC", _dark: "#0F0F0F" }}
@@ -150,7 +153,7 @@ export default function AccountDetail() {
               </Flex>
             </VStack>
           </Box>
-          <Assets balances={balancesMerged} />
+          <Assets balances={balancesMerged} erc20Balances={erc20Balances} />
         </Flex>
         <AssetChart balances={balancesMerged} />
       </Flex>

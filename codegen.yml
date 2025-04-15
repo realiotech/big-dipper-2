@@ -3,10 +3,10 @@ config:
   # omitOperationSuffix: true
   skipTypeNameForRoot: true
 generates:
-  ./src/graphql/types/general_types.ts:
+  ./src/graphql/types/subgraph.ts:
     documents:
-      - 'src/graphql/general/*'
-    schema: http://37.27.71.120/v1/graphql
+      - 'src/graphql/subgraph/*'
+    schema: http://37.27.56.238:8000/subgraphs/name/graphprotocol/erc20-subgraph
     plugins:
       - "typescript"
       - "typescript-operations"

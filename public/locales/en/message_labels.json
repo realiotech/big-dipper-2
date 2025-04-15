@@ -5,6 +5,7 @@
   "txCreateValidatorLabel": "Create Validator",
   "txEditValidatorLabel": "Edit Validator",
   "txSendLabel": "Send",
+  "txEthereumLabel": "Execute EVM",
   "txMultisendLabel": "Multisend",
   "txVerifyInvariantLabel": "Verify Invariant",
   "txFundLabel": "Fund",

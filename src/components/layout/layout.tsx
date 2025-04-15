@@ -5,9 +5,11 @@ import Footer from "./footer";
 import { Skeleton } from "../ui/skeleton";
 import { useValidatorRecoil } from "@/recoil/validators/hooks";
 import { useAssetRecoil } from "@/recoil/asset";
+import { useTokenRecoil } from "@/recoil/erc20";
 
 export default function Layout({ children }) {
   useAssetRecoil();
+  useTokenRecoil();
   const { loading } = useValidatorRecoil();
   const isMobile = useBreakpointValue({ base: true, lg: false });
   return (
