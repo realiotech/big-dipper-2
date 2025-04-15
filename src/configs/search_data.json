@@ -6,7 +6,7 @@
         "rio",
         "rst",
         "lmx",
-        "0xcc2bcda0674252bc65b185eb25c31fe7157ad30a"
+        "0xb841f365d5221bed66d60e69094418d8c2aa5a44"
     ],
     "ario": {
         "value": "ario",
@@ -32,8 +32,8 @@
         "value": "almx",
         "path": "assets"
     },
-    "0xcc2bcda0674252bc65b185eb25c31fe7157ad30a": {
-        "value": "0xcc2bcda0674252bc65b185eb25c31fe7157ad30a",
+    "0xb841f365d5221bed66d60e69094418d8c2aa5a44": {
+        "value": "0xb841f365d5221bed66d60e69094418d8c2aa5a44",
         "path": "erc20"
     }
 }
