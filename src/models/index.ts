@@ -67,5 +67,6 @@ export { default as MsgRedelegate } from '@/models/msg/staking/msg_redelegate';
 export { default as MsgUndelegate } from '@/models/msg/staking/msg_undelegate';
 export { default as MsgCreatePeriodicVestingAccount } from '@/models/msg/vesting/msg_create_periodic_vesting_account';
 export { default as MsgCreateVestingAccount } from '@/models/msg/vesting/msg_create_vesting_account';
+export { default as MsgEthereumTx } from '@/models/msg/evm/msg_ethereum_tx';
 export { default as SlashingParams } from '@/models/slashing_params';
 export { default as StakingParams } from '@/models/staking_params';

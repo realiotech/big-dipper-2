@@ -3,6 +3,7 @@ import {
   useTransactionsQuery,
   useTransactionsListenerSubscription,
   TransactionsListenerSubscription,
+  useEvmTransactionQuery,
 } from '@/graphql/types/general_types';
 import { convertMsgsToModels } from '@/components/msg/utils';
 import { TransactionsState, TransactionState } from './types';
@@ -12,6 +13,7 @@ import { TransactionDetailsQuery, useTransactionDetailsQuery } from '@/graphql/t
 import { formatToken } from '@/utils/format_token';
 import { PageInfo } from "../layout/pagination";
 import { load } from 'js-yaml';
+import { TRANSACTION_DETAILS } from '@/utils';
 
 const MAX_TXS = 500 * 20
 const PAGE_SIZE = 20
@@ -226,6 +228,23 @@ const formatTransactionDetails = (data: TransactionDetailsQuery) => {
 
 export const useTransactionDetails = () => {
   const router = useRouter();
+  const [evmQueryCompleted, setEvmQueryCompleted] = useState(false);
+
+  const txhash = router.query.tx as string;
+  const isEvmTransaction = txhash?.startsWith("0x");
+
+  // Run EVM query first if it's an EVM transaction
+  const { data: evmData } = useEvmTransactionQuery({
+    variables: { ehash: isEvmTransaction ? txhash : '' },
+    skip: !isEvmTransaction,
+    onCompleted: (data) => {
+      if (data?.etransaction?.length === 1) {
+        router.push(TRANSACTION_DETAILS(data.etransaction[0].transaction_hash));
+      }
+      setEvmQueryCompleted(true);
+    },
+  });
+
   const [state, setState] = useState<TransactionState>({
     exists: true,
     loading: true,
@@ -271,13 +290,11 @@ export const useTransactionDetails = () => {
     }));
   }, [handleSetState]);
 
-  // ===============================
-  // Fetch data
-  // ===============================
   useTransactionDetailsQuery({
     variables: {
-      hash: router.query.tx as string,
+      hash: txhash,
     },
+    skip: isEvmTransaction && !evmQueryCompleted,
     onCompleted: (data) => {
       handleSetState((prevState) => ({ ...prevState, ...formatTransactionDetails(data) }));
     },

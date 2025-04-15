@@ -24,7 +24,7 @@ export const useAssetRecoil = () => {
         setAssets({ assetArr: newData, assetMap: assetMap, loaded: true })
       })
       .catch(e => {
-        console.log("can not fetch token data", e)
+        console.log("can not fetch asset data", e)
         setAssets({ assetArr: [], assetMap: {}, loaded: true })
       })
   }, [])

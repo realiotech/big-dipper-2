@@ -29,3 +29,10 @@ query TransactionsCount {
     count
   }
 }
+
+query EvmTransaction($ehash: String) {
+  etransaction(where: {ehash: {_eq: $ehash}}, limit: 1) {
+    ehash
+    transaction_hash
+  }
+}

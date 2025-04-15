@@ -12,6 +12,7 @@ import NoData from "../helper/nodata";
 import { Avatar } from "../ui/avatar";
 import Big from "big.js";
 import numeral from "numeral";
+import { readTokens } from "@/recoil/erc20";
 
 const AssetItem = ({ metadata, asset }) => {
     // Convert all values to numbers safely
@@ -53,9 +54,34 @@ const AssetItem = ({ metadata, asset }) => {
     );
 };
 
+const Erc20Item = ({ metadata, erc20 }) => {
+    return (
+        <Flex
+            bg={{ base: "white", _dark: "black" }}
+            padding={2}
+            borderRadius={4}
+            justify="space-between"
+            align="center"
+        >
+            <HStack>
+                <Avatar src={metadata?.image} name={metadata?.symbol} />
+                <Box>
+                    <Text fontWeight={600} fontSize={'16px'}>
+                        {metadata?.symbol}
+                    </Text>
+                    <Text fontSize="sm" color="green.500">
+                        {numeral(erc20.value).format('0,0.00')}
+                    </Text>
+                </Box>
+            </HStack>
+        </Flex>
+    );
+};
 
-export default function Assets({ balances }) {
+export default function Assets({ balances, erc20Balances }) {
     const { assetMap } = useRecoilValue(readAssets)
+    const { tokenMap } = useRecoilValue(readTokens)
+
     return (
         <Box
             bg={{ base: "#FAFBFC", _dark: "#0F0F0F" }}
@@ -72,7 +98,10 @@ export default function Assets({ balances }) {
             <VStack align="stretch">
                 {balances?.length ? balances.map((asset, i) => (
                     <AssetItem key={`asset-${i}`} asset={asset} metadata={assetMap[asset?.denom]} />
-                )) : <NoData />}
+                )) : <></>}
+                {erc20Balances?.length ? erc20Balances.map((erc20, i) => (
+                    <Erc20Item key={`erc20-${i}`} erc20={erc20} metadata={tokenMap[erc20?.contract?.id]} />
+                )) : <></> }
             </VStack>
         </Box>
     )
