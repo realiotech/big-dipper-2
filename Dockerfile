@@ -23,5 +23,5 @@ COPY . .
 # RUN npm run build:next
 RUN npm run build:next
 EXPOSE ${PORT}
-ENTRYPOINT ["npm", "run", "start"]
 
+ENTRYPOINT ["npm", "run", "start"]
