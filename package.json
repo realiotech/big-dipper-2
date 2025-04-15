@@ -17,7 +17,6 @@
     "@chakra-ui/cli": "^2.4.1",
     "@chakra-ui/progress": "^2.2.0",
     "@chakra-ui/react": "^3.5.0",
-    "@cosmjs/launchpad": "^0.27.1",
     "@cosmjs/stargate": "^0.33.0",
     "@emotion/react": "^11.11.0",
     "@emotion/server": "^11.11.0",
