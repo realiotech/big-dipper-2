@@ -32,7 +32,7 @@ export default function AssetOverview() {
             <Text fontSize="14px" color="gray.500">
               Total Supply
             </Text>
-            <Text fontSize="32px" fontWeight="bold" color={'#522B61'}>
+            <Text fontSize="32px" fontWeight="bold"color={{ base: "#522B61", _dark: "white" }}>
               {numeral(supplyAmt).format("0,0")} {metadata?.symbol}
             </Text>
           </Box>
@@ -40,7 +40,7 @@ export default function AssetOverview() {
             <Text fontSize="14px" color="gray.500">
               Holders
             </Text>
-            <Text fontSize="32px" fontWeight="bold" color={'#522B61'}>
+            <Text fontSize="32px" fontWeight="bold"color={{ base: "#522B61", _dark: "white" }}>
               {numeral(state.holders).format("0,0")}
             </Text>
           </Box>
@@ -59,7 +59,7 @@ export default function AssetOverview() {
             <Text fontSize="14px" color="gray.500">
               Price
             </Text>
-            <Text fontSize="32px" fontWeight="bold" color={'#522B61'}>
+            <Text fontSize="32px" fontWeight="bold"color={{ base: "#522B61", _dark: "white" }}>
               ${numeral(metadata?.price).format("0.00")}
             </Text>
           </Box>
@@ -67,7 +67,7 @@ export default function AssetOverview() {
             <Text fontSize="14px" color="gray.500">
               Circulating Supply Market Cap
             </Text>
-            <Text fontSize="32px" fontWeight="bold" color={'#522B61'}>
+            <Text fontSize="32px" fontWeight="bold"color={{ base: "#522B61", _dark: "white" }}>
               ${numeral(supplyInUsd).format("0,0.00")}
             </Text>
           </Box>
