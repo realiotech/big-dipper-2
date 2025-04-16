@@ -27,7 +27,7 @@ const ASSET_METADATA = [
         image: '/images/assets/LMX.png',
         decimals: 18,
         price: 1
-    },
+    }
 ]
 
 export default async function handler(
@@ -61,7 +61,6 @@ export default async function handler(
             resJsonPromises.push(response[i].json())
         }
         const resJson = await Promise.all(resJsonPromises);
-
 
         res.status(200).json(ASSET_METADATA.map((item, index) => ({ ...item, price: resJson[index]?.USD ?? 0 })));
     } catch (error) {

@@ -2,7 +2,7 @@ import { useState } from 'react';
 import {
     useSuppliesQuery,
 } from '@/graphql/types/general_types';
-import { ASSET_SEARCH } from '@/utils/utils';
+import searchData from '@/configs/search_data.json'
 
 export const useSupplies = () => {
     const [state, setState] = useState({
@@ -14,7 +14,7 @@ export const useSupplies = () => {
         onCompleted: (data) => {
             setState({
                 loading: false,
-                items: data.supply?.[0].coins.filter(item => ASSET_SEARCH.includes(item?.denom)),
+                items: data.supply?.[0].coins.filter(item => searchData.seeds.includes(item?.denom)),
             });
         },
     });
