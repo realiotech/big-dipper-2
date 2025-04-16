@@ -79,7 +79,7 @@ export const useSearchBar = (t: TFunction) => {
     const handleOnSubmit = useRecoilCallback(
         ({ snapshot }) =>
             async (value: string, clear?: () => void) => {
-                const parsedValue = value.replace(/\s+/g, '');
+                const parsedValue = value.replace(/\s+/g, '').toLowerCase();
                 if (searchData.seeds.includes(parsedValue)) {
                     router.push(`/${searchData[parsedValue].path}/${searchData[parsedValue].value}`)
                 } else if (consensusRegex.test(parsedValue)) {
