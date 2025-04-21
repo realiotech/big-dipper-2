@@ -2,7 +2,7 @@ import { useState } from 'react';
 import {
     useSuppliesQuery,
 } from '@/graphql/types/general_types';
-import searchData from '@/configs/search_data.json'
+import { searchData } from '@/configs';
 
 export const useSupplies = () => {
     const [state, setState] = useState({

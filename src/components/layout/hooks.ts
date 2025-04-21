@@ -16,14 +16,13 @@ import numeral from 'numeral';
 import { toast } from 'react-toastify';
 import { useRecoilCallback } from 'recoil';
 import { ethToRealionetwork } from '@realiotech/address-generator';
-import searchData from "@/configs/search_data.json";
+import { searchData } from '@/configs';
 
 const { extra, prefix } = chainConfig;
 const consensusRegex = new RegExp(`^(${prefix.consensus})`);
 const validatorRegex = new RegExp(`^(${prefix.validator})`);
 const userRegex = new RegExp(`^(${prefix.account})`);
 const evmRegex = new RegExp(`^(0x)`);
-
 import {
     useEvmTransactionQuery
 } from '@/graphql/types/general_types';
@@ -80,7 +79,7 @@ export const useSearchBar = (t: TFunction) => {
     const handleOnSubmit = useRecoilCallback(
         ({ snapshot }) =>
             async (value: string, clear?: () => void) => {
-                const parsedValue = value.replace(/\s+/g, '');
+                const parsedValue = value.replace(/\s+/g, '').toLowerCase();
                 if (searchData.seeds.includes(parsedValue)) {
                     router.push(`/${searchData[parsedValue].path}/${searchData[parsedValue].value}`)
                 } else if (consensusRegex.test(parsedValue)) {

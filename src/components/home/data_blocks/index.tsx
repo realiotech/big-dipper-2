@@ -39,24 +39,6 @@ export default function DataBlocks() {
           {numeral(stakingState.validators.active).format("0,0")}
         </Text>
       </GridItem>
-      <GridItem
-        borderRadius="20px"
-        bgColor={{ base: "#FAFBFC", _dark: "#0F0F0F" }}
-        py="5"
-        px="8"
-      >
-        <Text fontSize="14px" pb="3">
-          <Flex gap='2' align="center">
-          Inflation
-          <Tooltip positioning={{ placement: "right-end" }} showArrow content={`${numeral(stakingState.inflation).format("0.0")}% of unminted RIO supply`}>
-                <IoMdInformationCircleOutline />
-              </Tooltip>
-          </Flex>
-        </Text>
-        <Text fontSize="32px" fontWeight={600}>
-            {numeral(stakingState.inflation).format("0.0")}%
-        </Text>
-      </GridItem>
     </GridItem>
   );
 }
