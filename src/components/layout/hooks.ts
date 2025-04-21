@@ -16,7 +16,7 @@ import numeral from 'numeral';
 import { toast } from 'react-toastify';
 import { useRecoilCallback } from 'recoil';
 import { ethToRealionetwork } from '@realiotech/address-generator';
-import searchData from "@/configs/search_data.json";
+import { searchData } from '@/configs';
 
 const { extra, prefix } = chainConfig;
 const consensusRegex = new RegExp(`^(${prefix.consensus})`);

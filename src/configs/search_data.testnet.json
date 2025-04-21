@@ -1,0 +1,39 @@
+{
+    "seeds": [
+        "ario",
+        "arst",
+        "almx",
+        "rio",
+        "rst",
+        "lmx",
+        "0xcc2bcda0674252bc65b185eb25c31fe7157ad30a"
+    ],
+    "ario": {
+        "value": "ario",
+        "path": "assets"
+    },
+    "arst": {
+        "value": "arst",
+        "path": "assets"
+    },
+    "almx": {
+        "value": "almx",
+        "path": "assets"
+    },
+    "rio": {
+        "value": "ario",
+        "path": "assets"
+    },
+    "rst": {
+        "value": "arst",
+        "path": "assets"
+    },
+    "lmx": {
+        "value": "almx",
+        "path": "assets"
+    },
+    "0xcc2bcda0674252bc65b185eb25c31fe7157ad30a": {
+        "value": "0xcc2bcda0674252bc65b185eb25c31fe7157ad30a",
+        "path": "erc20"
+    }
+}
