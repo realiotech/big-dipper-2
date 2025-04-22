@@ -73,7 +73,7 @@ export const useDataStaking = () => {
             const bondedPool = new Big(bp.pool.bonded_tokens)
             setState((prevState) => ({
               ...prevState,
-              apr: annualProvisions.div(bondedPool).times(100).toFixed(2),
+              apr: annualProvisions.div(bondedPool).times(100).toFixed(3),
             }))
           }).catch(e => console.log(e))
       }).catch(e => console.log(e))

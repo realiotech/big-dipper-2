@@ -47,7 +47,7 @@ export default function DataBlocks() {
           Staking APR
         </Text>
         <Text fontSize="32px" fontWeight={600}>
-          {numeral(stakingState.apr).format("0.0")}%
+          {numeral(stakingState.apr).format("0.00")}%
         </Text>
       </GridItem>
     </GridItem>
