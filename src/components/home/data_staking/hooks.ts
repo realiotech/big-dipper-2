@@ -61,23 +61,22 @@ export const useDataStaking = () => {
       total: data.total.aggregate.count,
     };
   };
-  
+
   useEffect(() => {
     fetch("https://api.realio.network/realionetwork/mint/v1/annual_provisions")
-    .then(res => res.json())
-    .then(ap => {
-      fetch("https://api.realio.network/cosmos/staking/v1beta1/pool")
-      .then(res => res.json()
-      .then(bp => {
-        const annualProvisions = new Big(ap.annual_provisions)
-        const bondedPool = new Big(bp.pool.bonded_tokens)
-        setState((prevState) => ({
-          ...prevState,
-          apr: annualProvisions.div(bondedPool).times(100).toFixed(2),
-        }))
-      })
-    )
-    })
+      .then(res => res.json())
+      .then(ap => {
+        fetch("https://api.realio.network/cosmos/staking/v1beta1/pool")
+          .then(res => res.json())
+          .then(bp => {
+            const annualProvisions = new Big(ap.annual_provisions)
+            const bondedPool = new Big(bp.pool.bonded_tokens)
+            setState((prevState) => ({
+              ...prevState,
+              apr: annualProvisions.div(bondedPool).times(100).toFixed(2),
+            }))
+          }).catch(e => console.log(e))
+      }).catch(e => console.log(e))
   }, [])
 
   return {
