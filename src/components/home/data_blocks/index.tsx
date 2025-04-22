@@ -1,8 +1,6 @@
-import { Flex, GridItem, Text } from "@chakra-ui/react";
+import { GridItem, Text } from "@chakra-ui/react";
 import { useDataBlocks } from "./hooks";
 import { useDataStaking } from "../data_staking/hooks";
-import { IoMdInformationCircleOutline } from "react-icons/io";
-import { Tooltip } from "@/components/ui/tooltip";
 import numeral from "numeral";
 
 export default function DataBlocks() {
@@ -37,6 +35,19 @@ export default function DataBlocks() {
         </Text>
         <Text fontSize="32px" fontWeight={600}>
           {numeral(stakingState.validators.active).format("0,0")}
+        </Text>
+      </GridItem>
+      <GridItem
+        borderRadius="20px"
+        bgColor={{ base: "#FAFBFC", _dark: "#0F0F0F" }}
+        py="5"
+        px="8"
+      >
+        <Text fontSize="14px" pb="3">
+          Staking APR
+        </Text>
+        <Text fontSize="32px" fontWeight={600}>
+          {numeral(stakingState.apr).format("0.0")}%
         </Text>
       </GridItem>
     </GridItem>
