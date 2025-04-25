@@ -16,5 +16,6 @@ export type AssetMap = {
 export interface AtomState {
   assetArr: AssetItem[];
   assetMap: AssetMap;
+  burnedSupply: string,
   loaded: boolean;
 }

@@ -7,16 +7,18 @@ import {
 } from "@chakra-ui/react";
 import { useOverview } from "./hooks";
 import { useRecoilValue } from "recoil";
-import { readAsset } from "@/recoil/asset";
+import { readAsset, readAssets } from "@/recoil/asset";
 import numeral from "numeral";
 import { formatTokenByExponent } from "@/utils";
 
 export default function AssetOverview() {
   const { state } = useOverview();
   const metadata = useRecoilValue(readAsset(state.denom));
-
+  const { burnedSupply } = useRecoilValue(readAssets);
+  const burnedAmt = formatTokenByExponent(burnedSupply, 18)
   const supplyAmt = formatTokenByExponent(state.supply, metadata?.decimals);
-  const supplyInUsd = parseFloat(supplyAmt) * metadata?.price;
+  const realSupply = state.denom == "ario" ? parseFloat(supplyAmt) - parseFloat(burnedAmt) : parseFloat(supplyAmt)
+  const supplyInUsd = realSupply * metadata?.price;
   return (
     <>
       <GridItem
@@ -33,7 +35,7 @@ export default function AssetOverview() {
               Total Supply
             </Text>
             <Text fontSize="32px" fontWeight="bold"color={{ base: "#522B61", _dark: "white" }}>
-              {numeral(supplyAmt).format("0,0")} {metadata?.symbol}
+              {numeral(realSupply).format("0,0")} {metadata?.symbol}
             </Text>
           </Box>
           <Box>

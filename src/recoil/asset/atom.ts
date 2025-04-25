@@ -4,6 +4,7 @@ import { AtomState } from "./types";
 const initialState: AtomState = {
   assetArr: [],
   assetMap: {},
+  burnedSupply: "0",
   loaded: false
 };
 
