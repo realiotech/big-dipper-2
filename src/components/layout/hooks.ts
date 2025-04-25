@@ -79,9 +79,9 @@ export const useSearchBar = (t: TFunction) => {
     const handleOnSubmit = useRecoilCallback(
         ({ snapshot }) =>
             async (value: string, clear?: () => void) => {
-                const parsedValue = value.replace(/\s+/g, '').toLowerCase();
-                if (searchData.seeds.includes(parsedValue)) {
-                    router.push(`/${searchData[parsedValue].path}/${searchData[parsedValue].value}`)
+                const parsedValue = value.replace(/\s+/g, '')
+                if (searchData.seeds.includes(parsedValue.toLowerCase())) {
+                    router.push(`/${searchData[parsedValue.toLowerCase()].path}/${searchData[parsedValue.toLowerCase()].value}`)
                 } else if (consensusRegex.test(parsedValue)) {
                     const validatorAddress = await snapshot.getPromise(readValidator(parsedValue));
                     if (validatorAddress) {
@@ -109,7 +109,7 @@ export const useSearchBar = (t: TFunction) => {
                         toast<string>(t('common:invalidAddress'));
                     }
                 } else if (parsedValue.length === 66 && evmRegex.test(parsedValue)) {
-                    setEvmTxHash(parsedValue); // This will trigger the useEvmTransactionQuery
+                    setEvmTxHash(parsedValue.toLowerCase()); // This will trigger the useEvmTransactionQuery
                 } else if (/^@/.test(parsedValue)) {
                     const configProfile = extra.profile;
                     if (!configProfile) {

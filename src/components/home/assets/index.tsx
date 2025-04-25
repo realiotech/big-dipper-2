@@ -16,9 +16,10 @@ import Loading from "@/components/helper/loading";
 import numeral from "numeral";
 import { formatTokenByExponent } from "@/utils";
 
-const TokenItem = ({ data, metadata }) => {
-  const amtStr = formatTokenByExponent(data?.amount, metadata.decimals);
-  const amtInUsd = parseFloat(amtStr) * metadata.price;
+const TokenItem = ({ data, metadata, burnedAmt }) => {
+  const supplyAmt = formatTokenByExponent(data?.amount, metadata.decimals);
+  const realSupply = metadata.denom == "ario" ? parseFloat(supplyAmt) - parseFloat(burnedAmt) : parseFloat(supplyAmt)
+  const supplyInUsd = realSupply * metadata?.price;
   return (
     <Table.Row bg={{ base: "white", _dark: "#262626" }}>
       <Table.Cell borderBottomColor={{ base: "gray.200", _dark: "gray.700" }}>
@@ -39,9 +40,9 @@ const TokenItem = ({ data, metadata }) => {
 
       <Table.Cell borderBottomColor={{ base: "gray.200", _dark: "gray.700" }}>
         <VStack align="flex-end">
-          <Text fontWeight="bold">${numeral(amtInUsd).format("0,0.00")}</Text>
+          <Text fontWeight="bold">${numeral(supplyInUsd).format("0,0.00")}</Text>
           <Text fontSize="sm" color="gray.500">
-            {numeral(amtStr).format("0,0.00")}
+            {numeral(realSupply).format("0,0.00")}
           </Text>
         </VStack>
       </Table.Cell>
@@ -51,7 +52,8 @@ const TokenItem = ({ data, metadata }) => {
 
 const FeaturedTokens = () => {
   const { items, loading } = useSupplies();
-  const { assetMap, loaded } = useRecoilValue(readAssets);
+  const { assetMap, loaded, burnedSupply } = useRecoilValue(readAssets);
+  const burnedAmt = formatTokenByExponent(burnedSupply, 18)
 
   const order = ["ario", "arst", "almx"];
 
@@ -92,6 +94,7 @@ const FeaturedTokens = () => {
                     data={item}
                     key={`token-${index}`}
                     metadata={assetMap[item.denom]}
+                    burnedAmt={burnedAmt}
                   />
                 ))}
               </Table.Body>

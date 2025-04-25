@@ -23566,6 +23566,14 @@ export type BalancesByAddressQueryVariables = Exact<{
 
 export type BalancesByAddressQuery = { balance: Array<{ __typename?: 'balance', amount: string, denom: string }> };
 
+export type BalanceByDenomQueryVariables = Exact<{
+  account: Scalars['String'];
+  denom: Scalars['String'];
+}>;
+
+
+export type BalanceByDenomQuery = { balance: Array<{ __typename?: 'balance', amount: string, denom: string }> };
+
 export type AccountDelegationsQueryVariables = Exact<{
   address: Scalars['String'];
   offset?: InputMaybe<Scalars['Int']>;
@@ -23983,6 +23991,43 @@ export function useBalancesByAddressLazyQuery(baseOptions?: Apollo.LazyQueryHook
 export type BalancesByAddressQueryHookResult = ReturnType<typeof useBalancesByAddressQuery>;
 export type BalancesByAddressLazyQueryHookResult = ReturnType<typeof useBalancesByAddressLazyQuery>;
 export type BalancesByAddressQueryResult = Apollo.QueryResult<BalancesByAddressQuery, BalancesByAddressQueryVariables>;
+export const BalanceByDenomDocument = gql`
+    query BalanceByDenom($account: String!, $denom: String!) {
+  balance(where: {address: {_eq: $account}, denom: {_eq: $denom}}) {
+    amount
+    denom
+  }
+}
+    `;
+
+/**
+ * __useBalanceByDenomQuery__
+ *
+ * To run a query within a React component, call `useBalanceByDenomQuery` and pass it any options that fit your needs.
+ * When your component renders, `useBalanceByDenomQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useBalanceByDenomQuery({
+ *   variables: {
+ *      account: // value for 'account'
+ *      denom: // value for 'denom'
+ *   },
+ * });
+ */
+export function useBalanceByDenomQuery(baseOptions: Apollo.QueryHookOptions<BalanceByDenomQuery, BalanceByDenomQueryVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useQuery<BalanceByDenomQuery, BalanceByDenomQueryVariables>(BalanceByDenomDocument, options);
+      }
+export function useBalanceByDenomLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<BalanceByDenomQuery, BalanceByDenomQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return Apollo.useLazyQuery<BalanceByDenomQuery, BalanceByDenomQueryVariables>(BalanceByDenomDocument, options);
+        }
+export type BalanceByDenomQueryHookResult = ReturnType<typeof useBalanceByDenomQuery>;
+export type BalanceByDenomLazyQueryHookResult = ReturnType<typeof useBalanceByDenomLazyQuery>;
+export type BalanceByDenomQueryResult = Apollo.QueryResult<BalanceByDenomQuery, BalanceByDenomQueryVariables>;
 export const AccountDelegationsDocument = gql`
     query AccountDelegations($address: String!, $offset: Int = 0, $limit: Int = 10, $order: String! = "desc") {
   get_ms_locks_sorted(

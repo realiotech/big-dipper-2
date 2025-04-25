@@ -12,7 +12,8 @@ export type BaseCategories =
   | 'feegrant'
   | 'vesting'
   | 'others';
-export type CustomCategories = 'evm'; // custom modules
+export type CustomCategories = 'evm'
+  | 'bridge'; // custom modules
 export type Categories = BaseCategories | CustomCategories;
 export interface Log {
   events?: Array<{

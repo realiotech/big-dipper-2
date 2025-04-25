@@ -377,6 +377,18 @@ const customTypeToModel = {
     tagTheme: 'teal',
     tagDisplay: 'txEthereumLabel',
   },
+  '/realionetwork.bridge.v1.MsgBridgeIn': {
+    model: MODELS.MsgBridgeIn,
+    content: COMPONENTS.BridgeIn,
+    tagTheme: 'blue',
+    tagDisplay: 'txBridgeInLabel',
+  },
+  '/realionetwork.bridge.v1.MsgBridgeOut': {
+    model: MODELS.MsgBridgeOut,
+    content: COMPONENTS.BridgeOut,
+    tagTheme: 'red',
+    tagDisplay: 'txBridgeOutLabel',
+  },
   // '/realionetwork.asset.v1.MsgUpdateToken': {
   //   model: MODELS.MsgTransfer,
   //   content: COMPONENTS.Transfer,
