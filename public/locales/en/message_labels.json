@@ -24,6 +24,8 @@
   "txAcceptDTagTransferLabel": "Accept DTag Transfer",
   "txCancelDTagTransferLabel": "Cancel DTag Transfer",
   "txRefuseDTagTransferLabel": "Refuse DTag Transfer",
+  "txBridgeInLabel": "Bridge In",
+  "txBridgeOutLabel": "Bridge Out",
   "txBlockUserLabel": "Block User",
   "txUnblockUserLabel": "Unblock User",
   "txCreateClientLabel": "IBC Create Client",
