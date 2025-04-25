@@ -109,7 +109,7 @@ export const useSearchBar = (t: TFunction) => {
                         toast<string>(t('common:invalidAddress'));
                     }
                 } else if (parsedValue.length === 66 && evmRegex.test(parsedValue)) {
-                    setEvmTxHash(parsedValue); // This will trigger the useEvmTransactionQuery
+                    setEvmTxHash(parsedValue.toLowerCase()); // This will trigger the useEvmTransactionQuery
                 } else if (/^@/.test(parsedValue)) {
                     const configProfile = extra.profile;
                     if (!configProfile) {
