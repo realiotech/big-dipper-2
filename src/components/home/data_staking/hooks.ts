@@ -63,10 +63,10 @@ export const useDataStaking = () => {
   };
 
   useEffect(() => {
-    fetch("https://api.realio.network/realionetwork/mint/v1/annual_provisions")
+    fetch(`${process.env.NEXT_PUBLIC_RPC_API}/realionetwork/mint/v1/annual_provisions`)
       .then(res => res.json())
       .then(ap => {
-        fetch("https://api.realio.network/cosmos/staking/v1beta1/pool")
+        fetch(`${process.env.NEXT_PUBLIC_RPC_API}/cosmos/staking/v1beta1/pool`)
           .then(res => res.json())
           .then(bp => {
             const annualProvisions = new Big(ap.annual_provisions)
