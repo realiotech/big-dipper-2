@@ -7,6 +7,9 @@ export type TokenItem = {
   image: string;
   decimals: number;
   price: number;
+  // Pre-loaded supply data from subgraph
+  supply?: string;
+  holders?: number;
 }
 
 export type TokenMap = {
