@@ -35,5 +35,9 @@
     "0xb841f365d5221bed66d60e69094418d8c2aa5a44": {
         "value": "0xb841f365d5221bed66d60e69094418d8c2aa5a44",
         "path": "erc20"
+    },
+    "dstrx": {
+        "value": "0xb841f365d5221bed66d60e69094418d8c2aa5a44",
+        "path": "erc20"
     }
 }
