@@ -24,22 +24,38 @@ class MsgWithdrawValidatorCommission {
     this.json = R.pathOr({}, ['json'], payload);
   }
 
-  static getWithdrawalAmount(log?: Log) {
-    const withdrawEvents =
-      log?.events ?? [].filter((x: { type: string }) => x.type === 'withdraw_commission');
-    const withdrawAmounts =
-      withdrawEvents?.[0]?.attributes?.filter((x: { key?: string }) => x.key === 'amount') ?? [];
+  static getWithdrawalAmount(logs?: Log | Log[]) {
+    if (Array.isArray(logs)) {
+      const withdrawEvents = logs.flatMap(log => 
+        log?.events?.filter((x: { type: string }) => x.type === 'withdraw_commission') || []
+      );
+      
+      const withdrawAmounts =
+        withdrawEvents?.[0]?.attributes?.filter((x: { key?: string }) => x.key === 'amount') ?? [];
 
-    const amounts = (withdrawAmounts?.[0]?.value ?? '0').split(',').map((x) => {
-      const [amount, denom = primaryTokenUnit] = x.match(/[a-z]+|[^a-z]+/gi) ?? [];
-      return formatToken(amount, denom);
-    });
+      const amounts = (withdrawAmounts?.[0]?.value ?? '0').split(',').map((x) => {
+        const [amount, denom = primaryTokenUnit] = x.match(/[a-z]+|[^a-z]+/gi) ?? [];
+        return formatToken(amount, denom);
+      });
 
-    return amounts;
+      return amounts;
+    } else {
+      const withdrawEvents =
+        logs?.events?.filter((x: { type: string }) => x.type === 'withdraw_commission') ?? [];
+      const withdrawAmounts =
+        withdrawEvents?.[0]?.attributes?.filter((x: { key?: string }) => x.key === 'amount') ?? [];
+
+      const amounts = (withdrawAmounts?.[0]?.value ?? '0').split(',').map((x) => {
+        const [amount, denom = primaryTokenUnit] = x.match(/[a-z]+|[^a-z]+/gi) ?? [];
+        return formatToken(amount, denom);
+      });
+
+      return amounts;
+    }
   }
 
-  static fromJson(json: object, log?: Log): MsgWithdrawValidatorCommission {
-    const amounts = this.getWithdrawalAmount(log);
+  static fromJson(json: object, logs?: Log | Log[]): MsgWithdrawValidatorCommission {
+    const amounts = this.getWithdrawalAmount(logs);
 
     return {
       category: 'distribution',

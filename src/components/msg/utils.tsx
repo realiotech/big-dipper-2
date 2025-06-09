@@ -479,12 +479,10 @@ export const convertMsgsToModels = (
     transaction?.messages?.map((msg: object, i: number) => {
       const model = getMessageModelByType(R.pathOr<string>('', ['@type'], msg));
       if (model === MODELS.MsgWithdrawDelegatorReward) {
-        const log = transaction?.logs?.[i];
-        return MODELS.MsgWithdrawDelegatorReward.fromJson(msg, log);
+        return MODELS.MsgWithdrawDelegatorReward.fromJson(msg, transaction?.logs);
       }
       if (model === MODELS.MsgWithdrawValidatorCommission) {
-        const log = transaction?.logs?.[i];
-        return MODELS.MsgWithdrawValidatorCommission.fromJson(msg, log);
+        return MODELS.MsgWithdrawValidatorCommission.fromJson(msg, transaction?.logs);
       }
       return model.fromJson(msg);
     }) ?? [];

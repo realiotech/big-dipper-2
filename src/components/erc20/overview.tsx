@@ -7,10 +7,15 @@ import {
 } from "@chakra-ui/react";
 import { useOverview } from "./hooks";
 import numeral from "numeral";
+import { useRecoilValue } from "recoil";
+import { readToken } from "@/recoil/erc20";
 
 export default function Erc20Overview({address, metadata}) {
   const { state } = useOverview(address);
   const supplyAmt = state.supply;
+  const tokenDetails = useRecoilValue(readToken(address));
+  const price = tokenDetails?.price || 0;
+  const supplyInUsd = Number(supplyAmt) * Number(price);
   return (
     <>
       <GridItem
@@ -54,7 +59,7 @@ export default function Erc20Overview({address, metadata}) {
               Price
             </Text>
             <Text fontSize="32px" fontWeight="bold" color={{ base: "#522B61", _dark: "white" }}>
-              N/A
+              ${numeral(price).format("0.0000")}
             </Text>
           </Box>
           <Box>
@@ -62,7 +67,7 @@ export default function Erc20Overview({address, metadata}) {
               Circulating Supply Market Cap
             </Text>
             <Text fontSize="32px" fontWeight="bold"color={{ base: "#522B61", _dark: "white" }}>
-              N/A
+              ${numeral(supplyInUsd).format("0,0.00")}
             </Text>
           </Box>
         </Flex>
