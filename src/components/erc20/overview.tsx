@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React from "react";
 import {
   Box,
   Flex,
@@ -16,6 +16,21 @@ export default function Erc20Overview({address, metadata}) {
   const tokenDetails = useRecoilValue(readToken(address));
   const price = tokenDetails?.price || 0;
   const supplyInUsd = Number(supplyAmt) * Number(price);
+
+  // Use default values when metadata is not available
+  const safeMetadata = metadata || {
+    symbol: 'N/A',
+    name: 'N/A',
+    decimals: 'N/A'
+  };
+
+  // Use default values for loading state
+  const displaySupplyAmt = supplyAmt || '0';
+  const displayHolders = state.holders || 0;
+  const displayPrice = price || 0;
+  const displaySupplyInUsd = supplyInUsd || 0;
+  const displayContractId = state.id || 'N/A';
+
   return (
     <>
       <GridItem
@@ -32,7 +47,7 @@ export default function Erc20Overview({address, metadata}) {
               Total Supply
             </Text>
             <Text fontSize="32px" fontWeight="bold"color={{ base: "#522B61", _dark: "white" }}>
-              {numeral(supplyAmt).format("0,0")} {metadata.symbol}
+              {numeral(displaySupplyAmt).format("0,0")} {safeMetadata.symbol}
             </Text>
           </Box>
           <Box>
@@ -40,7 +55,7 @@ export default function Erc20Overview({address, metadata}) {
               Holders
             </Text>
             <Text fontSize="32px" fontWeight="bold"color={{ base: "#522B61", _dark: "white" }}>
-              {numeral(state.holders).format("0,0")}
+              {numeral(displayHolders).format("0,0")}
             </Text>
           </Box>
         </Flex>
@@ -59,7 +74,7 @@ export default function Erc20Overview({address, metadata}) {
               Price
             </Text>
             <Text fontSize="32px" fontWeight="bold" color={{ base: "#522B61", _dark: "white" }}>
-              ${numeral(price).format("0.0000")}
+              ${numeral(displayPrice).format("0.0000")}
             </Text>
           </Box>
           <Box>
@@ -67,7 +82,7 @@ export default function Erc20Overview({address, metadata}) {
               Circulating Supply Market Cap
             </Text>
             <Text fontSize="32px" fontWeight="bold"color={{ base: "#522B61", _dark: "white" }}>
-              ${numeral(supplyInUsd).format("0,0.00")}
+              ${numeral(displaySupplyInUsd).format("0,0.00")}
             </Text>
           </Box>
         </Flex>
@@ -85,16 +100,16 @@ export default function Erc20Overview({address, metadata}) {
             More Information
           </Text>
           <Text fontSize="md" color="gray.500">
-            Contract: {state.id}
+            Contract: {displayContractId}
           </Text>
           <Text fontSize="md" color="gray.500">
-            Symbol: {metadata.symbol}
+            Symbol: {safeMetadata.symbol}
           </Text>
           <Text fontSize="md" color="gray.500">
-            Name: {metadata.name}
+            Name: {safeMetadata.name}
           </Text>
           <Text fontSize="md" color="gray.500">
-            Decimals: {metadata.decimals}
+            Decimals: {safeMetadata.decimals}
           </Text>
         </Flex>
       </GridItem>
