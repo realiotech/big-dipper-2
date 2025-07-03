@@ -8,6 +8,7 @@ import {
   Center,
   Grid,
   GridItem,
+  Spinner,
 } from "@chakra-ui/react";
 import Erc20Overview from "./overview";
 import Activities from "./activities";
@@ -16,12 +17,41 @@ import Holders from "./holders";
 import { useRecoilValue } from "recoil";
 import { readToken } from "@/recoil/erc20";
 import { useRouter } from "next/router";
+import { useEnsureTokenLoaded } from "@/recoil/erc20/hooks";
 
 const Erc20Details = () => {
   const router = useRouter();
-  const address = router.query.address as string
+  const address = router.query.address as string;
   const [selectedTab, setSelectedTab] = useState("holders");
+
+  // Get the token details from recoil state
   const erc20Details = useRecoilValue(readToken(address));
+
+  // Ensure token data is loaded if not already available
+  const { loading: tokenLoading, error: tokenError } = useEnsureTokenLoaded(address);
+
+  // Show loading state while router is not ready or token is loading
+  if (!router.isReady || !address) {
+    return (
+      <Center h="200px">
+        <Spinner size="lg" />
+      </Center>
+    );
+  }
+
+  if (tokenError) {
+    return (
+      <Center h="200px">
+        <VStack>
+          <Text color="red.500" fontSize="lg" fontWeight="bold">
+            Error loading token
+          </Text>
+          <Text color="gray.500">{tokenError}</Text>
+        </VStack>
+      </Center>
+    );
+  }
+
   return (
     <Grid templateColumns="repeat(6, 1fr)" gap={"1.5rem"} minH="auto">
       <GridItem
