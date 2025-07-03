@@ -39,18 +39,6 @@ const Erc20Details = () => {
     );
   }
 
-  // Show loading state only when actively loading and no token data exists
-  // if (tokenLoading && !erc20Details) {
-  //   return (
-  //     <Center h="200px">
-  //       <VStack>
-  //         <Spinner size="lg" />
-  //         <Text>Loading token details...</Text>
-  //       </VStack>
-  //     </Center>
-  //   );
-  // }
-
   if (tokenError) {
     return (
       <Center h="200px">
@@ -63,22 +51,6 @@ const Erc20Details = () => {
       </Center>
     );
   }
-
-  // Show error if token not found
-  // if (!erc20Details) {
-  //   return (
-  //     <Center h="200px">
-  //       <VStack>
-  //         <Text color="orange.500" fontSize="lg" fontWeight="bold">
-  //           Token not found
-  //         </Text>
-  //         <Text color="gray.500">
-  //           The token with address {address} could not be found.
-  //         </Text>
-  //       </VStack>
-  //     </Center>
-  //   );
-  // }
 
   return (
     <Grid templateColumns="repeat(6, 1fr)" gap={"1.5rem"} minH="auto">
