@@ -16,7 +16,7 @@ export default function Erc20Overview({address, metadata}) {
   const tokenDetails = useRecoilValue(readToken(address));
   const price = tokenDetails?.price || 0;
   const supplyInUsd = Number(supplyAmt) * Number(price);
-
+  
   // Use default values when metadata is not available
   const safeMetadata = metadata || {
     symbol: 'N/A',
@@ -30,7 +30,6 @@ export default function Erc20Overview({address, metadata}) {
   const displayPrice = price || 0;
   const displaySupplyInUsd = supplyInUsd || 0;
   const displayContractId = state.id || 'N/A';
-
   return (
     <>
       <GridItem
