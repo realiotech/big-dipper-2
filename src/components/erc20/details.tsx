@@ -12,6 +12,7 @@ import {
 } from "@chakra-ui/react";
 import Erc20Overview from "./overview";
 import Activities from "./activities";
+import Staking from "./staking";
 import { Avatar } from "../ui/avatar";
 import Holders from "./holders";
 import { useRecoilValue } from "recoil";
@@ -107,9 +108,22 @@ const Erc20Details = () => {
               }}
               p={4}
               w={{ base: "full", lg: "150px" }}
-              value="staking"
+              value="transactions"
             >
               <Center w={"full"}>Transactions</Center>
+            </Tabs.Trigger>
+            <Tabs.Trigger
+              _selected={{
+                bg: "#707D8A",
+                color: "white",
+                borderRadius: "100px",
+                border: "none",
+              }}
+              p={4}
+              w={{ base: "full", lg: "150px" }}
+              value="staking"
+            >
+              <Center w={"full"}>Staking</Center>
             </Tabs.Trigger>
             <Tabs.Indicator bg="#707D8A" borderRadius="100px" />
           </Tabs.List>
@@ -132,9 +146,16 @@ const Erc20Details = () => {
             <Tabs.Content
               bg={{ base: "#FAFBFC", _dark: "#0F0F0F" }}
               p={0}
-              value="staking"
+              value="transactions"
             >
               <Activities address={address} />
+            </Tabs.Content>
+            <Tabs.Content
+              bg={{ base: "#FAFBFC", _dark: "#0F0F0F" }}
+              p={0}
+              value="staking"
+            >
+              <Staking address={address} />
             </Tabs.Content>
           </Tabs.ContentGroup>
         </Tabs.Root>

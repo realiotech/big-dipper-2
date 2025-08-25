@@ -6,11 +6,14 @@ export function formatStakingData(bonded, unbonding, assetArr) {
     "#57B888",
     "#8642E3",
     "#FF4C00",
+    "#FFD788",
     "#57B88880",
     "#8642E380",
     "#FF4C0080",
+    "#FFD78880",
   ];
-  const bondedWeight = [1, 1, 10];
+  const bondedWeight = [1, 1, 10, 1];
+
   const getColor = (index) => colors[index % colors.length];
   const bondedData = assetArr.map((item, index) => {
     let bondedValue =
@@ -34,8 +37,8 @@ export function formatStakingData(bonded, unbonding, assetArr) {
     let unbondingValue = unbonding[item.denom] ?? "0";
     return parseFloat(formatTokenByExponent(unbondingValue, item.decimals));
   });
-  
-  return {
+
+  const chartData = {
     labels: labels,
     datasets: [
       {
@@ -49,9 +52,10 @@ export function formatStakingData(bonded, unbonding, assetArr) {
         label: "Unbonding",
         data: unbondingData,
         dataWithoutWeight: unbondingDataWithoutWeight,
-        backgroundColor: unbondingData.map((_, index) => getColor(index + 3)),
+        backgroundColor: unbondingData.map((_, index) => getColor(index + 4)),
         borderRadius: 4,
       },
     ],
   };
+  return chartData;
 }

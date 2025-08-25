@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import { OverviewState } from "./type";
 import { useEvmAssetBurnsQuery, useEvmAssetHoldersQuery, useEvmAssetMintsQuery, useEvmAssetOverviewQuery, useEvmAssetTransfersQuery } from "@/graphql/types/subgraph_types";
+import { useAssetDelegationsQuery, useAssetUndelegationsQuery } from "@/graphql/types/general_types";
 
 export function useOverview(address: string) {
   const [state, setState] = useState<OverviewState>({ id: "", name: "", denom: "", supply: '0', holders: 0, decimals: 18 })
@@ -159,5 +160,83 @@ export const useActivities = (address) => {
     setTransferPage,
     setMintPage,
     setBurnPage,
+  };
+};
+
+export const useStaking = (
+  address?: string
+) => {
+  const [delegationsPage, setDelegationsPage] = useState(0)
+  const [unbondingsPage, setUnboningsPage] = useState(0)
+  const [sortDirection, setSortDirection] = useState("desc")
+
+  // For ERC20 tokens, format the denom as erc20:address
+  const denom = address ? `erc20:${address}` : undefined;
+
+  const {
+    data: delegationsData,
+    loading: delegationsLoading,
+    error: delegationsError,
+    refetch: delegationsRefetch,
+  } = useAssetDelegationsQuery({
+    variables: {
+      denom,
+      limit: 10,
+      offset: delegationsPage * 10,
+      order: sortDirection
+    },
+  });
+  useEffect(() => {
+    if (delegationsLoading) return;
+    if (delegationsError) {
+      delegationsRefetch();
+    }
+  }, [delegationsError, delegationsLoading, delegationsRefetch]);
+
+  const {
+    data: undelegationsData,
+    loading: undelegationsLoading,
+    error: undelegationsError,
+    refetch: undelegationsRefetch,
+  } = useAssetUndelegationsQuery({
+    variables: {
+      denom,
+      limit: 10,
+      offset: unbondingsPage * 10,
+      order: sortDirection
+    },
+  });
+  useEffect(() => {
+    if (undelegationsLoading) return;
+    if (undelegationsError) {
+      undelegationsRefetch();
+    }
+  }, [undelegationsError, undelegationsLoading, undelegationsRefetch]);
+
+  const handleSort = (sortDirt) => {
+    setDelegationsPage(0)
+    setUnboningsPage(0)
+    setSortDirection(sortDirt)
+  }
+
+  return {
+    delegations: {
+      loading: delegationsLoading,
+      count: delegationsData?.locks_count_by_denom?.[0].count ?? 0,
+      data: delegationsData?.get_ms_locks_sorted ?? [],
+      error: delegationsError,
+    },
+    unbondings: {
+      loading: undelegationsLoading,
+      count: undelegationsData?.unlocks_count_by_denom?.[0].count ?? 0,
+      data: undelegationsData?.get_ms_unlocks_sorted ?? [],
+      error: undelegationsError,
+    },
+    delegationsPage,
+    unbondingsPage,
+    setDelegationsPage,
+    setUnboningsPage,
+    sortDirection,
+    handleSort
   };
 };
