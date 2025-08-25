@@ -14,8 +14,6 @@ export default function Staking({ address }) {
   const { delegations, unbondings, delegationsPage, unbondingsPage, setDelegationsPage, setUnboningsPage, handleSort, sortDirection } =
     useStaking(address);
 
-  console.log('ERC20 Staking address:', address);
-
   return (
     <Tabs.Root
       defaultValue={1}
