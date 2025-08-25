@@ -27,6 +27,15 @@ const ASSET_METADATA = [
         image: '/images/assets/LMX.png',
         decimals: 18,
         price: 1
+    },
+    {
+        denom: 'erc20:0x9b81cFe34C25131DaE2248c5e508829a3b52518b',
+        symbol: 'DSTRX',
+        name: 'District token',
+        description: 'Districts token for LandBank',
+        image: '/images/assets/DSTRX.png',
+        decimals: 18,
+        price: 1
     }
 ]
 
