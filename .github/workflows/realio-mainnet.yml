@@ -37,7 +37,7 @@ jobs:
           restore-keys: |
             ${{ github.workflow }}-buildx-${{ github.sha }}
             ${{ github.workflow }}
-      - uses: 1password/install-cli-action@v1
+      - uses: 1password/install-cli-action@v2
       - name: Load REALIO_PUBLIC vars
         env:
           OP_VAULT: gitops-prod
