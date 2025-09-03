@@ -103,7 +103,7 @@ export const DelegateDialog = ({
     denom: denom || "",
     amount: "",
     fees: "2000",
-    gas: "5000000",
+    gas: isERC20 ? "3000000" : "300000",
     memo: "realio.network",
   });
     const GAS_PRICE = Big(0.000000005); // Adjust this if needed    
@@ -114,6 +114,14 @@ export const DelegateDialog = ({
       setFormData((prev) => ({ ...prev, validator: operatorAddress }));
     }
   }, [operatorAddress]);
+
+  useEffect(() => {
+    // Update gas based on token type
+    setFormData((prev) => ({
+      ...prev,
+      gas: isERC20 ? "3000000" : "300000"
+    }));
+  }, [isERC20]);
 
   const [loading, setLoading] = useState(false);
 
