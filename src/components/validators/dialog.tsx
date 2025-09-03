@@ -43,10 +43,7 @@ export const DelegateDialog = ({
   operatorName,
   operatorAddress,
 }) => {
-  console.log('=== DelegateDialog Props Debug ===');
-  console.log('denom prop:', denom);
-  console.log('denomSymbol prop:', denomSymbol);
-  console.log('================================');
+
   const wallet = useRecoilValue(atomState);
   const { triggerWalletConnectPopover, reloadBalances } = useKeplrConnect();
 
@@ -56,11 +53,7 @@ export const DelegateDialog = ({
   // Extract contract address from ERC20 denom (erc20:0x...)
   const contractAddress = isERC20 ? denom.replace('erc20:', '') : null;
 
-  console.log('=== ERC20 Detection ===');
-  console.log('denom:', denom);
-  console.log('isERC20:', isERC20);
-  console.log('contractAddress:', contractAddress);
-  console.log('=====================');
+
 
   // Get user's spendable ERC20 balance if it's an ERC20 token
   const evmAddress = wallet?.walletAddress ? realioNetworkToEth(wallet.walletAddress) : undefined;
@@ -71,32 +64,7 @@ export const DelegateDialog = ({
     isERC20 ? contractAddress : undefined
   );
 
-  console.log('=== ERC20 Spendable Balance Debug ===');
-  console.log('EVM Address for query:', evmAddress);
-  console.log('Contract Address:', contractAddress);
-  console.log('Raw spendable balance:', rawSpendableBalance);
-  console.log('Raw spendable balance type:', typeof rawSpendableBalance);
-  console.log('Loading:', balanceLoading);
-  console.log('isERC20:', isERC20);
-  console.log('decimal:', decimal);
 
-  let availableBalance = "0";
-
-  if (isERC20) {
-    if (balanceLoading) {
-      availableBalance = "Loading...";
-    } else if (rawSpendableBalance !== undefined && rawSpendableBalance !== null) {
-      console.log('Calling formatTokenByExponent with:', rawSpendableBalance, decimal || 18);
-      availableBalance = formatTokenByExponent(rawSpendableBalance, decimal || 18);
-      console.log('formatTokenByExponent result:', availableBalance);
-    } else {
-      availableBalance = "0";
-    }
-  }
-
-  console.log('Final available balance:', availableBalance);
-  console.log('wallet.balances:', wallet.balances);
-  console.log('====================================');
   const [formData, setFormData] = useState({
     sender: wallet?.walletAddress || "",
     validator: operatorAddress || "",
@@ -150,11 +118,7 @@ export const DelegateDialog = ({
         throw new Error("Valid amount is required");
       }
 
-      console.log('=== Transaction Debug ===');
-      console.log('isERC20:', isERC20);
-      console.log('wallet.accounts:', wallet.accounts);
-      console.log('wallet.walletAddress:', wallet.walletAddress);
-      console.log('========================');
+
 
       if (isERC20) {
         // Use EVM delegation for ERC20 tokens

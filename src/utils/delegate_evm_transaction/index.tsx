@@ -101,27 +101,24 @@ export const createDelegateEVMTx = async ({
         amount: Big(amount).times(Big(10).pow(decimal)).toFixed(0),
       };
 
-      console.log('=== Custom Encoding Debug ===');
-      console.log('delegateEVMMsg:', delegateEVMMsg);
+
 
       const fee = {
         amount: coins(fees, "ario"), // Use RIO for fees
         gas: gas,
       };
 
-      console.log('=== Fee Debug ===', fee);
+
 
       const accountResponse = await fetch(`${apiEndpoint}/cosmos/auth/v1beta1/accounts/${sender}`);
 
-      console.log('Account response:', accountResponse);
-      console.log('path', `${apiEndpoint}/cosmos/auth/v1beta1/accounts/${sender}`);
+
 
       if (!accountResponse.ok) {
         throw new Error(`Failed to fetch account data: ${accountResponse.status} ${accountResponse.statusText}`);
       }
 
       const accountData = await accountResponse.json();
-      console.log('Account data response:', accountData);
 
       if (!accountData.account) {
         throw new Error("Account not found in response");
@@ -136,7 +133,6 @@ export const createDelegateEVMTx = async ({
 
       // Encode the MsgDelegateEVM using our custom encoder
       const msgBytes = MsgDelegateEVM.encode(delegateEVMMsg);
-      console.log('Encoded message bytes:', msgBytes);
 
       // Create the Any wrapper for the message
       const anyMsg = Any.fromPartial({
@@ -154,7 +150,6 @@ export const createDelegateEVMTx = async ({
       };
 
       const txBodyBytes = TxBody.encode(txBodyValue).finish();
-      console.log('TxBody bytes:', txBodyBytes);
 
       const gasLimit = Int53.fromString(fee.gas).toNumber();
       const authInfoBytes = makeAuthInfoBytes(

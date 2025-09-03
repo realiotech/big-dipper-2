@@ -245,10 +245,6 @@ export const useErc20Balances = (
       address: evmAddress
     },
     onCompleted: (data) => {
-      console.log('=== Subgraph ERC20 Balances ===');
-      console.log('Raw subgraph data:', data.erc20Balances);
-      console.log('==============================');
-
       setBalances(data.erc20Balances)
     },
     onError: (e) => {
@@ -278,16 +274,10 @@ export const useErc20SpendableBalance = (
         setLoading(true);
         setError(null);
 
-        console.log('=== ERC20 balanceOf JSON RPC Call ===');
-        console.log('Contract Address:', contractAddress);
-        console.log('User EVM Address:', evmAddress);
-
         // ERC20 balanceOf function signature: balanceOf(address)
         const functionSignature = '0x70a08231'; // balanceOf(address)
         const paddedAddress = evmAddress.slice(2).padStart(64, '0'); // Remove 0x and pad to 32 bytes
         const data = functionSignature + paddedAddress;
-
-        console.log('Call data:', data);
 
         // Make JSON RPC call to the testnet endpoint
         const response = await fetch('http://realio-testnet.json-rpc.decentrio.ventures/', {
@@ -315,8 +305,6 @@ export const useErc20SpendableBalance = (
 
         const result = await response.json();
 
-        console.log('JSON RPC response:', result);
-
         if (result.error) {
           throw new Error(result.error.message);
         }
@@ -324,10 +312,6 @@ export const useErc20SpendableBalance = (
         // Convert hex result to decimal string
         const balanceHex = result.result;
         const balanceDecimal = BigInt(balanceHex || '0x0').toString();
-
-        console.log('Balance hex:', balanceHex);
-        console.log('Balance decimal:', balanceDecimal);
-        console.log('====================================');
 
         setSpendableBalance(balanceDecimal);
       } catch (err) {
