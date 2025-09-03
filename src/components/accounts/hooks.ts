@@ -245,6 +245,10 @@ export const useErc20Balances = (
       address: evmAddress
     },
     onCompleted: (data) => {
+      console.log('=== Subgraph ERC20 Balances ===');
+      console.log('Raw subgraph data:', data.erc20Balances);
+      console.log('==============================');
+
       setBalances(data.erc20Balances)
     },
     onError: (e) => {
@@ -252,4 +256,91 @@ export const useErc20Balances = (
     }
   })
   return balances;
+};
+
+// Hook to get ERC20 balance using direct balanceOf JSON RPC call
+export const useErc20SpendableBalance = (
+  evmAddress?: string,
+  contractAddress?: string
+) => {
+  const [spendableBalance, setSpendableBalance] = useState('0');
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState<string | null>(null);
+
+  useEffect(() => {
+    if (!evmAddress || !contractAddress) {
+      setSpendableBalance('0');
+      return;
+    }
+
+    const fetchBalanceOf = async () => {
+      try {
+        setLoading(true);
+        setError(null);
+
+        console.log('=== ERC20 balanceOf JSON RPC Call ===');
+        console.log('Contract Address:', contractAddress);
+        console.log('User EVM Address:', evmAddress);
+
+        // ERC20 balanceOf function signature: balanceOf(address)
+        const functionSignature = '0x70a08231'; // balanceOf(address)
+        const paddedAddress = evmAddress.slice(2).padStart(64, '0'); // Remove 0x and pad to 32 bytes
+        const data = functionSignature + paddedAddress;
+
+        console.log('Call data:', data);
+
+        // Make JSON RPC call to the testnet endpoint
+        const response = await fetch('http://realio-testnet.json-rpc.decentrio.ventures/', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({
+            jsonrpc: '2.0',
+            method: 'eth_call',
+            params: [
+              {
+                to: contractAddress,
+                data: data,
+              },
+              'latest'
+            ],
+            id: 1,
+          }),
+        });
+
+        if (!response.ok) {
+          throw new Error(`HTTP error! status: ${response.status}`);
+        }
+
+        const result = await response.json();
+
+        console.log('JSON RPC response:', result);
+
+        if (result.error) {
+          throw new Error(result.error.message);
+        }
+
+        // Convert hex result to decimal string
+        const balanceHex = result.result;
+        const balanceDecimal = BigInt(balanceHex || '0x0').toString();
+
+        console.log('Balance hex:', balanceHex);
+        console.log('Balance decimal:', balanceDecimal);
+        console.log('====================================');
+
+        setSpendableBalance(balanceDecimal);
+      } catch (err) {
+        console.error('Error fetching ERC20 balance:', err);
+        setError(err instanceof Error ? err.message : 'Unknown error');
+        setSpendableBalance('0');
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchBalanceOf();
+  }, [evmAddress, contractAddress]);
+
+  return { balance: spendableBalance, loading, error };
 };

@@ -22,6 +22,7 @@ import { PopoverTrigger } from "@/components/ui/popover";
 import { IoCloseOutline } from "react-icons/io5";
 import { useState, useEffect } from "react";
 import { createDelegateTx } from "@/utils/delegate_transaction";
+import { createDelegateEVMTx } from "@/utils/delegate_evm_transaction";
 import { useRecoilValue } from "recoil";
 import { atomState } from "@/recoil/wallet/atom";
 import { useKeplrConnect } from "@/recoil/wallet/hooks";
@@ -30,6 +31,9 @@ import styles from "../layout/wallet-popover.module.css";
 import openNotification from "@/utils/notifications";
 import { ToastContainer } from "react-toastify";
 import Big from "big.js";
+import { useErc20SpendableBalance } from "@/components/accounts/hooks";
+import { realioNetworkToEth } from "@realiotech/address-generator";
+import { formatTokenByExponent } from "@/utils";
 
 
 export const DelegateDialog = ({
@@ -39,8 +43,60 @@ export const DelegateDialog = ({
   operatorName,
   operatorAddress,
 }) => {
+  console.log('=== DelegateDialog Props Debug ===');
+  console.log('denom prop:', denom);
+  console.log('denomSymbol prop:', denomSymbol);
+  console.log('================================');
   const wallet = useRecoilValue(atomState);
   const { triggerWalletConnectPopover, reloadBalances } = useKeplrConnect();
+
+  // Check if this is an ERC20 token delegation by checking denom format
+  const isERC20 = denom?.startsWith('erc20:');
+
+  // Extract contract address from ERC20 denom (erc20:0x...)
+  const contractAddress = isERC20 ? denom.replace('erc20:', '') : null;
+
+  console.log('=== ERC20 Detection ===');
+  console.log('denom:', denom);
+  console.log('isERC20:', isERC20);
+  console.log('contractAddress:', contractAddress);
+  console.log('=====================');
+
+  // Get user's spendable ERC20 balance if it's an ERC20 token
+  const evmAddress = wallet?.walletAddress ? realioNetworkToEth(wallet.walletAddress) : undefined;
+
+  // Use spendable balance hook with JSON RPC balanceOf call
+  const { balance: rawSpendableBalance, loading: balanceLoading } = useErc20SpendableBalance(
+    isERC20 ? evmAddress : undefined,
+    isERC20 ? contractAddress : undefined
+  );
+
+  console.log('=== ERC20 Spendable Balance Debug ===');
+  console.log('EVM Address for query:', evmAddress);
+  console.log('Contract Address:', contractAddress);
+  console.log('Raw spendable balance:', rawSpendableBalance);
+  console.log('Raw spendable balance type:', typeof rawSpendableBalance);
+  console.log('Loading:', balanceLoading);
+  console.log('isERC20:', isERC20);
+  console.log('decimal:', decimal);
+
+  let availableBalance = "0";
+
+  if (isERC20) {
+    if (balanceLoading) {
+      availableBalance = "Loading...";
+    } else if (rawSpendableBalance !== undefined && rawSpendableBalance !== null) {
+      console.log('Calling formatTokenByExponent with:', rawSpendableBalance, decimal || 18);
+      availableBalance = formatTokenByExponent(rawSpendableBalance, decimal || 18);
+      console.log('formatTokenByExponent result:', availableBalance);
+    } else {
+      availableBalance = "0";
+    }
+  }
+
+  console.log('Final available balance:', availableBalance);
+  console.log('wallet.balances:', wallet.balances);
+  console.log('====================================');
   const [formData, setFormData] = useState({
     sender: wallet?.walletAddress || "",
     validator: operatorAddress || "",
@@ -73,22 +129,62 @@ export const DelegateDialog = ({
       setLoading(true);
     //   console.log("Sending transaction with data:", formData);
 
-      const txResult = await createDelegateTx({
-        sender: wallet.walletAddress,
-        validator: formData.validator,
-        denom: denom,
-        amount: formData.amount,
-        fees: formData.fees,
-        gas: formData.gas,
-        memo: formData.memo,
-        accounts: wallet.accounts,
-        offlineSigner: wallet.offlineSigner,
-        signer: wallet.signer, // Ensure signer is correctly passed
-        decimal: decimal,
-        chainId: "realionetwork_3301-1",
-        rpcEndpoint: "https://realio.rpc.decentrio.ventures:443",
-        apiEndpoint: "https://realio.api.decentrio.ventures:443",
-      });
+      let txResult;
+
+      // Validate required data before transaction
+      if (!wallet.walletAddress) {
+        throw new Error("Wallet address is required");
+      }
+      if (!formData.validator) {
+        throw new Error("Validator address is required");
+      }
+      if (!formData.amount || parseFloat(formData.amount) <= 0) {
+        throw new Error("Valid amount is required");
+      }
+
+      console.log('=== Transaction Debug ===');
+      console.log('isERC20:', isERC20);
+      console.log('wallet.accounts:', wallet.accounts);
+      console.log('wallet.walletAddress:', wallet.walletAddress);
+      console.log('========================');
+
+      if (isERC20) {
+        // Use EVM delegation for ERC20 tokens
+        txResult = await createDelegateEVMTx({
+          sender: wallet.walletAddress,
+          validator: formData.validator,
+          contractAddress: contractAddress,
+          amount: formData.amount,
+          fees: formData.fees,
+          gas: formData.gas,
+          memo: formData.memo,
+          accounts: wallet.accounts,
+          offlineSigner: wallet.offlineSigner,
+          signer: wallet.signer,
+          decimal: decimal,
+          chainId: "realionetwork_3301-1",
+          rpcEndpoint: "https://realio.rpc.decentrio.ventures:443",
+          apiEndpoint: "https://realio.api.decentrio.ventures:443",
+        });
+      } else {
+        // Use regular delegation for native tokens
+        txResult = await createDelegateTx({
+          sender: wallet.walletAddress,
+          validator: formData.validator,
+          denom: denom,
+          amount: formData.amount,
+          fees: formData.fees,
+          gas: formData.gas,
+          memo: formData.memo,
+          accounts: wallet.accounts,
+          offlineSigner: wallet.offlineSigner,
+          signer: wallet.signer,
+          decimal: decimal,
+          chainId: "realionetwork_3301-1",
+          rpcEndpoint: "https://realio.rpc.decentrio.ventures:443",
+          apiEndpoint: "https://realio.api.decentrio.ventures:443",
+        });
+      }
       reloadBalances();
       openNotification("success", `Transaction success: ${txResult.transactionHash}` )
       setLoading(false);
@@ -102,13 +198,13 @@ export const DelegateDialog = ({
     <DialogRoot size="md"  placement={"center"} motionPreset="slide-in-bottom">
       <DialogTrigger asChild>
         <Button bg={{base: "#707D8A", _dark: "#242323"}} color="white" w='full' size="sm">
-          Delegate
+          {isERC20 ? `Delegate ${denomSymbol}` : "Delegate"}
         </Button>
       </DialogTrigger>
       <DialogContent>
         <DialogHeader>
           <Flex justify={"space-between"}>
-            <DialogTitle>Delegate</DialogTitle>
+            <DialogTitle>{isERC20 ? `Delegate ${denomSymbol}` : "Delegate"}</DialogTitle>
             <DialogTrigger style={{ cursor: "pointer" }}>
               <IoCloseOutline size={30} />
             </DialogTrigger>
@@ -175,9 +271,12 @@ export const DelegateDialog = ({
                     </Text>
                     <Text fontSize="xs">
                       Available:{" "}
-                      {(parseFloat(wallet.balances[`${denom}`]) / 10 ** decimal)
-                        .toFixed(2)
-                        .toString()}{" "}
+                      {isERC20 ?
+                        formatTokenByExponent(rawSpendableBalance, decimal || 18) :
+                        (parseFloat(wallet.balances[`${denom}`]) / 10 ** decimal)
+                          .toFixed(2)
+                          .toString()
+                      }{" "}
                       {denomSymbol}
                     </Text>
                   </Flex>
@@ -246,7 +345,7 @@ export const DelegateDialog = ({
                 {loading ? (
                   <AiOutlineLoading className={styles.spin} />
                 ) : (
-                  "Delegate"
+                  isERC20 ? `Delegate ${denomSymbol}` : "Delegate"
                 )}
               </Button>
             </DialogFooter>
