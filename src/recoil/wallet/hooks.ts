@@ -16,14 +16,14 @@ export const useKeplrConnect = () => {
     }
 
     try {
-      const chainId = "realionetwork_3301-1";
+      const chainId = "realionetwork_3300-6";
 
       // Define the chain configuration for Keplr
       const chainInfo = {
-        chainId: "realionetwork_3301-1",
+        chainId: "realionetwork_3300-6",
         chainName: "Realio Network",
-        rpc: "https://realio.rpc.decentrio.ventures:443",
-        rest: "https://realio.api.decentrio.ventures:443",
+        rpc: "https://realio-testnet.rpc.decentrio.ventures:443",
+        rest: "https://realio-testnet.api.decentrio.ventures:443",
         stakeCurrency: {
           coinDenom: "RIO",
           coinMinimalDenom: "ario",

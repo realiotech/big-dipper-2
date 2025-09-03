@@ -103,7 +103,7 @@ export const DelegateDialog = ({
     denom: denom || "",
     amount: "",
     fees: "2000",
-    gas: "300000",
+    gas: "5000000",
     memo: "realio.network",
   });
     const GAS_PRICE = Big(0.000000005); // Adjust this if needed    
@@ -162,9 +162,9 @@ export const DelegateDialog = ({
           offlineSigner: wallet.offlineSigner,
           signer: wallet.signer,
           decimal: decimal,
-          chainId: "realionetwork_3301-1",
-          rpcEndpoint: "https://realio.rpc.decentrio.ventures:443",
-          apiEndpoint: "https://realio.api.decentrio.ventures:443",
+          chainId: "realionetwork_3300-6",
+          rpcEndpoint: "https://realio-testnet.rpc.decentrio.ventures:443",
+          apiEndpoint: "https://realio-testnet.api.decentrio.ventures:443",
         });
       } else {
         // Use regular delegation for native tokens
@@ -180,9 +180,9 @@ export const DelegateDialog = ({
           offlineSigner: wallet.offlineSigner,
           signer: wallet.signer,
           decimal: decimal,
-          chainId: "realionetwork_3301-1",
-          rpcEndpoint: "https://realio.rpc.decentrio.ventures:443",
-          apiEndpoint: "https://realio.api.decentrio.ventures:443",
+          chainId: "realionetwork_3300-6",
+          rpcEndpoint: "https://realio-testnet.rpc.decentrio.ventures:443",
+          apiEndpoint: "https://realio-testnet.api.decentrio.ventures:443",
         });
       }
       reloadBalances();
