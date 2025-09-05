@@ -23,8 +23,8 @@ export const useKeplrConnect = () => {
       const chainInfo = {
         chainId: chainConfig.network,
         chainName: "Realio Network",
-        rpc: "https://realio-testnet.rpc.decentrio.ventures:443",
-        rest: "https://realio-testnet.api.decentrio.ventures:443",
+        rpc: process.env.NEXT_PUBLIC_RPC_URL,
+        rest: process.env.NEXT_PUBLIC_API_URL,
         stakeCurrency: {
           coinDenom: "RIO",
           coinMinimalDenom: "ario",

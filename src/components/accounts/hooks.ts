@@ -280,7 +280,7 @@ export const useErc20SpendableBalance = (
         const data = functionSignature + paddedAddress;
 
         // Make JSON RPC call to the testnet endpoint
-        const response = await fetch('http://realio-testnet.json-rpc.decentrio.ventures/', {
+        const response = await fetch(process.env.NEXT_PUBLIC_JSON_RPC_URL, {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json',

@@ -136,8 +136,8 @@ export const DelegateDialog = ({
           signer: wallet.signer,
           decimal: decimal,
           chainId: chainConfig.network,
-          rpcEndpoint: "https://realio-testnet.rpc.decentrio.ventures:443",
-          apiEndpoint: "https://realio-testnet.api.decentrio.ventures:443",
+          rpcEndpoint: process.env.NEXT_PUBLIC_RPC_URL,
+          apiEndpoint: process.env.NEXT_PUBLIC_API_URL,
         });
       } else {
         // Use regular delegation for native tokens
@@ -154,8 +154,8 @@ export const DelegateDialog = ({
           signer: wallet.signer,
           decimal: decimal,
           chainId: chainConfig.network,
-          rpcEndpoint: "https://realio-testnet.rpc.decentrio.ventures:443",
-          apiEndpoint: "https://realio-testnet.api.decentrio.ventures:443",
+          rpcEndpoint: process.env.NEXT_PUBLIC_RPC_URL,
+          apiEndpoint: process.env.NEXT_PUBLIC_API_URL,
         });
       }
       reloadBalances();
