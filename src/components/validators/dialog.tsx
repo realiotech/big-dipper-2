@@ -34,6 +34,7 @@ import Big from "big.js";
 import { useErc20SpendableBalance } from "@/components/accounts/hooks";
 import { realioNetworkToEth } from "@realiotech/address-generator";
 import { formatTokenByExponent } from "@/utils";
+import { chainConfig } from "@/configs";
 
 
 export const DelegateDialog = ({
@@ -134,7 +135,7 @@ export const DelegateDialog = ({
           offlineSigner: wallet.offlineSigner,
           signer: wallet.signer,
           decimal: decimal,
-          chainId: "realionetwork_3300-6",
+          chainId: chainConfig.network,
           rpcEndpoint: "https://realio-testnet.rpc.decentrio.ventures:443",
           apiEndpoint: "https://realio-testnet.api.decentrio.ventures:443",
         });
@@ -152,7 +153,7 @@ export const DelegateDialog = ({
           offlineSigner: wallet.offlineSigner,
           signer: wallet.signer,
           decimal: decimal,
-          chainId: "realionetwork_3300-6",
+          chainId: chainConfig.network,
           rpcEndpoint: "https://realio-testnet.rpc.decentrio.ventures:443",
           apiEndpoint: "https://realio-testnet.api.decentrio.ventures:443",
         });
