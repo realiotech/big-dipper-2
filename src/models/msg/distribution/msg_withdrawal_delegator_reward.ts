@@ -27,12 +27,11 @@ class MsgWithdrawDelegatorReward {
     this.json = R.pathOr({}, ["json"], payload);
   }
 
-  static getWithdrawalAmount(logs?: Log | Log[]) {
+  static getWithdrawalAmount(valAddress: string, logs?: Log | Log[]) {
     if (Array.isArray(logs)) {
       const withdrawEvents = logs.flatMap(
         (log) => log?.events?.filter((x) => x.type === "withdraw_rewards") || []
       );
-
       const withdrawAmounts =
         withdrawEvents?.[0]?.attributes?.filter((x) => x.key === "amount") ??
         [];
@@ -49,9 +48,11 @@ class MsgWithdrawDelegatorReward {
     } else {
       const withdrawEvents =
         logs?.events?.filter((x) => x.type === "withdraw_rewards") ?? [];
+      const withdrawEntry = withdrawEvents.find((x) => {
+        return x.attributes.findIndex((y) => y.value === valAddress) !== -1;
+      });
       const withdrawAmounts =
-        withdrawEvents?.[0]?.attributes?.filter((x) => x.key === "amount") ??
-        [];
+        withdrawEntry?.attributes?.filter((x) => x.key === "amount") ?? [];
 
       const amounts = (withdrawAmounts?.[0]?.value ?? "0")
         .split(",")
@@ -69,7 +70,7 @@ class MsgWithdrawDelegatorReward {
     json: object,
     logs?: Log | Log[]
   ): MsgWithdrawDelegatorReward {
-    const amounts = this.getWithdrawalAmount(logs);
+    const amounts = this.getWithdrawalAmount(R.pathOr("", ["validator_address"], json), logs);
 
     return {
       category: "distribution",
