@@ -29,7 +29,7 @@ const ASSET_METADATA = [
         price: 1
     },
     {
-        denom: 'erc20:0x9b81cFe34C25131DaE2248c5e508829a3b52518b',
+        denom: 'erc20:0xb841f365d5221bed66d60e69094418d8c2aa5a44',
         symbol: 'DSTRX',
         name: 'District token',
         description: 'Districts token for LandBank',
