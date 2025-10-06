@@ -14,7 +14,7 @@ export const useSupplies = () => {
         onCompleted: (data) => {
             setState({
                 loading: false,
-                items: data.supply?.[0].coins.filter(item => searchData.seeds.includes(item?.denom)),
+                items: data.supply?.[0].coins.filter(item => searchData.seeds.includes(item?.denom) && item?.denom != 'almx'),
             });
         },
     });

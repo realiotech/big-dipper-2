@@ -9,6 +9,7 @@ export {
 } from '@/utils/format_token';
 export { getDenom } from '@/utils/get_denom';
 export { getMiddleEllipsis } from '@/utils/get_middle_ellipsis';
+export { getDistrictsTokenUrl } from '@/utils/get_token_urls';
 export { getValidatorCondition, getValidatorConditionClass } from '@/utils/get_validator_condition';
 export { getValidatorStatus } from '@/utils/get_validator_status';
 export {
@@ -16,6 +17,7 @@ export {
   ADDRESS_DETAILS,
   BLOCKS,
   BLOCK_DETAILS,
+  ERC20_DETAILS,
   HOME,
   PARAMS,
   PROFILE_DETAILS,

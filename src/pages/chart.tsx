@@ -57,7 +57,7 @@ export default function Charts() {
 
   // Bar Chart Data
   const stakingData = {
-    labels: ["RIO", "RST", "LMX"],
+    labels: ["RIO", "RST"],
     datasets: [
       {
         label: "Staked",

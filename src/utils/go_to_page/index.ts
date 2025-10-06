@@ -14,6 +14,7 @@ export const PROPOSAL_DETAILS = (id: string | number): string => `/proposals/${i
 export const ACCOUNT_DETAILS = (address: string): string => `/accounts/${address}`;
 export const PARAMS = '/params';
 export const PROFILE_DETAILS = (dtag: string): string => `/${dtag}`;
+export const ERC20_DETAILS = (address: string): string => `/erc20/${address}`;
 
 /**
  * Helper to determine if we are routing to validator details or account details
