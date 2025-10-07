@@ -59,7 +59,6 @@ export default function StakingChart() {
     if (!state.loading && filterAssetArr.length > 0) {
       setStakingData(formatStakingData(state.bonded, state.unbonding, filterAssetArr))
     }
-
   }, [filterAssetArr, state.loading])
 
   const stakingOptions = {
@@ -112,11 +111,11 @@ export default function StakingChart() {
                   </Flex>
                 </Text>
                 <For each={filterAssetArr}>
-                  {(item) =>
+                  {(item, index) =>
                     <HStack>
-                      <Box borderRadius={4} height={5} w={5} bg={stakingData?.datasets[0].backgroundColor[item.idx]} />
+                      <Box borderRadius={4} height={5} w={5} bg={stakingData?.datasets[0].backgroundColor[index]} />
                       <Text>{item.symbol}:</Text>
-                      <Text>{numeral(stakingData?.datasets[0].dataWithoutWeight[item.idx]).format("0,0")}</Text>
+                      <Text>{numeral(stakingData?.datasets[0].dataWithoutWeight[index]).format("0,0")}</Text>
                     </HStack>
                   }
                 </For>
@@ -132,11 +131,11 @@ export default function StakingChart() {
                   </Flex>
                 </Text>
                 <For each={filterAssetArr}>
-                  {(item) =>
+                  {(item, index) =>
                     <HStack>
-                      <Box borderRadius={4} height={5} w={5} bg={stakingData?.datasets[1].backgroundColor[item.idx]} />
+                      <Box borderRadius={4} height={5} w={5} bg={stakingData?.datasets[1].backgroundColor[index]} />
                       <Text>{item.symbol}:</Text>
-                      <Text>{numeral(stakingData?.datasets[1].dataWithoutWeight[item.idx]).format("0,0")}</Text>
+                      <Text>{numeral(stakingData?.datasets[1].dataWithoutWeight[index]).format("0,0")}</Text>
                     </HStack>
                   }
                 </For>

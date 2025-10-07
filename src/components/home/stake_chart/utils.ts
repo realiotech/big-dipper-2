@@ -12,7 +12,7 @@ export function formatStakingData(bonded, unbonding, assetArr) {
     // "#FF4C0080",
     "#FFD78880",
   ];
-  const bondedWeight = [1, 1, 10, 1];
+  const bondedWeight = [1, 1, 1];
 
   const getColor = (index) => colors[index % colors.length];
   const bondedData = assetArr.map((item, index) => {
@@ -52,7 +52,7 @@ export function formatStakingData(bonded, unbonding, assetArr) {
         label: "Unbonding",
         data: unbondingData,
         dataWithoutWeight: unbondingDataWithoutWeight,
-        backgroundColor: unbondingData.map((_, index) => getColor(index + 4)),
+        backgroundColor: unbondingData.map((_, index) => getColor(index + 3)),
         borderRadius: 4,
       },
     ],
