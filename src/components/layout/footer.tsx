@@ -18,12 +18,12 @@ import { getDistrictsTokenUrl } from '@/utils';
 
 export default function Footer() {
   const { colorMode } = useColorMode();
-  const [logoSrc, setLogoSrc] = useState("/images/logo-full.svg");
+  const [logoSrc, setLogoSrc] = useState("/images/logo-full.png");
   useEffect(() => {
     setLogoSrc(
       colorMode === "dark"
-        ? "/images/logo-full-white.svg"
-        : "/images/logo-full.svg"
+        ? "/images/logo-full-white.png"
+        : "/images/logo-full.png"
     );
   }, [colorMode]);
   return (
