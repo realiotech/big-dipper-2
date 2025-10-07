@@ -5,11 +5,11 @@ export function formatStakingData(bonded, unbonding, assetArr) {
   const colors = [
     "#57B888",
     "#8642E3",
-    "#FF4C00",
+    // "#FF4C00",
     "#FFD788",
     "#57B88880",
     "#8642E380",
-    "#FF4C0080",
+    // "#FF4C0080",
     "#FFD78880",
   ];
   const bondedWeight = [1, 1, 10, 1];

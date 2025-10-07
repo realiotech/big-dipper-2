@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useMemo, useState } from "react";
 import { Box, Button, Center, Flex, For, GridItem, HStack, Text } from "@chakra-ui/react";
 import { Bar } from "react-chartjs-2";
 import {
@@ -51,14 +51,16 @@ export default function StakingChart() {
         borderRadius: 4,
       },
     ],
-})
+  })
+
+  const filterAssetArr = useMemo(() => assetArr.filter(item => item.symbol != "LMX"), [assetArr])
 
   useEffect(() => {
-    if (!state.loading && assetArr.length > 0) {
-      setStakingData(formatStakingData(state.bonded, state.unbonding, assetArr))
+    if (!state.loading && filterAssetArr.length > 0) {
+      setStakingData(formatStakingData(state.bonded, state.unbonding, filterAssetArr))
     }
-    
-  }, [assetArr, state.loading])
+
+  }, [filterAssetArr, state.loading])
 
   const stakingOptions = {
     plugins: {
@@ -109,13 +111,13 @@ export default function StakingChart() {
                     </Center>
                   </Flex>
                 </Text>
-                <For each={assetArr}>
-                  {(item) => 
+                <For each={filterAssetArr}>
+                  {(item) =>
                     <HStack>
                       <Box borderRadius={4} height={5} w={5} bg={stakingData?.datasets[0].backgroundColor[item.idx]} />
                       <Text>{item.symbol}:</Text>
                       <Text>{numeral(stakingData?.datasets[0].dataWithoutWeight[item.idx]).format("0,0")}</Text>
-                    </HStack> 
+                    </HStack>
                   }
                 </For>
               </Box>
@@ -129,7 +131,7 @@ export default function StakingChart() {
                     </Center>
                   </Flex>
                 </Text>
-                <For each={assetArr}>
+                <For each={filterAssetArr}>
                   {(item) =>
                     <HStack>
                       <Box borderRadius={4} height={5} w={5} bg={stakingData?.datasets[1].backgroundColor[item.idx]} />
