@@ -17,12 +17,12 @@ export function formatStakingData(bonded: any, unbonding: any, assetArr: any[]) 
 
   // Calculate raw values first
   const bondedDataWithoutWeight = assetArr.map((item) => {
-    let bondedValue = bonded[item.denom] ?? "0";
+    let bondedValue = bonded[item.denom.toLowerCase()] ?? "0";
     return parseFloat(formatTokenByExponent(bondedValue, item.decimals));
   });
 
   const unbondingDataWithoutWeight = assetArr.map((item) => {
-    let unbondingValue = unbonding[item.denom] ?? "0";
+    let unbondingValue = unbonding[item.denom.toLowerCase()] ?? "0";
     return parseFloat(formatTokenByExponent(unbondingValue, item.decimals));
   });
 
