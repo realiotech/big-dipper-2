@@ -26,6 +26,7 @@ ChartJS.register(
   BarElement,
   LineElement,
   PointElement,
+  Tooltip,
   Legend
 );
 
@@ -40,14 +41,14 @@ export default function StakingChart() {
         label: "Staked",
         data: [],
         dataWithoutWeight: [],
-        backgroundColor: "#38A169",
+        backgroundColor: [],
         borderRadius: 4,
       },
       {
         label: "Unbonding",
         data: [],
         dataWithoutWeight: [],
-        backgroundColor: "#6C63FF",
+        backgroundColor: [],
         borderRadius: 4,
       },
     ],
@@ -59,13 +60,20 @@ export default function StakingChart() {
     if (!state.loading && filterAssetArr.length > 0) {
       setStakingData(formatStakingData(state.bonded, state.unbonding, filterAssetArr))
     }
-  }, [filterAssetArr, state.loading])
+  }, [filterAssetArr, state.loading, state.bonded, state.unbonding])
 
   const stakingOptions = {
     plugins: {
       legend: { display: false },
       tooltip: {
-        events: ['none']
+        enabled: true,
+        callbacks: {
+          label: (context: any) => {
+            const label = context.dataset.label || '';
+            const value = numeral(context.raw).format('0,0');
+            return `${label}: ${value}`;
+          }
+        }
       }
     },
     responsive: true,
@@ -76,8 +84,14 @@ export default function StakingChart() {
         border: { color: textColor },
       },
       y: {
+        beginAtZero: true,
         grid: { display: false },
-        ticks: { color: textColor },
+        ticks: {
+          color: textColor,
+          callback: function (value: any) {
+            return numeral(value).format('0,0');
+          }
+        },
         border: { color: textColor },
       },
     },

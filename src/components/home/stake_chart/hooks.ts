@@ -17,10 +17,10 @@ export const useHero = () => {
             var bonded: StakeValueMap = {}
             var unbonding: StakeValueMap = {}
             data.token_bonded.forEach(item => {
-                bonded[item.denom] = item.amount
+                bonded[item.denom.toLowerCase()] = item.amount
             })
             data.token_unbonding.forEach(item => {
-                unbonding[item.denom] = item.amount
+                unbonding[item.denom.toLowerCase()] = item.amount
             })
             const newState: HeroState = {
                 loading: false,
