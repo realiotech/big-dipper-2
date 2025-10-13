@@ -11,5 +11,5 @@ export const getDistrictsTokenUrl = (): string => {
     return ERC20_DETAILS(tokenData.value);
   }
   // Fallback to mainnet address if search data is not available
-  return ERC20_DETAILS('0xb841f365d5221bed66d60e69094418d8c2aa5a44');
+  return ERC20_DETAILS('0xb841F365D5221Bed66d60E69094418D8C2aa5A44');
 };
