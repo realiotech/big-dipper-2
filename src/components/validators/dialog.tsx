@@ -171,13 +171,13 @@ export const DelegateDialog = ({
     <DialogRoot size="md"  placement={"center"} motionPreset="slide-in-bottom">
       <DialogTrigger asChild>
         <Button bg={{base: "#707D8A", _dark: "#242323"}} color="white" w='full' size="sm">
-          {isERC20 ? `Delegate ${denomSymbol}` : "Delegate"}
+          {"Delegate"}
         </Button>
       </DialogTrigger>
       <DialogContent>
         <DialogHeader>
           <Flex justify={"space-between"}>
-            <DialogTitle>{isERC20 ? `Delegate ${denomSymbol}` : "Delegate"}</DialogTitle>
+            <DialogTitle>{"Delegate"}</DialogTitle>
             <DialogTrigger style={{ cursor: "pointer" }}>
               <IoCloseOutline size={30} />
             </DialogTrigger>
@@ -318,7 +318,7 @@ export const DelegateDialog = ({
                 {loading ? (
                   <AiOutlineLoading className={styles.spin} />
                 ) : (
-                  isERC20 ? `Delegate ${denomSymbol}` : "Delegate"
+                  "Delegate"
                 )}
               </Button>
             </DialogFooter>
