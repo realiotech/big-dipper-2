@@ -1,41 +1,62 @@
 import { formatTokenByExponent } from "@/utils";
 
-export function formatStakingData(bonded, unbonding, assetArr) {
-  const labels = assetArr.map((item) => item.symbol);
+export function formatStakingData(bonded: any, unbonding: any, assetArr: any[]) {
+  const labels = assetArr.map((item: any) => item.symbol);
   const colors = [
     "#57B888",
     "#8642E3",
-    "#FF4C00",
+    // "#FF4C00",
+    "#FFD788",
     "#57B88880",
     "#8642E380",
-    "#FF4C0080",
+    // "#FF4C0080",
+    "#FFD78880",
   ];
-  const bondedWeight = [1, 1, 10];
-  const getColor = (index) => colors[index % colors.length];
-  const bondedData = assetArr.map((item, index) => {
-    let bondedValue =
-      (parseFloat(bonded[item.denom]) * bondedWeight[index]).toString() ?? "0";
-    return parseFloat(formatTokenByExponent(bondedValue, item.decimals));
-  });
 
-  const unbondingData = assetArr.map((item, index) => {
-    let unbondingValue =
-      (parseFloat(unbonding[item.denom]) * bondedWeight[index]).toString() ??
-      "0";
-    return parseFloat(formatTokenByExponent(unbondingValue, item.decimals));
-  });
+  const getColor = (index: number) => colors[index % colors.length];
 
+  // Calculate raw values first
   const bondedDataWithoutWeight = assetArr.map((item) => {
-    let bondedValue = bonded[item.denom] ?? "0";
+    let bondedValue = bonded[item.denom.toLowerCase()] ?? "0";
     return parseFloat(formatTokenByExponent(bondedValue, item.decimals));
   });
 
   const unbondingDataWithoutWeight = assetArr.map((item) => {
-    let unbondingValue = unbonding[item.denom] ?? "0";
+    let unbondingValue = unbonding[item.denom.toLowerCase()] ?? "0";
     return parseFloat(formatTokenByExponent(unbondingValue, item.decimals));
   });
-  
-  return {
+
+  // For chart display, ensure minimum visibility for non-zero values
+  const bondedData = bondedDataWithoutWeight.map((value: number) => {
+    if (value === 0) return 0;
+
+    // Find the maximum value to calculate relative scaling
+    const maxValue = Math.max(...bondedDataWithoutWeight);
+
+    // If the value is very small compared to the max, give it a minimum height
+    // This ensures small values like DSTRX are still visible
+    const minVisibleRatio = 0.01; // 1% of max value as minimum
+    const minVisibleValue = maxValue * minVisibleRatio;
+
+    return Math.max(value, minVisibleValue);
+  });
+
+  const unbondingData = unbondingDataWithoutWeight.map((value: number) => {
+    if (value === 0) return 0;
+
+    // Find the maximum value across both datasets for consistent scaling
+    const maxBonded = Math.max(...bondedDataWithoutWeight);
+    const maxUnbonding = Math.max(...unbondingDataWithoutWeight);
+    const maxValue = Math.max(maxBonded, maxUnbonding);
+
+    // Apply minimum visibility
+    const minVisibleRatio = 0.01;
+    const minVisibleValue = maxValue * minVisibleRatio;
+
+    return Math.max(value, minVisibleValue);
+  });
+
+  const chartData = {
     labels: labels,
     datasets: [
       {
@@ -54,4 +75,5 @@ export function formatStakingData(bonded, unbonding, assetArr) {
       },
     ],
   };
+  return chartData;
 }

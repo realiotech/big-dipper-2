@@ -12,16 +12,18 @@ import { Telegram } from "../icons/telegram";
 import { Twitter } from "../icons/twitter";
 import { Github } from "../icons/github";
 import { useColorMode } from "../ui/color-mode";
-import { FaDiscord, FaDochub } from "react-icons/fa";
+import { FaTelegram, FaDochub } from "react-icons/fa";
 import { useState, useEffect } from "react";
+import { getDistrictsTokenUrl } from '@/utils';
+
 export default function Footer() {
   const { colorMode } = useColorMode();
-  const [logoSrc, setLogoSrc] = useState("/images/logo-full.svg");
+  const [logoSrc, setLogoSrc] = useState("/images/logo-full.png");
   useEffect(() => {
     setLogoSrc(
       colorMode === "dark"
-        ? "/images/logo-full-white.svg"
-        : "/images/logo-full.svg"
+        ? "/images/logo-full-white.png"
+        : "/images/logo-full.png"
     );
   }, [colorMode]);
   return (
@@ -68,12 +70,12 @@ export default function Footer() {
           </Text>
           <Link
             color={{ base: "black", _dark: "white" }}
-            href="/assets/lmx"
+            href={getDistrictsTokenUrl()}
             _hover={{ color: "#173DA6" }}
             fontWeight={400}
             fontSize={"14px"}
           >
-            Liquid Mining Fund
+            Districts Token
           </Link>
           <Link
             href="/assets/rio"
@@ -168,10 +170,10 @@ export default function Footer() {
               <LinkedIn />
             </Link>
             <Link
-              href="https://discord.com/invite/WhRgHEfDF4"
+              href="https://t.me/realio_network_official"
               fontSize={"20px"}
             >
-              <FaDiscord />
+              <FaTelegram />
             </Link>
             <Link href="https://x.com/realio_network" fontSize={"20px"}>
               <Twitter />

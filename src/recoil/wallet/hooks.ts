@@ -1,6 +1,7 @@
 import { useRecoilState } from "recoil";
 import { atomState } from "@/recoil/wallet/atom";
 import { SigningStargateClient, StargateClient } from "@cosmjs/stargate";
+import { chainConfig } from "@/configs";
 
 export const useKeplrConnect = () => {
   const [wallet, setWallet] = useRecoilState(atomState);
@@ -16,14 +17,14 @@ export const useKeplrConnect = () => {
     }
 
     try {
-      const chainId = "realionetwork_3301-1";
+      const chainId = chainConfig.network;
 
       // Define the chain configuration for Keplr
       const chainInfo = {
-        chainId: "realionetwork_3301-1",
+        chainId: chainConfig.network,
         chainName: "Realio Network",
-        rpc: "https://realio.rpc.decentrio.ventures:443",
-        rest: "https://realio.api.decentrio.ventures:443",
+        rpc: process.env.NEXT_PUBLIC_RPC_URL,
+        rest: process.env.NEXT_PUBLIC_API_URL,
         stakeCurrency: {
           coinDenom: "RIO",
           coinMinimalDenom: "ario",

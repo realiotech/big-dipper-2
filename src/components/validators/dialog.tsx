@@ -22,6 +22,7 @@ import { PopoverTrigger } from "@/components/ui/popover";
 import { IoCloseOutline } from "react-icons/io5";
 import { useState, useEffect } from "react";
 import { createDelegateTx } from "@/utils/delegate_transaction";
+import { createDelegateEVMTx } from "@/utils/delegate_evm_transaction";
 import { useRecoilValue } from "recoil";
 import { atomState } from "@/recoil/wallet/atom";
 import { useKeplrConnect } from "@/recoil/wallet/hooks";
@@ -30,6 +31,10 @@ import styles from "../layout/wallet-popover.module.css";
 import openNotification from "@/utils/notifications";
 import { ToastContainer } from "react-toastify";
 import Big from "big.js";
+import { useErc20SpendableBalance } from "@/components/accounts/hooks";
+import { realioNetworkToEth } from "@realiotech/address-generator";
+import { formatTokenByExponent } from "@/utils";
+import { chainConfig } from "@/configs";
 
 
 export const DelegateDialog = ({
@@ -39,15 +44,35 @@ export const DelegateDialog = ({
   operatorName,
   operatorAddress,
 }) => {
+
   const wallet = useRecoilValue(atomState);
   const { triggerWalletConnectPopover, reloadBalances } = useKeplrConnect();
+
+  // Check if this is an ERC20 token delegation by checking denom format
+  const isERC20 = denom?.startsWith('erc20:');
+
+  // Extract contract address from ERC20 denom (erc20:0x...)
+  const contractAddress = isERC20 ? denom.replace('erc20:', '') : null;
+
+
+
+  // Get user's spendable ERC20 balance if it's an ERC20 token
+  const evmAddress = wallet?.walletAddress ? realioNetworkToEth(wallet.walletAddress) : undefined;
+
+  // Use spendable balance hook with JSON RPC balanceOf call
+  const { balance: rawSpendableBalance, loading: balanceLoading } = useErc20SpendableBalance(
+    isERC20 ? evmAddress : undefined,
+    isERC20 ? contractAddress : undefined
+  );
+
+
   const [formData, setFormData] = useState({
     sender: wallet?.walletAddress || "",
     validator: operatorAddress || "",
     denom: denom || "",
     amount: "",
     fees: "2000",
-    gas: "300000",
+    gas: isERC20 ? "3000000" : "300000",
     memo: "realio.network",
   });
     const GAS_PRICE = Big(0.000000005); // Adjust this if needed    
@@ -58,6 +83,14 @@ export const DelegateDialog = ({
       setFormData((prev) => ({ ...prev, validator: operatorAddress }));
     }
   }, [operatorAddress]);
+
+  useEffect(() => {
+    // Update gas based on token type
+    setFormData((prev) => ({
+      ...prev,
+      gas: isERC20 ? "3000000" : "300000"
+    }));
+  }, [isERC20]);
 
   const [loading, setLoading] = useState(false);
 
@@ -73,22 +106,58 @@ export const DelegateDialog = ({
       setLoading(true);
     //   console.log("Sending transaction with data:", formData);
 
-      const txResult = await createDelegateTx({
-        sender: wallet.walletAddress,
-        validator: formData.validator,
-        denom: denom,
-        amount: formData.amount,
-        fees: formData.fees,
-        gas: formData.gas,
-        memo: formData.memo,
-        accounts: wallet.accounts,
-        offlineSigner: wallet.offlineSigner,
-        signer: wallet.signer, // Ensure signer is correctly passed
-        decimal: decimal,
-        chainId: "realionetwork_3301-1",
-        rpcEndpoint: "https://realio.rpc.decentrio.ventures:443",
-        apiEndpoint: "https://realio.api.decentrio.ventures:443",
-      });
+      let txResult;
+
+      // Validate required data before transaction
+      if (!wallet.walletAddress) {
+        throw new Error("Wallet address is required");
+      }
+      if (!formData.validator) {
+        throw new Error("Validator address is required");
+      }
+      if (!formData.amount || parseFloat(formData.amount) <= 0) {
+        throw new Error("Valid amount is required");
+      }
+
+
+
+      if (isERC20) {
+        // Use EVM delegation for ERC20 tokens
+        txResult = await createDelegateEVMTx({
+          sender: wallet.walletAddress,
+          validator: formData.validator,
+          contractAddress: contractAddress,
+          amount: formData.amount,
+          fees: formData.fees,
+          gas: formData.gas,
+          memo: formData.memo,
+          accounts: wallet.accounts,
+          offlineSigner: wallet.offlineSigner,
+          signer: wallet.signer,
+          decimal: decimal,
+          chainId: chainConfig.network,
+          rpcEndpoint: process.env.NEXT_PUBLIC_RPC_URL,
+          apiEndpoint: process.env.NEXT_PUBLIC_API_URL,
+        });
+      } else {
+        // Use regular delegation for native tokens
+        txResult = await createDelegateTx({
+          sender: wallet.walletAddress,
+          validator: formData.validator,
+          denom: denom,
+          amount: formData.amount,
+          fees: formData.fees,
+          gas: formData.gas,
+          memo: formData.memo,
+          accounts: wallet.accounts,
+          offlineSigner: wallet.offlineSigner,
+          signer: wallet.signer,
+          decimal: decimal,
+          chainId: chainConfig.network,
+          rpcEndpoint: process.env.NEXT_PUBLIC_RPC_URL,
+          apiEndpoint: process.env.NEXT_PUBLIC_API_URL,
+        });
+      }
       reloadBalances();
       openNotification("success", `Transaction success: ${txResult.transactionHash}` )
       setLoading(false);
@@ -102,13 +171,13 @@ export const DelegateDialog = ({
     <DialogRoot size="md"  placement={"center"} motionPreset="slide-in-bottom">
       <DialogTrigger asChild>
         <Button bg={{base: "#707D8A", _dark: "#242323"}} color="white" w='full' size="sm">
-          Delegate
+          {"Delegate"}
         </Button>
       </DialogTrigger>
       <DialogContent>
         <DialogHeader>
           <Flex justify={"space-between"}>
-            <DialogTitle>Delegate</DialogTitle>
+            <DialogTitle>{"Delegate"}</DialogTitle>
             <DialogTrigger style={{ cursor: "pointer" }}>
               <IoCloseOutline size={30} />
             </DialogTrigger>
@@ -175,9 +244,12 @@ export const DelegateDialog = ({
                     </Text>
                     <Text fontSize="xs">
                       Available:{" "}
-                      {(parseFloat(wallet.balances[`${denom}`]) / 10 ** decimal)
-                        .toFixed(2)
-                        .toString()}{" "}
+                      {isERC20 ?
+                        formatTokenByExponent(rawSpendableBalance, decimal || 18) :
+                        (parseFloat(wallet.balances[`${denom}`]) / 10 ** decimal)
+                          .toFixed(2)
+                          .toString()
+                      }{" "}
                       {denomSymbol}
                     </Text>
                   </Flex>

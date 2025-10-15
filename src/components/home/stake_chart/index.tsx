@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useMemo, useState } from "react";
 import { Box, Button, Center, Flex, For, GridItem, HStack, Text } from "@chakra-ui/react";
 import { Bar } from "react-chartjs-2";
 import {
@@ -26,6 +26,7 @@ ChartJS.register(
   BarElement,
   LineElement,
   PointElement,
+  Tooltip,
   Legend
 );
 
@@ -40,31 +41,39 @@ export default function StakingChart() {
         label: "Staked",
         data: [],
         dataWithoutWeight: [],
-        backgroundColor: "#38A169",
+        backgroundColor: [],
         borderRadius: 4,
       },
       {
         label: "Unbonding",
         data: [],
         dataWithoutWeight: [],
-        backgroundColor: "#6C63FF",
+        backgroundColor: [],
         borderRadius: 4,
       },
     ],
-})
+  })
+
+  const filterAssetArr = useMemo(() => assetArr.filter(item => item.symbol != "LMX"), [assetArr])
 
   useEffect(() => {
-    if (!state.loading && assetArr.length > 0) {
-      setStakingData(formatStakingData(state.bonded, state.unbonding, assetArr))
+    if (!state.loading && filterAssetArr.length > 0) {
+      setStakingData(formatStakingData(state.bonded, state.unbonding, filterAssetArr))
     }
-    
-  }, [assetArr, state.loading])
+  }, [filterAssetArr, state.loading, state.bonded, state.unbonding])
 
   const stakingOptions = {
     plugins: {
       legend: { display: false },
       tooltip: {
-        events: ['none']
+        enabled: true,
+        callbacks: {
+          label: (context: any) => {
+            const label = context.dataset.label || '';
+            const value = numeral(context.raw).format('0,0');
+            return `${label}: ${value}`;
+          }
+        }
       }
     },
     responsive: true,
@@ -75,8 +84,14 @@ export default function StakingChart() {
         border: { color: textColor },
       },
       y: {
+        beginAtZero: true,
         grid: { display: false },
-        ticks: { color: textColor },
+        ticks: {
+          color: textColor,
+          callback: function (value: any) {
+            return numeral(value).format('0,0');
+          }
+        },
         border: { color: textColor },
       },
     },
@@ -109,13 +124,13 @@ export default function StakingChart() {
                     </Center>
                   </Flex>
                 </Text>
-                <For each={assetArr}>
-                  {(item) => 
+                <For each={filterAssetArr}>
+                  {(item, index) =>
                     <HStack>
-                      <Box borderRadius={4} height={5} w={5} bg={stakingData?.datasets[0].backgroundColor[item.idx]} />
+                      <Box borderRadius={4} height={5} w={5} bg={stakingData?.datasets[0].backgroundColor[index]} />
                       <Text>{item.symbol}:</Text>
-                      <Text>{numeral(stakingData?.datasets[0].dataWithoutWeight[item.idx]).format("0,0")}</Text>
-                    </HStack> 
+                      <Text>{numeral(stakingData?.datasets[0].dataWithoutWeight[index]).format("0,0")}</Text>
+                    </HStack>
                   }
                 </For>
               </Box>
@@ -129,12 +144,12 @@ export default function StakingChart() {
                     </Center>
                   </Flex>
                 </Text>
-                <For each={assetArr}>
-                  {(item) =>
+                <For each={filterAssetArr}>
+                  {(item, index) =>
                     <HStack>
-                      <Box borderRadius={4} height={5} w={5} bg={stakingData?.datasets[1].backgroundColor[item.idx]} />
+                      <Box borderRadius={4} height={5} w={5} bg={stakingData?.datasets[1].backgroundColor[index]} />
                       <Text>{item.symbol}:</Text>
-                      <Text>{numeral(stakingData?.datasets[1].dataWithoutWeight[item.idx]).format("0,0")}</Text>
+                      <Text>{numeral(stakingData?.datasets[1].dataWithoutWeight[index]).format("0,0")}</Text>
                     </HStack>
                   }
                 </For>
