@@ -60,10 +60,13 @@ jobs:
           push: true
           tags: ${{ secrets.IMAGE_REGISTRY_URL }}/${{ secrets.IMAGE_REPO }}/${{ secrets.IMAGE_NAME }}:${{ github.sha }}-${{ github.run_number }}
           build-args: |
+            NEXT_PUBLIC_API_URL
             NEXT_PUBLIC_CHAIN_TYPE
             NEXT_PUBLIC_GRAPHQL_URL
             NEXT_PUBLIC_GRAPHQL_WS
+            NEXT_PUBLIC_JSON_RPC_URL
             NEXT_PUBLIC_RPC_API
+            NEXT_PUBLIC_RPC_URL
             NEXT_PUBLIC_RPC_WEBSOCKET
             NEXT_PUBLIC_SUBGRAPHQL_URL
             NODE_ENV
