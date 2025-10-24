@@ -1,6 +1,6 @@
 import { useRouter } from 'next/router';
 import * as R from 'ramda';
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useCallback } from 'react';
 
 import {
   GetMessagesByAddressQuery,
@@ -18,7 +18,9 @@ import { readFilter } from '@/recoil/transactions_filter';
 import type { OverviewType } from './types';
 import { realioNetworkToEth } from "@realiotech/address-generator"
 import { useEvmBalancesQuery } from '@/graphql/types/subgraph';
-const LIMIT = 50;
+import { PageInfo } from '@/components/layout/pagination';
+
+const PAGE_SIZE = 20;
 
 const formatTransactions = (data: GetMessagesByAddressQuery): Transactions[] => {
   let formattedData = data.messagesByAddress;
@@ -55,6 +57,12 @@ export function useTransactions() {
     isNextPageLoading: true,
     offsetCount: 0,
   });
+  const [pageInfo, setPageInfo] = useState<PageInfo>({
+    count: 0, // Will be calculated dynamically
+    pageSize: PAGE_SIZE,
+    currentPage: 1,
+  });
+  const [totalCount, setTotalCount] = useState(0); // Track exact count
   const msgTypes = useRecoilValue(readFilter);
 
   useEffect(() => {
@@ -65,62 +73,108 @@ export function useTransactions() {
       isNextPageLoading: true,
       offsetCount: 0,
     }));
+    setPageInfo({
+      count: 0,
+      pageSize: PAGE_SIZE,
+      currentPage: 1,
+    });
+    setTotalCount(0);
   }, [router?.query?.address, msgTypes]);
 
-  const handleSetState = (stateChange: (prevState: TransactionState) => TransactionState) => {
+  const handleSetState = useCallback((stateChange: (prevState: TransactionState) => TransactionState) => {
     setState((prevState) => {
       const newState = stateChange(prevState);
       return R.equals(prevState, newState) ? prevState : newState;
     });
-  };
+  }, []);
 
   const transactionQuery = useGetMessagesByAddressQuery({
     variables: {
-      limit: LIMIT + 1, // to check if more exist
+      limit: PAGE_SIZE + 1, // to check if more exist
       offset: 0,
       address: `{${router?.query?.address ?? ''}}`,
       types: msgTypes,
     },
     onCompleted: (data) => {
       const itemsLength = data.messagesByAddress.length;
-      const newItems = R.uniq([...state.data, ...formatTransactions(data)]);
+      const formattedData = formatTransactions(data);
+      const hasNextPage = itemsLength === PAGE_SIZE + 1;
+
+      // Calculate exact count: if we got PAGE_SIZE + 1 items, there are at least PAGE_SIZE + 1
+      // Otherwise, the count is exactly what we got
+      const exactCount = hasNextPage ? PAGE_SIZE + 1 : itemsLength;
+
       const stateChange: TransactionState = {
-        data: newItems,
-        hasNextPage: itemsLength === 51,
+        data: formattedData.slice(0, PAGE_SIZE),
+        hasNextPage: hasNextPage,
         isNextPageLoading: false,
-        offsetCount: state.offsetCount + LIMIT,
+        offsetCount: PAGE_SIZE,
       };
 
+      setTotalCount(exactCount);
+      setPageInfo((prevPageInfo) => ({
+        ...prevPageInfo,
+        count: exactCount,
+      }));
       handleSetState((prevState) => ({ ...prevState, ...stateChange }));
     },
   });
 
-  const loadNextPage = async () => {
-    handleSetState((prevState) => ({ ...prevState, isNextPageLoading: true }));
+  const loadPage = (page: number) => {
+    handleSetState((prevState) => ({
+      ...prevState,
+      isNextPageLoading: true,
+    }));
+
     // refetch query
-    await transactionQuery
-      .fetchMore({
-        variables: {
-          offset: state.offsetCount,
-          limit: LIMIT + 1,
-        },
-      })
-      .then(({ data }) => {
-        const itemsLength = data.messagesByAddress.length;
-        const newItems = R.uniq([...state.data, ...formatTransactions(data)]);
-        const stateChange: TransactionState = {
-          data: newItems,
-          hasNextPage: itemsLength === 51,
-          isNextPageLoading: false,
-          offsetCount: state.offsetCount + LIMIT,
-        };
-        handleSetState((prevState) => ({ ...prevState, ...stateChange }));
-      });
+    transactionQuery.refetch({
+      offset: (page - 1) * PAGE_SIZE,
+      limit: PAGE_SIZE + 1,
+    }).then(({ data }) => {
+      const itemsLength = data.messagesByAddress.length;
+      const formattedData = formatTransactions(data);
+      const hasNextPage = itemsLength === PAGE_SIZE + 1;
+
+      // Update total count based on current page and items found
+      const currentPageStart = (page - 1) * PAGE_SIZE;
+      const newTotalCount = hasNextPage
+        ? currentPageStart + PAGE_SIZE + 1
+        : currentPageStart + itemsLength;
+
+      const stateChange: TransactionState = {
+        data: formattedData.slice(0, PAGE_SIZE),
+        hasNextPage: hasNextPage,
+        isNextPageLoading: false,
+        offsetCount: currentPageStart + PAGE_SIZE,
+      };
+
+      setTotalCount(newTotalCount);
+      setPageInfo((prevPageInfo) => ({
+        ...prevPageInfo,
+        count: newTotalCount,
+      }));
+      handleSetState((prevState) => ({ ...prevState, ...stateChange }));
+    }).catch((error) => {
+      console.error('Error loading page:', error);
+      handleSetState((prevState) => ({
+        ...prevState,
+        isNextPageLoading: false,
+      }));
+    });
+  };
+
+  const handlePageChange = (e: any) => {
+    loadPage(e.page);
+    setPageInfo((prevPageInfo) => ({
+      ...prevPageInfo,
+      currentPage: e.page,
+    }));
   };
 
   return {
     state,
-    loadNextPage,
+    pageInfo,
+    handlePageChange,
   };
 }
 
