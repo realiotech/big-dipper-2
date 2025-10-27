@@ -1,4 +1,4 @@
-import { Box, Text, Flex, VStack, Center } from "@chakra-ui/react";
+import { Box, Text, Flex, VStack, Center, Button } from "@chakra-ui/react";
 import { useBreakpointValue } from "@chakra-ui/react";
 import { ClipboardRoot, ClipboardIconButton } from "@/components/ui/clipboard";
 import Transactions from "./transactions";
@@ -12,15 +12,22 @@ import { useMemo } from "react";
 import { useRecoilValue } from "recoil";
 import { readAssets } from "@/recoil/asset";
 import Big from "big.js";
-import { readTokens } from "@/recoil/erc20";
+import { useRouter } from "next/router";
+import useTranslation from "next-translate/useTranslation";
 
 export default function AccountDetail() {
   const { balances, address, evmAddress, completed } = useOverview();
   const { assetMap, loaded } = useRecoilValue(readAssets);
   const { delegations, unbondings, handleSort, sortDirection } =
     useStaking(address);
+  const router = useRouter();
+  const { t } = useTranslation("accounts");
 
   const isMobile = useBreakpointValue({ base: true, lg: false });
+
+  const handleExportClick = () => {
+    router.push(`/accounts/${address}/export`);
+  };
 
   const createFreshBalanceMap = () => {
     return {
@@ -112,9 +119,18 @@ export default function AccountDetail() {
             flex="1"
             w={"auto"}
           >
-            <Text fontSize="lg" fontWeight="bold" mb={4}>
-              Portfolio
-            </Text>
+            <Flex justifyContent="space-between" alignItems="flex-start" mb={4}>
+              <Text fontSize="lg" fontWeight="bold">
+                Portfolio
+              </Text>
+              <Button
+                size="sm"
+                colorScheme="blue"
+                onClick={handleExportClick}
+              >
+                {t("exportTransactions")}
+              </Button>
+            </Flex>
             <VStack gap={0} align={"left"}>
               <Flex gap={2} alignItems={"center"}>
                 <Text>
