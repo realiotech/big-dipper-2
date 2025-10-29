@@ -141,11 +141,13 @@ export default function TransactionDetails() {
             bg={{ base: "white", _dark: "#262626" }}
             p={4}
             borderRadius="md"
-            overflowY="auto"
+            overflow="auto"
             fontSize={{base: 10, md: 15}}
             fontFamily="monospace"
             maxHeight={300}
+            maxW="100%"
             whiteSpace="pre-wrap"
+            wordBreak="break-word"
           >
             <code>{JSON.stringify(logs, null, 4)}</code>
           </Box>

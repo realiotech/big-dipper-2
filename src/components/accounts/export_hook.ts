@@ -1,4 +1,3 @@
-import { useRouter } from 'next/router';
 import { useState, useCallback } from 'react';
 import * as R from 'ramda';
 
@@ -67,9 +66,8 @@ export interface ExportTransactionsState {
 }
 
 export function useExportTransactions() {
-  const router = useRouter();
-  const address = router?.query?.address as string;
-  
+  const [currentAddress, setCurrentAddress] = useState<string>('');
+
   const [state, setState] = useState<ExportTransactionsState>({
     data: [],
     rawData: [],
@@ -98,49 +96,15 @@ export function useExportTransactions() {
   const queryVariables = {
     limit: PAGE_SIZE,
     offset: 0,
-    address: `{${address ?? ''}}`,
+    address: `{${currentAddress ?? ''}}`,
     types: msgTypes,
     startDate: startDateStr,
     endDate: endDateStr,
   };
 
-  // Log the query when it's about to be executed
-  if (!(!address || (!state.startDate && !state.endDate))) {
-    console.log('📊 Export Query Variables:', queryVariables);
-    console.log('📊 Start Date (YYYY-MM-DD):', startDateStr);
-    console.log('📊 End Date (YYYY-MM-DD):', endDateStr);
-    console.log('📊 Export GraphQL Query:', `
-      query GetMessagesByAddressExport(
-        $address: _text
-        $limit: bigint = 50
-        $offset: bigint = 0
-        $types: _text = "{}"
-        $startDate: timestamp
-        $endDate: timestamp
-      ) {
-        messagesByAddress: messages_by_address(
-          args: {addresses: $address, types: $types, limit: $limit, offset: $offset}
-          where: {transaction: {block: {timestamp: {_gte: $startDate, _lt: $endDate}}}}
-        ) {
-          transaction {
-            height
-            hash
-            success
-            messages
-            logs
-            block {
-              height
-              timestamp
-            }
-          }
-        }
-      }
-    `);
-  }
-
   const transactionQuery = useGetMessagesByAddressExportQuery({
     variables: queryVariables,
-    skip: !address || (!state.startDate && !state.endDate),
+    skip: !currentAddress || (!state.startDate && !state.endDate),
     onCompleted: (data) => {
       const formattedData = formatTransactions(data);
       const rawTransactionData = data.messagesByAddress || [];
@@ -164,10 +128,19 @@ export function useExportTransactions() {
   });
 
   /**
-   * Query transactions with the specified date range
+   * Query transactions with the specified date range and address
    */
   const queryTransactions = useCallback(
-    (startDate: Date | null, endDate: Date | null) => {
+    (startDate: Date | null, endDate: Date | null, address: string) => {
+      // Validate address
+      if (!address || !address.trim()) {
+        handleSetState((prevState) => ({
+          ...prevState,
+          error: 'Address is required',
+        }));
+        return;
+      }
+
       // Validate date range
       if (startDate && endDate && startDate > endDate) {
         handleSetState((prevState) => ({
@@ -176,6 +149,9 @@ export function useExportTransactions() {
         }));
         return;
       }
+
+      // Update current address
+      setCurrentAddress(address);
 
       handleSetState((prevState) => ({
         ...prevState,
@@ -189,11 +165,11 @@ export function useExportTransactions() {
       transactionQuery.refetch({
         limit: PAGE_SIZE,
         offset: 0,
-        address: `{${address ?? ''}}`,
+        address: `{${address}}`,
         types: msgTypes,
       });
     },
-    [address, msgTypes, transactionQuery, handleSetState]
+    [msgTypes, transactionQuery, handleSetState]
   );
 
   /**

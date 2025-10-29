@@ -26,7 +26,7 @@ export default function AccountDetail() {
   const isMobile = useBreakpointValue({ base: true, lg: false });
 
   const handleExportClick = () => {
-    router.push(`/accounts/${address}/export`);
+    router.push(`/accounts/export?a=${address}`);
   };
 
   const createFreshBalanceMap = () => {

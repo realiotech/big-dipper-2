@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import {
   Box,
   Button,
@@ -19,14 +19,27 @@ import { exportTransactionsToCSV } from '@/utils/csv_export';
 export default function ExportTransactionsPage() {
   const { t } = useTranslation('accounts');
   const router = useRouter();
-  const { address } = router.query;
+  const { a: queryAddress } = router.query;
   
   const { state, queryTransactions, clearFilters, isLoading } = useExportTransactions();
   
+  const [addressInput, setAddressInput] = useState('');
   const [startDateInput, setStartDateInput] = useState('');
   const [endDateInput, setEndDateInput] = useState('');
 
+  // Pre-fill address from query parameter on mount
+  useEffect(() => {
+    if (queryAddress && typeof queryAddress === 'string') {
+      setAddressInput(queryAddress);
+    }
+  }, [queryAddress]);
+
   const handleQuery = () => {
+    if (!addressInput.trim()) {
+      alert('Please enter an address');
+      return;
+    }
+
     const startDate = startDateInput ? new Date(startDateInput) : null;
     const endDate = endDateInput ? new Date(endDateInput) : null;
 
@@ -35,7 +48,7 @@ export default function ExportTransactionsPage() {
       endDate.setHours(23, 59, 59, 999);
     }
 
-    queryTransactions(startDate, endDate);
+    queryTransactions(startDate, endDate, addressInput);
   };
 
   const handleClear = () => {
@@ -51,7 +64,7 @@ export default function ExportTransactionsPage() {
         return;
       }
 
-      exportTransactionsToCSV(state.rawData, address as string, startDateInput || null, endDateInput || null);
+      exportTransactionsToCSV(state.rawData, addressInput, startDateInput || null, endDateInput || null);
     } catch (error) {
       console.error('❌ CSV export error:', error);
       alert(`Error exporting CSV: ${error instanceof Error ? error.message : 'Unknown error'}`);
@@ -80,7 +93,7 @@ export default function ExportTransactionsPage() {
             {t('exportTransactions')}
           </Text>
           <Text fontSize="sm" color="gray.600" _dark={{ color: 'gray.400' }}>
-            {t('address')}: {address}
+            Export transactions for any address with date range filtering
           </Text>
         </Box>
 
@@ -97,6 +110,22 @@ export default function ExportTransactionsPage() {
           </Text>
           
           <VStack align="stretch" gap={4}>
+            {/* Address Input */}
+            <Box>
+              <Text fontSize="sm" fontWeight="medium" mb={2}>
+                {t('address')}
+              </Text>
+              <Input
+                type="text"
+                value={addressInput}
+                onChange={(e) => setAddressInput(e.target.value)}
+                placeholder="Enter account address (e.g., realio1xxx...)"
+                bg={{ base: 'white', _dark: '#262626' }}
+                borderColor={{ base: 'gray.200', _dark: 'gray.700' }}
+              />
+            </Box>
+
+            {/* Date Range Inputs */}
             <HStack gap={4} flexWrap={{ base: 'wrap', md: 'nowrap' }}>
               <Box flex={1} minW={{ base: '100%', md: 'auto' }}>
                 <Text fontSize="sm" fontWeight="medium" mb={2}>
@@ -127,6 +156,7 @@ export default function ExportTransactionsPage() {
               </Box>
             </HStack>
 
+            {/* Action Buttons */}
             <HStack gap={3} justifyContent="flex-start">
               <Button
                 onClick={handleQuery}

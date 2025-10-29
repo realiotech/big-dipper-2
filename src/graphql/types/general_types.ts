@@ -25035,6 +25035,7 @@ export const GetMessagesByAddressExportDocument = gql`
   messagesByAddress: messages_by_address(
     args: {addresses: $address, types: $types, limit: $limit, offset: $offset}
     where: {transaction: {block: {timestamp: {_gte: $startDate, _lte: $endDate}}}}
+    order_by: {height: desc}
   ) {
     transaction {
       height
