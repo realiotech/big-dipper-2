@@ -1,4 +1,4 @@
-import { Box, Text, Flex, VStack, Center, Button } from "@chakra-ui/react";
+import { Box, Text, Flex, VStack, Center } from "@chakra-ui/react";
 import { useBreakpointValue } from "@chakra-ui/react";
 import { ClipboardRoot, ClipboardIconButton } from "@/components/ui/clipboard";
 import Transactions from "./transactions";
@@ -13,7 +13,6 @@ import { useRecoilValue } from "recoil";
 import { readAssets } from "@/recoil/asset";
 import Big from "big.js";
 import { useRouter } from "next/router";
-import useTranslation from "next-translate/useTranslation";
 
 export default function AccountDetail() {
   const { balances, address, evmAddress, completed } = useOverview();
@@ -21,7 +20,6 @@ export default function AccountDetail() {
   const { delegations, unbondings, handleSort, sortDirection } =
     useStaking(address);
   const router = useRouter();
-  const { t } = useTranslation("accounts");
 
   const isMobile = useBreakpointValue({ base: true, lg: false });
 
@@ -119,18 +117,9 @@ export default function AccountDetail() {
             flex="1"
             w={"auto"}
           >
-            <Flex justifyContent="space-between" alignItems="flex-start" mb={4}>
-              <Text fontSize="lg" fontWeight="bold">
-                Portfolio
-              </Text>
-              <Button
-                size="sm"
-                colorScheme="blue"
-                onClick={handleExportClick}
-              >
-                {t("exportTransactions")}
-              </Button>
-            </Flex>
+            <Text fontSize="lg" fontWeight="bold" mb={4}>
+              Portfolio
+            </Text>
             <VStack gap={0} align={"left"}>
               <Flex gap={2} alignItems={"center"}>
                 <Text>
@@ -173,7 +162,7 @@ export default function AccountDetail() {
         </Flex>
         <AssetChart balances={balancesMerged} />
       </Flex>
-      <Transactions />
+      <Transactions onExportClick={handleExportClick} />
       <Staking
         delegations={delegations}
         unbondings={unbondings}

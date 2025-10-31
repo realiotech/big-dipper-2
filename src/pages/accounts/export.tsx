@@ -6,14 +6,11 @@ import {
   HStack,
   Text,
   Input,
-  Center,
-  Spinner,
 } from '@chakra-ui/react';
 import { NextSeo } from 'next-seo';
 import useTranslation from 'next-translate/useTranslation';
 import { useRouter } from 'next/router';
 import { useExportTransactions } from '@/components/accounts/export_hook';
-import TxTable from '@/components/transactions/table';
 import { exportTransactionsToCSV } from '@/utils/csv_export';
 
 export default function ExportTransactionsPage() {
@@ -26,6 +23,7 @@ export default function ExportTransactionsPage() {
   const [addressInput, setAddressInput] = useState('');
   const [startDateInput, setStartDateInput] = useState('');
   const [endDateInput, setEndDateInput] = useState('');
+  const [isDownloading, setIsDownloading] = useState(false);
 
   // Pre-fill address from query parameter on mount
   useEffect(() => {
@@ -34,7 +32,21 @@ export default function ExportTransactionsPage() {
     }
   }, [queryAddress]);
 
-  const handleQuery = () => {
+  // Auto-download when data is ready
+  useEffect(() => {
+    if (isDownloading && state.rawData && state.rawData.length > 0 && !isLoading) {
+      try {
+        exportTransactionsToCSV(state.rawData, addressInput, startDateInput || null, endDateInput || null);
+        setIsDownloading(false);
+      } catch (error) {
+        console.error('❌ CSV export error:', error);
+        alert(`Error exporting CSV: ${error instanceof Error ? error.message : 'Unknown error'}`);
+        setIsDownloading(false);
+      }
+    }
+  }, [isDownloading, state.rawData, isLoading, addressInput, startDateInput, endDateInput]);
+
+  const handleDownloadCSV = () => {
     if (!addressInput.trim()) {
       alert('Please enter an address');
       return;
@@ -48,27 +60,19 @@ export default function ExportTransactionsPage() {
       endDate.setHours(23, 59, 59, 999);
     }
 
+    // Set flag to trigger download after query completes
+    setIsDownloading(true);
+
+    // Execute query
     queryTransactions(startDate, endDate, addressInput);
   };
 
   const handleClear = () => {
+    setAddressInput('');
     setStartDateInput('');
     setEndDateInput('');
+    setIsDownloading(false);
     clearFilters();
-  };
-
-  const handleDownloadCSV = () => {
-    try {
-      if (!state.rawData || state.rawData.length === 0) {
-        alert('No transactions to export');
-        return;
-      }
-
-      exportTransactionsToCSV(state.rawData, addressInput, startDateInput || null, endDateInput || null);
-    } catch (error) {
-      console.error('❌ CSV export error:', error);
-      alert(`Error exporting CSV: ${error instanceof Error ? error.message : 'Unknown error'}`);
-    }
   };
 
   return (
@@ -159,17 +163,9 @@ export default function ExportTransactionsPage() {
             {/* Action Buttons */}
             <HStack gap={3} justifyContent="flex-start">
               <Button
-                onClick={handleQuery}
-                loading={isLoading}
-                colorScheme="blue"
-              >
-                {t('query')}
-              </Button>
-              <Button
                 onClick={handleDownloadCSV}
-                disabled={state.data.length === 0}
+                loading={isDownloading || isLoading}
                 colorScheme="green"
-                variant="outline"
               >
                 Download CSV
               </Button>
@@ -198,36 +194,7 @@ export default function ExportTransactionsPage() {
           </VStack>
         </Box>
 
-        {/* Results Section - Only show after query is executed */}
-        {state.startDate || state.endDate ? (
-          <Box
-            bg={{ base: '#FAFBFC', _dark: '#0F0F0F' }}
-            overflow="auto"
-            py={6}
-            px={2}
-            borderRadius="md"
-            boxShadow="sm"
-            mb={8}
-          >
-            <Text fontSize="lg" px={4} fontWeight="bold" mb="4">
-              {t('transactions')} ({state.data.length})
-            </Text>
 
-            {isLoading ? (
-              <Center py={10}>
-                <Spinner />
-              </Center>
-            ) : state.data.length > 0 ? (
-              <TxTable transactions={state.data} isLoading={false} />
-            ) : (
-              <Center py={10}>
-                <Text color="gray.500" _dark={{ color: 'gray.400' }}>
-                  {t('noTransactionsFound')}
-                </Text>
-              </Center>
-            )}
-          </Box>
-        ) : null}
       </Box>
     </>
   );
