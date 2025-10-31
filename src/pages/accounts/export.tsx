@@ -25,12 +25,12 @@ export default function ExportTransactionsPage() {
   const [endDateInput, setEndDateInput] = useState('');
   const [isDownloading, setIsDownloading] = useState(false);
 
-  // Pre-fill address from query parameter on mount
+  // Pre-fill address from query parameter on mount (only once)
   useEffect(() => {
-    if (queryAddress && typeof queryAddress === 'string') {
+    if (queryAddress && typeof queryAddress === 'string' && !addressInput) {
       setAddressInput(queryAddress);
     }
-  }, [queryAddress]);
+  }, []);
 
   // Auto-download when data is ready
   useEffect(() => {
