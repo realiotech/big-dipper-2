@@ -12,15 +12,20 @@ import { useMemo } from "react";
 import { useRecoilValue } from "recoil";
 import { readAssets } from "@/recoil/asset";
 import Big from "big.js";
-import { readTokens } from "@/recoil/erc20";
+import { useRouter } from "next/router";
 
 export default function AccountDetail() {
   const { balances, address, evmAddress, completed } = useOverview();
   const { assetMap, loaded } = useRecoilValue(readAssets);
   const { delegations, unbondings, handleSort, sortDirection } =
     useStaking(address);
+  const router = useRouter();
 
   const isMobile = useBreakpointValue({ base: true, lg: false });
+
+  const handleExportClick = () => {
+    router.push(`/accounts/export?a=${address}`);
+  };
 
   const createFreshBalanceMap = () => {
     return {
@@ -157,7 +162,7 @@ export default function AccountDetail() {
         </Flex>
         <AssetChart balances={balancesMerged} />
       </Flex>
-      <Transactions />
+      <Transactions onExportClick={handleExportClick} />
       <Staking
         delegations={delegations}
         unbondings={unbondings}

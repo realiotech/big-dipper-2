@@ -23753,7 +23753,20 @@ export type GetMessagesByAddressQueryVariables = Exact<{
 }>;
 
 
+export type GetMessagesByAddressExportQueryVariables = Exact<{
+  address?: InputMaybe<Scalars['_text']>;
+  limit?: InputMaybe<Scalars['bigint']>;
+  offset?: InputMaybe<Scalars['bigint']>;
+  types?: InputMaybe<Scalars['_text']>;
+  startDate?: InputMaybe<Scalars['timestamp']>;
+  endDate?: InputMaybe<Scalars['timestamp']>;
+}>;
+
+
 export type GetMessagesByAddressQuery = { messagesByAddress: Array<{ __typename?: 'message', transaction?: { __typename?: 'transaction', height: any, hash: string, success: boolean, messages: any, logs?: any | null, block: { __typename?: 'block', height: any, timestamp: any } } | null }> };
+
+
+export type GetMessagesByAddressExportQuery = { messagesByAddress: Array<{ __typename?: 'message', transaction?: { __typename?: 'transaction', height: any, hash: string, success: boolean, messages: any, logs?: any | null, block: { __typename?: 'block', height: any, timestamp: any } } | null }> };
 
 export type MultistakingQueryVariables = Exact<{ [key: string]: never; }>;
 
@@ -25010,6 +25023,71 @@ export function useGetMessagesByAddressLazyQuery(baseOptions?: Apollo.LazyQueryH
 export type GetMessagesByAddressQueryHookResult = ReturnType<typeof useGetMessagesByAddressQuery>;
 export type GetMessagesByAddressLazyQueryHookResult = ReturnType<typeof useGetMessagesByAddressLazyQuery>;
 export type GetMessagesByAddressQueryResult = Apollo.QueryResult<GetMessagesByAddressQuery, GetMessagesByAddressQueryVariables>;
+export const GetMessagesByAddressExportDocument = gql`
+    query GetMessagesByAddressExport(
+  $address: _text
+  $limit: bigint = 50
+  $offset: bigint = 0
+  $types: _text = "{}"
+  $startDate: timestamp
+  $endDate: timestamp
+) {
+  messagesByAddress: messages_by_address(
+    args: {addresses: $address, types: $types, limit: $limit, offset: $offset}
+    where: {transaction: {block: {timestamp: {_gte: $startDate, _lte: $endDate}}}}
+    order_by: {height: desc}
+  ) {
+    transaction {
+      height
+      hash
+      success
+      messages
+      logs
+      fee
+      gasUsed: gas_used
+      gasWanted: gas_wanted
+      rawLog: raw_log
+      block {
+        height
+        timestamp
+      }
+    }
+  }
+}
+    `;
+
+/**
+ * __useGetMessagesByAddressExportQuery__
+ *
+ * To run a query within a React component, call `useGetMessagesByAddressExportQuery` and pass it any options that fit your needs.
+ * When your component renders, `useGetMessagesByAddressExportQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useGetMessagesByAddressExportQuery({
+ *   variables: {
+ *      address: // value for 'address'
+ *      limit: // value for 'limit'
+ *      offset: // value for 'offset'
+ *      types: // value for 'types'
+ *      startDate: // value for 'startDate'
+ *      endDate: // value for 'endDate'
+ *   },
+ * });
+ */
+export function useGetMessagesByAddressExportQuery(baseOptions?: Apollo.QueryHookOptions<GetMessagesByAddressExportQuery, GetMessagesByAddressExportQueryVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useQuery<GetMessagesByAddressExportQuery, GetMessagesByAddressExportQueryVariables>(GetMessagesByAddressExportDocument, options);
+      }
+export function useGetMessagesByAddressExportLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<GetMessagesByAddressExportQuery, GetMessagesByAddressExportQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return Apollo.useLazyQuery<GetMessagesByAddressExportQuery, GetMessagesByAddressExportQueryVariables>(GetMessagesByAddressExportDocument, options);
+        }
+export type GetMessagesByAddressExportQueryHookResult = ReturnType<typeof useGetMessagesByAddressExportQuery>;
+export type GetMessagesByAddressExportLazyQueryHookResult = ReturnType<typeof useGetMessagesByAddressExportLazyQuery>;
+export type GetMessagesByAddressExportQueryResult = Apollo.QueryResult<GetMessagesByAddressExportQuery, GetMessagesByAddressExportQueryVariables>;
 export const MultistakingDocument = gql`
     query Multistaking {
   token_bonded {

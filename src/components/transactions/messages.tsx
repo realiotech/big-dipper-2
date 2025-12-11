@@ -1,4 +1,4 @@
-import { Box, Flex, Text, Table, Link, Stack, StackSeparator, For, useBreakpointValue } from "@chakra-ui/react"
+import { Box, Flex, Text, Stack, StackSeparator, useBreakpointValue } from "@chakra-ui/react"
 import { useState } from "react"
 import { Switch } from "../ui/switch"
 import useTranslation from "next-translate/useTranslation";
@@ -12,8 +12,8 @@ const MessageItem = ({ message, raw }) => {
 
     return (
         <Flex w='full' gap='10' direction={isMobile? 'column' : 'row'}>
-            <Box w='30%'>{formattedItem.type}</Box>
-            <Box overflow={'auto'}>{formattedItem.message}</Box>
+            <Box w={isMobile ? 'full' : '30%'} flexShrink={0}>{formattedItem.type}</Box>
+            <Box overflow={'auto'} maxW={isMobile ? 'full' : 'calc(100% - 30% - 40px)'} w='full'>{formattedItem.message}</Box>
         </Flex>
     )
 }
