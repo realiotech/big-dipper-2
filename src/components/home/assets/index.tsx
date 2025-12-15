@@ -89,24 +89,24 @@ const TokenItem = ({ data, metadata, burnedAmt, isErc20 = false }) => {
   }
 
   // Handle native token display
-  const supplyAmt = formatTokenByExponent(data?.amount, metadata.decimals);
-  const realSupply = metadata.denom == "ario" ? parseFloat(supplyAmt) - parseFloat(burnedAmt) : parseFloat(supplyAmt)
+  const supplyAmt = formatTokenByExponent(data?.amount, metadata?.decimals);
+  const realSupply = metadata?.denom == "ario" ? parseFloat(supplyAmt) - parseFloat(burnedAmt) : parseFloat(supplyAmt)
   const supplyInUsd = realSupply * metadata?.price;
   return (
     <Table.Row bg={{ base: "white", _dark: "#262626" }}>
       <Table.Cell borderBottomColor={{ base: "gray.200", _dark: "gray.700" }}>
         <HStack>
           <Asset
-            name={metadata.symbol}
-            image={metadata.image}
-            denom={metadata.denom}
+            name={metadata?.symbol}
+            image={metadata?.image}
+            denom={metadata?.denom}
           />
         </HStack>
       </Table.Cell>
 
       <Table.Cell borderBottomColor={{ base: "gray.200", _dark: "gray.700" }}>
         <Text fontWeight="bold">
-          ${numeral(metadata.price).format("0.0000")}
+          ${numeral(metadata?.price).format("0.0000")}
         </Text>
       </Table.Cell>
 
