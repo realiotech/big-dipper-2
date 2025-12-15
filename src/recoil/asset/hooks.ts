@@ -12,8 +12,20 @@ export const useAssetRecoil = () => {
 
   useEffect(() => {
     fetch("/api/assets")
-      .then(data => data.json())
+      .then(async (response) => {
+        if (!response.ok) {
+          throw new Error(`API returned status ${response.status}`);
+        }
+        const text = await response.text();
+        if (!text) {
+          throw new Error("Empty response body");
+        }
+        return JSON.parse(text);
+      })
       .then(data => {
+        if (!Array.isArray(data)) {
+          throw new Error("Invalid response format: expected array");
+        }
         var assetMap = {}
         var newData = []
         data.forEach((item, idx) => {
@@ -25,7 +37,7 @@ export const useAssetRecoil = () => {
         setAssets(prevState => ({ ...prevState, assetArr: newData, assetMap: assetMap, loaded: true }))
       })
       .catch(e => {
-        console.log("can not fetch asset data", e)
+        console.error("Error fetching asset data:", e)
         setAssets(prevState => ({ ...prevState, assetArr: [], assetMap: {}, loaded: true }))
       })
   }, [])
