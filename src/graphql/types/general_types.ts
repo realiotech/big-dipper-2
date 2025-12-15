@@ -23768,6 +23768,14 @@ export type GetMessagesByAddressQuery = { messagesByAddress: Array<{ __typename?
 
 export type GetMessagesByAddressExportQuery = { messagesByAddress: Array<{ __typename?: 'message', transaction?: { __typename?: 'transaction', height: any, hash: string, success: boolean, messages: any, logs?: any | null, block: { __typename?: 'block', height: any, timestamp: any } } | null }> };
 
+export type GetMessagesByAddressCountQueryVariables = Exact<{
+  address?: InputMaybe<Scalars['_text']>;
+  types?: InputMaybe<Scalars['_text']>;
+}>;
+
+
+export type GetMessagesByAddressCountQuery = { messagesByAddressAggregate: { __typename?: 'message_aggregate', aggregate?: { __typename?: 'message_aggregate_fields', count: number } | null } };
+
 export type MultistakingQueryVariables = Exact<{ [key: string]: never; }>;
 
 
@@ -25088,6 +25096,44 @@ export function useGetMessagesByAddressExportLazyQuery(baseOptions?: Apollo.Lazy
 export type GetMessagesByAddressExportQueryHookResult = ReturnType<typeof useGetMessagesByAddressExportQuery>;
 export type GetMessagesByAddressExportLazyQueryHookResult = ReturnType<typeof useGetMessagesByAddressExportLazyQuery>;
 export type GetMessagesByAddressExportQueryResult = Apollo.QueryResult<GetMessagesByAddressExportQuery, GetMessagesByAddressExportQueryVariables>;
+export const GetMessagesByAddressCountDocument = gql`
+    query GetMessagesByAddressCount($address: _text, $types: _text = "{}") {
+  messagesByAddressAggregate: messages_by_address_aggregate(args: {addresses: $address, types: $types, limit: 10000, offset: 0}, where: {}) {
+    aggregate {
+      count
+    }
+  }
+}
+    `;
+
+/**
+ * __useGetMessagesByAddressCountQuery__
+ *
+ * To run a query within a React component, call `useGetMessagesByAddressCountQuery` and pass it any options that fit your needs.
+ * When your component renders, `useGetMessagesByAddressCountQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useGetMessagesByAddressCountQuery({
+ *   variables: {
+ *      address: // value for 'address'
+ *      types: // value for 'types'
+ *   },
+ * });
+ */
+export function useGetMessagesByAddressCountQuery(baseOptions?: Apollo.QueryHookOptions<GetMessagesByAddressCountQuery, GetMessagesByAddressCountQueryVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useQuery<GetMessagesByAddressCountQuery, GetMessagesByAddressCountQueryVariables>(GetMessagesByAddressCountDocument, options);
+      }
+export function useGetMessagesByAddressCountLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<GetMessagesByAddressCountQuery, GetMessagesByAddressCountQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return Apollo.useLazyQuery<GetMessagesByAddressCountQuery, GetMessagesByAddressCountQueryVariables>(GetMessagesByAddressCountDocument, options);
+        }
+export type GetMessagesByAddressCountQueryHookResult = ReturnType<typeof useGetMessagesByAddressCountQuery>;
+export type GetMessagesByAddressCountLazyQueryHookResult = ReturnType<typeof useGetMessagesByAddressCountLazyQuery>;
+export type GetMessagesByAddressCountQueryResult = Apollo.QueryResult<GetMessagesByAddressCountQuery, GetMessagesByAddressCountQueryVariables>;
 export const MultistakingDocument = gql`
     query Multistaking {
   token_bonded {
