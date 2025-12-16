@@ -101,19 +101,19 @@ const SkeletonItem = () => {
         w={"full"}
       >
         <Flex justify="space-between" w="full">
-          <Skeleton bg={'gray.400'} h={"20px"} w="full" mb="4" />
+          <Skeleton bg={{ base: "gray.200", _dark: "#4f4f4fff" }} h={"20px"} w="full" mb="4" />
         </Flex>
-        <Skeleton bg={'gray.400'} h={"20px"} w="full"/>
+        <Skeleton bg={{ base: "gray.200", _dark: "#4f4f4fff" }} h={"20px"} w="full"/>
       </Flex>
     </Box>
   ) : (
     <Box bg={{ base: "white", _dark: "#262626" }} p={4}>
       <Flex justify="space-between" align="center"  w={"full"}>
         <Flex direction={"column"} w="70%">
-          <Skeleton bg={'gray.400'} h={"20px"} w="full" mb="4" />
-          <Skeleton bg={'gray.400'} h={"20px"} w="full"/>
+          <Skeleton bg={{ base: "gray.200", _dark: "#4f4f4fff" }} h={"20px"} w="full" mb="4" />
+          <Skeleton bg={{ base: "gray.200", _dark: "#4f4f4fff" }} h={"20px"} w="full"/>
         </Flex>
-        <Skeleton bg={'gray.400'} h={"30px"} w="15%"/>
+        <Skeleton bg={{ base: "gray.200", _dark: "#4f4f4fff" }} h={"30px"} w="15%"/>
       </Flex>
     </Box>
   );

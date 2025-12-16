@@ -80,7 +80,7 @@ const BlockItemWindow = ({ item, isItemLoaded, rowIndex }) => {
       bg={{ base: "white", _dark: "#262626" }}
       key={`block-${rowIndex}`}
     >
-      <Table.Cell py={0} verticalAlign="middle">
+      <Table.Cell borderBottomColor={{ base: "gray.200", _dark: "gray.700" }} py={0} verticalAlign="middle">
         <Text lineHeight={TEXT_LINE_HEIGHT}>
           <HelpLink
             href={`/blocks/${item.height}`}
@@ -89,23 +89,23 @@ const BlockItemWindow = ({ item, isItemLoaded, rowIndex }) => {
         </Text>
       </Table.Cell>
 
-      <Table.Cell py={0} verticalAlign="middle">
+      <Table.Cell borderBottomColor={{ base: "gray.200", _dark: "gray.700" }} py={0} verticalAlign="middle">
         <Proposer address={address} image={imageUrl} name={name} />
       </Table.Cell>
 
-      <Table.Cell py={0} verticalAlign="middle">
+      <Table.Cell borderBottomColor={{ base: "gray.200", _dark: "gray.700" }} py={0} verticalAlign="middle">
         <Text lineHeight={TEXT_LINE_HEIGHT}>
           {getMiddleEllipsis(item.hash, { beginning: 6, ending: 5 })}
         </Text>
       </Table.Cell>
 
-      <Table.Cell py={0} verticalAlign="middle">
+      <Table.Cell borderBottomColor={{ base: "gray.200", _dark: "gray.700" }} py={0} verticalAlign="middle">
         <Text lineHeight={TEXT_LINE_HEIGHT}>
           {numeral(item.txs).format("0,0")}
         </Text>
       </Table.Cell>
 
-      <Table.Cell py={0} verticalAlign="middle">
+      <Table.Cell borderBottomColor={{ base: "gray.200", _dark: "gray.700" }} py={0} verticalAlign="middle">
         <Text lineHeight={TEXT_LINE_HEIGHT}>
           {dayjs.utc(item.timestamp).fromNow()}
         </Text>
@@ -128,7 +128,7 @@ const SkeletonBlockItem = ({ index }) => {
           verticalAlign="middle"
           borderBottomColor={{ base: "gray.200", _dark: "gray.700" }}
         >
-          <Skeleton h={TEXT_LINE_HEIGHT} w="full" />
+          <Skeleton bg={{ base: "gray.200", _dark: "#4f4f4fff" }} h={TEXT_LINE_HEIGHT} w="full" />
         </Table.Cell>
       ))}
     </Table.Row>
@@ -172,7 +172,7 @@ export function BlockList() {
       ) : (
         <Table.Root w="full">
           <Table.Header>
-            <Table.Row h={ROW_HEIGHT}>
+            <Table.Row h={ROW_HEIGHT} bg={{ base: "#FAFBFC", _dark: "#0F0F0F" }}>
               {["Height", "Proposer", "Hash", "Txs", "Time"].map((label) => (
                 <Table.ColumnHeader key={label}>
                   {label}
