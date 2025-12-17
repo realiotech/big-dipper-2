@@ -6474,6 +6474,10 @@ export type Mutation_Root = {
   delete_proposal_validator_status_snapshot_by_pk?: Maybe<Proposal_Validator_Status_Snapshot>;
   /** delete data from the table: "proposal_vote" */
   delete_proposal_vote?: Maybe<Proposal_Vote_Mutation_Response>;
+  /** delete data from the table: "reward_earned" */
+  delete_reward_earned?: Maybe<Reward_Earned_Mutation_Response>;
+  /** delete single row from the table: "reward_earned" */
+  delete_reward_earned_by_pk?: Maybe<Reward_Earned>;
   /** delete data from the table: "slashing_params" */
   delete_slashing_params?: Maybe<Slashing_Params_Mutation_Response>;
   /** delete single row from the table: "slashing_params" */
@@ -6680,6 +6684,10 @@ export type Mutation_Root = {
   insert_proposal_vote?: Maybe<Proposal_Vote_Mutation_Response>;
   /** insert a single row into the table: "proposal_vote" */
   insert_proposal_vote_one?: Maybe<Proposal_Vote>;
+  /** insert data into the table: "reward_earned" */
+  insert_reward_earned?: Maybe<Reward_Earned_Mutation_Response>;
+  /** insert a single row into the table: "reward_earned" */
+  insert_reward_earned_one?: Maybe<Reward_Earned>;
   /** insert data into the table: "slashing_params" */
   insert_slashing_params?: Maybe<Slashing_Params_Mutation_Response>;
   /** insert a single row into the table: "slashing_params" */
@@ -6944,6 +6952,12 @@ export type Mutation_Root = {
   update_proposal_vote?: Maybe<Proposal_Vote_Mutation_Response>;
   /** update multiples rows of table: "proposal_vote" */
   update_proposal_vote_many?: Maybe<Array<Maybe<Proposal_Vote_Mutation_Response>>>;
+  /** update data of the table: "reward_earned" */
+  update_reward_earned?: Maybe<Reward_Earned_Mutation_Response>;
+  /** update single row of the table: "reward_earned" */
+  update_reward_earned_by_pk?: Maybe<Reward_Earned>;
+  /** update multiples rows of table: "reward_earned" */
+  update_reward_earned_many?: Maybe<Array<Maybe<Reward_Earned_Mutation_Response>>>;
   /** update data of the table: "slashing_params" */
   update_slashing_params?: Maybe<Slashing_Params_Mutation_Response>;
   /** update single row of the table: "slashing_params" */
@@ -7406,6 +7420,18 @@ export type Mutation_RootDelete_Proposal_Validator_Status_Snapshot_By_PkArgs = {
 /** mutation root */
 export type Mutation_RootDelete_Proposal_VoteArgs = {
   where: Proposal_Vote_Bool_Exp;
+};
+
+
+/** mutation root */
+export type Mutation_RootDelete_Reward_EarnedArgs = {
+  where: Reward_Earned_Bool_Exp;
+};
+
+
+/** mutation root */
+export type Mutation_RootDelete_Reward_Earned_By_PkArgs = {
+  delegator_address: Scalars['String'];
 };
 
 
@@ -8082,6 +8108,20 @@ export type Mutation_RootInsert_Proposal_VoteArgs = {
 export type Mutation_RootInsert_Proposal_Vote_OneArgs = {
   object: Proposal_Vote_Insert_Input;
   on_conflict?: InputMaybe<Proposal_Vote_On_Conflict>;
+};
+
+
+/** mutation root */
+export type Mutation_RootInsert_Reward_EarnedArgs = {
+  objects: Array<Reward_Earned_Insert_Input>;
+  on_conflict?: InputMaybe<Reward_Earned_On_Conflict>;
+};
+
+
+/** mutation root */
+export type Mutation_RootInsert_Reward_Earned_OneArgs = {
+  object: Reward_Earned_Insert_Input;
+  on_conflict?: InputMaybe<Reward_Earned_On_Conflict>;
 };
 
 
@@ -9070,6 +9110,28 @@ export type Mutation_RootUpdate_Proposal_VoteArgs = {
 /** mutation root */
 export type Mutation_RootUpdate_Proposal_Vote_ManyArgs = {
   updates: Array<Proposal_Vote_Updates>;
+};
+
+
+/** mutation root */
+export type Mutation_RootUpdate_Reward_EarnedArgs = {
+  _inc?: InputMaybe<Reward_Earned_Inc_Input>;
+  _set?: InputMaybe<Reward_Earned_Set_Input>;
+  where: Reward_Earned_Bool_Exp;
+};
+
+
+/** mutation root */
+export type Mutation_RootUpdate_Reward_Earned_By_PkArgs = {
+  _inc?: InputMaybe<Reward_Earned_Inc_Input>;
+  _set?: InputMaybe<Reward_Earned_Set_Input>;
+  pk_columns: Reward_Earned_Pk_Columns_Input;
+};
+
+
+/** mutation root */
+export type Mutation_RootUpdate_Reward_Earned_ManyArgs = {
+  updates: Array<Reward_Earned_Updates>;
 };
 
 
@@ -12535,6 +12597,12 @@ export type Query_Root = {
   proposal_vote: Array<Proposal_Vote>;
   /** fetch aggregated fields from the table: "proposal_vote" */
   proposal_vote_aggregate: Proposal_Vote_Aggregate;
+  /** fetch data from the table: "reward_earned" */
+  reward_earned: Array<Reward_Earned>;
+  /** fetch aggregated fields from the table: "reward_earned" */
+  reward_earned_aggregate: Reward_Earned_Aggregate;
+  /** fetch data from the table: "reward_earned" using primary key columns */
+  reward_earned_by_pk?: Maybe<Reward_Earned>;
   /** fetch data from the table: "slashing_params" */
   slashing_params: Array<Slashing_Params>;
   /** fetch aggregated fields from the table: "slashing_params" */
@@ -13567,6 +13635,29 @@ export type Query_RootProposal_Vote_AggregateArgs = {
 };
 
 
+export type Query_RootReward_EarnedArgs = {
+  distinct_on?: InputMaybe<Array<Reward_Earned_Select_Column>>;
+  limit?: InputMaybe<Scalars['Int']>;
+  offset?: InputMaybe<Scalars['Int']>;
+  order_by?: InputMaybe<Array<Reward_Earned_Order_By>>;
+  where?: InputMaybe<Reward_Earned_Bool_Exp>;
+};
+
+
+export type Query_RootReward_Earned_AggregateArgs = {
+  distinct_on?: InputMaybe<Array<Reward_Earned_Select_Column>>;
+  limit?: InputMaybe<Scalars['Int']>;
+  offset?: InputMaybe<Scalars['Int']>;
+  order_by?: InputMaybe<Array<Reward_Earned_Order_By>>;
+  where?: InputMaybe<Reward_Earned_Bool_Exp>;
+};
+
+
+export type Query_RootReward_Earned_By_PkArgs = {
+  delegator_address: Scalars['String'];
+};
+
+
 export type Query_RootSlashing_ParamsArgs = {
   distinct_on?: InputMaybe<Array<Slashing_Params_Select_Column>>;
   limit?: InputMaybe<Scalars['Int']>;
@@ -14117,6 +14208,227 @@ export type Query_RootVesting_Period_AggregateArgs = {
   offset?: InputMaybe<Scalars['Int']>;
   order_by?: InputMaybe<Array<Vesting_Period_Order_By>>;
   where?: InputMaybe<Vesting_Period_Bool_Exp>;
+};
+
+/** columns and relationships of "reward_earned" */
+export type Reward_Earned = {
+  __typename?: 'reward_earned';
+  amount: Scalars['String'];
+  delegator_address: Scalars['String'];
+  denom: Scalars['String'];
+  height: Scalars['bigint'];
+};
+
+/** aggregated selection of "reward_earned" */
+export type Reward_Earned_Aggregate = {
+  __typename?: 'reward_earned_aggregate';
+  aggregate?: Maybe<Reward_Earned_Aggregate_Fields>;
+  nodes: Array<Reward_Earned>;
+};
+
+/** aggregate fields of "reward_earned" */
+export type Reward_Earned_Aggregate_Fields = {
+  __typename?: 'reward_earned_aggregate_fields';
+  avg?: Maybe<Reward_Earned_Avg_Fields>;
+  count: Scalars['Int'];
+  max?: Maybe<Reward_Earned_Max_Fields>;
+  min?: Maybe<Reward_Earned_Min_Fields>;
+  stddev?: Maybe<Reward_Earned_Stddev_Fields>;
+  stddev_pop?: Maybe<Reward_Earned_Stddev_Pop_Fields>;
+  stddev_samp?: Maybe<Reward_Earned_Stddev_Samp_Fields>;
+  sum?: Maybe<Reward_Earned_Sum_Fields>;
+  var_pop?: Maybe<Reward_Earned_Var_Pop_Fields>;
+  var_samp?: Maybe<Reward_Earned_Var_Samp_Fields>;
+  variance?: Maybe<Reward_Earned_Variance_Fields>;
+};
+
+
+/** aggregate fields of "reward_earned" */
+export type Reward_Earned_Aggregate_FieldsCountArgs = {
+  columns?: InputMaybe<Array<Reward_Earned_Select_Column>>;
+  distinct?: InputMaybe<Scalars['Boolean']>;
+};
+
+/** aggregate avg on columns */
+export type Reward_Earned_Avg_Fields = {
+  __typename?: 'reward_earned_avg_fields';
+  height?: Maybe<Scalars['Float']>;
+};
+
+/** Boolean expression to filter rows from the table "reward_earned". All fields are combined with a logical 'AND'. */
+export type Reward_Earned_Bool_Exp = {
+  _and?: InputMaybe<Array<Reward_Earned_Bool_Exp>>;
+  _not?: InputMaybe<Reward_Earned_Bool_Exp>;
+  _or?: InputMaybe<Array<Reward_Earned_Bool_Exp>>;
+  amount?: InputMaybe<String_Comparison_Exp>;
+  delegator_address?: InputMaybe<String_Comparison_Exp>;
+  denom?: InputMaybe<String_Comparison_Exp>;
+  height?: InputMaybe<Bigint_Comparison_Exp>;
+};
+
+/** unique or primary key constraints on table "reward_earned" */
+export enum Reward_Earned_Constraint {
+  /** unique or primary key constraint on columns "delegator_address" */
+  RewardEarnedPkey = 'reward_earned_pkey'
+}
+
+/** input type for incrementing numeric columns in table "reward_earned" */
+export type Reward_Earned_Inc_Input = {
+  height?: InputMaybe<Scalars['bigint']>;
+};
+
+/** input type for inserting data into table "reward_earned" */
+export type Reward_Earned_Insert_Input = {
+  amount?: InputMaybe<Scalars['String']>;
+  delegator_address?: InputMaybe<Scalars['String']>;
+  denom?: InputMaybe<Scalars['String']>;
+  height?: InputMaybe<Scalars['bigint']>;
+};
+
+/** aggregate max on columns */
+export type Reward_Earned_Max_Fields = {
+  __typename?: 'reward_earned_max_fields';
+  amount?: Maybe<Scalars['String']>;
+  delegator_address?: Maybe<Scalars['String']>;
+  denom?: Maybe<Scalars['String']>;
+  height?: Maybe<Scalars['bigint']>;
+};
+
+/** aggregate min on columns */
+export type Reward_Earned_Min_Fields = {
+  __typename?: 'reward_earned_min_fields';
+  amount?: Maybe<Scalars['String']>;
+  delegator_address?: Maybe<Scalars['String']>;
+  denom?: Maybe<Scalars['String']>;
+  height?: Maybe<Scalars['bigint']>;
+};
+
+/** response of any mutation on the table "reward_earned" */
+export type Reward_Earned_Mutation_Response = {
+  __typename?: 'reward_earned_mutation_response';
+  /** number of rows affected by the mutation */
+  affected_rows: Scalars['Int'];
+  /** data from the rows affected by the mutation */
+  returning: Array<Reward_Earned>;
+};
+
+/** on_conflict condition type for table "reward_earned" */
+export type Reward_Earned_On_Conflict = {
+  constraint: Reward_Earned_Constraint;
+  update_columns?: Array<Reward_Earned_Update_Column>;
+  where?: InputMaybe<Reward_Earned_Bool_Exp>;
+};
+
+/** Ordering options when selecting data from "reward_earned". */
+export type Reward_Earned_Order_By = {
+  amount?: InputMaybe<Order_By>;
+  delegator_address?: InputMaybe<Order_By>;
+  denom?: InputMaybe<Order_By>;
+  height?: InputMaybe<Order_By>;
+};
+
+/** primary key columns input for table: reward_earned */
+export type Reward_Earned_Pk_Columns_Input = {
+  delegator_address: Scalars['String'];
+};
+
+/** select columns of table "reward_earned" */
+export enum Reward_Earned_Select_Column {
+  /** column name */
+  Amount = 'amount',
+  /** column name */
+  DelegatorAddress = 'delegator_address',
+  /** column name */
+  Denom = 'denom',
+  /** column name */
+  Height = 'height'
+}
+
+/** input type for updating data in table "reward_earned" */
+export type Reward_Earned_Set_Input = {
+  amount?: InputMaybe<Scalars['String']>;
+  delegator_address?: InputMaybe<Scalars['String']>;
+  denom?: InputMaybe<Scalars['String']>;
+  height?: InputMaybe<Scalars['bigint']>;
+};
+
+/** aggregate stddev on columns */
+export type Reward_Earned_Stddev_Fields = {
+  __typename?: 'reward_earned_stddev_fields';
+  height?: Maybe<Scalars['Float']>;
+};
+
+/** aggregate stddev_pop on columns */
+export type Reward_Earned_Stddev_Pop_Fields = {
+  __typename?: 'reward_earned_stddev_pop_fields';
+  height?: Maybe<Scalars['Float']>;
+};
+
+/** aggregate stddev_samp on columns */
+export type Reward_Earned_Stddev_Samp_Fields = {
+  __typename?: 'reward_earned_stddev_samp_fields';
+  height?: Maybe<Scalars['Float']>;
+};
+
+/** Streaming cursor of the table "reward_earned" */
+export type Reward_Earned_Stream_Cursor_Input = {
+  /** Stream column input with initial value */
+  initial_value: Reward_Earned_Stream_Cursor_Value_Input;
+  /** cursor ordering */
+  ordering?: InputMaybe<Cursor_Ordering>;
+};
+
+/** Initial value of the column from where the streaming should start */
+export type Reward_Earned_Stream_Cursor_Value_Input = {
+  amount?: InputMaybe<Scalars['String']>;
+  delegator_address?: InputMaybe<Scalars['String']>;
+  denom?: InputMaybe<Scalars['String']>;
+  height?: InputMaybe<Scalars['bigint']>;
+};
+
+/** aggregate sum on columns */
+export type Reward_Earned_Sum_Fields = {
+  __typename?: 'reward_earned_sum_fields';
+  height?: Maybe<Scalars['bigint']>;
+};
+
+/** update columns of table "reward_earned" */
+export enum Reward_Earned_Update_Column {
+  /** column name */
+  Amount = 'amount',
+  /** column name */
+  DelegatorAddress = 'delegator_address',
+  /** column name */
+  Denom = 'denom',
+  /** column name */
+  Height = 'height'
+}
+
+export type Reward_Earned_Updates = {
+  /** increments the numeric columns with given value of the filtered values */
+  _inc?: InputMaybe<Reward_Earned_Inc_Input>;
+  /** sets the columns of the filtered rows to the given values */
+  _set?: InputMaybe<Reward_Earned_Set_Input>;
+  /** filter the rows which have to be updated */
+  where: Reward_Earned_Bool_Exp;
+};
+
+/** aggregate var_pop on columns */
+export type Reward_Earned_Var_Pop_Fields = {
+  __typename?: 'reward_earned_var_pop_fields';
+  height?: Maybe<Scalars['Float']>;
+};
+
+/** aggregate var_samp on columns */
+export type Reward_Earned_Var_Samp_Fields = {
+  __typename?: 'reward_earned_var_samp_fields';
+  height?: Maybe<Scalars['Float']>;
+};
+
+/** aggregate variance on columns */
+export type Reward_Earned_Variance_Fields = {
+  __typename?: 'reward_earned_variance_fields';
+  height?: Maybe<Scalars['Float']>;
 };
 
 /** columns and relationships of "slashing_params" */
@@ -15374,6 +15686,14 @@ export type Subscription_Root = {
   proposal_vote_aggregate: Proposal_Vote_Aggregate;
   /** fetch data from the table in a streaming manner: "proposal_vote" */
   proposal_vote_stream: Array<Proposal_Vote>;
+  /** fetch data from the table: "reward_earned" */
+  reward_earned: Array<Reward_Earned>;
+  /** fetch aggregated fields from the table: "reward_earned" */
+  reward_earned_aggregate: Reward_Earned_Aggregate;
+  /** fetch data from the table: "reward_earned" using primary key columns */
+  reward_earned_by_pk?: Maybe<Reward_Earned>;
+  /** fetch data from the table in a streaming manner: "reward_earned" */
+  reward_earned_stream: Array<Reward_Earned>;
   /** fetch data from the table: "slashing_params" */
   slashing_params: Array<Slashing_Params>;
   /** fetch aggregated fields from the table: "slashing_params" */
@@ -16572,6 +16892,36 @@ export type Subscription_RootProposal_Vote_StreamArgs = {
   batch_size: Scalars['Int'];
   cursor: Array<InputMaybe<Proposal_Vote_Stream_Cursor_Input>>;
   where?: InputMaybe<Proposal_Vote_Bool_Exp>;
+};
+
+
+export type Subscription_RootReward_EarnedArgs = {
+  distinct_on?: InputMaybe<Array<Reward_Earned_Select_Column>>;
+  limit?: InputMaybe<Scalars['Int']>;
+  offset?: InputMaybe<Scalars['Int']>;
+  order_by?: InputMaybe<Array<Reward_Earned_Order_By>>;
+  where?: InputMaybe<Reward_Earned_Bool_Exp>;
+};
+
+
+export type Subscription_RootReward_Earned_AggregateArgs = {
+  distinct_on?: InputMaybe<Array<Reward_Earned_Select_Column>>;
+  limit?: InputMaybe<Scalars['Int']>;
+  offset?: InputMaybe<Scalars['Int']>;
+  order_by?: InputMaybe<Array<Reward_Earned_Order_By>>;
+  where?: InputMaybe<Reward_Earned_Bool_Exp>;
+};
+
+
+export type Subscription_RootReward_Earned_By_PkArgs = {
+  delegator_address: Scalars['String'];
+};
+
+
+export type Subscription_RootReward_Earned_StreamArgs = {
+  batch_size: Scalars['Int'];
+  cursor: Array<InputMaybe<Reward_Earned_Stream_Cursor_Input>>;
+  where?: InputMaybe<Reward_Earned_Bool_Exp>;
 };
 
 
@@ -20332,7 +20682,7 @@ export type Validator_Commission = {
   __typename?: 'validator_commission';
   commission: Scalars['numeric'];
   height: Scalars['bigint'];
-  min_self_delegation: Scalars['bigint'];
+  min_self_delegation: Scalars['String'];
   /** An object relationship */
   validator: Validator;
   validator_address: Scalars['String'];
@@ -20406,14 +20756,12 @@ export type Validator_Commission_Avg_Fields = {
   __typename?: 'validator_commission_avg_fields';
   commission?: Maybe<Scalars['Float']>;
   height?: Maybe<Scalars['Float']>;
-  min_self_delegation?: Maybe<Scalars['Float']>;
 };
 
 /** order by avg() on columns of table "validator_commission" */
 export type Validator_Commission_Avg_Order_By = {
   commission?: InputMaybe<Order_By>;
   height?: InputMaybe<Order_By>;
-  min_self_delegation?: InputMaybe<Order_By>;
 };
 
 /** Boolean expression to filter rows from the table "validator_commission". All fields are combined with a logical 'AND'. */
@@ -20423,7 +20771,7 @@ export type Validator_Commission_Bool_Exp = {
   _or?: InputMaybe<Array<Validator_Commission_Bool_Exp>>;
   commission?: InputMaybe<Numeric_Comparison_Exp>;
   height?: InputMaybe<Bigint_Comparison_Exp>;
-  min_self_delegation?: InputMaybe<Bigint_Comparison_Exp>;
+  min_self_delegation?: InputMaybe<String_Comparison_Exp>;
   validator?: InputMaybe<Validator_Bool_Exp>;
   validator_address?: InputMaybe<String_Comparison_Exp>;
 };
@@ -20438,14 +20786,13 @@ export enum Validator_Commission_Constraint {
 export type Validator_Commission_Inc_Input = {
   commission?: InputMaybe<Scalars['numeric']>;
   height?: InputMaybe<Scalars['bigint']>;
-  min_self_delegation?: InputMaybe<Scalars['bigint']>;
 };
 
 /** input type for inserting data into table "validator_commission" */
 export type Validator_Commission_Insert_Input = {
   commission?: InputMaybe<Scalars['numeric']>;
   height?: InputMaybe<Scalars['bigint']>;
-  min_self_delegation?: InputMaybe<Scalars['bigint']>;
+  min_self_delegation?: InputMaybe<Scalars['String']>;
   validator?: InputMaybe<Validator_Obj_Rel_Insert_Input>;
   validator_address?: InputMaybe<Scalars['String']>;
 };
@@ -20455,7 +20802,7 @@ export type Validator_Commission_Max_Fields = {
   __typename?: 'validator_commission_max_fields';
   commission?: Maybe<Scalars['numeric']>;
   height?: Maybe<Scalars['bigint']>;
-  min_self_delegation?: Maybe<Scalars['bigint']>;
+  min_self_delegation?: Maybe<Scalars['String']>;
   validator_address?: Maybe<Scalars['String']>;
 };
 
@@ -20472,7 +20819,7 @@ export type Validator_Commission_Min_Fields = {
   __typename?: 'validator_commission_min_fields';
   commission?: Maybe<Scalars['numeric']>;
   height?: Maybe<Scalars['bigint']>;
-  min_self_delegation?: Maybe<Scalars['bigint']>;
+  min_self_delegation?: Maybe<Scalars['String']>;
   validator_address?: Maybe<Scalars['String']>;
 };
 
@@ -20530,7 +20877,7 @@ export enum Validator_Commission_Select_Column {
 export type Validator_Commission_Set_Input = {
   commission?: InputMaybe<Scalars['numeric']>;
   height?: InputMaybe<Scalars['bigint']>;
-  min_self_delegation?: InputMaybe<Scalars['bigint']>;
+  min_self_delegation?: InputMaybe<Scalars['String']>;
   validator_address?: InputMaybe<Scalars['String']>;
 };
 
@@ -20539,14 +20886,12 @@ export type Validator_Commission_Stddev_Fields = {
   __typename?: 'validator_commission_stddev_fields';
   commission?: Maybe<Scalars['Float']>;
   height?: Maybe<Scalars['Float']>;
-  min_self_delegation?: Maybe<Scalars['Float']>;
 };
 
 /** order by stddev() on columns of table "validator_commission" */
 export type Validator_Commission_Stddev_Order_By = {
   commission?: InputMaybe<Order_By>;
   height?: InputMaybe<Order_By>;
-  min_self_delegation?: InputMaybe<Order_By>;
 };
 
 /** aggregate stddev_pop on columns */
@@ -20554,14 +20899,12 @@ export type Validator_Commission_Stddev_Pop_Fields = {
   __typename?: 'validator_commission_stddev_pop_fields';
   commission?: Maybe<Scalars['Float']>;
   height?: Maybe<Scalars['Float']>;
-  min_self_delegation?: Maybe<Scalars['Float']>;
 };
 
 /** order by stddev_pop() on columns of table "validator_commission" */
 export type Validator_Commission_Stddev_Pop_Order_By = {
   commission?: InputMaybe<Order_By>;
   height?: InputMaybe<Order_By>;
-  min_self_delegation?: InputMaybe<Order_By>;
 };
 
 /** aggregate stddev_samp on columns */
@@ -20569,14 +20912,12 @@ export type Validator_Commission_Stddev_Samp_Fields = {
   __typename?: 'validator_commission_stddev_samp_fields';
   commission?: Maybe<Scalars['Float']>;
   height?: Maybe<Scalars['Float']>;
-  min_self_delegation?: Maybe<Scalars['Float']>;
 };
 
 /** order by stddev_samp() on columns of table "validator_commission" */
 export type Validator_Commission_Stddev_Samp_Order_By = {
   commission?: InputMaybe<Order_By>;
   height?: InputMaybe<Order_By>;
-  min_self_delegation?: InputMaybe<Order_By>;
 };
 
 /** Streaming cursor of the table "validator_commission" */
@@ -20591,7 +20932,7 @@ export type Validator_Commission_Stream_Cursor_Input = {
 export type Validator_Commission_Stream_Cursor_Value_Input = {
   commission?: InputMaybe<Scalars['numeric']>;
   height?: InputMaybe<Scalars['bigint']>;
-  min_self_delegation?: InputMaybe<Scalars['bigint']>;
+  min_self_delegation?: InputMaybe<Scalars['String']>;
   validator_address?: InputMaybe<Scalars['String']>;
 };
 
@@ -20600,14 +20941,12 @@ export type Validator_Commission_Sum_Fields = {
   __typename?: 'validator_commission_sum_fields';
   commission?: Maybe<Scalars['numeric']>;
   height?: Maybe<Scalars['bigint']>;
-  min_self_delegation?: Maybe<Scalars['bigint']>;
 };
 
 /** order by sum() on columns of table "validator_commission" */
 export type Validator_Commission_Sum_Order_By = {
   commission?: InputMaybe<Order_By>;
   height?: InputMaybe<Order_By>;
-  min_self_delegation?: InputMaybe<Order_By>;
 };
 
 /** update columns of table "validator_commission" */
@@ -20636,14 +20975,12 @@ export type Validator_Commission_Var_Pop_Fields = {
   __typename?: 'validator_commission_var_pop_fields';
   commission?: Maybe<Scalars['Float']>;
   height?: Maybe<Scalars['Float']>;
-  min_self_delegation?: Maybe<Scalars['Float']>;
 };
 
 /** order by var_pop() on columns of table "validator_commission" */
 export type Validator_Commission_Var_Pop_Order_By = {
   commission?: InputMaybe<Order_By>;
   height?: InputMaybe<Order_By>;
-  min_self_delegation?: InputMaybe<Order_By>;
 };
 
 /** aggregate var_samp on columns */
@@ -20651,14 +20988,12 @@ export type Validator_Commission_Var_Samp_Fields = {
   __typename?: 'validator_commission_var_samp_fields';
   commission?: Maybe<Scalars['Float']>;
   height?: Maybe<Scalars['Float']>;
-  min_self_delegation?: Maybe<Scalars['Float']>;
 };
 
 /** order by var_samp() on columns of table "validator_commission" */
 export type Validator_Commission_Var_Samp_Order_By = {
   commission?: InputMaybe<Order_By>;
   height?: InputMaybe<Order_By>;
-  min_self_delegation?: InputMaybe<Order_By>;
 };
 
 /** aggregate variance on columns */
@@ -20666,14 +21001,12 @@ export type Validator_Commission_Variance_Fields = {
   __typename?: 'validator_commission_variance_fields';
   commission?: Maybe<Scalars['Float']>;
   height?: Maybe<Scalars['Float']>;
-  min_self_delegation?: Maybe<Scalars['Float']>;
 };
 
 /** order by variance() on columns of table "validator_commission" */
 export type Validator_Commission_Variance_Order_By = {
   commission?: InputMaybe<Order_By>;
   height?: InputMaybe<Order_By>;
-  min_self_delegation?: InputMaybe<Order_By>;
 };
 
 /** unique or primary key constraints on table "validator" */
@@ -23753,6 +24086,16 @@ export type GetMessagesByAddressQueryVariables = Exact<{
 }>;
 
 
+export type GetMessagesByAddressQuery = { messagesByAddress: Array<{ __typename?: 'message', transaction?: { __typename?: 'transaction', height: any, hash: string, success: boolean, messages: any, logs?: any | null, block: { __typename?: 'block', height: any, timestamp: any } } | null }> };
+
+export type GetMessagesByAddressCountQueryVariables = Exact<{
+  address?: InputMaybe<Scalars['_text']>;
+  types?: InputMaybe<Scalars['_text']>;
+}>;
+
+
+export type GetMessagesByAddressCountQuery = { messagesByAddressAggregate: { __typename?: 'message_aggregate', aggregate?: { __typename?: 'message_aggregate_fields', count: number } | null } };
+
 export type GetMessagesByAddressExportQueryVariables = Exact<{
   address?: InputMaybe<Scalars['_text']>;
   limit?: InputMaybe<Scalars['bigint']>;
@@ -23763,18 +24106,7 @@ export type GetMessagesByAddressExportQueryVariables = Exact<{
 }>;
 
 
-export type GetMessagesByAddressQuery = { messagesByAddress: Array<{ __typename?: 'message', transaction?: { __typename?: 'transaction', height: any, hash: string, success: boolean, messages: any, logs?: any | null, block: { __typename?: 'block', height: any, timestamp: any } } | null }> };
-
-
-export type GetMessagesByAddressExportQuery = { messagesByAddress: Array<{ __typename?: 'message', transaction?: { __typename?: 'transaction', height: any, hash: string, success: boolean, messages: any, logs?: any | null, block: { __typename?: 'block', height: any, timestamp: any } } | null }> };
-
-export type GetMessagesByAddressCountQueryVariables = Exact<{
-  address?: InputMaybe<Scalars['_text']>;
-  types?: InputMaybe<Scalars['_text']>;
-}>;
-
-
-export type GetMessagesByAddressCountQuery = { messagesByAddressAggregate: { __typename?: 'message_aggregate', aggregate?: { __typename?: 'message_aggregate_fields', count: number } | null } };
+export type GetMessagesByAddressExportQuery = { messagesByAddress: Array<{ __typename?: 'message', transaction?: { __typename?: 'transaction', height: any, hash: string, success: boolean, messages: any, logs?: any | null, fee: any, gasUsed?: any | null, gasWanted?: any | null, rawLog?: string | null, block: { __typename?: 'block', height: any, timestamp: any } } | null }> };
 
 export type MultistakingQueryVariables = Exact<{ [key: string]: never; }>;
 
@@ -25031,15 +25363,49 @@ export function useGetMessagesByAddressLazyQuery(baseOptions?: Apollo.LazyQueryH
 export type GetMessagesByAddressQueryHookResult = ReturnType<typeof useGetMessagesByAddressQuery>;
 export type GetMessagesByAddressLazyQueryHookResult = ReturnType<typeof useGetMessagesByAddressLazyQuery>;
 export type GetMessagesByAddressQueryResult = Apollo.QueryResult<GetMessagesByAddressQuery, GetMessagesByAddressQueryVariables>;
+export const GetMessagesByAddressCountDocument = gql`
+    query GetMessagesByAddressCount($address: _text, $types: _text = "{}") {
+  messagesByAddressAggregate: messages_by_address_aggregate(
+    args: {addresses: $address, types: $types, limit: 100000, offset: 0}
+    where: {}
+  ) {
+    aggregate {
+      count
+    }
+  }
+}
+    `;
+
+/**
+ * __useGetMessagesByAddressCountQuery__
+ *
+ * To run a query within a React component, call `useGetMessagesByAddressCountQuery` and pass it any options that fit your needs.
+ * When your component renders, `useGetMessagesByAddressCountQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useGetMessagesByAddressCountQuery({
+ *   variables: {
+ *      address: // value for 'address'
+ *      types: // value for 'types'
+ *   },
+ * });
+ */
+export function useGetMessagesByAddressCountQuery(baseOptions?: Apollo.QueryHookOptions<GetMessagesByAddressCountQuery, GetMessagesByAddressCountQueryVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useQuery<GetMessagesByAddressCountQuery, GetMessagesByAddressCountQueryVariables>(GetMessagesByAddressCountDocument, options);
+      }
+export function useGetMessagesByAddressCountLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<GetMessagesByAddressCountQuery, GetMessagesByAddressCountQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return Apollo.useLazyQuery<GetMessagesByAddressCountQuery, GetMessagesByAddressCountQueryVariables>(GetMessagesByAddressCountDocument, options);
+        }
+export type GetMessagesByAddressCountQueryHookResult = ReturnType<typeof useGetMessagesByAddressCountQuery>;
+export type GetMessagesByAddressCountLazyQueryHookResult = ReturnType<typeof useGetMessagesByAddressCountLazyQuery>;
+export type GetMessagesByAddressCountQueryResult = Apollo.QueryResult<GetMessagesByAddressCountQuery, GetMessagesByAddressCountQueryVariables>;
 export const GetMessagesByAddressExportDocument = gql`
-    query GetMessagesByAddressExport(
-  $address: _text
-  $limit: bigint = 50
-  $offset: bigint = 0
-  $types: _text = "{}"
-  $startDate: timestamp
-  $endDate: timestamp
-) {
+    query GetMessagesByAddressExport($address: _text, $limit: bigint = 50, $offset: bigint = 0, $types: _text = "{}", $startDate: timestamp, $endDate: timestamp) {
   messagesByAddress: messages_by_address(
     args: {addresses: $address, types: $types, limit: $limit, offset: $offset}
     where: {transaction: {block: {timestamp: {_gte: $startDate, _lte: $endDate}}}}
@@ -25096,44 +25462,6 @@ export function useGetMessagesByAddressExportLazyQuery(baseOptions?: Apollo.Lazy
 export type GetMessagesByAddressExportQueryHookResult = ReturnType<typeof useGetMessagesByAddressExportQuery>;
 export type GetMessagesByAddressExportLazyQueryHookResult = ReturnType<typeof useGetMessagesByAddressExportLazyQuery>;
 export type GetMessagesByAddressExportQueryResult = Apollo.QueryResult<GetMessagesByAddressExportQuery, GetMessagesByAddressExportQueryVariables>;
-export const GetMessagesByAddressCountDocument = gql`
-    query GetMessagesByAddressCount($address: _text, $types: _text = "{}") {
-  messagesByAddressAggregate: messages_by_address_aggregate(args: {addresses: $address, types: $types, limit: 10000, offset: 0}, where: {}) {
-    aggregate {
-      count
-    }
-  }
-}
-    `;
-
-/**
- * __useGetMessagesByAddressCountQuery__
- *
- * To run a query within a React component, call `useGetMessagesByAddressCountQuery` and pass it any options that fit your needs.
- * When your component renders, `useGetMessagesByAddressCountQuery` returns an object from Apollo Client that contains loading, error, and data properties
- * you can use to render your UI.
- *
- * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
- *
- * @example
- * const { data, loading, error } = useGetMessagesByAddressCountQuery({
- *   variables: {
- *      address: // value for 'address'
- *      types: // value for 'types'
- *   },
- * });
- */
-export function useGetMessagesByAddressCountQuery(baseOptions?: Apollo.QueryHookOptions<GetMessagesByAddressCountQuery, GetMessagesByAddressCountQueryVariables>) {
-        const options = {...defaultOptions, ...baseOptions}
-        return Apollo.useQuery<GetMessagesByAddressCountQuery, GetMessagesByAddressCountQueryVariables>(GetMessagesByAddressCountDocument, options);
-      }
-export function useGetMessagesByAddressCountLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<GetMessagesByAddressCountQuery, GetMessagesByAddressCountQueryVariables>) {
-          const options = {...defaultOptions, ...baseOptions}
-          return Apollo.useLazyQuery<GetMessagesByAddressCountQuery, GetMessagesByAddressCountQueryVariables>(GetMessagesByAddressCountDocument, options);
-        }
-export type GetMessagesByAddressCountQueryHookResult = ReturnType<typeof useGetMessagesByAddressCountQuery>;
-export type GetMessagesByAddressCountLazyQueryHookResult = ReturnType<typeof useGetMessagesByAddressCountLazyQuery>;
-export type GetMessagesByAddressCountQueryResult = Apollo.QueryResult<GetMessagesByAddressCountQuery, GetMessagesByAddressCountQueryVariables>;
 export const MultistakingDocument = gql`
     query Multistaking {
   token_bonded {

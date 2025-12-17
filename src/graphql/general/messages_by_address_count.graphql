@@ -1,5 +1,5 @@
 query GetMessagesByAddressCount($address: _text, $types: _text = "{}") {
-  messagesByAddressAggregate: messages_by_address_aggregate(args: {addresses: $address, types: $types, limit: 10000, offset: 0}, where: {}) {
+  messagesByAddressAggregate: messages_by_address_aggregate(args: {addresses: $address, types: $types, limit: 100000, offset: 0}, where: {}) {
     aggregate {
       count
     }
