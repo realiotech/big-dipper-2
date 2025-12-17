@@ -42,7 +42,7 @@ export default function MenuDrawer() {
         maxWidth="100vw" /* Ensures it doesn't exceed the viewport width */
       >
         <DrawerHeader>
-          <Flex justify="space-between" align="center">
+          <Flex w={'full'} px={3} justify="space-between" align="center">
             <DrawerTitle>
               <Flex gap={"1.5"} align={"center"}>
                 {colorMode == "light" ? (
@@ -79,8 +79,10 @@ export default function MenuDrawer() {
                   align="center"
                   gap={8}
                   py={2}
+                  px={3}
                   borderRadius="md"
-                  _hover={{ bg: "gray.100" }}
+                  w={'full'}
+                  _hover={{ bg: { base: "gray.200", _dark: "gray.700" } }}
                 >
                   <Center fontSize="25px">{item.image}</Center>
 
