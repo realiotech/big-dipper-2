@@ -6,7 +6,7 @@ on:
 jobs:
   build:
     name: common-test-build
-    runs-on: [blacksmith-2vcpu-ubuntu-2404]
+    runs-on: [ubuntu-latest]
     steps:
       - uses: actions/checkout@v2
       - uses: actions/setup-node@v2
