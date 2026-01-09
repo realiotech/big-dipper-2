@@ -19,7 +19,7 @@ WORKDIR /app
 
 # Installing dependencies
 COPY package*.json ./
-RUN npm ci
+RUN --mount=type=cache,target=/root/.npm npm ci
 RUN npx browserslist@latest --update-db
 
 # Copying source files
