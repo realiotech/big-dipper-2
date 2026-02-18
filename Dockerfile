@@ -1,4 +1,4 @@
-FROM node:lts-alpine
+FROM node:23-alpine
 
 ARG NEXT_PUBLIC_API_URL
 ARG NEXT_PUBLIC_CHAIN_TYPE
