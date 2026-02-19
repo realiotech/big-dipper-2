@@ -42,7 +42,7 @@ jobs:
         env:
           OP_VAULT: gitops-stage
           OP_ITEM: bigdipper-envvars
-          OP_SERVICE_ACCOUNT_TOKEN: ${{ secrets.OP_SERVICE_ACCOUNT_TOKEN }}
+          OP_SERVICE_ACCOUNT_TOKEN: ${{ secrets.OP_SERVICE_ACCOUNT_TOKEN_STAGE }}
         run: |
           op item get $OP_ITEM --vault $OP_VAULT --reveal --format json | jq '.fields[].label' | tail -n +3 | while IFS= read -r line; do
             value=$(op item get $OP_ITEM --vault $OP_VAULT --fields $line --reveal)
