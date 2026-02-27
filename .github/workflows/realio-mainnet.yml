@@ -40,7 +40,7 @@ jobs:
       - uses: 1password/install-cli-action@v2
       - name: Load REALIO_PUBLIC vars
         env:
-          OP_VAULT: gitops-prod
+          OP_VAULT: gitops-pubrepo-prod
           OP_ITEM: bigdipper-envvars
           OP_SERVICE_ACCOUNT_TOKEN: ${{ secrets.OP_SERVICE_ACCOUNT_TOKEN_PUBLIC_PROD }}
         run: |
