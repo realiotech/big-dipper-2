@@ -50,20 +50,26 @@ const SkeletonBlockItem = ({ index }) => {
       <Table.Cell
         w="50%"
         borderBottomColor={{ base: "gray.200", _dark: "gray.700" }}
+        bg={{ base: "white", _dark: "#262626" }}
+        h="62px"
       >
-        <Skeleton h={"10px"} w="full" mb="2" />
+        <Skeleton bg={{ base: "gray.200", _dark: "#4f4f4fff" }} h={"10px"} w="full" />
       </Table.Cell>
       <Table.Cell
         w="40%"
         borderBottomColor={{ base: "gray.200", _dark: "gray.700" }}
+        bg={{ base: "white", _dark: "#262626" }}
+        h="62px"
       >
-        <Skeleton h={"10px"} w="full" mb="2" />
+        <Skeleton bg={{ base: "gray.200", _dark: "#4f4f4fff" }} h={"10px"} w="full" />
       </Table.Cell>
       <Table.Cell
         w="10%"
         borderBottomColor={{ base: "gray.200", _dark: "gray.700" }}
+        bg={{ base: "white", _dark: "#262626" }}
+        h="62px"
       >
-        <Skeleton columnFill={"3"} h={"10px"} w="full" mb="2" />
+        <Skeleton bg={{ base: "gray.200", _dark: "#4f4f4fff" }} columnFill={"3"} h={"10px"} w="full" />
       </Table.Cell>
     </Table.Row>
   );
@@ -96,7 +102,7 @@ export default function Holders({ address }) {
         <Table.Body bg={{ base: "white", _dark: "#262626" }}>
           {!holderState.loading ? (
             holderState.data.length > 0 ? (
-              holderState.data.map((item, index) => (
+ holderState.data.map((item, index) => (
                 <HolderItem item={item} key={`holder-${index}`} metadata={erc20Detail} />
               ))
             ) : (

@@ -115,24 +115,24 @@ const ValidatorItemMobile = ({ item }) => {
 
 const SkeletonItem = () => {
   return (
-    <Table.Row>
+    <Table.Row bg={{ base: "white", _dark: "#262626" }}>
       <Table.Cell borderBottomColor={{base: 'gray.200', _dark: 'gray.700'}}>
-        <Skeleton h={"20px"} w="full" mb="4" />
+        <Skeleton bg={{ base: "gray.200", _dark: "#4f4f4fff" }} h={"20px"} w="full" mb="4" />
       </Table.Cell>
       <Table.Cell borderBottomColor={{base: 'gray.200', _dark: 'gray.700'}}>
-        <Skeleton h={"20px"} w="full" mb="4" />
+        <Skeleton bg={{ base: "gray.200", _dark: "#4f4f4fff" }} h={"20px"} w="full" mb="4" />
       </Table.Cell>
       <Table.Cell borderBottomColor={{base: 'gray.200', _dark: 'gray.700'}} w={"30%"}>
-        <Skeleton h={"20px"} w="full" mb="4" />
+        <Skeleton bg={{ base: "gray.200", _dark: "#4f4f4fff" }} h={"20px"} w="full" mb="4" />
       </Table.Cell>
       <Table.Cell borderBottomColor={{base: 'gray.200', _dark: 'gray.700'}} textAlign={"right"}>
-        <Skeleton h={"20px"} w="full" mb="4" />
+        <Skeleton bg={{ base: "gray.200", _dark: "#4f4f4fff" }} h={"20px"} w="full" mb="4" />
       </Table.Cell>
       <Table.Cell borderBottomColor={{base: 'gray.200', _dark: 'gray.700'}} textAlign={"left"} pl={6}>
-        <Skeleton h={"20px"} w="full" mb="4" />
+        <Skeleton bg={{ base: "gray.200", _dark: "#4f4f4fff" }} h={"20px"} w="full" mb="4" />
       </Table.Cell>
       <Table.Cell borderBottomColor={{base: 'gray.200', _dark: 'gray.700'}} width={'10%'} textAlign="left">
-        <Skeleton h={"20px"} w="full" mb="4" />
+        <Skeleton bg={{ base: "gray.200", _dark: "#4f4f4fff" }} h={"20px"} w="full" mb="4" />
       </Table.Cell>
     </Table.Row>
   )
@@ -287,7 +287,7 @@ const ValidatorList = () => {
           <SearchValidator callback={handleSearch} />
         </Center>
       </Flex>
-      <Box bg={{ base: "#FAFBFC", _dark: "#0F0F0F" }} py={"5"} px={"8"} h={"100vh"} rounded={"2xl"}>
+      <Box bg={{ base: "#FAFBFC", _dark: "#0F0F0F" }} py={"5"} px={"8"} rounded={"2xl"}>
         {isMobile ? (
           <VStack
           bg={{ base: "white", _dark: "#262626" }}
@@ -302,8 +302,8 @@ const ValidatorList = () => {
             ))}
           </VStack>
         ) : (
-          <Table.ScrollArea maxH={"100vh"} h={"95vh"} rounded="lg">
-            <Table.Root  color={{ base: "black", _dark: "white" }} borderRadius="3xl" stickyHeader>
+          <Box rounded="lg" overflowX="auto">
+            <Table.Root  color={{ base: "black", _dark: "white" }} borderRadius="3xl">
               <Table.Header>
                 <Table.Row bg={{ base: "#FAFBFC", _dark: "#0F0F0F" }}>
                   {columns.map((item, index) => (
@@ -342,7 +342,7 @@ const ValidatorList = () => {
                 )}
               </Table.Body>
             </Table.Root >
-          </Table.ScrollArea>
+          </Box>
         )}
       </Box>
     </Box>

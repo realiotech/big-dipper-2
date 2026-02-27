@@ -46,8 +46,9 @@ export default async function handler(
     const apiUrl = process.env.PRICE_API_URL;
     const apiKey = process.env.PRICE_API_KEY;
 
+    // If API credentials are missing, return default metadata with price 0
     if (!apiUrl || !apiKey) {
-        return res.status(500).json({ error: "Missing API_URL or API_KEY in environment variables" });
+        return res.status(200).json(ASSET_METADATA.map(item => ({ ...item, price: 0 })));
     }
 
     try {
@@ -65,14 +66,19 @@ export default async function handler(
 
         for (let i = 0; i < response.length; i++) {
             if (!response[i].ok) {
-                throw new Error(`API request failed with status ${response[i].status}`);
+                console.warn(`API request failed for ${ASSET_METADATA[i].symbol} with status ${response[i].status}`);
+                // Push null for failed requests instead of throwing
+                resJsonPromises.push(Promise.resolve(null));
+            } else {
+                resJsonPromises.push(response[i].json());
             }
-            resJsonPromises.push(response[i].json())
         }
         const resJson = await Promise.all(resJsonPromises);
 
         res.status(200).json(ASSET_METADATA.map((item, index) => ({ ...item, price: resJson[index]?.USD ?? 0 })));
     } catch (error) {
-        res.status(500).json({ error: (error as Error).message });
+        console.error("Error fetching asset prices:", error);
+        // Return default metadata with price 0 on error instead of 500
+        res.status(200).json(ASSET_METADATA.map(item => ({ ...item, price: 0 })));
     }
 }

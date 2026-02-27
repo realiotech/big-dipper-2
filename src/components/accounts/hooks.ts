@@ -8,6 +8,7 @@ import {
   useAccountUndelegationsQuery,
   useBalancesByAddressQuery,
   useGetMessagesByAddressQuery,
+  useGetMessagesByAddressCountQuery,
 } from '@/graphql/types/general_types';
 
 import { convertMsgsToModels } from '@/components/msg/utils';
@@ -58,11 +59,10 @@ export function useTransactions() {
     offsetCount: 0,
   });
   const [pageInfo, setPageInfo] = useState<PageInfo>({
-    count: 0, // Will be calculated dynamically
+    count: 0, // Will be set from count query
     pageSize: PAGE_SIZE,
     currentPage: 1,
   });
-  const [totalCount, setTotalCount] = useState(0); // Track exact count
   const msgTypes = useRecoilValue(readFilter);
 
   useEffect(() => {
@@ -78,7 +78,6 @@ export function useTransactions() {
       pageSize: PAGE_SIZE,
       currentPage: 1,
     });
-    setTotalCount(0);
   }, [router?.query?.address, msgTypes]);
 
   const handleSetState = useCallback((stateChange: (prevState: TransactionState) => TransactionState) => {
@@ -87,6 +86,22 @@ export function useTransactions() {
       return R.equals(prevState, newState) ? prevState : newState;
     });
   }, []);
+
+  // Query to get the exact total count of transactions
+  const countQuery = useGetMessagesByAddressCountQuery({
+    variables: {
+      address: `{${router?.query?.address ?? ''}}`,
+      types: msgTypes,
+    },
+    onCompleted: (data) => {
+      const totalCount = data.messagesByAddressAggregate.aggregate?.count ?? 0;
+      setPageInfo((prevPageInfo) => ({
+        ...prevPageInfo,
+        count: totalCount,
+      }));
+    },
+    skip: !router?.query?.address,
+  });
 
   const transactionQuery = useGetMessagesByAddressQuery({
     variables: {
@@ -100,10 +115,6 @@ export function useTransactions() {
       const formattedData = formatTransactions(data);
       const hasNextPage = itemsLength === PAGE_SIZE + 1;
 
-      // Calculate exact count: if we got PAGE_SIZE + 1 items, there are at least PAGE_SIZE + 1
-      // Otherwise, the count is exactly what we got
-      const exactCount = hasNextPage ? PAGE_SIZE + 1 : itemsLength;
-
       const stateChange: TransactionState = {
         data: formattedData.slice(0, PAGE_SIZE),
         hasNextPage: hasNextPage,
@@ -111,11 +122,6 @@ export function useTransactions() {
         offsetCount: PAGE_SIZE,
       };
 
-      setTotalCount(exactCount);
-      setPageInfo((prevPageInfo) => ({
-        ...prevPageInfo,
-        count: exactCount,
-      }));
       handleSetState((prevState) => ({ ...prevState, ...stateChange }));
     },
   });
@@ -135,11 +141,7 @@ export function useTransactions() {
       const formattedData = formatTransactions(data);
       const hasNextPage = itemsLength === PAGE_SIZE + 1;
 
-      // Update total count based on current page and items found
       const currentPageStart = (page - 1) * PAGE_SIZE;
-      const newTotalCount = hasNextPage
-        ? currentPageStart + PAGE_SIZE + 1
-        : currentPageStart + itemsLength;
 
       const stateChange: TransactionState = {
         data: formattedData.slice(0, PAGE_SIZE),
@@ -148,11 +150,6 @@ export function useTransactions() {
         offsetCount: currentPageStart + PAGE_SIZE,
       };
 
-      setTotalCount(newTotalCount);
-      setPageInfo((prevPageInfo) => ({
-        ...prevPageInfo,
-        count: newTotalCount,
-      }));
       handleSetState((prevState) => ({ ...prevState, ...stateChange }));
     }).catch((error) => {
       console.error('Error loading page:', error);

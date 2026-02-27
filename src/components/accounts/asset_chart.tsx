@@ -83,7 +83,7 @@ const AssetChart: React.FC<Props> = ({ balances }) => {
                     <Tabs.List>
                         <For each={balances}>
                             {(item, index) => (
-                                <Tabs.Trigger key={`tab-${index}`} value={item?.denom}>{assetMap[item?.denom].symbol}</Tabs.Trigger>
+                                <Tabs.Trigger key={`tab-${index}`} value={item?.denom}>{assetMap[item?.denom]?.symbol}</Tabs.Trigger>
                             )}
                         </For>
                     </Tabs.List>
