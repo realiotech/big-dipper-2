@@ -10,19 +10,23 @@ import {
 import { NextSeo } from 'next-seo';
 import useTranslation from 'next-translate/useTranslation';
 import { useRouter } from 'next/router';
+import { useSetRecoilState } from 'recoil';
 import { useExportTransactions } from '@/components/accounts/export_hook';
 import { exportTransactionsToCSV } from '@/utils/csv_export';
+import { writeFilter } from '@/recoil/transactions_filter';
 
 export default function ExportTransactionsPage() {
   const { t } = useTranslation('accounts');
   const router = useRouter();
   const { a: queryAddress } = router.query;
-  
+
   const { state, queryTransactions, clearFilters, isLoading } = useExportTransactions();
-  
+  const setFilter = useSetRecoilState(writeFilter);
+
   const [addressInput, setAddressInput] = useState('');
   const [startDateInput, setStartDateInput] = useState('');
   const [endDateInput, setEndDateInput] = useState('');
+  const [messageTypeInput, setMessageTypeInput] = useState('');
   const [isDownloading, setIsDownloading] = useState(false);
 
   // Pre-fill address from query parameter on mount (only once)
@@ -60,6 +64,16 @@ export default function ExportTransactionsPage() {
       endDate.setHours(23, 59, 59, 999);
     }
 
+    // Set message type filter if provided
+    if (messageTypeInput.trim()) {
+      // Format: {/cosmos.bank.v1beta1.MsgSend}
+      const formattedFilter = `{${messageTypeInput.trim()}}`;
+      setFilter(formattedFilter);
+    } else {
+      // Reset to all types
+      setFilter('{}');
+    }
+
     // Set flag to trigger download after query completes
     setIsDownloading(true);
 
@@ -71,7 +85,9 @@ export default function ExportTransactionsPage() {
     setAddressInput('');
     setStartDateInput('');
     setEndDateInput('');
+    setMessageTypeInput('');
     setIsDownloading(false);
+    setFilter('{}');
     clearFilters();
   };
 
@@ -159,6 +175,24 @@ export default function ExportTransactionsPage() {
                 />
               </Box>
             </HStack>
+
+            {/* Message Type Filter Input */}
+            <Box>
+              <Text fontSize="sm" fontWeight="medium" mb={2}>
+                Message Type (Optional)
+              </Text>
+              <Input
+                type="text"
+                value={messageTypeInput}
+                onChange={(e) => setMessageTypeInput(e.target.value)}
+                placeholder="e.g., /cosmos.bank.v1beta1.MsgSend"
+                bg={{ base: 'white', _dark: '#262626' }}
+                borderColor={{ base: 'gray.200', _dark: 'gray.700' }}
+              />
+              <Text fontSize="xs" color="gray.500" _dark={{ color: 'gray.400' }} mt={1}>
+                Leave empty to export all transaction types
+              </Text>
+            </Box>
 
             {/* Action Buttons */}
             <HStack gap={3} justifyContent="flex-start">

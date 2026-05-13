@@ -76,11 +76,11 @@ const formatGas = (gasUsed: any, gasWanted: any): string => {
 };
 
 /**
- * Format messages array to string
+ * Format messages array to string - Extract only message types
  * @param messages - Messages array from transaction
- * @returns Formatted messages string
+ * @returns Formatted message types string
  */
-const formatMessages = (messages: any): string => {
+const formatMessageTypes = (messages: any): string => {
   if (!messages || !Array.isArray(messages) || messages.length === 0) {
     return '';
   }
@@ -98,6 +98,58 @@ const formatMessages = (messages: any): string => {
       return msg['@type'] || 'Unknown';
     })
     .join('; ');
+};
+
+/**
+ * Format messages array to include all message details
+ * @param messages - Messages array from transaction
+ * @returns Formatted messages with all details
+ */
+const formatMessages = (messages: any): string => {
+  if (!messages || !Array.isArray(messages) || messages.length === 0) {
+    return '';
+  }
+
+  return messages
+    .map((msg: any, index: number) => {
+      try {
+        let msgObj = msg;
+
+        // Parse if it's a JSON string
+        if (typeof msg === 'string') {
+          msgObj = JSON.parse(msg);
+        }
+
+        // Format message with all key-value pairs
+        const msgType = msgObj['@type'] || 'Unknown';
+        const msgDetails = Object.entries(msgObj)
+          .filter(([key]) => key !== '@type') // Exclude @type as it's already in the type column
+          .map(([key, value]) => {
+            // Format the key (convert snake_case to readable format)
+            const formattedKey = key
+              .replace(/_/g, ' ')
+              .replace(/\b\w/g, (char) => char.toUpperCase());
+
+            // Format the value
+            let formattedValue = '';
+            if (typeof value === 'object') {
+              formattedValue = JSON.stringify(value);
+            } else {
+              formattedValue = String(value);
+            }
+
+            return `${formattedKey}: ${formattedValue}`;
+          })
+          .join(' | ');
+
+        // Return formatted message with type and details
+        return `[${index + 1}] ${msgType} | ${msgDetails}`;
+      } catch (error) {
+        console.error(`Error formatting message ${index}:`, error);
+        return `Message ${index + 1}: ${JSON.stringify(msg)}`;
+      }
+    })
+    .join('\n');
 };
 
 /**
@@ -147,7 +199,8 @@ export const exportTransactionsToCSV = (
       'Time',
       'Fee',
       'Gas',
-      'Message',
+      'Message Type',
+      'Message Details',
       'Code',
       'Raw Log',
     ];
@@ -160,9 +213,10 @@ export const exportTransactionsToCSV = (
           escapeCSVField(transaction.hash),
           escapeCSVField(transaction.height),
           escapeCSVField(formatTimestamp(transaction.block?.timestamp)),
-          formatFee(transaction.fee),
-          formatGas(transaction.gasUsed, transaction.gasWanted),
-          formatMessages(transaction.messages),
+          escapeCSVField(formatFee(transaction.fee)),
+          escapeCSVField(formatGas(transaction.gasUsed, transaction.gasWanted)),
+          escapeCSVField(formatMessageTypes(transaction.messages)),
+          escapeCSVField(formatMessages(transaction.messages)),
           escapeCSVField(transaction.success ? '0' : '1'),
           escapeCSVField(formatLogs(transaction.rawLog)),
         ];
