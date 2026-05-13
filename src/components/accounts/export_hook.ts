@@ -41,24 +41,29 @@ const formatTransactions = (data: GetMessagesByAddressExportQuery): Transactions
 };
 
 /**
- * Convert Date to YYYY-MM-DD format (matching Hasura timestamp format)
+ * Convert Date to a Hasura timestamp while preserving the selected time.
  * @param date - Date object to convert
- * @returns Date string in YYYY-MM-DD format
+ * @returns Date string in YYYY-MM-DDTHH:mm:ss.SSS format
  */
-const dateToISOString = (date: Date | null): string | null => {
+const dateToHasuraTimestamp = (date: Date | null): string | null => {
   if (!date) return null;
-  // Format: YYYY-MM-DD (e.g., "2025-09-24")
+
   const year = date.getFullYear();
   const month = String(date.getMonth() + 1).padStart(2, '0');
   const day = String(date.getDate()).padStart(2, '0');
-  return `${year}-${month}-${day}`;
+  const hours = String(date.getHours()).padStart(2, '0');
+  const minutes = String(date.getMinutes()).padStart(2, '0');
+  const seconds = String(date.getSeconds()).padStart(2, '0');
+  const milliseconds = String(date.getMilliseconds()).padStart(3, '0');
+
+  return `${year}-${month}-${day}T${hours}:${minutes}:${seconds}.${milliseconds}`;
 };
 
 
 
 export interface ExportTransactionsState {
   data: Transactions[];
-  rawData: any[];
+  rawData: any[] | null;
   isLoading: boolean;
   error: string | null;
   startDate: Date | null;
@@ -70,7 +75,7 @@ export function useExportTransactions() {
 
   const [state, setState] = useState<ExportTransactionsState>({
     data: [],
-    rawData: [],
+    rawData: null,
     isLoading: false,
     error: null,
     startDate: null,
@@ -90,8 +95,8 @@ export function useExportTransactions() {
   );
 
   // Query to fetch transactions for the address with date range filtering
-  const startDateStr = dateToISOString(state.startDate);
-  const endDateStr = dateToISOString(state.endDate);
+  const startDateStr = dateToHasuraTimestamp(state.startDate);
+  const endDateStr = dateToHasuraTimestamp(state.endDate);
 
   const queryVariables = {
     limit: PAGE_SIZE,
@@ -158,6 +163,7 @@ export function useExportTransactions() {
         startDate,
         endDate,
         isLoading: true,
+        rawData: null,
         error: null,
       }));
 
@@ -167,6 +173,8 @@ export function useExportTransactions() {
         offset: 0,
         address: `{${address}}`,
         types: msgTypes,
+        startDate: dateToHasuraTimestamp(startDate),
+        endDate: dateToHasuraTimestamp(endDate),
       });
     },
     [msgTypes, transactionQuery, handleSetState]
@@ -181,7 +189,7 @@ export function useExportTransactions() {
       startDate: null,
       endDate: null,
       data: [],
-      rawData: [],
+      rawData: null,
       error: null,
     }));
   }, [handleSetState]);
@@ -193,4 +201,3 @@ export function useExportTransactions() {
     isLoading: transactionQuery.loading,
   };
 }
-
