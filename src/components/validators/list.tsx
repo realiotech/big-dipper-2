@@ -32,6 +32,11 @@ import { readAsset } from "@/recoil/asset";
 import { useRecoilValue } from "recoil";
 import { DelegateDialog } from "./dialog";
 
+const formatSelfStake = (value: number) => new Intl.NumberFormat('en-US', {
+  maximumFractionDigits: 2,
+  minimumFractionDigits: 2,
+}).format(Number.isFinite(value) ? value : 0);
+
 const SkeletonValidatorItems = ({ rowCount = 30 }) => {
     return (
       <>
@@ -50,6 +55,7 @@ const ValidatorItemMobile = ({ item }) => {
       ? `${numeral(item.votingPowerPercent.toFixed(6)).format("0.[00]")}`
       : "0";
   const votingPower = numeral(item.votingPower).format("0,0");
+  const selfStake = formatSelfStake(item.selfStake);
 
   return (
     <Box
@@ -88,6 +94,10 @@ const ValidatorItemMobile = ({ item }) => {
           </ProgressRoot>
         </Flex>
         <Flex justify="space-between" mb={2}>
+          <Flex direction={"column"} justify="space-between">
+            <Text>{t("selfStake")}</Text>
+            <Text>{selfStake}</Text>
+          </Flex>
           <Flex direction={"column"} justify="space-between">
             <Text>Status</Text>
             <Status colorPalette={status.theme} color={status.theme}>
@@ -128,6 +138,12 @@ const SkeletonItem = () => {
       <Table.Cell borderBottomColor={{base: 'gray.200', _dark: 'gray.700'}} textAlign={"right"}>
         <Skeleton bg={{ base: "gray.200", _dark: "#4f4f4fff" }} h={"20px"} w="full" mb="4" />
       </Table.Cell>
+      <Table.Cell borderBottomColor={{base: 'gray.200', _dark: 'gray.700'}} textAlign={"right"}>
+        <Skeleton bg={{ base: "gray.200", _dark: "#4f4f4fff" }} h={"20px"} w="full" mb="4" />
+      </Table.Cell>
+      <Table.Cell borderBottomColor={{base: 'gray.200', _dark: 'gray.700'}} textAlign={"right"}>
+        <Skeleton bg={{ base: "gray.200", _dark: "#4f4f4fff" }} h={"20px"} w="full" mb="4" />
+      </Table.Cell>
       <Table.Cell borderBottomColor={{base: 'gray.200', _dark: 'gray.700'}} textAlign={"left"} pl={6}>
         <Skeleton bg={{ base: "gray.200", _dark: "#4f4f4fff" }} h={"20px"} w="full" mb="4" />
       </Table.Cell>
@@ -147,6 +163,7 @@ const ValidatorItem = ({ item, idx }) => {
       ? `${numeral(item.votingPowerPercent.toFixed(6)).format("0.[00]")}`
       : "0";
   const votingPower = numeral(item.votingPower).format("0,0");
+  const selfStake = formatSelfStake(item.selfStake);
   return (
     <Table.Row 
     bg={{ base: "white", _dark: "#262626" }}
@@ -183,6 +200,9 @@ const ValidatorItem = ({ item, idx }) => {
             <ProgressBar />
           </ProgressRoot>
         </Box>
+      </Table.Cell>
+      <Table.Cell borderBottomColor={{base: 'gray.200', _dark: 'gray.700'}} textAlign={"right"}>
+        {selfStake}
       </Table.Cell>
       <Table.Cell borderBottomColor={{base: 'gray.200', _dark: 'gray.700'}} textAlign={"right"}>
         {numeral(item.commission).format("0.[00]")}%
@@ -315,7 +335,7 @@ const ValidatorList = () => {
                       handleSort={handleSort}
                     />
                   ))}
-                  {Array.from({ length: Math.max(0, 7 - columns.length) }).map(
+                  {Array.from({ length: Math.max(0, 8 - columns.length) }).map(
                     (_, idx) => (
                       <Table.ColumnHeader key={`placeholder-${idx}`} />
                     )
