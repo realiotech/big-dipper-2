@@ -17,28 +17,30 @@ import { convertMsgType } from '@/utils/convert_msg_type';
 import { useRecoilValue } from 'recoil';
 import { readFilter } from '@/recoil/transactions_filter';
 import type { OverviewType } from './types';
-import { realioNetworkToEth } from "@realiotech/address-generator"
+import { realioNetworkToEth, ethToRealionetwork } from "@realiotech/address-generator"
+import { ACCOUNT_DETAILS } from '@/utils/go_to_page'
 import { useEvmBalancesQuery } from '@/graphql/types/subgraph';
 import { PageInfo } from '@/components/layout/pagination';
 
 const PAGE_SIZE = 20;
 
 const formatTransactions = (data: GetMessagesByAddressQuery): Transactions[] => {
-  let formattedData = data.messagesByAddress;
-  if (data.messagesByAddress.length === 51) {
-    formattedData = data.messagesByAddress.slice(0, 51);
-  }
-  return formattedData.map((x) => {
+  const seen = new Set<string>();
+  const result: Transactions[] = [];
+
+  for (const x of data.messagesByAddress) {
     const { transaction } = x;
+    const hash = transaction?.hash ?? '';
+    if (seen.has(hash)) continue;
+    seen.add(hash);
+
     const messages = convertMsgsToModels(transaction);
-    const msgType = messages.map((eachMsg) => {
-      const eachMsgType = eachMsg?.type ?? 'none type';
-      return eachMsgType ?? '';
-    });
+    const msgType = messages.map((eachMsg) => eachMsg?.type ?? 'none type');
     const convertedMsgType = convertMsgType(msgType);
-    return {
+
+    result.push({
       height: transaction?.height,
-      hash: transaction?.hash ?? '',
+      hash,
       type: convertedMsgType,
       messages: {
         count: messages.length,
@@ -46,12 +48,19 @@ const formatTransactions = (data: GetMessagesByAddressQuery): Transactions[] => 
       },
       success: transaction?.success ?? false,
       timestamp: transaction?.block.timestamp,
-    };
-  });
+    });
+  }
+
+  return result;
 };
 
 export function useTransactions() {
   const router = useRouter();
+  const rawAddress = router?.query?.address as string;
+  const address = rawAddress?.startsWith('0x') && rawAddress?.length === 42
+    ? ethToRealionetwork(rawAddress)
+    : rawAddress;
+
   const [state, setState] = useState<TransactionState>({
     data: [],
     hasNextPage: false,
@@ -59,7 +68,7 @@ export function useTransactions() {
     offsetCount: 0,
   });
   const [pageInfo, setPageInfo] = useState<PageInfo>({
-    count: 0, // Will be set from count query
+    count: 0,
     pageSize: PAGE_SIZE,
     currentPage: 1,
   });
@@ -78,7 +87,7 @@ export function useTransactions() {
       pageSize: PAGE_SIZE,
       currentPage: 1,
     });
-  }, [router?.query?.address, msgTypes]);
+  }, [address, msgTypes]);
 
   const handleSetState = useCallback((stateChange: (prevState: TransactionState) => TransactionState) => {
     setState((prevState) => {
@@ -90,7 +99,7 @@ export function useTransactions() {
   // Query to get the exact total count of transactions
   const countQuery = useGetMessagesByAddressCountQuery({
     variables: {
-      address: `{${router?.query?.address ?? ''}}`,
+      address: `{${address ?? ''}}`,
       types: msgTypes,
     },
     onCompleted: (data) => {
@@ -100,14 +109,14 @@ export function useTransactions() {
         count: totalCount,
       }));
     },
-    skip: !router?.query?.address,
+    skip: !address,
   });
 
   const transactionQuery = useGetMessagesByAddressQuery({
     variables: {
       limit: PAGE_SIZE + 1, // to check if more exist
       offset: 0,
-      address: `{${router?.query?.address ?? ''}}`,
+      address: `{${address ?? ''}}`,
       types: msgTypes,
     },
     onCompleted: (data) => {
@@ -177,7 +186,16 @@ export function useTransactions() {
 
 export function useOverview(): OverviewType {
   const router = useRouter()
-  const address = router?.query?.address as string
+  const rawAddress = router?.query?.address as string
+  const isEvmAddress = rawAddress?.startsWith('0x') && rawAddress?.length === 42
+  const address = isEvmAddress ? ethToRealionetwork(rawAddress) : rawAddress
+  const evmAddress = isEvmAddress ? rawAddress : (address ? realioNetworkToEth(address) : undefined)
+
+  useEffect(() => {
+    if (isEvmAddress && address) {
+      router.replace(ACCOUNT_DETAILS(address))
+    }
+  }, [isEvmAddress, address, router])
 
   const [balances, setBalances] = useState([])
   const [completed, setCompleted] = useState(false)
@@ -199,7 +217,7 @@ export function useOverview(): OverviewType {
     address,
     balances,
     completed,
-    evmAddress: realioNetworkToEth(address)
+    evmAddress,
   }
 }
 
