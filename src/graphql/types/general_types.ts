@@ -24302,6 +24302,13 @@ export type ValidatorsQueryVariables = Exact<{ [key: string]: never; }>;
 
 export type ValidatorsQuery = { stakingPool: Array<{ __typename?: 'staking_pool', bondedTokens: string }>, validator_denom: Array<{ __typename?: 'validator_denom', denom: string, validator: { __typename?: 'validator', validatorStatuses: Array<{ __typename?: 'validator_status', status: number, jailed: boolean, height: any }>, validatorSigningInfos: Array<{ __typename?: 'validator_signing_info', tombstoned: boolean, missedBlocksCounter: any }>, validatorInfo?: { __typename?: 'validator_info', operatorAddress: string, selfDelegateAddress?: string | null } | null, validatorVotingPowers: Array<{ __typename?: 'validator_voting_power', votingPower: any }>, validatorCommissions: Array<{ __typename?: 'validator_commission', commission: any }> } }>, slashingParams: Array<{ __typename?: 'slashing_params', params: any }> };
 
+export type ValidatorSelfStakesQueryVariables = Exact<{
+  where: Array<Ms_Locks_Bool_Exp> | Ms_Locks_Bool_Exp;
+}>;
+
+
+export type ValidatorSelfStakesQuery = { ms_locks: Array<{ __typename?: 'ms_locks', amount?: string | null, denom?: string | null, staker_addr: string, val_addr: string }> };
+
 export type ValidatorAddressesQueryVariables = Exact<{ [key: string]: never; }>;
 
 
@@ -26715,6 +26722,44 @@ export function useValidatorsLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions
 export type ValidatorsQueryHookResult = ReturnType<typeof useValidatorsQuery>;
 export type ValidatorsLazyQueryHookResult = ReturnType<typeof useValidatorsLazyQuery>;
 export type ValidatorsQueryResult = Apollo.QueryResult<ValidatorsQuery, ValidatorsQueryVariables>;
+export const ValidatorSelfStakesDocument = gql`
+    query ValidatorSelfStakes($where: [ms_locks_bool_exp!]!) {
+  ms_locks(where: {_or: $where}) {
+    amount
+    denom
+    staker_addr
+    val_addr
+  }
+}
+    `;
+
+/**
+ * __useValidatorSelfStakesQuery__
+ *
+ * To run a query within a React component, call `useValidatorSelfStakesQuery` and pass it any options that fit your needs.
+ * When your component renders, `useValidatorSelfStakesQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useValidatorSelfStakesQuery({
+ *   variables: {
+ *      where: // value for 'where'
+ *   },
+ * });
+ */
+export function useValidatorSelfStakesQuery(baseOptions: Apollo.QueryHookOptions<ValidatorSelfStakesQuery, ValidatorSelfStakesQueryVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useQuery<ValidatorSelfStakesQuery, ValidatorSelfStakesQueryVariables>(ValidatorSelfStakesDocument, options);
+      }
+export function useValidatorSelfStakesLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<ValidatorSelfStakesQuery, ValidatorSelfStakesQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return Apollo.useLazyQuery<ValidatorSelfStakesQuery, ValidatorSelfStakesQueryVariables>(ValidatorSelfStakesDocument, options);
+        }
+export type ValidatorSelfStakesQueryHookResult = ReturnType<typeof useValidatorSelfStakesQuery>;
+export type ValidatorSelfStakesLazyQueryHookResult = ReturnType<typeof useValidatorSelfStakesLazyQuery>;
+export type ValidatorSelfStakesQueryResult = Apollo.QueryResult<ValidatorSelfStakesQuery, ValidatorSelfStakesQueryVariables>;
 export const ValidatorAddressesDocument = gql`
     query ValidatorAddresses {
   validator(

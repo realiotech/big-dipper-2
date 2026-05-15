@@ -27,6 +27,12 @@ export const fetchColumns = (
             align: 'left'
         },
         {
+            key: 'selfStake',
+            sortKey: 'selfStake',
+            sort: true,
+            align: 'right'
+        },
+        {
             key: 'commission',
             sortKey: 'commission',
             align: 'right',

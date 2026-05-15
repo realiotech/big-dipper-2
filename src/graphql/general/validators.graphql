@@ -33,3 +33,12 @@ query Validators {
     params
   }
 }
+
+query ValidatorSelfStakes($where: [ms_locks_bool_exp!]!) {
+  ms_locks(where: {_or: $where}) {
+    amount
+    denom
+    staker_addr
+    val_addr
+  }
+}
