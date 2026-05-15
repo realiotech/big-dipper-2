@@ -32,12 +32,18 @@ function shortenText(text, maxLength = 40) {
   return text?.length > maxLength ? `${text.slice(0, maxLength)}...` : text;
 }
 
+const formatSelfStake = (value: number) =>
+  new Intl.NumberFormat("en-US", {
+    maximumFractionDigits: 2,
+    minimumFractionDigits: 2,
+  }).format(Number.isFinite(value) ? value : 0);
+
 export default function Overview({ state }) {
   const { t } = useTranslation("validators");
   const { overview, status } = state;
   const asset = useRecoilValue(readAsset(overview?.denom));
   const { imageUrl, name, address } = useProfileRecoil(overview.validator);
-  const selfStake = `${numeral(overview.selfStake).format("0,0.00")} ${
+  const selfStake = `${formatSelfStake(overview.selfStake)} ${
     asset?.symbol ?? ""
   }`.trim();
   const statusTheme = getValidatorStatus(
