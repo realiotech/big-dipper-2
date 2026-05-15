@@ -13,6 +13,26 @@ import { useRouter } from 'next/router';
 import { useExportTransactions } from '@/components/accounts/export_hook';
 import { exportTransactionsToCSV } from '@/utils/csv_export';
 
+type ExportFeedback = {
+  type: 'error' | 'info';
+  message: string;
+} | null;
+
+const parseDateInput = (dateInput: string, endOfDay = false): Date | null => {
+  if (!dateInput) return null;
+
+  const [year, month, day] = dateInput.split('-').map(Number);
+  const date = new Date(year, month - 1, day);
+
+  if (endOfDay) {
+    date.setHours(23, 59, 59, 999);
+  } else {
+    date.setHours(0, 0, 0, 0);
+  }
+
+  return date;
+};
+
 export default function ExportTransactionsPage() {
   const { t } = useTranslation('accounts');
   const router = useRouter();
@@ -24,6 +44,7 @@ export default function ExportTransactionsPage() {
   const [startDateInput, setStartDateInput] = useState('');
   const [endDateInput, setEndDateInput] = useState('');
   const [isDownloading, setIsDownloading] = useState(false);
+  const [feedback, setFeedback] = useState<ExportFeedback>(null);
 
   // Pre-fill address from query parameter on mount (only once)
   useEffect(() => {
@@ -34,31 +55,63 @@ export default function ExportTransactionsPage() {
 
   // Auto-download when data is ready
   useEffect(() => {
-    if (isDownloading && state.rawData && state.rawData.length > 0 && !isLoading) {
-      try {
-        exportTransactionsToCSV(state.rawData, addressInput, startDateInput || null, endDateInput || null);
-        setIsDownloading(false);
-      } catch (error) {
-        console.error('❌ CSV export error:', error);
-        alert(`Error exporting CSV: ${error instanceof Error ? error.message : 'Unknown error'}`);
-        setIsDownloading(false);
-      }
-    }
-  }, [isDownloading, state.rawData, isLoading, addressInput, startDateInput, endDateInput]);
-
-  const handleDownloadCSV = () => {
-    if (!addressInput.trim()) {
-      alert('Please enter an address');
+    if (isDownloading && state.error && !isLoading) {
+      setIsDownloading(false);
       return;
     }
 
-    const startDate = startDateInput ? new Date(startDateInput) : null;
-    const endDate = endDateInput ? new Date(endDateInput) : null;
+    if (isDownloading && state.rawData !== null && !isLoading) {
+      if (state.rawData.length === 0) {
+        setFeedback({
+          type: 'info',
+          message: 'No transactions found for the selected date range.',
+        });
+        setIsDownloading(false);
+        setStartDateInput('');
+        setEndDateInput('');
+        clearFilters();
+        return;
+      }
 
-    // Set end date to end of day if provided
-    if (endDate) {
-      endDate.setHours(23, 59, 59, 999);
+      try {
+        exportTransactionsToCSV(state.rawData, addressInput, startDateInput || null, endDateInput || null);
+        setIsDownloading(false);
+        setStartDateInput('');
+        setEndDateInput('');
+        clearFilters();
+      } catch (error) {
+        console.error('❌ CSV export error:', error);
+        setFeedback({
+          type: 'error',
+          message: `Error exporting CSV: ${error instanceof Error ? error.message : 'Unknown error'}`,
+        });
+        setIsDownloading(false);
+      }
     }
+  }, [
+    isDownloading,
+    state.error,
+    state.rawData,
+    isLoading,
+    addressInput,
+    startDateInput,
+    endDateInput,
+    clearFilters,
+  ]);
+
+  const handleDownloadCSV = () => {
+    if (!addressInput.trim()) {
+      setFeedback({
+        type: 'error',
+        message: 'Please enter an address.',
+      });
+      return;
+    }
+
+    setFeedback(null);
+
+    const startDate = parseDateInput(startDateInput);
+    const endDate = parseDateInput(endDateInput, true);
 
     // Set flag to trigger download after query completes
     setIsDownloading(true);
@@ -72,6 +125,7 @@ export default function ExportTransactionsPage() {
     setStartDateInput('');
     setEndDateInput('');
     setIsDownloading(false);
+    setFeedback(null);
     clearFilters();
   };
 
@@ -177,6 +231,25 @@ export default function ExportTransactionsPage() {
               </Button>
             </HStack>
 
+            {feedback && (
+              <Box
+                bg={feedback.type === 'error' ? 'red.50' : 'blue.50'}
+                _dark={{ bg: feedback.type === 'error' ? 'red.900' : 'blue.900' }}
+                p={3}
+                borderRadius="md"
+                borderLeft="4px"
+                borderColor={feedback.type === 'error' ? 'red.500' : 'blue.500'}
+              >
+                <Text
+                  color={feedback.type === 'error' ? 'red.700' : 'blue.700'}
+                  _dark={{ color: feedback.type === 'error' ? 'red.200' : 'blue.200' }}
+                  fontSize="sm"
+                >
+                  {feedback.message}
+                </Text>
+              </Box>
+            )}
+
             {state.error && (
               <Box
                 bg="red.50"
@@ -199,4 +272,3 @@ export default function ExportTransactionsPage() {
     </>
   );
 }
-
