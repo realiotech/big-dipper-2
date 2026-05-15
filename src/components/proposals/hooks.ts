@@ -1,4 +1,5 @@
 import { useRouter } from 'next/router';
+import { bech32 } from 'bech32';
 import {
   ProposalsQuery, useProposalsQuery,
   ProposalDetailsQuery, useProposalDetailsQuery,
@@ -11,8 +12,28 @@ import { useCallback, useState, SyntheticEvent } from 'react';
 import xss from 'xss';
 import { chainConfig } from '@/configs';
 import { formatToken } from '@/utils/format_token';
-import { toValidatorAddress } from '@/utils/prefix_convert';
+import dayjs from '@/utils/dayjs';
 import Big from 'big.js';
+
+const EXPIRED_DEPOSIT_STATUS = 'PROPOSAL_STATUS_DEPOSIT_EXPIRED';
+
+const getDisplayStatus = (
+  status: string,
+  depositEndTime?: string | null,
+  votingStartTime?: string | null
+) => {
+  if (
+    status === 'PROPOSAL_STATUS_DEPOSIT_PERIOD'
+    && depositEndTime
+    && !votingStartTime
+    && dayjs.utc(depositEndTime).isValid()
+    && dayjs.utc(depositEndTime).isBefore(dayjs.utc())
+  ) {
+    return EXPIRED_DEPOSIT_STATUS;
+  }
+
+  return status;
+};
 
 const formatProposals = (data?: ProposalsQuery): ProposalType[] => {
   if (!data?.proposals) return [];
@@ -21,7 +42,8 @@ const formatProposals = (data?: ProposalsQuery): ProposalType[] => {
     description: xss(x?.description?.replace(/\\n\s?/g, '<br/>')) ?  xss(x?.description?.replace(/\\n\s?/g, '<br/>')) : x.content?.[0] && x.content[0].content ?  xss(x.content[0].content.description.replace(/\\n\s?/g, '<br/>')) : '',
     id: x.proposalId,
     title: x.title ? x.title : x.content?.[0] && x.content[0].content ? x.content[0].content.title : '',
-    status: x.status ?? '',
+    status: getDisplayStatus(x.status ?? '', x.depositEndTime, x.votingStartTime),
+    depositEndTime: x.depositEndTime ?? '',
   }));
 };
 
@@ -128,7 +150,11 @@ const formatOverview = (data: ProposalDetailsQuery) => {
     title: title,
     id: proposal.proposalId ?? '',
     description: description,
-    status: proposal.status ?? '',
+    status: getDisplayStatus(
+      proposal.status ?? '',
+      proposal.depositEndTime,
+      proposal.votingStartTime
+    ),
     submitTime: proposal.submitTime ?? '',
     proposalType: propsalType.length > 0 ? propsalType.substring(1) : propsalType,
     depositEndTime: proposal.depositEndTime ?? '',
@@ -208,6 +234,19 @@ export const useProposalDetails = () => {
 };
 
 const { votingPowerTokenUnit } = chainConfig;
+const { prefix } = chainConfig;
+
+const validatorToDelegatorAddress = (validatorAddress: string) => {
+  try {
+    if (!validatorAddress) {
+      return '';
+    }
+
+    return bech32.encode(prefix.account, bech32.decode(validatorAddress).words);
+  } catch {
+    return '';
+  }
+};
 
 const defaultTokenUnit: TokenUnit = {
   value: '0',
@@ -272,11 +311,25 @@ export const useVotesGraph = () => {
 };
 
 const formatVotes = (data: ProposalDetailsVotesQuery) => {
-  const validatorDict: { [key: string]: unknown } = {};
+  const validatorDict: { [key: string]: boolean } = {};
   const validators = data.validatorStatuses.map((x) => {
     const selfDelegateAddress = x?.validator?.validatorInfo?.selfDelegateAddress ?? '';
-    validatorDict[selfDelegateAddress] = false;
-    return selfDelegateAddress;
+    const operatorAddress = x?.validator?.validatorInfo?.operatorAddress ?? '';
+    const operatorAccountAddress = validatorToDelegatorAddress(operatorAddress);
+
+    if (selfDelegateAddress) {
+      validatorDict[selfDelegateAddress] = false;
+    }
+
+    if (operatorAccountAddress) {
+      validatorDict[operatorAccountAddress] = false;
+    }
+
+    return {
+      operatorAddress,
+      operatorAccountAddress,
+      selfDelegateAddress,
+    };
   });
 
   let yes = 0;
@@ -311,9 +364,12 @@ const formatVotes = (data: ProposalDetailsVotesQuery) => {
   // Get data for active validators that did not vote
   // =====================================
   const validatorsNotVoted = validators
-    .filter((x) => validatorDict[x] === false)
-    .map((address) => ({
-      user: toValidatorAddress(address),
+    .filter((x) => ![
+      x.selfDelegateAddress,
+      x.operatorAccountAddress,
+    ].some((address) => address && validatorDict[address] === true))
+    .map((validator) => ({
+      user: validator.operatorAddress,
       vote: 'NOT_VOTED',
     }));
 
