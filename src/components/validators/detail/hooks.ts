@@ -1,4 +1,5 @@
 import { useRouter } from 'next/router';
+import { bech32 } from 'bech32';
 import * as R from 'ramda';
 import { useCallback, useEffect, useState, SyntheticEvent } from 'react';
 import { chainConfig } from '@/configs';
@@ -39,7 +40,25 @@ import Big from 'big.js';
 import { getDenom } from '@/utils/get_denom';
 import numeral from 'numeral';
 
-const { extra, votingPowerTokenUnit } = chainConfig;
+const { extra, prefix, tokenUnits, votingPowerTokenUnit } = chainConfig;
+
+const validatorToDelegatorAddress = (validatorAddress: string) => {
+    try {
+        if (!validatorAddress) {
+            return '';
+        }
+
+        return bech32.encode(prefix.account, bech32.decode(validatorAddress).words);
+    } catch {
+        return '';
+    }
+};
+
+const formatSelfStake = (amount: string | null | undefined, denom: string | null | undefined) => {
+    const exponent = tokenUnits?.[denom ?? '']?.exponent ?? (denom?.startsWith('erc20:') ? 18 : 0);
+
+    return numeral(Big(amount ?? 0).div(Big(10).pow(exponent)).toFixed(exponent)).value() ?? 0;
+};
 
 const initialTokenDenom: TokenUnit = {
     value: '0',
@@ -67,6 +86,7 @@ const initialValidatorOverviewState: ValidatorOverviewState = {
         selfDelegateAddress: '',
         description: '',
         website: '',
+        selfStake: 0,
     },
     status: {
         status: 0,
@@ -136,6 +156,7 @@ export const useValidatorOverviewDetails = () => {
     const { loading } = useValidatorInfoQuery({
         variables: {
             address: router.query.address as string,
+            delegatorAddress: validatorToDelegatorAddress(router.query.address as string),
         },
         onCompleted: data => {
             handleSetState(prevState => ({ ...prevState, ...formatValidatorOverview(data) }));
@@ -244,6 +265,7 @@ function formatValidatorOverview(data: ValidatorInfoQuery): Partial<ValidatorOve
         description: data.validator_denom[0]?.validator.validatorDescriptions?.[0]?.details ?? '',
         website: data.validator_denom[0]?.validator.validatorDescriptions?.[0]?.website ?? '',
         denom: data.validator_denom[0]?.denom ?? '',
+        selfStake: formatSelfStake(data.selfStake?.[0]?.amount, data.selfStake?.[0]?.denom),
     };
 
     const slashingParams = SlashingParams.fromJson(data?.slashingParams?.[0]?.params ?? {});

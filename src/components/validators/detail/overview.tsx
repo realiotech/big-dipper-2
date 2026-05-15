@@ -37,6 +37,9 @@ export default function Overview({ state }) {
   const { overview, status } = state;
   const asset = useRecoilValue(readAsset(overview?.denom));
   const { imageUrl, name, address } = useProfileRecoil(overview.validator);
+  const selfStake = `${numeral(overview.selfStake).format("0,0.00")} ${
+    asset?.symbol ?? ""
+  }`.trim();
   const statusTheme = getValidatorStatus(
     status.status,
     status.jailed,
@@ -112,6 +115,13 @@ export default function Overview({ state }) {
                   {shortenText(overview.website)}
                 </NextLink>
               </Link>
+            </GridItem>
+
+            <GridItem>
+              <Text>Self Stake:</Text>
+            </GridItem>
+            <GridItem textAlign="right">
+              <Text>{selfStake}</Text>
             </GridItem>
 
             <GridItem>

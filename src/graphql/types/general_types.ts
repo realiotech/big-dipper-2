@@ -24251,10 +24251,11 @@ export type ValidatorSigningInfosQuery = { validator: Array<{ __typename?: 'vali
 
 export type ValidatorInfoQueryVariables = Exact<{
   address?: InputMaybe<Scalars['String']>;
+  delegatorAddress?: InputMaybe<Scalars['String']>;
 }>;
 
 
-export type ValidatorInfoQuery = { validator_denom: Array<{ __typename?: 'validator_denom', denom: string, validator: { __typename?: 'validator', validatorInfo?: { __typename?: 'validator_info', operatorAddress: string, selfDelegateAddress?: string | null, maxRate: string } | null, validatorDescriptions: Array<{ __typename?: 'validator_description', details?: string | null, website?: string | null }>, validatorStatuses: Array<{ __typename?: 'validator_status', status: number, jailed: boolean, height: any }>, validatorSigningInfos: Array<{ __typename?: 'validator_signing_info', tombstoned: boolean, missedBlocksCounter: any }>, validatorCommissions: Array<{ __typename?: 'validator_commission', commission: any }> } }>, slashingParams: Array<{ __typename?: 'slashing_params', params: any }> };
+export type ValidatorInfoQuery = { validator_denom: Array<{ __typename?: 'validator_denom', denom: string, validator: { __typename?: 'validator', validatorInfo?: { __typename?: 'validator_info', operatorAddress: string, selfDelegateAddress?: string | null, maxRate: string } | null, validatorDescriptions: Array<{ __typename?: 'validator_description', details?: string | null, website?: string | null }>, validatorStatuses: Array<{ __typename?: 'validator_status', status: number, jailed: boolean, height: any }>, validatorSigningInfos: Array<{ __typename?: 'validator_signing_info', tombstoned: boolean, missedBlocksCounter: any }>, validatorCommissions: Array<{ __typename?: 'validator_commission', commission: any }> } }>, slashingParams: Array<{ __typename?: 'slashing_params', params: any }>, selfStake: Array<{ __typename?: 'ms_locks', amount?: string | null, denom?: string | null }> };
 
 export type ValidatorCommissionQueryVariables = Exact<{
   address?: InputMaybe<Scalars['String']>;
@@ -26361,7 +26362,7 @@ export type ValidatorSigningInfosQueryHookResult = ReturnType<typeof useValidato
 export type ValidatorSigningInfosLazyQueryHookResult = ReturnType<typeof useValidatorSigningInfosLazyQuery>;
 export type ValidatorSigningInfosQueryResult = Apollo.QueryResult<ValidatorSigningInfosQuery, ValidatorSigningInfosQueryVariables>;
 export const ValidatorInfoDocument = gql`
-    query ValidatorInfo($address: String) {
+    query ValidatorInfo($address: String, $delegatorAddress: String) {
   validator_denom(
     where: {validator: {validator_info: {operator_address: {_eq: $address}}}}
   ) {
@@ -26399,6 +26400,13 @@ export const ValidatorInfoDocument = gql`
   slashingParams: slashing_params(order_by: {height: desc}, limit: 1) {
     params
   }
+  selfStake: ms_locks(
+    where: {val_addr: {_eq: $address}, staker_addr: {_eq: $delegatorAddress}}
+    limit: 1
+  ) {
+    amount
+    denom
+  }
 }
     `;
 
@@ -26415,6 +26423,7 @@ export const ValidatorInfoDocument = gql`
  * const { data, loading, error } = useValidatorInfoQuery({
  *   variables: {
  *      address: // value for 'address'
+ *      delegatorAddress: // value for 'delegatorAddress'
  *   },
  * });
  */
