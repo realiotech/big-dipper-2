@@ -37,6 +37,7 @@
   "key": "Key",
   "value": "Value",
   "deposit": "Deposit",
+  "expired": "Expired",
   "invalid": "Invalid",
   "voting": "Voting",
   "passed": "Passed",

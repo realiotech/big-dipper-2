@@ -24149,7 +24149,7 @@ export type ProposalDetailsVotesQueryVariables = Exact<{
 }>;
 
 
-export type ProposalDetailsVotesQuery = { proposalVote: Array<{ __typename?: 'proposal_vote', option: string, voterAddress: string }>, validatorStatuses: Array<{ __typename?: 'proposal_validator_status_snapshot', validator: { __typename?: 'validator', validatorInfo?: { __typename?: 'validator_info', selfDelegateAddress?: string | null } | null } }> };
+export type ProposalDetailsVotesQuery = { proposalVote: Array<{ __typename?: 'proposal_vote', option: string, voterAddress: string }>, validatorStatuses: Array<{ __typename?: 'proposal_validator_status_snapshot', validator: { __typename?: 'validator', validatorInfo?: { __typename?: 'validator_info', operatorAddress: string, selfDelegateAddress?: string | null } | null } }> };
 
 export type ProposalsQueryVariables = Exact<{
   limit?: InputMaybe<Scalars['Int']>;
@@ -24157,7 +24157,7 @@ export type ProposalsQueryVariables = Exact<{
 }>;
 
 
-export type ProposalsQuery = { proposals: Array<{ __typename?: 'proposal', title: string, status?: string | null, content: any, description: string, proposalId: number }>, total: { __typename?: 'proposal_aggregate', aggregate?: { __typename?: 'proposal_aggregate_fields', count: number } | null } };
+export type ProposalsQuery = { proposals: Array<{ __typename?: 'proposal', title: string, status?: string | null, content: any, description: string, proposalId: number, depositEndTime?: any | null, votingStartTime?: any | null }>, total: { __typename?: 'proposal_aggregate', aggregate?: { __typename?: 'proposal_aggregate_fields', count: number } | null } };
 
 export type TokenPriceListenerSubscriptionVariables = Exact<{
   denom?: InputMaybe<Scalars['String']>;
@@ -25748,6 +25748,7 @@ export const ProposalDetailsVotesDocument = gql`
   ) {
     validator {
       validatorInfo: validator_info {
+        operatorAddress: operator_address
         selfDelegateAddress: self_delegate_address
       }
     }
@@ -25790,6 +25791,8 @@ export const ProposalsDocument = gql`
     status
     content
     description
+    depositEndTime: deposit_end_time
+    votingStartTime: voting_start_time
   }
   total: proposal_aggregate {
     aggregate {

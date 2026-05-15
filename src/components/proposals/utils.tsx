@@ -10,6 +10,10 @@ export const getStatusInfo = (status: string, t: TFunction) => {
       value: t('deposit'),
       tag: 'blue',
     },
+    PROPOSAL_STATUS_DEPOSIT_EXPIRED: {
+      value: t('expired'),
+      tag: 'gray',
+    },
     PROPOSAL_STATUS_INVALID: {
       value: t('invalid'),
       tag: 'gray',
@@ -132,6 +136,13 @@ export const getVoteKey = (vote: string) => {
 };
 
 export const filterDataByTab = (props: { data: VoteType[]; notVoted: VoteType[]; tab: number }) => {
+  if (props.tab === 0) {
+    return [
+      ...props.data,
+      ...props.notVoted,
+    ];
+  }
+
   if (props.tab === 5) {
     return props.notVoted;
   }

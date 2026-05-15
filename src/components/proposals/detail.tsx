@@ -22,6 +22,15 @@ import HelpLink from "../helper/help_link";
 const dateFormat = 'locale'
 const timeFormat = '12-hour'
 
+const formatProposalDate = (value?: string | null) => {
+    if (!value) {
+        return '-';
+    }
+
+    const parsedDate = dayjs.utc(value);
+    return parsedDate.isValid() ? formatDayJs(parsedDate, dateFormat, timeFormat) : '-';
+};
+
 export default function ProposalDetail() {
     const { t } = useTranslation('proposals');
     const { state } = useProposalDetails();
@@ -80,25 +89,25 @@ export default function ProposalDetail() {
                         <Text fontWeight="bold" w="150px">
                             Submit Time:
                         </Text>
-                        <Text>{formatDayJs(dayjs.utc(overview.submitTime), dateFormat, timeFormat)}</Text>
+                        <Text>{formatProposalDate(overview.submitTime)}</Text>
                     </Stack>
                     <Stack direction={{base: 'column', md:'row'}}>
                         <Text fontWeight="bold" w="150px">
                             Deposit End Time:
                         </Text>
-                        <Text>{formatDayJs(dayjs.utc(overview.depositEndTime), dateFormat, timeFormat)}</Text>
+                        <Text>{formatProposalDate(overview.depositEndTime)}</Text>
                     </Stack>
                     <Stack direction={{base: 'column', md:'row'}}>
                         <Text fontWeight="bold" w="150px">
                             Voting Start Time:
                         </Text>
-                        <Text>{formatDayJs(dayjs.utc(overview.votingStartTime), dateFormat, timeFormat)}</Text>
+                        <Text>{formatProposalDate(overview.votingStartTime)}</Text>
                     </Stack>
                     <Stack direction={{base: 'column', md:'row'}}>
                         <Text fontWeight="bold" w="150px">
                             Voting End Time:
                         </Text>
-                        <Text>{formatDayJs(dayjs.utc(overview.votingEndTime), dateFormat, timeFormat)}</Text>
+                        <Text>{formatProposalDate(overview.votingEndTime)}</Text>
                     </Stack>
                     <Stack  direction={{base: 'column', md:'row'}} align={'start'} w={'full'}>
                         <Text fontWeight="bold" w="150px">
