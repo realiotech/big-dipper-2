@@ -160,7 +160,7 @@ export default function AccountDetail() {
           </Box>
           <Assets balances={balancesMerged} erc20Balances={erc20Balances} />
         </Flex>
-        <AssetChart balances={balancesMerged} />
+        <AssetChart balances={balancesMerged} erc20Balances={erc20Balances} />
       </Flex>
       <Transactions onExportClick={handleExportClick} />
       <Staking

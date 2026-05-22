@@ -55,6 +55,9 @@ const AssetItem = ({ metadata, asset }) => {
 };
 
 const Erc20Item = ({ metadata, erc20 }) => {
+    const amount = new Big(erc20?.value || "0");
+    const amountInUsd = amount.times(new Big(metadata?.price || "0")).toFixed(2);
+
     return (
         <Flex
             bg={{ base: "white", _dark: "black" }}
@@ -70,10 +73,18 @@ const Erc20Item = ({ metadata, erc20 }) => {
                         {metadata?.symbol}
                     </Text>
                     <Text fontSize="sm" color="green.500">
-                        {numeral(erc20.value).format('0,0.00')}
+                        {numeral(amount.toString()).format('0,0.00')} (${numeral(amountInUsd).format('0,0.00')})
                     </Text>
                 </Box>
             </HStack>
+            <Box textAlign={'right'}>
+                <Text fontSize={'14px'}>
+                    Price
+                </Text>
+                <Text fontWeight={600} fontSize={'16px'}>
+                    ${numeral(metadata?.price || 0).format('0.00')}
+                </Text>
+            </Box>
         </Flex>
     );
 };
@@ -81,6 +92,10 @@ const Erc20Item = ({ metadata, erc20 }) => {
 export default function Assets({ balances, erc20Balances }) {
     const { assetMap } = useRecoilValue(readAssets)
     const { tokenMap } = useRecoilValue(readTokens)
+    const getTokenMetadata = (contractId?: string) => {
+        if (!contractId) return undefined;
+        return tokenMap[contractId] ?? tokenMap[contractId.toLowerCase()];
+    };
 
     return (
         <Box
@@ -100,7 +115,7 @@ export default function Assets({ balances, erc20Balances }) {
                     <AssetItem key={`asset-${i}`} asset={asset} metadata={assetMap[asset?.denom]} />
                 )) : <></>}
                 {erc20Balances?.length ? erc20Balances.map((erc20, i) => (
-                    <Erc20Item key={`erc20-${i}`} erc20={erc20} metadata={tokenMap[erc20?.contract?.id]} />
+                    <Erc20Item key={`erc20-${i}`} erc20={erc20} metadata={getTokenMetadata(erc20?.contract?.id)} />
                 )) : <></> }
             </VStack>
         </Box>

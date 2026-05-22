@@ -1,4 +1,5 @@
 import { readAssets } from "@/recoil/asset";
+import { readTokens } from "@/recoil/erc20";
 import {
     Box,
     Text,
@@ -18,13 +19,40 @@ import Loading from "../helper/loading";
 import { AssetBalanceDetail } from "./types";
 import numeral from "numeral";
 import Big from "big.js";
+import { useMemo } from "react";
 ChartJS.register(ArcElement, Tooltip, Legend);
 
 type Props = {
     balances: AssetBalanceDetail[]
+    erc20Balances?: any[]
 };
-const AssetChart: React.FC<Props> = ({ balances }) => {
+const AssetChart: React.FC<Props> = ({ balances, erc20Balances }) => {
     const { assetMap, loaded } = useRecoilValue(readAssets)
+    const { tokenMap } = useRecoilValue(readTokens)
+
+    const getTokenMetadata = (contractId?: string) => {
+        if (!contractId) return undefined;
+        return tokenMap[contractId] ?? tokenMap[contractId.toLowerCase()];
+    };
+
+    const chartBalances = useMemo(
+        () => [
+            ...(balances ?? []),
+            ...(erc20Balances ?? [])
+                .map((erc20) => ({
+                    denom: erc20?.contract?.id,
+                    spendable: erc20?.value ?? 0,
+                    delegated: 0,
+                    unbonding: 0,
+                    metadata: getTokenMetadata(erc20?.contract?.id),
+                }))
+                .filter((item) => Number(item.spendable) > 0),
+        ],
+        [balances, erc20Balances, tokenMap]
+    );
+
+    const getMetadata = (item) => item?.metadata ?? assetMap[item?.denom];
+
     if (!loaded) return (
         <Box
             bg={{ base: "#FAFBFC", _dark: "#0F0F0F" }}
@@ -53,7 +81,7 @@ const AssetChart: React.FC<Props> = ({ balances }) => {
         }
     };
     
-    if (!assetMap || !balances?.length) return (
+    if (!assetMap || !chartBalances?.length) return (
         <Box
             bg={{ base: "#FAFBFC", _dark: "#0F0F0F" }}
             p={6}
@@ -75,20 +103,20 @@ const AssetChart: React.FC<Props> = ({ balances }) => {
             flex="1"
             minW="320px"
         >
-            <Tabs.Root defaultValue={'ario'} variant={'enclosed'}>
+            <Tabs.Root defaultValue={chartBalances[0]?.denom} variant={'enclosed'}>
                 <Flex justifyContent={'space-between'} align={'center'}>
                     <Text fontSize="lg" fontWeight="bold" mb={4}>
                         Portfolio / USD
                     </Text>
                     <Tabs.List>
-                        <For each={balances}>
+                        <For each={chartBalances}>
                             {(item, index) => (
-                                <Tabs.Trigger key={`tab-${index}`} value={item?.denom}>{assetMap[item?.denom]?.symbol}</Tabs.Trigger>
+                                <Tabs.Trigger key={`tab-${index}`} value={item?.denom}>{getMetadata(item)?.symbol}</Tabs.Trigger>
                             )}
                         </For>
                     </Tabs.List>
                 </Flex>
-                <For each={balances}>
+                <For each={chartBalances}>
                     {(item, index) => (
                         <Tabs.Content key={`tab-content-${index}`} value={item?.denom}>
                             <Flex
@@ -115,7 +143,7 @@ const AssetChart: React.FC<Props> = ({ balances }) => {
                                         <Text>
                                             Spendable - {" "}
                                             <Link fontWeight={600}>
-                                            ${numeral(calculateSafeValue(item.spendable, assetMap[item.denom]?.price)).format('0,0.00')}
+                                            ${numeral(calculateSafeValue(item.spendable, getMetadata(item)?.price)).format('0,0.00')}
                                             </Link>{" "}
                                         </Text>
                                     </HStack>
@@ -124,7 +152,7 @@ const AssetChart: React.FC<Props> = ({ balances }) => {
                                         <Text>
                                             Delegated - {" "}
                                             <Link fontWeight={600}>
-                                            ${numeral(calculateSafeValue(item.delegated, assetMap[item.denom]?.price)).format('0,0.00')}
+                                            ${numeral(calculateSafeValue(item.delegated, getMetadata(item)?.price)).format('0,0.00')}
                                             </Link>{" "}
                                         </Text>
                                     </HStack>
@@ -133,7 +161,7 @@ const AssetChart: React.FC<Props> = ({ balances }) => {
                                         <Text>
                                             Unbonding - {" "}
                                             <Link fontWeight={600}>
-                                            ${numeral(calculateSafeValue(item.unbonding, assetMap[item.denom]?.price)).format('0,0.00')}
+                                            ${numeral(calculateSafeValue(item.unbonding, getMetadata(item)?.price)).format('0,0.00')}
                                             </Link>{" "}
                                         </Text>
                                     </HStack>
