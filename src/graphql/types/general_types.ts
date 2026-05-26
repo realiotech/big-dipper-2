@@ -24149,7 +24149,7 @@ export type ProposalDetailsVotesQueryVariables = Exact<{
 }>;
 
 
-export type ProposalDetailsVotesQuery = { proposalVote: Array<{ __typename?: 'proposal_vote', option: string, voterAddress: string }>, validatorStatuses: Array<{ __typename?: 'proposal_validator_status_snapshot', validator: { __typename?: 'validator', validatorInfo?: { __typename?: 'validator_info', selfDelegateAddress?: string | null } | null } }> };
+export type ProposalDetailsVotesQuery = { proposalVote: Array<{ __typename?: 'proposal_vote', option: string, voterAddress: string }>, validatorStatuses: Array<{ __typename?: 'proposal_validator_status_snapshot', validator: { __typename?: 'validator', validatorInfo?: { __typename?: 'validator_info', operatorAddress: string, selfDelegateAddress?: string | null } | null } }> };
 
 export type ProposalsQueryVariables = Exact<{
   limit?: InputMaybe<Scalars['Int']>;
@@ -24157,7 +24157,7 @@ export type ProposalsQueryVariables = Exact<{
 }>;
 
 
-export type ProposalsQuery = { proposals: Array<{ __typename?: 'proposal', title: string, status?: string | null, content: any, description: string, proposalId: number }>, total: { __typename?: 'proposal_aggregate', aggregate?: { __typename?: 'proposal_aggregate_fields', count: number } | null } };
+export type ProposalsQuery = { proposals: Array<{ __typename?: 'proposal', title: string, status?: string | null, content: any, description: string, proposalId: number, depositEndTime?: any | null, votingStartTime?: any | null }>, total: { __typename?: 'proposal_aggregate', aggregate?: { __typename?: 'proposal_aggregate_fields', count: number } | null } };
 
 export type TokenPriceListenerSubscriptionVariables = Exact<{
   denom?: InputMaybe<Scalars['String']>;
@@ -24251,10 +24251,11 @@ export type ValidatorSigningInfosQuery = { validator: Array<{ __typename?: 'vali
 
 export type ValidatorInfoQueryVariables = Exact<{
   address?: InputMaybe<Scalars['String']>;
+  delegatorAddress?: InputMaybe<Scalars['String']>;
 }>;
 
 
-export type ValidatorInfoQuery = { validator_denom: Array<{ __typename?: 'validator_denom', denom: string, validator: { __typename?: 'validator', validatorInfo?: { __typename?: 'validator_info', operatorAddress: string, selfDelegateAddress?: string | null, maxRate: string } | null, validatorDescriptions: Array<{ __typename?: 'validator_description', details?: string | null, website?: string | null }>, validatorStatuses: Array<{ __typename?: 'validator_status', status: number, jailed: boolean, height: any }>, validatorSigningInfos: Array<{ __typename?: 'validator_signing_info', tombstoned: boolean, missedBlocksCounter: any }>, validatorCommissions: Array<{ __typename?: 'validator_commission', commission: any }> } }>, slashingParams: Array<{ __typename?: 'slashing_params', params: any }> };
+export type ValidatorInfoQuery = { validator_denom: Array<{ __typename?: 'validator_denom', denom: string, validator: { __typename?: 'validator', validatorInfo?: { __typename?: 'validator_info', operatorAddress: string, selfDelegateAddress?: string | null, maxRate: string } | null, validatorDescriptions: Array<{ __typename?: 'validator_description', details?: string | null, website?: string | null }>, validatorStatuses: Array<{ __typename?: 'validator_status', status: number, jailed: boolean, height: any }>, validatorSigningInfos: Array<{ __typename?: 'validator_signing_info', tombstoned: boolean, missedBlocksCounter: any }>, validatorCommissions: Array<{ __typename?: 'validator_commission', commission: any }> } }>, slashingParams: Array<{ __typename?: 'slashing_params', params: any }>, selfStake: Array<{ __typename?: 'ms_locks', amount?: string | null, denom?: string | null }> };
 
 export type ValidatorCommissionQueryVariables = Exact<{
   address?: InputMaybe<Scalars['String']>;
@@ -24301,6 +24302,13 @@ export type ValidatorsQueryVariables = Exact<{ [key: string]: never; }>;
 
 
 export type ValidatorsQuery = { stakingPool: Array<{ __typename?: 'staking_pool', bondedTokens: string }>, validator_denom: Array<{ __typename?: 'validator_denom', denom: string, validator: { __typename?: 'validator', validatorStatuses: Array<{ __typename?: 'validator_status', status: number, jailed: boolean, height: any }>, validatorSigningInfos: Array<{ __typename?: 'validator_signing_info', tombstoned: boolean, missedBlocksCounter: any }>, validatorInfo?: { __typename?: 'validator_info', operatorAddress: string, selfDelegateAddress?: string | null } | null, validatorVotingPowers: Array<{ __typename?: 'validator_voting_power', votingPower: any }>, validatorCommissions: Array<{ __typename?: 'validator_commission', commission: any }> } }>, slashingParams: Array<{ __typename?: 'slashing_params', params: any }> };
+
+export type ValidatorSelfStakesQueryVariables = Exact<{
+  where: Array<Ms_Locks_Bool_Exp> | Ms_Locks_Bool_Exp;
+}>;
+
+
+export type ValidatorSelfStakesQuery = { ms_locks: Array<{ __typename?: 'ms_locks', amount?: string | null, denom?: string | null, staker_addr: string, val_addr: string }> };
 
 export type ValidatorAddressesQueryVariables = Exact<{ [key: string]: never; }>;
 
@@ -25748,6 +25756,7 @@ export const ProposalDetailsVotesDocument = gql`
   ) {
     validator {
       validatorInfo: validator_info {
+        operatorAddress: operator_address
         selfDelegateAddress: self_delegate_address
       }
     }
@@ -25790,6 +25799,8 @@ export const ProposalsDocument = gql`
     status
     content
     description
+    depositEndTime: deposit_end_time
+    votingStartTime: voting_start_time
   }
   total: proposal_aggregate {
     aggregate {
@@ -26351,7 +26362,7 @@ export type ValidatorSigningInfosQueryHookResult = ReturnType<typeof useValidato
 export type ValidatorSigningInfosLazyQueryHookResult = ReturnType<typeof useValidatorSigningInfosLazyQuery>;
 export type ValidatorSigningInfosQueryResult = Apollo.QueryResult<ValidatorSigningInfosQuery, ValidatorSigningInfosQueryVariables>;
 export const ValidatorInfoDocument = gql`
-    query ValidatorInfo($address: String) {
+    query ValidatorInfo($address: String, $delegatorAddress: String) {
   validator_denom(
     where: {validator: {validator_info: {operator_address: {_eq: $address}}}}
   ) {
@@ -26389,6 +26400,13 @@ export const ValidatorInfoDocument = gql`
   slashingParams: slashing_params(order_by: {height: desc}, limit: 1) {
     params
   }
+  selfStake: ms_locks(
+    where: {val_addr: {_eq: $address}, staker_addr: {_eq: $delegatorAddress}}
+    limit: 1
+  ) {
+    amount
+    denom
+  }
 }
     `;
 
@@ -26405,6 +26423,7 @@ export const ValidatorInfoDocument = gql`
  * const { data, loading, error } = useValidatorInfoQuery({
  *   variables: {
  *      address: // value for 'address'
+ *      delegatorAddress: // value for 'delegatorAddress'
  *   },
  * });
  */
@@ -26712,6 +26731,44 @@ export function useValidatorsLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions
 export type ValidatorsQueryHookResult = ReturnType<typeof useValidatorsQuery>;
 export type ValidatorsLazyQueryHookResult = ReturnType<typeof useValidatorsLazyQuery>;
 export type ValidatorsQueryResult = Apollo.QueryResult<ValidatorsQuery, ValidatorsQueryVariables>;
+export const ValidatorSelfStakesDocument = gql`
+    query ValidatorSelfStakes($where: [ms_locks_bool_exp!]!) {
+  ms_locks(where: {_or: $where}) {
+    amount
+    denom
+    staker_addr
+    val_addr
+  }
+}
+    `;
+
+/**
+ * __useValidatorSelfStakesQuery__
+ *
+ * To run a query within a React component, call `useValidatorSelfStakesQuery` and pass it any options that fit your needs.
+ * When your component renders, `useValidatorSelfStakesQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useValidatorSelfStakesQuery({
+ *   variables: {
+ *      where: // value for 'where'
+ *   },
+ * });
+ */
+export function useValidatorSelfStakesQuery(baseOptions: Apollo.QueryHookOptions<ValidatorSelfStakesQuery, ValidatorSelfStakesQueryVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useQuery<ValidatorSelfStakesQuery, ValidatorSelfStakesQueryVariables>(ValidatorSelfStakesDocument, options);
+      }
+export function useValidatorSelfStakesLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<ValidatorSelfStakesQuery, ValidatorSelfStakesQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return Apollo.useLazyQuery<ValidatorSelfStakesQuery, ValidatorSelfStakesQueryVariables>(ValidatorSelfStakesDocument, options);
+        }
+export type ValidatorSelfStakesQueryHookResult = ReturnType<typeof useValidatorSelfStakesQuery>;
+export type ValidatorSelfStakesLazyQueryHookResult = ReturnType<typeof useValidatorSelfStakesLazyQuery>;
+export type ValidatorSelfStakesQueryResult = Apollo.QueryResult<ValidatorSelfStakesQuery, ValidatorSelfStakesQueryVariables>;
 export const ValidatorAddressesDocument = gql`
     query ValidatorAddresses {
   validator(

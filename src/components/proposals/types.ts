@@ -3,6 +3,7 @@ export interface ProposalType {
   title: string;
   description: string;
   status: string;
+  depositEndTime: string;
 }
 
 export interface ProposalsState {

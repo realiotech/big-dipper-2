@@ -1,6 +1,6 @@
 export interface OverviewType {
   address: string;
-  evmAddress: string;
+  evmAddress: string | undefined;
   balances: Balance[];
   completed: boolean;
 }

@@ -47,6 +47,7 @@ query ProposalDetailsVotes($proposalId: Int) {
   validatorStatuses: proposal_validator_status_snapshot(where: {proposal_id: {_eq: $proposalId}, status: {_eq: 3}}) {
     validator {
       validatorInfo: validator_info {
+        operatorAddress: operator_address
         selfDelegateAddress: self_delegate_address
       }
     }

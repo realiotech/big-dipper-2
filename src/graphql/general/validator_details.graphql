@@ -54,7 +54,7 @@ query ValidatorSigningInfos($address: String) {
   }
 }
 
-query ValidatorInfo($address: String) {
+query ValidatorInfo($address: String, $delegatorAddress: String) {
   validator_denom(where: {validator: {validator_info: {operator_address: {_eq: $address}}}}) {
     denom
     validator {
@@ -81,8 +81,12 @@ query ValidatorInfo($address: String) {
       }
     }
   }
-    slashingParams: slashing_params(order_by: {height: desc}, limit: 1) {
+  slashingParams: slashing_params(order_by: {height: desc}, limit: 1) {
     params
+  }
+  selfStake: ms_locks(where: {val_addr: {_eq: $address}, staker_addr: {_eq: $delegatorAddress}}, limit: 1) {
+    amount
+    denom
   }
 }
 

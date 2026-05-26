@@ -9,6 +9,7 @@ export interface ValidatorType {
   tombstoned: boolean;
   topVotingPower?: boolean; // top 34% VP
   denom: string;
+  selfStake: number;
 }
 
 export interface ValidatorsState {
