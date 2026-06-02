@@ -19,6 +19,7 @@ WORKDIR /app
 
 # Installing dependencies
 COPY package*.json .npmrc ./
+RUN npm i -g npm@latest
 RUN --mount=type=cache,target=/root/.npm npm ci
 RUN npx browserslist@latest --update-db
 
