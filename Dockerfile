@@ -21,7 +21,6 @@ WORKDIR /app
 COPY package*.json .npmrc ./
 RUN npm i -g npm@11.19.0
 RUN --mount=type=cache,target=/root/.npm npm ci
-RUN npx browserslist@latest --update-db
 
 # Copying source files
 COPY . .
