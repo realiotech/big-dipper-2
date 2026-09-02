@@ -1,4 +1,5 @@
 import type { NextApiRequest, NextApiResponse } from "next";
+import { fetchUsdPrices } from "@/utils/spot_prices";
 
 const ASSET_METADATA = [
     {
@@ -43,42 +44,19 @@ export default async function handler(
     req: NextApiRequest,
     res: NextApiResponse
 ) {
-    const apiUrl = process.env.PRICE_API_URL;
-    const apiKey = process.env.PRICE_API_KEY;
-
-    // If API credentials are missing, return default metadata with price 0
-    if (!apiUrl || !apiKey) {
-        return res.status(200).json(ASSET_METADATA.map(item => ({ ...item, price: 0 })));
-    }
-
     try {
-        let promises = []
-        for (let i = 0; i < ASSET_METADATA.length; i++) {
-            promises.push(fetch(`${apiUrl}/${ASSET_METADATA[i].symbol.toUpperCase()}`, {
-                headers: {
-                    "x-api-key": apiKey,
-                },
-            }))
-        }
-
-        const response = await Promise.all(promises);
-        let resJsonPromises = []
-
-        for (let i = 0; i < response.length; i++) {
-            if (!response[i].ok) {
-                console.warn(`API request failed for ${ASSET_METADATA[i].symbol} with status ${response[i].status}`);
-                // Push null for failed requests instead of throwing
-                resJsonPromises.push(Promise.resolve(null));
-            } else {
-                resJsonPromises.push(response[i].json());
-            }
-        }
-        const resJson = await Promise.all(resJsonPromises);
-
-        res.status(200).json(ASSET_METADATA.map((item, index) => ({ ...item, price: resJson[index]?.USD ?? 0 })));
+        // One batched request to the freehold spot-price API (REA-3126)
+        // instead of a fetch per symbol against the v1 asset-api. A symbol
+        // with no usable price source (`unresolved` upstream - LMX today)
+        // degrades to price 0, same as the previous per-symbol failure path.
+        const prices = await fetchUsdPrices(ASSET_METADATA.map((item) => item.symbol));
+        res.status(200).json(ASSET_METADATA.map((item) => ({
+            ...item,
+            price: prices[item.symbol.toUpperCase()] ?? 0,
+        })));
     } catch (error) {
         console.error("Error fetching asset prices:", error);
-        // Return default metadata with price 0 on error instead of 500
+        // Return default metadata with price 0 on error (missing env included) instead of 500
         res.status(200).json(ASSET_METADATA.map(item => ({ ...item, price: 0 })));
     }
 }
