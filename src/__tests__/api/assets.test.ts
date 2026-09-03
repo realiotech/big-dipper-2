@@ -3,7 +3,8 @@
  * batched upstream call, metadata + price merge, and the price-0 degradation
  * on unresolved symbols and upstream failure (the UI's existing contract).
  */
-import handler from './assets';
+import handler from '@/pages/api/assets';
+import { resetSpotPriceCache } from '@/utils/spot_prices';
 
 const ORIGINAL_ENV = { ...process.env };
 
@@ -27,6 +28,7 @@ describe('GET /api/assets', () => {
   let fetchMock: jest.Mock;
 
   beforeEach(() => {
+    resetSpotPriceCache();
     process.env = {
       ...ORIGINAL_ENV,
       PRICE_API_URL: 'https://api.example/api/v1/prices/spot',
