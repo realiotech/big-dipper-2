@@ -1,3 +1,6 @@
+const { pathsToModuleNameMapper } = require('ts-jest/utils');
+const { compilerOptions } = require('./tsconfig.json');
+
 module.exports = {
   testEnvironment: 'jsdom',
   preset: 'ts-jest',
@@ -19,15 +22,9 @@ module.exports = {
   ],
   moduleNameMapper: {
     '\\.(css|less|sass|scss)$': 'identity-obj-proxy',
-    // Static equivalent of tsconfig's paths ("@/*" -> "src/*"). The previous
-    // pathsToModuleNameMapper(require('./tsconfig.json')) setup broke on two
-    // counts: ts-jest v29 moved the helper off 'ts-jest/utils', and the
-    // tsconfig's trailing commas (JSONC) crash require().
-    '^@/(.*)$': '<rootDir>/src/$1',
-    // Legacy upstream aliases still referenced by jest.setup.js mocks.
-    '^@utils/(.*)$': '<rootDir>/src/utils/$1',
-    '^@configs$': '<rootDir>/src/configs',
-    '^@recoil/(.*)$': '<rootDir>/src/recoil/$1',
+    ...pathsToModuleNameMapper(compilerOptions.paths, {
+      prefix: '<rootDir>/',
+    }),
   },
   setupFilesAfterEnv: [
     '<rootDir>/jest.setup.js',
