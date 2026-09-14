@@ -14,6 +14,7 @@ import { formatToken } from '@/utils/format_token';
 import { PageInfo } from "../layout/pagination";
 import { load } from 'js-yaml';
 import { TRANSACTION_DETAILS } from '@/utils';
+import { canonicalizeTendermintTxHash } from '@/utils/canonicalize_tendermint_tx_hash';
 
 const MAX_TXS = 500 * 20
 const PAGE_SIZE = 20
@@ -292,7 +293,7 @@ export const useTransactionDetails = () => {
 
   useTransactionDetailsQuery({
     variables: {
-      hash: txhash,
+      hash: canonicalizeTendermintTxHash(txhash),
     },
     skip: isEvmTransaction && !evmQueryCompleted,
     onCompleted: (data) => {

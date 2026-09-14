@@ -5,6 +5,8 @@ query Proposals ($limit: Int = 7, $offset: Int = 0) {
     status
     content
     description
+    depositEndTime: deposit_end_time
+    votingStartTime: voting_start_time
   }
   total: proposal_aggregate {
     aggregate {
@@ -12,4 +14,3 @@ query Proposals ($limit: Int = 7, $offset: Int = 0) {
     }
   }
 }
-

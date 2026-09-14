@@ -187,9 +187,9 @@ export default function VotesTable() {
             </Table.Body>
           </Table.Root >
         ) : <NoData />}
-        <Show when={state?.data?.length > 10}>
+        <Show when={filteredItemsMemo.length > 10}>
           <PaginationRoot
-            count={state.data.length}
+            count={filteredItemsMemo.length}
             pageSize={10}
             page={page + 1}
             onPageChange={(e) => handlePageChange(e, e.page - 1)}
