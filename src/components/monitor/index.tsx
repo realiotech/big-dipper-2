@@ -300,7 +300,7 @@ function BlacklistTotals({ data }: { data: MonitorOverview }) {
 
       {rows.length ? (
         <Grid
-          templateColumns={{ base: '1fr', md: 'repeat(2, 1fr)', xl: 'repeat(3, 1fr)' }}
+          templateColumns={{ base: '1fr', sm: 'repeat(auto-fill, minmax(260px, 1fr))' }}
           gap={{ base: '4', md: '5' }}
         >
           {rows.map((row) => (
@@ -311,8 +311,14 @@ function BlacklistTotals({ data }: { data: MonitorOverview }) {
               borderWidth="1px"
               borderColor={borderColor}
               p="4"
+              minW="0"
             >
-              <Text fontSize="sm" color={mutedColor}>
+              <Text
+                fontSize="sm"
+                color={mutedColor}
+                title={row.denom}
+                overflowWrap="anywhere"
+              >
                 {denomSymbol(row.denom)} total
               </Text>
               <Text
@@ -327,19 +333,20 @@ function BlacklistTotals({ data }: { data: MonitorOverview }) {
               <Flex
                 justify="space-between"
                 gap="4"
+                wrap="wrap"
                 mt="3"
                 pt="3"
                 borderTopWidth="1px"
                 borderColor={borderColor}
                 fontSize="sm"
               >
-                <Box>
+                <Box minW="0">
                   <Text color={mutedColor}>Staked</Text>
                   <Text fontFamily="mono" whiteSpace="nowrap">
                     {formatBaseUnits(row.staked, row.denom, 2, false)}
                   </Text>
                 </Box>
-                <Box textAlign="end">
+                <Box textAlign="end" minW="0">
                   <Text color={mutedColor}>Balance</Text>
                   <Text fontFamily="mono" whiteSpace="nowrap">
                     {formatBaseUnits(row.balance, row.denom, 2, false)}

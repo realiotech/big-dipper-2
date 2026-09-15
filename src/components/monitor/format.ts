@@ -13,11 +13,17 @@ const PREFIX_EXPONENTS: { prefix: string; exponent: number }[] = [
   { prefix: 'ibc/', exponent: 6 },
 ];
 
+// A bridged denom is a single unbreakable 50-70 character token. Left whole it
+// sets the minimum width of whatever contains it and widens the page, so it is
+// abbreviated for display; callers keep the full value in a title attribute.
+const abbreviate = (denom: string) =>
+  (denom.length > 20 ? `${denom.slice(0, 10)}…${denom.slice(-6)}` : denom);
+
 export function denomMeta(denom: string): DenomMeta | null {
   const known = DENOMS[denom];
   if (known) return known;
   const match = PREFIX_EXPONENTS.find((item) => denom.startsWith(item.prefix));
-  return match ? { symbol: denom, exponent: match.exponent } : null;
+  return match ? { symbol: abbreviate(denom), exponent: match.exponent } : null;
 }
 
 export const denomSymbol = (denom: string) => denomMeta(denom)?.symbol ?? denom;

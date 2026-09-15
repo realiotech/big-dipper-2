@@ -23,7 +23,7 @@ export default function Layout({ children }) {
       {!isMobile ? (
         <>
           <Sidebar />
-          <VStack w="full">
+          <VStack w="full" minW="0">
             <Header />
             {loading ? (
               <Skeleton height={400} />
@@ -34,7 +34,7 @@ export default function Layout({ children }) {
           </VStack>
         </>
       ) : (
-        <VStack w="full">
+        <VStack w="full" minW="0">
           <Header />
           {loading ? <Skeleton height={400} /> : <Box w="full">{children}</Box>}
           <Footer />
