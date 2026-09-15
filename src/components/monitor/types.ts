@@ -11,7 +11,7 @@ export type MonitorOverview = {
 };
 export type MonitorAddress = {
   address: string; tags: string[]; validators: number; stake: DenomAmount[]; balances: DenomAmount[];
-  unbonding: number; lastActivityHeight: number | null; lastActivityAt: string | null; activityCount: number; primaryAmount: string;
+  unbonding: number; lastActivityHeight: number | null; lastActivityAt: string | null; activityCount: number; primaryAmount: string; primaryBalance: string;
 };
 export type MonitorActivity = {
   height: number; txHash: string; msgIndex: number; address: string; type: string;

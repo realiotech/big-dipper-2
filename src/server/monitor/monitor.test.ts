@@ -37,7 +37,7 @@ describe('wallet monitor correctness',()=>{
       const lease=acquireLease('activity',db);
       expect(()=>acquireLease('activity',db)).toThrow(/already running/);
       lease.release();expect(()=>acquireLease('activity',db)).not.toThrow();
-      migrate(db);expect(db.pragma('user_version',{simple:true})).toBe(2);
+      migrate(db);expect(db.pragma('user_version',{simple:true})).toBe(3);
     }finally{db.close();fs.rmSync(dir,{recursive:true,force:true});}
   });
 
@@ -53,7 +53,7 @@ describe('wallet monitor correctness',()=>{
     db.pragma('user_version = 1');
     migrate(db);
     expect(db.prepare("SELECT name FROM sqlite_master WHERE type='index' AND name='stake_snapshot_validator'").get()).toBeUndefined();
-    expect(db.pragma('user_version',{simple:true})).toBe(2);
+    expect(db.pragma('user_version',{simple:true})).toBe(3);
     db.close();
   });
 

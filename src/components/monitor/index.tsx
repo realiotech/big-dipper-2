@@ -443,7 +443,7 @@ export default function Monitor({
           <Box>
             <Text fontWeight="semibold">EVM transactions</Text>
             <Text fontSize="sm" color={mutedColor} mt="1">
-              Explorer message type <code>/os.evm.v1.MsgEthereumTx</code>
+              Explorer message type <code>{summary.evm.actualType}</code>
             </Text>
             <Text fontSize="xs" color={mutedColor} mt="1">
               Observed:{' '}
@@ -522,6 +522,8 @@ export default function Monitor({
                 >
                   <option value="stake">Stake high to low</option>
                   <option value="stake_asc">Stake low to high</option>
+                  <option value="balance">Balance high to low</option>
+                  <option value="balance_asc">Balance low to high</option>
                   <option value="validators">Validator count</option>
                   <option value="activity">Recent activity</option>
                   <option value="address">Address</option>
@@ -548,7 +550,7 @@ export default function Monitor({
                   <Table.ColumnHeader>Classification</Table.ColumnHeader>
                   <Table.ColumnHeader>Staked</Table.ColumnHeader>
                   <Table.ColumnHeader>Balances</Table.ColumnHeader>
-                  <Table.ColumnHeader textAlign="end">Validators</Table.ColumnHeader>
+                  <Table.ColumnHeader textAlign="end">Delegated validators</Table.ColumnHeader>
                   <Table.ColumnHeader>Last activity</Table.ColumnHeader>
                 </Table.Row>
               </Table.Header>
@@ -598,7 +600,10 @@ export default function Monitor({
       </Box>
 
       <Box mt="6">
-        <Section title="Activity" summary={`${activity.total.toLocaleString()} matches`}>
+        <Section
+          title="Activity"
+          summary={`${activity.total.toLocaleString()} matches · one row per watched wallet in a message`}
+        >
           <form method="get">
             <Flex gap="3" wrap="wrap" mb="5">
               <NativeSelect.Root w={{ base: 'full', md: '220px' }}>
@@ -710,6 +715,14 @@ export default function Monitor({
                           {row.blockTime
                             ? new Date(row.blockTime).toLocaleString()
                             : '—'}
+                        </Text>
+                        <Text
+                          fontSize="xs"
+                          fontFamily="mono"
+                          color={mutedColor}
+                          title={row.txHash}
+                        >
+                          {short(row.txHash, 6)}
                         </Text>
                       </Table.Cell>
                       <Table.Cell {...tableCellProps} fontFamily="mono">

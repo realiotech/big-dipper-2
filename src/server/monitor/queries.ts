@@ -51,8 +51,13 @@ export function overview(database: Database.Database = monitorDb(), now = Date.n
       stale: !ranAt || now-new Date(ranAt).getTime()>JOB_STALE_MS,
       error: cursor?.error ?? null,
     },
-    evm: { supportedTypes:[...EVM_TYPES], observedTypes:observed, actualType:'/os.evm.v1.MsgEthereumTx', covered:EVM_TYPES.includes('/os.evm.v1.MsgEthereumTx') },
-    classifications: database.prepare("SELECT address,tag,label FROM watchlist_tag WHERE tag IN ('suspected_sink','systemic_counterparty') ORDER BY tag,address").all() as {address:string;tag:string;label:string|null}[],
+    evm: (() => {
+      // Report what the chain actually emits rather than a pinned string: the
+      // EVM module moved to cosmos/evm, and observed counts settle the question.
+      const actualType = [...observed].sort((a,b) => b.count-a.count)[0]?.type ?? '/cosmos.evm.vm.v1.MsgEthereumTx';
+      return { supportedTypes:[...EVM_TYPES], observedTypes:observed, actualType, covered:(EVM_TYPES as readonly string[]).includes(actualType) };
+    })(),
+    classifications: database.prepare("SELECT address,tag,label FROM watchlist_tag WHERE tag='suspected_sink' ORDER BY address").all() as {address:string;tag:string;label:string|null}[],
   };
 }
 
@@ -76,12 +81,13 @@ export function addressPage(options: {page:number;pageSize:number;q:string;sort:
     const stake=fold(amountsFor('stake_snapshot',row.address));
     const balances=fold(amountsFor('balance_snapshot',row.address));
     const last = row.last_height == null ? null : database.prepare('SELECT block_time FROM activity_message WHERE height=? ORDER BY tx_hash DESC,msg_index DESC LIMIT 1').get(row.last_height) as any;
-    return {address:row.address,tags:(row.tags??'compromised').split(','),validators:row.validators,stake,balances,unbonding:row.unbonding,lastActivityHeight:row.last_height,lastActivityAt:last?.block_time??null,activityCount:row.activity_count,primaryAmount:stake.find((item)=>item.denom===options.denom)?.amount??'0'};
+    return {address:row.address,tags:(row.tags??'compromised').split(','),validators:row.validators,stake,balances,unbonding:row.unbonding,lastActivityHeight:row.last_height,lastActivityAt:last?.block_time??null,activityCount:row.activity_count,primaryAmount:stake.find((item)=>item.denom===options.denom)?.amount??'0',primaryBalance:balances.find((item)=>item.denom===options.denom)?.amount??'0'};
   });
   mapped.sort((a,b)=> {
     if(options.sort==='address') return a.address.localeCompare(b.address);
     if(options.sort==='validators') return b.validators-a.validators || compareAmount(b.primaryAmount,a.primaryAmount) || a.address.localeCompare(b.address);
     if(options.sort==='activity') return (b.lastActivityHeight??-1)-(a.lastActivityHeight??-1) || a.address.localeCompare(b.address);
+    if(options.sort==='balance'||options.sort==='balance_asc') return compareAmount(options.sort==='balance_asc'?a.primaryBalance:b.primaryBalance,options.sort==='balance_asc'?b.primaryBalance:a.primaryBalance) || a.address.localeCompare(b.address);
     return compareAmount(options.sort==='stake_asc'?a.primaryAmount:b.primaryAmount,options.sort==='stake_asc'?b.primaryAmount:a.primaryAmount) || a.address.localeCompare(b.address);
   });
   const total=mapped.length; const page=Math.max(1,options.page); const start=(page-1)*options.pageSize;

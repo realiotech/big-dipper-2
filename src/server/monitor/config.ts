@@ -38,7 +38,8 @@ export const EVM_TYPES = [
 export const DENOMS: Record<string, { symbol: string; exponent: number }> = {
   ario: { symbol: 'RIO', exponent: 18 },
   arst: { symbol: 'RST', exponent: 18 },
-  almx: { symbol: 'ALMX', exponent: 18 },
+  almx: { symbol: 'LMX', exponent: 18 },
+  'erc20:0xb841F365D5221Bed66d60E69094418D8C2aa5A44': { symbol: 'DSTRX', exponent: 18 },
 };
 export const ACCOUNT_URL = (address: string) => `/accounts/${address}`;
 export const TX_URL = (hash: string) => `/transactions/${hash}`;

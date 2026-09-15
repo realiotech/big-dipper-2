@@ -5,8 +5,9 @@ import { randomUUID } from 'node:crypto';
 import { DB_FILE, LOCK_TTL_MS, WATCHLIST_FILE } from './config';
 
 export const SUSPECTED_SINK = 'realio1uzkdrfnjv53rt0cf4ltszffpd7mvkpd2cv794j';
-export const SYSTEMIC_COUNTERPARTY = 'realio17xpfvakm2amg962yls6f84z3kell8c5lev82h8';
-const SCHEMA_VERSION = 2;
+/** Retired classification: kept only so v3 can remove it from existing stores. */
+const RETIRED_SYSTEMIC_COUNTERPARTY = 'realio17xpfvakm2amg962yls6f84z3kell8c5lev82h8';
+const SCHEMA_VERSION = 3;
 let singleton: Database.Database | null = null;
 
 const SCHEMA = `
@@ -92,6 +93,12 @@ export function migrate(database: Database.Database): void {
     database.exec('DROP INDEX IF EXISTS stake_snapshot_validator');
     database.pragma('user_version = 2');
   })();
+  if (version < 3) database.transaction(() => {
+    // The systemic-counterparty classification was never a drain receiver and
+    // only invited misreading; its tag cascades with the watchlist row.
+    database.prepare('DELETE FROM watchlist WHERE address=?').run(RETIRED_SYSTEMIC_COUNTERPARTY);
+    database.pragma('user_version = 3');
+  })();
 }
 
 export function openMonitorDatabase(file = DB_FILE): Database.Database {
@@ -118,9 +125,9 @@ export function importWatchlist(database = monitorDb()): number {
     "SELECT COUNT(*) count FROM watchlist_tag WHERE tag='compromised'"
   ).get() as { count: number };
   const hasLabels = database.prepare(
-    "SELECT COUNT(*) count FROM watchlist_tag WHERE (address=? AND tag='suspected_sink') OR (address=? AND tag='systemic_counterparty')"
-  ).get(SUSPECTED_SINK, SYSTEMIC_COUNTERPARTY) as { count: number };
-  if (existing.count === addresses.length && hasLabels.count === 2) return addresses.length;
+    "SELECT COUNT(*) count FROM watchlist_tag WHERE address=? AND tag='suspected_sink'"
+  ).get(SUSPECTED_SINK) as { count: number };
+  if (existing.count === addresses.length && hasLabels.count === 1) return addresses.length;
   const now = new Date().toISOString();
   const addAddress = database.prepare('INSERT OR IGNORE INTO watchlist(address,added_at,source) VALUES(?,?,?)');
   const addTag = database.prepare('INSERT OR IGNORE INTO watchlist_tag(address,tag,label,notes) VALUES(?,?,?,?)');
@@ -129,9 +136,8 @@ export function importWatchlist(database = monitorDb()): number {
       addAddress.run(address, now, path.basename(WATCHLIST_FILE));
       addTag.run(address, 'compromised', 'Compromised source list', null);
     });
-    [SUSPECTED_SINK, SYSTEMIC_COUNTERPARTY].forEach((address) => addAddress.run(address, now, 'incident-analysis-v2'));
+    addAddress.run(SUSPECTED_SINK, now, 'incident-analysis-v2');
     addTag.run(SUSPECTED_SINK, 'suspected_sink', 'Dominant incident receiver', 'Payload-derived label; attribution is unconfirmed.');
-    addTag.run(SYSTEMIC_COUNTERPARTY, 'systemic_counterparty', 'Systemic counterparty', 'Not a payload-derived drain receiver.');
   })();
   return addresses.length;
 }

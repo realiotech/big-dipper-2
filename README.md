@@ -69,5 +69,4 @@ backoff. The export endpoint is the narrow, authenticated
 
 Address classifications are independent tags. The original 33,606 entries
 remain `compromised`; the payload-derived dominant receiver is additionally
-`suspected_sink`, while the previously misidentified address is
-`systemic_counterparty`. Neither behavioral label claims ownership or intent.
+`suspected_sink`. That label is behavioral and claims no ownership or intent.

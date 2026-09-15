@@ -3,7 +3,8 @@ type DenomMeta = { symbol: string; exponent: number };
 const DENOMS: Record<string, DenomMeta> = {
   ario: { symbol: 'RIO', exponent: 18 },
   arst: { symbol: 'RST', exponent: 18 },
-  almx: { symbol: 'ALMX', exponent: 18 },
+  almx: { symbol: 'LMX', exponent: 18 },
+  'erc20:0xb841F365D5221Bed66d60E69094418D8C2aa5A44': { symbol: 'DSTRX', exponent: 18 },
 };
 
 // Bridged denominations carry no registry entry, so their precision comes from
