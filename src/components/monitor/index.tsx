@@ -1,5 +1,6 @@
-import React from 'react';
+import React, { useCallback, useEffect, useState } from 'react';
 import NextLink from 'next/link';
+import { useRouter } from 'next/router';
 import {
   Box,
   Button,
@@ -12,6 +13,7 @@ import {
   Text,
 } from '@chakra-ui/react';
 import { Status } from '@/components/ui/status';
+import Pagination from '@/components/layout/pagination';
 import type {
   DenomAmount,
   MonitorActivity,
@@ -67,49 +69,29 @@ const Amounts = ({ rows }: { rows: { denom: string; amount: string }[] }) => (
   </>
 );
 
-const Pager = ({
+const PageBar = ({
+  total,
+  pageSize,
   page,
-  pages,
-  filters,
-  keyName,
+  onPage,
 }: {
+  total: number;
+  pageSize: number;
   page: number;
-  pages: number;
-  filters: Record<string, string>;
-  keyName: string;
-}) => (
-  <Flex justify="center" gap="4" pt="5" align="center">
-    <Button
-      asChild={page > 1}
-      disabled={page <= 1}
-      size="sm"
-      variant="outline"
-    >
-      {page > 1 ? (
-        <NextLink href={params(filters, { [keyName]: page - 1 })}>
-          Previous
-        </NextLink>
-      ) : (
-        'Previous'
-      )}
-    </Button>
-    <Text fontSize="sm" color={mutedColor}>
-      Page {page} of {Math.max(1, pages)}
-    </Text>
-    <Button
-      asChild={page < pages}
-      disabled={page >= pages}
-      size="sm"
-      variant="outline"
-    >
-      {page < pages ? (
-        <NextLink href={params(filters, { [keyName]: page + 1 })}>Next</NextLink>
-      ) : (
-        'Next'
-      )}
-    </Button>
-  </Flex>
-);
+  onPage: (next: number) => void;
+}) =>
+  (total <= pageSize ? null : (
+    <Flex justify="center" pt="5">
+      <Pagination
+        page={page}
+        pageInfo={{ count: total, pageSize, currentPage: page }}
+        // The bundled Chakra typings lose zag's page field; the runtime detail
+        // object always carries it.
+        pageChangeFunc={(details) => onPage((details as unknown as { page: number }).page)}
+        pageSizeChangeFunc={() => {}}
+      />
+    </Flex>
+  ));
 
 const Section = ({
   title,
@@ -380,6 +362,33 @@ export default function Monitor({
   activity,
   filters = {},
 }: MonitorProps) {
+  const router = useRouter();
+  const [pending, setPending] = useState(false);
+  const [query, setQuery] = useState(filters.q ?? '');
+
+  useEffect(() => setQuery(filters.q ?? ''), [filters.q]);
+
+  // Client-side navigation re-runs getServerSideProps and swaps the props in
+  // place; only the route events tell us when that round trip is in flight.
+  useEffect(() => {
+    const start = () => setPending(true);
+    const done = () => setPending(false);
+    router.events.on('routeChangeStart', start);
+    router.events.on('routeChangeComplete', done);
+    router.events.on('routeChangeError', done);
+    return () => {
+      router.events.off('routeChangeStart', start);
+      router.events.off('routeChangeComplete', done);
+      router.events.off('routeChangeError', done);
+    };
+  }, [router]);
+
+  const go = useCallback(
+    (patch: Record<string, string | number>) =>
+      router.push(params(filters, patch), undefined, { scroll: false }),
+    [router, filters]
+  );
+
   if (unauthorized || !summary || !addresses || !activity) {
     return (
       <Box bg={panelBg} borderRadius="20px" p={{ base: '5', md: '8' }}>
@@ -500,12 +509,18 @@ export default function Monitor({
             </>
           }
         >
-          <form method="get">
+          <form
+            onSubmit={(event) => {
+              event.preventDefault();
+              go({ q: query, sPage: 1 });
+            }}
+          >
             <Flex gap="3" wrap="wrap" mb="5">
               <Input
                 aria-label="Search address"
                 name="q"
-                defaultValue={filters.q}
+                value={query}
+                onChange={(event) => setQuery(event.target.value)}
                 placeholder="Search address"
                 bg={fieldBg}
                 borderRadius="full"
@@ -515,7 +530,8 @@ export default function Monitor({
                 <NativeSelect.Field
                   aria-label="Sort addresses"
                   name="sort"
-                  defaultValue={filters.sort || 'stake'}
+                  value={filters.sort || 'stake'}
+                  onChange={(event) => go({ sort: event.target.value, sPage: 1 })}
                   bg={fieldBg}
                   borderRadius="full"
                   px="4"
@@ -536,13 +552,19 @@ export default function Monitor({
                 color="white"
                 border={{ base: 'none', _dark: '1px solid white' }}
                 _hover={{ opacity: 0.9 }}
+                disabled={pending}
               >
-                Apply
+                Search
               </Button>
             </Flex>
           </form>
 
-          <Table.ScrollArea border="none" borderRadius="10px">
+          <Table.ScrollArea
+            border="none"
+            borderRadius="10px"
+            opacity={pending ? 0.55 : 1}
+            transition="opacity 0.15s"
+          >
             <Table.Root color={{ base: 'black', _dark: 'white' }} size="sm">
               <Table.Header>
                 <Table.Row {...tableHeaderProps}>
@@ -590,11 +612,11 @@ export default function Monitor({
               </Table.Body>
             </Table.Root>
           </Table.ScrollArea>
-          <Pager
+          <PageBar
+            total={addresses.total}
+            pageSize={addresses.pageSize}
             page={addresses.page}
-            pages={addresses.pages}
-            filters={filters}
-            keyName="sPage"
+            onPage={(next) => go({ sPage: next })}
           />
         </Section>
       </Box>
@@ -604,89 +626,87 @@ export default function Monitor({
           title="Activity"
           summary={`${activity.total.toLocaleString()} matches · one row per watched wallet in a message`}
         >
-          <form method="get">
-            <Flex gap="3" wrap="wrap" mb="5">
-              <NativeSelect.Root w={{ base: 'full', md: '220px' }}>
-                <NativeSelect.Field
-                  aria-label="Message type"
-                  name="type"
-                  defaultValue={filters.type || ''}
-                  bg={fieldBg}
-                  borderRadius="full"
-                  px="4"
-                >
-                  <option value="">All message types</option>
-                  {activity.types.map((type) => (
-                    <option key={type} value={type}>
-                      {messageLabel(type)}
-                    </option>
-                  ))}
-                </NativeSelect.Field>
-                <NativeSelect.Indicator />
-              </NativeSelect.Root>
-              <NativeSelect.Root w={{ base: 'full', md: '180px' }}>
-                <NativeSelect.Field
-                  aria-label="Direction"
-                  name="direction"
-                  defaultValue={filters.direction || ''}
-                  bg={fieldBg}
-                  borderRadius="full"
-                  px="4"
-                >
-                  <option value="">All directions</option>
-                  <option value="incoming">Incoming</option>
-                  <option value="outgoing">Outgoing</option>
-                  <option value="self">Self</option>
-                  <option value="involved">Involved</option>
-                </NativeSelect.Field>
-                <NativeSelect.Indicator />
-              </NativeSelect.Root>
-              <NativeSelect.Root w={{ base: 'full', md: '160px' }}>
-                <NativeSelect.Field
-                  aria-label="Result"
-                  name="success"
-                  defaultValue={filters.success || ''}
-                  bg={fieldBg}
-                  borderRadius="full"
-                  px="4"
-                >
-                  <option value="">All results</option>
-                  <option value="success">Success</option>
-                  <option value="failed">Failed</option>
-                  <option value="unknown">Unknown</option>
-                </NativeSelect.Field>
-                <NativeSelect.Indicator />
-              </NativeSelect.Root>
-              <Flex
-                as="label"
-                align="center"
-                gap="2"
-                px="3"
-                minH="10"
-                fontSize="sm"
-                color={mutedColor}
+          <Flex gap="3" wrap="wrap" mb="5">
+            <NativeSelect.Root w={{ base: 'full', md: '220px' }}>
+              <NativeSelect.Field
+                aria-label="Message type"
+                name="type"
+                value={filters.type || ''}
+                onChange={(event) => go({ type: event.target.value, aPage: 1 })}
+                bg={fieldBg}
+                borderRadius="full"
+                px="4"
               >
-                <input
-                  type="checkbox"
-                  name="sinceRestart"
-                  value="1"
-                  defaultChecked={filters.sinceRestart === '1'}
-                />
-                Since restart
-              </Flex>
-              <Button
-                type="submit"
-                bg={actionBg}
-                color="white"
-                border={{ base: 'none', _dark: '1px solid white' }}
-                _hover={{ opacity: 0.9 }}
+                <option value="">All message types</option>
+                {activity.types.map((type) => (
+                  <option key={type} value={type}>
+                    {messageLabel(type)}
+                  </option>
+                ))}
+              </NativeSelect.Field>
+              <NativeSelect.Indicator />
+            </NativeSelect.Root>
+            <NativeSelect.Root w={{ base: 'full', md: '180px' }}>
+              <NativeSelect.Field
+                aria-label="Direction"
+                name="direction"
+                value={filters.direction || ''}
+                onChange={(event) => go({ direction: event.target.value, aPage: 1 })}
+                bg={fieldBg}
+                borderRadius="full"
+                px="4"
               >
-                Apply
-              </Button>
+                <option value="">All directions</option>
+                <option value="incoming">Incoming</option>
+                <option value="outgoing">Outgoing</option>
+                <option value="self">Self</option>
+                <option value="involved">Involved</option>
+              </NativeSelect.Field>
+              <NativeSelect.Indicator />
+            </NativeSelect.Root>
+            <NativeSelect.Root w={{ base: 'full', md: '160px' }}>
+              <NativeSelect.Field
+                aria-label="Result"
+                name="success"
+                value={filters.success || ''}
+                onChange={(event) => go({ success: event.target.value, aPage: 1 })}
+                bg={fieldBg}
+                borderRadius="full"
+                px="4"
+              >
+                <option value="">All results</option>
+                <option value="success">Success</option>
+                <option value="failed">Failed</option>
+                <option value="unknown">Unknown</option>
+              </NativeSelect.Field>
+              <NativeSelect.Indicator />
+            </NativeSelect.Root>
+            <Flex
+              as="label"
+              align="center"
+              gap="2"
+              px="3"
+              minH="10"
+              fontSize="sm"
+              color={mutedColor}
+            >
+              <input
+                type="checkbox"
+                name="sinceRestart"
+                value="1"
+                checked={filters.sinceRestart === '1'}
+                onChange={(event) => go({ sinceRestart: event.target.checked ? '1' : '', aPage: 1 })}
+              />
+              Since restart
             </Flex>
-          </form>
+          </Flex>
 
-          <Table.ScrollArea border="none" borderRadius="10px">
+          <Table.ScrollArea
+            border="none"
+            borderRadius="10px"
+            opacity={pending ? 0.55 : 1}
+            transition="opacity 0.15s"
+          >
             <Table.Root color={{ base: 'black', _dark: 'white' }} size="sm">
               <Table.Header>
                 <Table.Row {...tableHeaderProps}>
@@ -778,11 +798,11 @@ export default function Monitor({
               </Table.Body>
             </Table.Root>
           </Table.ScrollArea>
-          <Pager
+          <PageBar
+            total={activity.total}
+            pageSize={activity.pageSize}
             page={activity.page}
-            pages={activity.pages}
-            filters={filters}
-            keyName="aPage"
+            onPage={(next) => go({ aPage: next })}
           />
         </Section>
       </Box>
