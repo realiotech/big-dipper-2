@@ -12,9 +12,10 @@ process.on('SIGINT', () => { stopped = true; });
 process.on('SIGTERM', () => { stopped = true; });
 
 async function run() {
-  const [{ importWatchlist }, { tailActivity }, { sweepStake }, { deliverAlerts }] = await Promise.all([
+  const [{ importWatchlist }, { tailActivity }, { sweepStake }, { deliverAlerts }, { pruneSnapshots }] = await Promise.all([
     import('../src/server/monitor/db'), import('../src/server/monitor/tail'),
     import('../src/server/monitor/sweep'), import('../src/server/monitor/alerts'),
+    import('../src/server/monitor/retention'),
   ]);
   const count = importWatchlist();
   console.log(`monitor watchlist: ${count} compromised addresses`);
@@ -24,6 +25,10 @@ async function run() {
       if (Date.now() - lastSweep >= sweepEvery || once) {
         const sweep = await sweepStake(); lastSweep = Date.now();
         console.log(`monitor stake: snapshot ${sweep.snapshotId}, ${sweep.addresses} addresses, head ${sweep.headHeight}`);
+        // Each sweep rewrites every staking row, so retire superseded ones
+        // before the next one lands. Activity evidence is never pruned.
+        const pruned = pruneSnapshots();
+        if (pruned.removedSnapshots || pruned.removedAlerts) console.log(`monitor prune: ${pruned.removedSnapshots} snapshots, ${pruned.removedRows} rows, ${pruned.removedAlerts} alerts removed`);
       }
       const tail = await tailActivity();
       console.log(`monitor activity: ${tail.scanned} scanned, ${tail.matches} matches, verified ${tail.verifiedThrough}`);

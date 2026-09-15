@@ -8,6 +8,7 @@ import { acquireLease, migrate, openMonitorDatabase } from './db';
 import { assertOrdered } from './tail';
 import { authorized } from './auth';
 import { overview } from './queries';
+import { pruneSnapshots } from './retention';
 
 const source='realio1s3n5vzt0ynwyrl48ph5fp43fgt6edsccj65nln';
 const target='realio10vzxfu5q4l6yk7nvtm9l2mp0w7sd062chay5f0';
@@ -74,6 +75,25 @@ describe('wallet monitor correctness',()=>{
         {denom:'ario',amount:'3000000000000000001'},
       ]);
       expect(data.balanceByDenom).toEqual([{denom:'arst',amount:'4'},{denom:'ario',amount:'3'}]);
+    }finally{db.close();fs.rmSync(dir,{recursive:true,force:true});}
+  });
+
+  test('prunes superseded snapshots while keeping activity evidence',()=>{
+    const dir=fs.mkdtempSync(path.join(os.tmpdir(),'realio-monitor-prune-')); const file=path.join(dir,'db.sqlite');
+    const db=openMonitorDatabase(file);
+    try{
+      const snapshot=db.prepare("INSERT INTO snapshot(id,started_at,finished_at,captured_head_height,status) VALUES(?,'t','t',100,'ok')");
+      const stake=db.prepare('INSERT INTO stake_snapshot VALUES(?,?,?,?,?,100)');
+      const balance=db.prepare('INSERT INTO balance_snapshot VALUES(?,?,?,?,100)');
+      [1,2,3,4,5].forEach((id)=>{snapshot.run(id);stake.run(id,source,'realiovaloper1a','ario','1');balance.run(id,source,'ario','1');});
+      db.prepare("INSERT INTO activity_message VALUES(10,'A',0,'x','[]','[]','[]',1,'{}',NULL,'now')").run();
+      db.prepare("INSERT INTO alert_outbox(dedupe_key,height,tx_hash,msg_index,address,payload,state,created_at,delivered_at) VALUES('k',10,'A',0,?,'{}','delivered','t',datetime('now','-60 days'))").run(source);
+      const result=pruneSnapshots({keep:2,alertDays:30,database:db});
+      expect(result).toMatchObject({removedSnapshots:3,removedRows:6,removedAlerts:1,keptFrom:4});
+      expect((db.prepare('SELECT COUNT(*) n FROM snapshot').get() as any).n).toBe(2);
+      expect((db.prepare('SELECT MIN(snapshot_id) n FROM stake_snapshot').get() as any).n).toBe(4);
+      expect((db.prepare('SELECT COUNT(*) n FROM activity_message').get() as any).n).toBe(1);
+      expect(pruneSnapshots({keep:2,alertDays:30,database:db}).removedSnapshots).toBe(0);
     }finally{db.close();fs.rmSync(dir,{recursive:true,force:true});}
   });
 
