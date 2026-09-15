@@ -7,7 +7,6 @@ import {
 import { chainConfig } from '@/configs';
 import numeral from 'numeral';
 import { formatTokenByExponent } from '@/utils';
-import Big from 'big.js';
 
 export const useDataStaking = () => {
   const [stakingState, setState] = useState<{
@@ -63,20 +62,23 @@ export const useDataStaking = () => {
   };
 
   useEffect(() => {
-    fetch(`${process.env.NEXT_PUBLIC_RPC_API}/realionetwork/mint/v1/annual_provisions`)
-      .then(res => res.json())
-      .then(ap => {
-        fetch(`${process.env.NEXT_PUBLIC_RPC_API}/cosmos/staking/v1beta1/pool`)
-          .then(res => res.json())
-          .then(bp => {
-            const annualProvisions = new Big(ap.annual_provisions)
-            const bondedPool = new Big(bp.pool.bonded_tokens)
-            setState((prevState) => ({
-              ...prevState,
-              apr: annualProvisions.div(bondedPool).times(100).toFixed(3),
-            }))
-          }).catch(e => console.log(e))
-      }).catch(e => console.log(e))
+    const controller = new AbortController();
+
+    fetch('/api/staking-apr', { signal: controller.signal })
+      .then((response) => {
+        if (!response.ok) throw new Error(`APR API returned ${response.status}`);
+        return response.json() as Promise<{ apr: string }>;
+      })
+      .then(({ apr }) => {
+        setState((prevState) => ({ ...prevState, apr }));
+      })
+      .catch((error) => {
+        if (error instanceof Error && error.name !== 'AbortError') {
+          console.error('Unable to load staking APR:', error);
+        }
+      });
+
+    return () => controller.abort();
   }, [])
 
   return {
