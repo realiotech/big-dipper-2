@@ -22,6 +22,8 @@ export default function PageHeader() {
         return 'Proposals';
       case '/params':
         return 'Parameters';
+      case '/monitor':
+        return 'Wallet Monitor';
       default:
         if (pathname.startsWith('/blocks/')) return 'Block Details';
         if (pathname.startsWith('/validators/')) return 'Validator Details';

@@ -11,6 +11,7 @@ import { useRouter } from "next/router";
 import { useColorMode } from "../ui/color-mode";
 import { Switch } from "@/components/ui/switch";
 import { MdDarkMode, MdLightMode } from "react-icons/md";
+import { MdOutlineSecurity } from "react-icons/md";
 
 export default function Sidebar() {
   const { pathname } = useRouter();
@@ -54,6 +55,11 @@ export default function Sidebar() {
             href="/proposals"
             selected={pathname.includes("proposals")}
             children={<Proposal />}
+          />
+          <NavLink
+            href="/monitor"
+            selected={pathname.includes("monitor")}
+            children={<MdOutlineSecurity />}
           />
           <Switch
             theme="light"

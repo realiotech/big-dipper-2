@@ -26,3 +26,42 @@ Do not create branches from stage or other branches.
 Pull requests should target the integration branch for testing `(chains/realio-testnet)`.
 
 The `chains/realio` branch is the default and canonical branch of this repository.
+
+## Compromised-wallet monitor
+
+The internal monitor is available at `/monitor`. It is server-rendered and reads
+from a local SQLite database; the 33,606-address source file and Hasura admin
+secret are never bundled into the browser. Set both `MONITOR_BASIC_AUTH_USER`
+and `MONITOR_BASIC_AUTH_PASSWORD` to protect the page and CSV endpoint with
+HTTP Basic Auth. Production fails closed when neither value is set; set
+`MONITOR_PUBLIC=true` only when publishing the address-level monitor is an
+explicit decision. Authentication remains disabled by default in local development.
+
+Initialize and run one full cycle:
+
+```sh
+npm run monitor:migrate
+npm run monitor:once
+```
+
+For a long-running single-host worker use `npm run monitor:worker`. It takes a
+SQLite lease before each job, snapshots staking state, tails messages with the
+total-order cursor `(height, transaction_hash, index)`, records a captured head
+and verified-through watermark, and overlaps completed activity scans by 100
+blocks. Run only one worker against a persistent volume. SQLite is not suitable
+for multiple stateless replicas; migrate the store to Postgres before scaling
+the worker horizontally.
+
+The staking tables exposed by the indexer are mutable current-state views, so
+the captured head is an operational freshness marker rather than a historical
+`as-of` guarantee across the whole multi-request sweep.
+
+Set `MONITOR_WEBHOOK_URL` to deliver deduplicated post-restart compromised-wallet
+activity. Failed deliveries remain in the outbox and retry with exponential
+backoff. The export endpoint is the narrow, authenticated
+`/api/monitor/export`; there is deliberately no general Hasura proxy.
+
+Address classifications are independent tags. The original 33,606 entries
+remain `compromised`; the payload-derived dominant receiver is additionally
+`suspected_sink`, while the previously misidentified address is
+`systemic_counterparty`. Neither behavioral label claims ownership or intent.

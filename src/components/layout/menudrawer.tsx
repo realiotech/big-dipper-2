@@ -20,6 +20,7 @@ import { Proposal } from "../icons/proposal";
 import { useColorMode } from "../ui/color-mode";
 import { Switch } from "@/components/ui/switch";
 import { MdDarkMode, MdLightMode } from "react-icons/md";
+import { MdOutlineSecurity } from "react-icons/md";
 
 export default function MenuDrawer() {
   const menuItems = [
@@ -28,6 +29,7 @@ export default function MenuDrawer() {
     { label: "Validators", href: "/validators", image: <Stake /> },
     { label: "Transactions", href: "/transactions", image: <Transaction /> },
     { label: "Proposals", href: "/proposals", image: <Proposal /> },
+    { label: "Wallet Monitor", href: "/monitor", image: <MdOutlineSecurity /> },
   ];
   const { colorMode, toggleColorMode } = useColorMode();
 
