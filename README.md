@@ -52,6 +52,12 @@ blocks. Run only one worker against a persistent volume. SQLite is not suitable
 for multiple stateless replicas; migrate the store to Postgres before scaling
 the worker horizontally.
 
+Every sweep rewrites the full staking picture, so the worker retires superseded
+snapshots after each one; `MONITOR_SNAPSHOT_RETENTION` (default 96, about a day
+at the standard interval) sets how many are kept. Run it by hand with
+`npm run monitor:prune -- --keep=96 --vacuum`. Activity messages and matches are
+never pruned. See `DEPLOY.md` for the full deployment runbook.
+
 The staking tables exposed by the indexer are mutable current-state views, so
 the captured head is an operational freshness marker rather than a historical
 `as-of` guarantee across the whole multi-request sweep.
