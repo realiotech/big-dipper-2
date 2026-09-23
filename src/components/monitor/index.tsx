@@ -407,6 +407,16 @@ export default function Monitor({
       ? null
       : summary.stakers - summary.previousStakers;
 
+  // Stake and balance sorting rank one token at a time, so the picker offers
+  // whichever tokens the latest snapshot actually holds.
+  const sortDenoms = [
+    ...new Set([
+      ...summary.stakeByDenom.map((row) => row.denom),
+      ...summary.balanceByDenom.map((row) => row.denom),
+    ]),
+  ];
+  const sortDenom = filters.denom || 'ario';
+
   return (
     <Box pb="10">
       <Flex
@@ -546,6 +556,26 @@ export default function Monitor({
                 </NativeSelect.Field>
                 <NativeSelect.Indicator />
               </NativeSelect.Root>
+              {sortDenoms.length > 1 ? (
+                <NativeSelect.Root w={{ base: 'full', md: '140px' }}>
+                  <NativeSelect.Field
+                    aria-label="Token to sort by"
+                    name="denom"
+                    value={sortDenom}
+                    onChange={(event) => go({ denom: event.target.value, sPage: 1 })}
+                    bg={fieldBg}
+                    borderRadius="full"
+                    px="4"
+                  >
+                    {sortDenoms.map((denom) => (
+                      <option key={denom} value={denom} title={denom}>
+                        {denomSymbol(denom)}
+                      </option>
+                    ))}
+                  </NativeSelect.Field>
+                  <NativeSelect.Indicator />
+                </NativeSelect.Root>
+              ) : null}
               <Button
                 type="submit"
                 bg={actionBg}
