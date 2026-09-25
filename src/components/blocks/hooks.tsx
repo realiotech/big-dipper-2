@@ -1,276 +1,139 @@
-import * as R from 'ramda';
-import { useCallback, useState, useEffect } from 'react';
-import {
-  BlocksListenerSubscription,
-  useBlocksListenerSubscription,
-  useBlocksQuery,
-  BlockDetailsQuery, useBlockDetailsQuery,
-} from '@/graphql/types/general_types';
+import { useEffect, useMemo, useState } from 'react';
 import { useRouter } from 'next/router';
-import type { BlocksState, BlockType, BlockDetailState } from './types';
 import numeral from 'numeral';
-import { convertMsgsToModels } from '@/components/msg/utils';
-import { convertMsgType } from '@/utils/convert_msg_type';
-import { PageInfo } from "../layout/pagination";
+import {
+  BlocksByHeightQuery,
+  BlockDetailsQuery,
+  useBlockDetailsQuery,
+  useBlocksByHeightQuery,
+  useLatestBlocksListenerSubscription,
+  useOldestBlocksQuery,
+} from '@/graphql/types/general_types';
+import { usePageParam } from '@/components/explorer/pager';
+import { formatTokenByExponent } from '@/utils';
+import { txLabel } from '@/utils/tx_label';
+import type { BlockType, BlockDetailState, BlockTransaction } from './types';
 
-const MAX_BLOCKS = 500 * 20
-const PAGE_SIZE = 20
+export const PAGE_SIZE = 25;
+// Upper bound for "the newest blocks" before the latest height is known.
+const NEWEST = '9223372036854775807';
 
-// This is a bandaid as it can get extremely
-// expensive if there is too much data
+const formatBlocks = (data?: BlocksByHeightQuery): BlockType[] =>
+  data?.blocks.map((x) => ({
+    height: Number(x.height),
+    txs: x.txs ?? 0,
+    hash: x.hash,
+    timestamp: x.timestamp,
+    gasUsed: Number(x.totalGas ?? 0),
+    proposer: x?.validator?.validatorInfo?.operatorAddress ?? '',
+  })) ?? [];
+
 /**
- * Helps remove any possible duplication
- * and sorts by height in case it bugs out
+ * Blocks are paged by height rather than offset: the indexer holds every
+ * height from its oldest block on, so page N starts at
+ * `anchor - (N - 1) * PAGE_SIZE`. That stays fast on the last page, where an
+ * offset scan over millions of rows would not. The anchor is the newest height
+ * seen, frozen while browsing older pages so rows do not shift as blocks arrive.
  */
-const uniqueAndSort = R.pipe(
-  R.uniqBy((r: BlockType) => r?.height),
-  R.sort(R.descend((r) => r?.height))
-);
-
-const formatBlocks = (data: BlocksListenerSubscription): BlockType[] => {
-  let formattedData = data.blocks;
-  if (data.blocks.length === 51) {
-    formattedData = data.blocks.slice(0, 51);
-  }
-  return (
-    formattedData?.map((x) => {
-      const proposerAddress = x?.validator?.validatorInfo?.operatorAddress ?? '';
-      return {
-        height: x.height,
-        txs: x.txs ?? 0,
-        hash: x.hash,
-        timestamp: x.timestamp,
-        proposer: proposerAddress,
-      };
-    }) ?? []
-  );
-};
-
 export const useBlocks = () => {
-  const [state, setState] = useState<BlocksState>({
-    loading: true,
-    exists: true,
-    items: [],
-    hasNextPage: false,
-    isNextPageLoading: true,
-    oldestHeight: null,
-  });
-  const [pageInfo, SetPageInfo] = useState<PageInfo>({
-    count: MAX_BLOCKS,
-    pageSize: 20,
-    currentPage: 1,
-  })
+  const { page, setPage } = usePageParam();
+  const [live, setLive] = useState<BlockType[]>([]);
+  const [anchor, setAnchor] = useState<number | null>(null);
 
-  const handlePageChange = (e) => {
-    loadPage(e.page);
-    SetPageInfo({
-      ...pageInfo,
-      currentPage: e.page,
-    });
-  }
-
-  const handleSetState = useCallback((stateChange: (prevState: BlocksState) => BlocksState) => {
-    setState((prevState) => {
-      const newState = stateChange(prevState);
-      return R.equals(prevState, newState) ? prevState : newState;
-    });
-  }, []);
-
-  // ================================
-  // block subscription
-  // ================================
-  useBlocksListenerSubscription({
-    variables: {
-      limit: 1,
-      offset: 0,
-    },
-    onData: (data) => {
-      if (pageInfo.currentPage === 1) {
-        const newBlocks = data.data.data ? formatBlocks(data.data.data) : [];
-        const newItems = uniqueAndSort([...newBlocks, ...state.items]);
-  
-        handleSetState((prevState) => ({
-          ...prevState,
-          loading: false,
-          items: newItems.slice(0, PAGE_SIZE),
-        }));
-      }
-    },
+  useLatestBlocksListenerSubscription({
+    variables: { limit: PAGE_SIZE },
+    onData: ({ data }) => setLive(formatBlocks(data.data)),
   });
 
-  // ================================
-  // block query
-  // ================================
-  let blockQuery = useBlocksQuery({
-    variables: {
-      limit: PAGE_SIZE,
-      offset: 0,
-    },
-    onCompleted: (data) => {
-      const blocks = formatBlocks(data);
-      const oldestBlock = blocks[blocks.length - 1];
-      handleSetState((prevState) => ({
-        ...prevState,
-        loading: false,
-        items: uniqueAndSort([...blocks]),
-        hasNextPage: blocks.length === PAGE_SIZE,
-        isNextPageLoading: false,
-        oldestHeight: oldestBlock?.height ?? null,
-      }));
-    },
-    onError: () => {
-      handleSetState((prevState) => ({ ...prevState, loading: false }));
-    },
+  const maxHeight = page === 1 ? NEWEST : anchor === null ? null : String(anchor - (page - 1) * PAGE_SIZE);
+  const { data, loading } = useBlocksByHeightQuery({
+    variables: { maxHeight, limit: PAGE_SIZE },
+    skip: maxHeight === null,
   });
+  const queried = useMemo(() => formatBlocks(data), [data]);
 
-  const loadPage = (page: number) => {
-    handleSetState((prevState) => ({ ...prevState, loading: true, isNextPageLoading: true }));
+  const newest = live[0]?.height ?? (page === 1 ? queried[0]?.height : undefined);
+  useEffect(() => {
+    // Follow the chain on page 1; keep the anchor fixed on older pages.
+    if (newest && (page === 1 || anchor === null)) setAnchor(newest);
+  }, [newest, page, anchor]);
 
-    blockQuery.refetch({
-      limit: PAGE_SIZE,
-      offset: (page - 1) * PAGE_SIZE,
-    }).then(({ data }) => {
-      const blocks = formatBlocks(data);
-      const oldestBlock = blocks[blocks.length - 1];
-      handleSetState((prevState) => ({
-        ...prevState,
-        loading: false,
-        items: uniqueAndSort([...blocks]),
-        hasNextPage: blocks.length === PAGE_SIZE,
-        isNextPageLoading: false,
-        oldestHeight: oldestBlock?.height ?? null,
-      }));
-    });
-  };
+  // The indexer does not start at genesis, so count from its oldest block.
+  const { data: oldestData } = useOldestBlocksQuery({ variables: { limit: 1 } });
+  const oldest = Number(oldestData?.blocks[0]?.height ?? 0);
+
+  const items = page === 1 && live.length ? live : queried;
 
   return {
-    state,
-    loadPage,
-    pageInfo,
-    handlePageChange,
-    isItemLoaded: (index: number) =>
-      !state.hasNextPage || index < state.items.length,
+    items,
+    loading: items.length === 0 && (loading || maxHeight === null),
+    total: anchor && oldest ? anchor - oldest + 1 : 0,
+    page,
+    setPage,
   };
 };
+
+// ==========================
+// Block detail
+// ==========================
+const FEE_DENOM = 'ario';
+const FEE_DECIMALS = 18;
+
+const formatTransactions = (data: BlockDetailsQuery): BlockTransaction[] =>
+  data.transaction.map((x) => ({
+    hash: x.hash,
+    success: x.success,
+    label: txLabel(x.messages),
+    fee: (x.fee?.amount ?? [])
+      .filter((coin) => coin.denom === FEE_DENOM)
+      .reduce((sum, coin) => sum + parseFloat(formatTokenByExponent(coin.amount, FEE_DECIMALS)), 0),
+    gasUsed: Number(x.gasUsed ?? 0),
+    gasWanted: Number(x.gasWanted ?? 0),
+  }));
 
 export const useBlockDetails = () => {
   const router = useRouter();
+  const height = numeral(router.query.height).value() ?? 0;
   const [state, setState] = useState<BlockDetailState>({
     loading: true,
     exists: true,
-    overview: {
-      height: 0,
-      hash: '',
-      txs: 0,
-      timestamp: '',
-      proposer: '',
-    },
+    overview: { height: 0, hash: '', txs: 0, timestamp: '', proposer: '', gasUsed: 0 },
     signatures: [],
     transactions: [],
   });
 
-  const handleSetState = useCallback(
-    (stateChange: (prevState: BlockDetailState) => BlockDetailState) => {
-      setState((prevState) => {
-        const newState = stateChange(prevState);
-        return R.equals(prevState, newState) ? prevState : newState;
-      });
-    },
-    []
-  );
-
-  // ==========================
-  // Fetch Data
-  // ==========================
   useBlockDetailsQuery({
-    variables: {
-      height: numeral(router.query.height).value(),
-      signatureHeight: (numeral(router.query.height).value() ?? 0) + 1,
-    },
+    variables: { height, signatureHeight: height + 1 },
+    skip: !router.isReady,
     onCompleted: (data) => {
-      handleSetState((prevState) => ({ ...prevState, ...formatRaws(data) }));
+      const block = data.block[0];
+      if (!block) {
+        setState((prev) => ({ ...prev, loading: false, exists: false }));
+        return;
+      }
+      setState({
+        loading: false,
+        exists: true,
+        overview: {
+          height: Number(block.height),
+          hash: block.hash,
+          txs: block.txs ?? 0,
+          timestamp: block.timestamp,
+          proposer: block.validator?.validatorInfo?.operatorAddress ?? '',
+          gasUsed: Number(block.totalGas ?? 0),
+        },
+        signatures: data.preCommits
+          .map((x) => x?.validator?.validatorInfo?.operatorAddress)
+          .filter(Boolean) as string[],
+        transactions: formatTransactions(data),
+      });
     },
   });
 
   useEffect(() => {
-    // reset every call
-    handleSetState((prevState) => ({
-      ...prevState,
-      loading: true,
-      exists: true,
-    }));
-  }, [handleSetState]);
+    // Reset when moving to the previous or next block.
+    setState((prev) => ({ ...prev, loading: true, exists: true }));
+  }, [height]);
 
-  return {
-    state,
-  };
+  return { state, height };
 };
-
-// ==========================
-// Overview
-// ==========================
-const formatOverview = (data: BlockDetailsQuery) => {
-  const proposerAddress = data?.block?.[0]?.validator?.validatorInfo?.operatorAddress ?? '';
-  const overview = {
-    height: data.block[0].height,
-    hash: data.block[0].hash,
-    txs: data.block[0].txs ?? 0,
-    timestamp: data.block[0].timestamp,
-    proposer: proposerAddress,
-  };
-  return overview;
-};
-
-// ==========================
-// Signatures
-// ==========================
-const formatSignatures = (data: BlockDetailsQuery) => {
-  const signatures = data.preCommits
-    .filter((x) => x?.validator?.validatorInfo)
-    .map((x) => x?.validator?.validatorInfo?.operatorAddress ?? '');
-  return signatures;
-};
-
-// ==========================
-// Transactions
-// ==========================
-const formatTransactions = (data: BlockDetailsQuery, stateChange: Partial<BlockDetailState>) => {
-  const transactions = data.transaction.map((x) => {
-    const messages = convertMsgsToModels(x);
-    const msgType = messages.map((eachMsg) => {
-      const eachMsgType = eachMsg?.type ?? 'none type';
-      return eachMsgType ?? '';
-    });
-    const convertedMsgType = convertMsgType(msgType);
-    return {
-      type: convertedMsgType,
-      height: x.height,
-      hash: x.hash,
-      success: x.success,
-      timestamp: stateChange.overview?.timestamp ?? '',
-      messages: {
-        count: x.messages.length,
-        items: messages,
-      },
-    };
-  });
-
-  return transactions;
-};
-
-function formatRaws(data: BlockDetailsQuery) {
-  const stateChange: Partial<BlockDetailState> = {
-    loading: false,
-  };
-
-  if (!data.block.length) {
-    stateChange.exists = false;
-    return stateChange;
-  }
-
-  stateChange.overview = formatOverview(data);
-  stateChange.signatures = formatSignatures(data);
-  stateChange.transactions = formatTransactions(data, stateChange);
-
-  return stateChange;
-}

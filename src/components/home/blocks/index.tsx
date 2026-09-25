@@ -1,152 +1,52 @@
-import {
-  Flex,
-  GridItem,
-  Link as ChakraLink,
-  Text,
-  Table,
-  For,
-  Box,
-  VStack,
-  useBreakpointValue,
-} from "@chakra-ui/react";
-import { useBlocks } from "./hooks";
-import Link from "next/link";
-import { Skeleton } from "@/components/ui/skeleton";
+import { Box, Flex, Link as ChakraLink, Skeleton, Stack, Text } from "@chakra-ui/react";
+import NextLink from "next/link";
 import numeral from "numeral";
-import { getMiddleEllipsis } from "@/utils/get_middle_ellipsis";
-import dayjs from "@/utils/dayjs";
-import Proposer from "@/components/helper/proposer";
-import { useProfileRecoil } from "@/recoil/profiles/hooks";
+import { BLOCK_DETAILS } from "@/utils/go_to_page";
+import { Panel, PanelHeader } from "@/components/explorer/panel";
+import { ValidatorName } from "@/components/explorer/validator_name";
+import { timeAgo } from "@/components/explorer/format";
 import NoData from "@/components/helper/nodata";
-import Loading from "@/components/helper/loading";
-import HelpLink from "@/components/helper/help_link";
+import { useBlocks } from "./hooks";
 
-const BlockItemMobile = ({ item, rowIndex }) => {
-  const { name, address, imageUrl } = useProfileRecoil(item.proposer);
+const ROWS = 9;
 
-  return (
-    <Box p="5" w="full">
-      <VStack align="stretch">
-        <Flex gap={1} direction="column">
-          <Text>Height</Text>
-          <HelpLink
-            href={`/blocks/${item.height}`}
-            value={numeral(item.height).format("0,0")}
-          />
-        </Flex>
-        <Flex gap={1} direction="column">
-          <Text>Proposer</Text>
-          <Proposer address={address} image={imageUrl} name={name} />
-        </Flex>
-        <Flex gap={1} direction="column">
-          <Text>Hash</Text>
-          <Text>
-            {getMiddleEllipsis(item.hash, { beginning: 6, ending: 5 })}
-          </Text>
-        </Flex>
-        <Flex justify="space-between">
-          <Flex gap={1} direction="column">
-            <Text>Txs</Text>
-            <Text>{numeral(item.txs).format("0,0")}</Text>
-          </Flex>
-          <Flex gap={1} direction="column">
-            <Text>Time</Text>
-            <Text>{dayjs.utc(item.timestamp).fromNow()}</Text>
-          </Flex>
-        </Flex>
-      </VStack>
+const BlockRow = ({ item }) => (
+  <Flex align="center" gap="4" py="3" borderTopWidth="1px" borderColor="explorer.border" _first={{ borderTopWidth: 0 }}>
+    <Box w="96px" flexShrink={0}>
+      <ChakraLink asChild color="explorer.link" fontSize="sm">
+        <NextLink href={BLOCK_DETAILS(item.height)}>{numeral(item.height).format("0,0")}</NextLink>
+      </ChakraLink>
+      <Text fontSize="xs" color="explorer.muted">
+        {timeAgo(item.timestamp)}
+      </Text>
     </Box>
-  );
-};
-
-const BlockItem = ({ item }) => {
-  const { name, address, imageUrl } = useProfileRecoil(item.proposer);
-
-  return (
-    <Table.Row bg={{ base: "white", _dark: "#262626" }}>
-      <Table.Cell borderBottomColor={{base: 'gray.200', _dark: 'gray.700'}}>
-        <ChakraLink asChild colorPalette="blue">
-          <Link href={`/blocks/${item.height}`}>
-            {numeral(item.height).format("0,0")}
-          </Link>
-        </ChakraLink>
-      </Table.Cell>
-      <Table.Cell borderBottomColor={{base: 'gray.200', _dark: 'gray.700'}} h={"54px"}>
-        <Proposer address={address} image={imageUrl} name={name} />
-      </Table.Cell>
-      <Table.Cell borderBottomColor={{base: 'gray.200', _dark: 'gray.700'}}>
-        {getMiddleEllipsis(item.hash, { beginning: 6, ending: 5 })}
-      </Table.Cell>
-      <Table.Cell borderBottomColor={{base: 'gray.200', _dark: 'gray.700'}}>{numeral(item.txs).format("0,0")}</Table.Cell>
-      <Table.Cell borderBottomColor={{base: 'gray.200', _dark: 'gray.700'}}>{dayjs.utc(item.timestamp).fromNow()}</Table.Cell>
-    </Table.Row>
-  );
-};
+    <Box flex="1" minW="0">
+      <ValidatorName address={item.proposer} />
+    </Box>
+    <Text fontSize="sm" color="explorer.muted" whiteSpace="nowrap">
+      {numeral(item.txs).format("0,0")} txs
+    </Text>
+  </Flex>
+);
 
 const Blocks = () => {
-  const { state } = useBlocks();
-  const isMobile = useBreakpointValue({ base: true, md: false });
-
-  if (state.loading)
-    return (
-      <GridItem borderRadius="20px" bgColor={{ base: "#FAFBFC", _dark: "#0F0F0F" }} py="5" px="8" colSpan={2}>
-        <Loading />
-      </GridItem>
-    );
+  const { state } = useBlocks(ROWS);
 
   return (
-    <GridItem borderRadius="20px" bgColor={{ base: "#FAFBFC", _dark: "#0F0F0F" }} py="5" px="8" colSpan={2}>
-      <Flex w="full" justifyContent={"space-between"} pb="4">
-        <Text fontSize="24px" fontWeight={400}>
-          Latest Blocks
-        </Text>
-        <ChakraLink asChild colorPalette={"blue"}>
-          <Link href="/blocks">See more</Link>
-        </ChakraLink>
-      </Flex>
-      {state.items.length ? (
-        isMobile ? (
-          <VStack
-            divideY={"1px"}
-            divideStyle={"ridge"}
-            divideColor={{ base: "gray.200", _dark: "gray.700" }}
-            borderRadius="10px"
-            bg={{ base: "white", _dark: "#262626" }}
-            gap={0}
-            px={3}
-          >
-            {state.items.map((item, index) => (
-              <BlockItemMobile
-                key={`block-${index}`}
-                item={item}
-                rowIndex={index}
-              />
-            ))}
-          </VStack>
-        ) : (
-          <Table.Root  color={{ base: "black", _dark:  "white" }}  bgColor="inherit" size="sm" showColumnBorder={false}>
-            <Table.Header>
-              <Table.Row bgColor="inherit">
-                <Table.ColumnHeader>Height</Table.ColumnHeader>
-                <Table.ColumnHeader>Proposer</Table.ColumnHeader>
-                <Table.ColumnHeader>Hash</Table.ColumnHeader>
-                <Table.ColumnHeader>Txs</Table.ColumnHeader>
-                <Table.ColumnHeader>Time</Table.ColumnHeader>
-              </Table.Row>
-            </Table.Header>
-            <Table.Body bg={{ base: "white", _dark: "#262626" }}>
-              <For each={state.items}>
-                {(item, index) => (
-                  <BlockItem key={`block-${index}`} item={item} />
-                )}
-              </For>
-            </Table.Body>
-          </Table.Root >
-        )
+    <Panel>
+      <PanelHeader title="Latest blocks" href="/blocks" />
+      {state.loading ? (
+        <Stack gap="3">
+          {Array.from({ length: ROWS }).map((_, index) => (
+            <Skeleton key={index} h="42px" />
+          ))}
+        </Stack>
+      ) : state.items.length ? (
+        state.items.map((item) => <BlockRow key={item.height} item={item} />)
       ) : (
         <NoData />
       )}
-    </GridItem>
+    </Panel>
   );
 };
 

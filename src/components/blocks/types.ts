@@ -1,21 +1,13 @@
+import type { TxLabel } from '@/utils/tx_label';
+
 export interface BlockType {
   height: number;
   txs: number;
   timestamp: string;
   proposer: string;
   hash: string;
+  gasUsed: number;
 }
-
-export interface BlocksState {
-  loading: boolean;
-  exists: boolean;
-  hasNextPage: boolean;
-  isNextPageLoading: boolean;
-  items: BlockType[];
-  oldestHeight: number | null;
-}
-
-export type ItemType = BlockType;
 
 export interface OverviewType {
   height: number;
@@ -23,7 +15,16 @@ export interface OverviewType {
   txs: number;
   timestamp: string;
   proposer: string;
-  // votingPower: number;
+  gasUsed: number;
+}
+
+export interface BlockTransaction {
+  hash: string;
+  success: boolean;
+  label: TxLabel;
+  fee: number;
+  gasUsed: number;
+  gasWanted: number;
 }
 
 export interface BlockDetailState {
@@ -31,5 +32,5 @@ export interface BlockDetailState {
   exists: boolean;
   overview: OverviewType;
   signatures: string[];
-  transactions: Transactions[];
+  transactions: BlockTransaction[];
 }

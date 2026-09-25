@@ -1,97 +1,98 @@
-import {
-  HStack,
-  Text,
-  Link,
-  Input,
-  Center,
-  Flex,
-  useBreakpointValue,
-  Image,
-} from '@chakra-ui/react';
-import NextLink from 'next/link';
-import { chainConfig } from '@/configs';
-import { Search } from '../icons/search';
-import { InputGroup } from '../ui/input-group';
-import MenuDrawer from './menudrawer';
-import SearchBar from './search';
-import PageHeader from './page-header';
-import WalletPopover from './wallet-popover';
-import { useColorMode } from "../ui/color-mode";
+import { Box, Button, Flex, Link as ChakraLink, Menu, Portal } from "@chakra-ui/react";
+import NextLink from "next/link";
+import { useRouter } from "next/router";
+import { LuChevronDown } from "react-icons/lu";
+import { SearchInput } from "../explorer/search_input";
+import MenuDrawer from "./menudrawer";
+import { Logo, SoonTag, ThemeToggle } from "./brand";
+import WalletPopover from "./wallet-popover";
+import { MONITOR_ITEM, NAV_GROUPS, NavItem, isActive } from "./nav";
+
+const NavMenu = ({ label, items, pathname }: { label: string; items: NavItem[]; pathname: string }) => {
+  const active = items.some((item) => item.ready && isActive(item.href, pathname));
+
+  return (
+    <Menu.Root positioning={{ placement: "bottom-start", gutter: 12 }}>
+      <Menu.Trigger asChild>
+        <Button
+          variant="ghost"
+          size="sm"
+          px="2"
+          fontWeight="400"
+          color={active ? "explorer.text" : "explorer.muted"}
+          _hover={{ color: "explorer.text", bg: "transparent" }}
+          _expanded={{ color: "explorer.text", bg: "transparent" }}
+        >
+          {label}
+          <LuChevronDown />
+        </Button>
+      </Menu.Trigger>
+      <Portal>
+        <Menu.Positioner>
+          <Menu.Content minW="200px" bg="explorer.card" borderWidth="1px" borderColor="explorer.border" boxShadow="lg" p="1">
+            {items.map((item) =>
+              item.ready ? (
+                <Menu.Item key={item.href} value={item.href} asChild color={isActive(item.href, pathname) ? "explorer.link" : "explorer.text"}>
+                  <NextLink href={item.href}>{item.label}</NextLink>
+                </Menu.Item>
+              ) : (
+                <Menu.Item key={item.href} value={item.href} disabled justifyContent="space-between" color="explorer.muted">
+                  {item.label}
+                  <SoonTag />
+                </Menu.Item>
+              )
+            )}
+          </Menu.Content>
+        </Menu.Positioner>
+      </Portal>
+    </Menu.Root>
+  );
+};
 
 export default function Header() {
-  const isMobile = useBreakpointValue({
-    base: true, lg: false,
-  });
-  const { colorMode } = useColorMode()
+  const { pathname } = useRouter();
+  // The overview has its own large search box.
+  const showSearch = pathname !== "/";
 
-  return !isMobile ? (
-    <Flex w="full" gap="20px" align="center" pb="10" direction="column">
-      <HStack w="full">
-        <PageHeader />
-        <SearchBar />
-        <Center
-          w="250px"
-          h="60px"
-          borderRadius="60px"
-          fontSize="16px"
-          border={{base: '1px solid #707D8A', _dark: '1px solid white'}}
-        >
-          {chainConfig.network}
-        </Center>
-        {/* <IconButton
-          aria-label="connect wallet"
-          rounded="full"
-          bgColor="#707D8A"
-          w="60px"
-          h="60px"
-        >
-          <Wallet />
-        </IconButton> */}
-        <WalletPopover/>
-      </HStack>
-    </Flex>
-  ) : (
-    <Flex flexDirection="column" w="full" gap="20px" align="center" pb="10">
-      <Flex w="full" gap="10px" align="center" pb="2">
-        <Link asChild outline="none">
-          <NextLink href="/">
-          {colorMode == 'light' ? <Image w='50px' src="/images/logo.svg" /> : <Image w='50px' src="/images/logo_white.svg" />}
-          </NextLink>
-        </Link>
-        <Text fontSize="20px" fontWeight={600} flex="1">
-          Realio
-        </Text>
-
-        <Center
-          w="200px"
-          h="45px"
-          borderRadius="60px"
-          fontSize="12px"
-          border="1px solid #e4e4e7"
-        >
-          {chainConfig.network}
-        </Center>
-        <MenuDrawer />
+  return (
+    <Box as="header" position="sticky" top="0" zIndex="sticky" bg="explorer.page" borderBottomWidth="1px" borderColor="explorer.border">
+      <Flex maxW="1440px" mx="auto" h="56px" px={{ base: "4", md: "12" }} align="center" gap={{ base: "3", lg: "6" }}>
+        <Logo />
+        {showSearch && (
+          <Box flex="1" maxW="440px" hideBelow="lg">
+            <SearchInput height="34px" />
+          </Box>
+        )}
+        <Flex as="nav" align="center" gap="1" ml="auto" hideBelow="lg">
+          {NAV_GROUPS.map((group) => (
+            <NavMenu key={group.label} label={group.label} items={group.items} pathname={pathname} />
+          ))}
+          {MONITOR_ITEM.ready ? (
+            <ChakraLink asChild px="2" fontSize="sm" color={isActive(MONITOR_ITEM.href, pathname) ? "explorer.text" : "explorer.muted"}>
+              <NextLink href={MONITOR_ITEM.href}>Monitor</NextLink>
+            </ChakraLink>
+          ) : (
+            <Flex align="center" gap="1.5" px="2" fontSize="sm" color="explorer.muted">
+              Monitor
+              <SoonTag />
+            </Flex>
+          )}
+        </Flex>
+        <Flex align="center" gap="3" ml={{ base: "auto", lg: "2" }}>
+          <ThemeToggle />
+          <Box hideBelow="lg">
+            <WalletPopover />
+          </Box>
+          <Box hideFrom="lg">
+            <MenuDrawer />
+          </Box>
+        </Flex>
       </Flex>
-      <InputGroup
-        w="full"
-        maxW={{
-          base: '100%', lg: '550px',
-        }}
-        startElement={<Search />}
-      >
-        <Input
-          h="50px"
-          borderRadius="60px"
-          fontSize="12px"
-          border={{base: '1px solid #707D8A', _dark: '1px solid white'}}
-          
-          w={{
-            base: 'full', lg: '550px',
-          }}
-          placeholder="Search for validator / tx hash / block height / address"
-        />
-      </InputGroup>
-    </Flex>
+      {showSearch && (
+        <Box hideFrom="lg" px="4" pb="3">
+          <SearchInput height="38px" />
+        </Box>
+      )}
+    </Box>
   );
 }

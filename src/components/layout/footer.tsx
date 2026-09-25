@@ -1,192 +1,70 @@
-import {
-  VStack,
-  Image,
-  SimpleGrid,
-  GridItem,
-  Text,
-  Link,
-  HStack,
-} from "@chakra-ui/react";
-import { LinkedIn } from "../icons/linkedin";
-import { Telegram } from "../icons/telegram";
-import { Twitter } from "../icons/twitter";
-import { Github } from "../icons/github";
-import { useColorMode } from "../ui/color-mode";
-import { FaTelegram, FaDochub } from "react-icons/fa";
-import { useState, useEffect } from "react";
-import { getDistrictsTokenUrl } from '@/utils';
+import { Box, Flex, Grid, Link as ChakraLink, SimpleGrid, Stack, Text } from "@chakra-ui/react";
+import NextLink from "next/link";
+import { EXTERNAL_LINKS, MONITOR_ITEM, NAV_GROUPS } from "./nav";
+import { Logo } from "./brand";
+
+const columns = [...NAV_GROUPS, { label: "Monitor", items: [MONITOR_ITEM] }];
 
 export default function Footer() {
-  const { colorMode } = useColorMode();
-  const [logoSrc, setLogoSrc] = useState("/images/logo-full.png");
-  useEffect(() => {
-    setLogoSrc(
-      colorMode === "dark"
-        ? "/images/logo-full-white.png"
-        : "/images/logo-full.png"
-    );
-  }, [colorMode]);
   return (
-    <SimpleGrid
-      w="full"
-      columns={{ base: 1, lg: 6 }}
-      my="10"
-      px="10"
-      py="10"
-      divideY={{ base: "2px", lg: "0px" }}
-      boxShadow={{
-        base: "0px 0px 10px 2px #0000001A",
-        lg: "0px 0px 10px 2px #0000001A",
-      }}
-      borderRadius={"20px"}
-      bg={{ base: "white", _dark: "#0F0F0F" }}
-    >
-      <GridItem colSpan={{ base: 1, lg: 3 }} pb="15px">
-        <VStack align="left" gap="20px">
-          <Image
-            key={logoSrc}
-            h="50px"
-            fit="contain"
-            w="min-content"
-            src={logoSrc}
-            alt="Logo"
-          />
-
-          <Text>Realio Network Block Explorer</Text>
-        </VStack>
-      </GridItem>
-      <GridItem py={{ base: "15px", lg: "0px" }}>
-        <VStack
-          color={{ base: "#707D8A", _dark: "#9DA7B0" }}
-          align="left"
-          gap="20px"
+    <Box as="footer" borderTopWidth="1px" borderColor="explorer.border" mt="auto">
+      <Grid
+        maxW="1440px"
+        mx="auto"
+        px={{ base: "4", md: "12" }}
+        py="12"
+        templateColumns={{ base: "1fr", lg: "1fr 810px" }}
+        gap="10"
+      >
+        <Box maxW="340px">
+          <Logo />
+          <Text mt="4" fontSize="sm" color="explorer.muted">
+            Block explorer for the Realio Network, an interoperable Layer-1 for digital and real-world assets.
+          </Text>
+        </Box>
+        <SimpleGrid columns={{ base: 2, sm: 3, md: 5 }} gap="8">
+          {columns.map((column) => (
+            <Stack key={column.label} gap="3">
+              <Text fontSize="xs" letterSpacing="0.1em" textTransform="uppercase" color="explorer.muted">
+                {column.label}
+              </Text>
+              {column.items.map((item) =>
+                item.ready ? (
+                  <ChakraLink key={item.href} asChild fontSize="sm" color="explorer.text" _hover={{ color: "explorer.link" }}>
+                    <NextLink href={item.href}>{item.label}</NextLink>
+                  </ChakraLink>
+                ) : (
+                  <Text key={item.href} fontSize="sm" color="explorer.muted" title="Coming soon">
+                    {item.label}
+                  </Text>
+                )
+              )}
+            </Stack>
+          ))}
+        </SimpleGrid>
+      </Grid>
+      <Box borderTopWidth="1px" borderColor="explorer.border">
+        <Flex
+          maxW="1440px"
+          mx="auto"
+          px={{ base: "4", md: "12" }}
+          py="5"
+          justify="space-between"
+          gap="4"
+          direction={{ base: "column", sm: "row" }}
+          fontSize="sm"
+          color="explorer.muted"
         >
-          <Text
-            color={{ base: "#707D8A", _dark: "#9DA7B0" }}
-            fontSize="16px"
-            fontWeight={600}
-          >
-            Realio Tokens
-          </Text>
-          <Link
-            color={{ base: "black", _dark: "white" }}
-            href={getDistrictsTokenUrl()}
-            _hover={{ color: "#173DA6" }}
-            fontWeight={400}
-            fontSize={"14px"}
-          >
-            Districts Token
-          </Link>
-          <Link
-            href="/assets/rio"
-            _hover={{ color: "#173DA6" }}
-            fontWeight={400}
-            color={{ base: "black", _dark: "white" }}
-            fontSize={"14px"}
-          >
-            Realio Network Token
-          </Link>
-          <Link
-            href="/assets/rst"
-            _hover={{ color: "#173DA6" }}
-            fontWeight={400}
-            color={{ base: "black", _dark: "white" }}
-            fontSize={"14px"}
-          >
-            Realio Network, LTD
-          </Link>
-        </VStack>
-      </GridItem>
-      <GridItem py={{ base: "15px", lg: "0px" }}>
-        <VStack align="left" gap="20px">
-          <Text
-            color={{ base: "#707D8A", _dark: "#9DA7B0" }}
-            fontSize="16px"
-            fontWeight={600}
-          >
-            Realio Websites
-          </Text>
-          <Link
-            href="https://realio.network"
-            _hover={{ color: "#173DA6" }}
-            fontWeight={400}
-            color={{ base: "black", _dark: "white" }}
-            fontSize={"14px"}
-          >
-            Realio Network
-          </Link>
-          <Link
-            href="https://realio.fund/"
-            _hover={{ color: "#173DA6" }}
-            fontWeight={400}
-            color={{ base: "black", _dark: "white" }}
-            fontSize={"14px"}
-          >
-            Realio Fund
-          </Link>
-          <Link
-            href="https://liquidmining.fund/"
-            _hover={{ color: "#173DA6" }}
-            fontWeight={400}
-            color={{ base: "black", _dark: "white" }}
-            fontSize={"14px"}
-          >
-            Liquid Mining Fund
-          </Link>
-          <Link
-            href="https://freehold.finance/"
-            _hover={{ color: "#173DA6" }}
-            fontWeight={400}
-            color={{ base: "black", _dark: "white" }}
-            fontSize={"14px"}
-          >
-            Freehold
-          </Link>
-          <Link
-            href="https://districts.xyz/"
-            _hover={{ color: "#173DA6" }}
-            fontWeight={400}
-            color={{ base: "black", _dark: "white" }}
-            fontSize={"14px"}
-          >
-            Districts
-          </Link>
-        </VStack>
-      </GridItem>
-      <GridItem py={{ base: "15px", lg: "0px" }}>
-        <VStack align="left" gap="20px">
-          <Text
-            color={{ base: "#707D8A", _dark: "#9DA7B0" }}
-            fontSize="16px"
-            fontWeight={600}
-          >
-            Community
-          </Text>
-          <HStack gap="4" color={{ base: "white", _dark: "black" }}>
-            <Link
-              href="https://www.linkedin.com/company/realio"
-              fontSize={"20px"}
-            >
-              <LinkedIn />
-            </Link>
-            <Link
-              href="https://t.me/realio_network_official"
-              fontSize={"20px"}
-            >
-              <FaTelegram />
-            </Link>
-            <Link href="https://x.com/realio_network" fontSize={"20px"}>
-              <Twitter />
-            </Link>
-            <Link href="https://github.com/realiotech" fontSize={"20px"}>
-              <Github />
-            </Link>
-            <Link href="https://docs.realio.network/" fontSize={"20px"}>
-              <FaDochub />
-            </Link>
-          </HStack>
-        </VStack>
-      </GridItem>
-    </SimpleGrid>
+          <Text>Copyright © Realio Technology LTD</Text>
+          <Flex gap="6">
+            {EXTERNAL_LINKS.map((link) => (
+              <ChakraLink key={link.href} href={link.href} target="_blank" rel="noreferrer" color="explorer.muted" _hover={{ color: "explorer.text" }}>
+                {link.label}
+              </ChakraLink>
+            ))}
+          </Flex>
+        </Flex>
+      </Box>
+    </Box>
   );
 }

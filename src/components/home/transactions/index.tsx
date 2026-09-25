@@ -1,171 +1,69 @@
-import {
-  Flex,
-  GridItem,
-  Link as ChakraLink,
-  Text,
-  Table,
-  For,
-  VStack,
-  Box,
-  useBreakpointValue,
-  StackSeparator,
-} from "@chakra-ui/react";
-import { useTransactions } from "./hooks";
-import Link from "next/link";
+import { Box, Flex, Link as ChakraLink, Skeleton, Stack, Text } from "@chakra-ui/react";
+import NextLink from "next/link";
 import numeral from "numeral";
 import { getMiddleEllipsis } from "@/utils/get_middle_ellipsis";
-import dayjs from "@/utils/dayjs";
-import { Status } from "@/components/ui/status";
-import Loading from "@/components/helper/loading";
+import { BLOCK_DETAILS, TRANSACTION_DETAILS } from "@/utils/go_to_page";
+import { Panel, PanelHeader } from "@/components/explorer/panel";
+import { TxNameTag, TxStatus, TxTypeTag } from "@/components/explorer/badges";
+import { timeAgo } from "@/components/explorer/format";
+import NoData from "@/components/helper/nodata";
+import { useTransactions } from "./hooks";
+import { TransactionType } from "./types";
 
-const TxItemMobile = ({ item, rowIndex }) => {
-  return (
-    <VStack align="stretch" p={4} key={`transaction-${rowIndex}`}>
-      <Flex direction={"column"} justify="space-between" gap={1} mb={2}>
-        <Text>Block</Text>
-        <ChakraLink asChild colorPalette="blue">
-          <Link href={`/blocks/${item.height}`}>
-            {numeral(item.height).format("0,0")}
-          </Link>
+const ROWS = 8;
+
+const TxRow = ({ item }: { item: TransactionType }) => (
+  <Flex justify="space-between" gap="4" py="3" borderTopWidth="1px" borderColor="explorer.border" _first={{ borderTopWidth: 0 }}>
+    <Box minW="0">
+      <Flex align="center" gap="3" wrap="wrap">
+        <ChakraLink asChild color="explorer.link" fontSize="sm">
+          <NextLink href={TRANSACTION_DETAILS(item.hash)}>
+            {getMiddleEllipsis(item.hash, { beginning: 10, ending: 6 })}
+          </NextLink>
+        </ChakraLink>
+        <TxStatus success={item.success} />
+      </Flex>
+      <Flex align="center" gap="2" mt="1.5" wrap="wrap">
+        <TxTypeTag kind={item.label.kind} />
+        <TxNameTag label={item.label} />
+        <ChakraLink asChild color="explorer.muted" fontSize="xs">
+          <NextLink href={BLOCK_DETAILS(item.height)}>#{numeral(item.height).format("0,0")}</NextLink>
         </ChakraLink>
       </Flex>
-      <Flex direction={"column"} justify="space-between" gap={1} mb={2}>
-        <Text>Hash</Text>
-        <ChakraLink asChild colorPalette="blue">
-          <Link href={`/transactions/${item.hash}`}>
-            {getMiddleEllipsis(item.hash, { beginning: 12, ending: 6 })}
-          </Link>
-        </ChakraLink>
-      </Flex>
-      <Flex direction={"column"} justify="space-between" gap={1} mb={2}>
-        <Text>Messages</Text>
-        <Text>{numeral(item.messages.count).format("0,0")}</Text>
-      </Flex>
-      <Flex justify="space-between">
-        <Flex direction={"column"} justify="space-between" gap={1} mb={2}>
-          <Text>Result</Text>
-          <Status value={item.success ? "success" : "error"}>
-            <Text>{item.success ? "Success" : "Failed"}</Text>
-          </Status>
-        </Flex>
-        <Flex direction={"column"} justify="space-between" gap={1} mb={2}>
-          <Text>Time</Text>
-          <Text>{dayjs.utc(item.timestamp).fromNow()}</Text>
-        </Flex>
-      </Flex>
-    </VStack>
-  );
-};
+    </Box>
+    <Box textAlign="end" flexShrink={0}>
+      <Text fontSize="sm" color="explorer.text">
+        {/* numeral returns NaN for tiny values such as EVM fees (~1e-12) */}
+        {numeral(Number(item.fee.toFixed(4))).format("0,0.[0000]")}{" "}
+        <Text as="span" color="explorer.muted">
+          RIO
+        </Text>
+      </Text>
+      <Text fontSize="xs" color="explorer.muted" mt="1.5">
+        {timeAgo(item.timestamp)}
+      </Text>
+    </Box>
+  </Flex>
+);
 
 const Transactions = () => {
-  const { state } = useTransactions();
-  const isMobile = useBreakpointValue({ base: true, md: false });
-
-  if (!state?.items?.length)
-    return (
-      <GridItem
-        borderRadius="20px"
-        bgColor={{ base: "#FAFBFC", _dark: "#0F0F0F" }}
-        py="5"
-        px="8"
-        colSpan={2}
-      >
-        <Loading />
-      </GridItem>
-    );
+  const { state } = useTransactions(ROWS);
 
   return (
-    <GridItem
-      borderRadius="20px"
-      bgColor={{ base: "#FAFBFC", _dark: "#0F0F0F" }}
-      py="5"
-      px="8"
-      colSpan={2}
-    >
-      <Flex w="full" justifyContent={"space-between"} pb="4">
-        <Text fontSize="24px" fontWeight={400}>
-          Latest Transactions
-        </Text>
-        <ChakraLink asChild colorPalette={"blue"}>
-          <Link href="/transactions">See more</Link>
-        </ChakraLink>
-      </Flex>
-      {isMobile ? (
-        <Box
-          bg={{ base: "white", _dark: "#262626" }}
-          borderRadius="md"
-          overflowY="auto"
-          maxH="auto"
-        >
-            <VStack px={3} separator={<StackSeparator borderTopColor={{base: 'gray.200', _dark: 'gray.700'}}/>} align="stretch">
-            {state.items.map((item, index) => (
-              <TxItemMobile item={item} rowIndex={index} />
-            ))}
-          </VStack>
-        </Box>
+    <Panel>
+      <PanelHeader title="Latest transactions" href="/transactions" />
+      {state.loading ? (
+        <Stack gap="3">
+          {Array.from({ length: ROWS }).map((_, index) => (
+            <Skeleton key={index} h="52px" />
+          ))}
+        </Stack>
+      ) : state.items.length ? (
+        state.items.map((item) => <TxRow key={item.hash} item={item} />)
       ) : (
-        <Table.Root
-          color={{ base: "black", _dark: "white" }}
-          size={"sm"}
-          bgColor="inherit"
-          showColumnBorder={false}
-        >
-          <Table.Header>
-            <Table.Row bgColor="inherit">
-              <Table.ColumnHeader>Block</Table.ColumnHeader>
-              <Table.ColumnHeader>Hash</Table.ColumnHeader>
-              <Table.ColumnHeader>Result</Table.ColumnHeader>
-              <Table.ColumnHeader>Time</Table.ColumnHeader>
-            </Table.Row>
-          </Table.Header>
-          <Table.Body bg={{ base: "white", _dark: "#262626" }}>
-            <For each={state.items}>
-              {(item, index) => (
-                <Table.Row
-                  bg={{ base: "white", _dark: "#262626" }}
-                  key={`transaction-${index}`}
-                >
-                  <Table.Cell
-                    borderBottomColor={{ base: "gray.200", _dark: "gray.700" }}
-                    height={"54px"}
-                  >
-                    <ChakraLink asChild colorPalette="blue">
-                      <Link href={`/blocks/${item.height}`}>
-                        {numeral(item.height).format("0,0")}
-                      </Link>
-                    </ChakraLink>
-                  </Table.Cell>
-                  <Table.Cell
-                    borderBottomColor={{ base: "gray.200", _dark: "gray.700" }}
-                  >
-                    <ChakraLink asChild colorPalette="blue">
-                      <Link href={`/transactions/${item.hash}`}>
-                        {getMiddleEllipsis(item.hash, {
-                          beginning: 15,
-                          ending: 5,
-                        })}
-                      </Link>
-                    </ChakraLink>
-                  </Table.Cell>
-                  <Table.Cell
-                    borderBottomColor={{ base: "gray.200", _dark: "gray.700" }}
-                  >
-                    <Status value={item.success ? "success" : "error"}>
-                      <Text>{item.success ? "Success" : "Failed"}</Text>
-                    </Status>
-                  </Table.Cell>
-                  <Table.Cell
-                    borderBottomColor={{ base: "gray.200", _dark: "gray.700" }}
-                  >
-                    {dayjs.utc(item.timestamp).fromNow()}
-                  </Table.Cell>
-                </Table.Row>
-              )}
-            </For>
-          </Table.Body>
-        </Table.Root>
+        <NoData />
       )}
-    </GridItem>
+    </Panel>
   );
 };
 

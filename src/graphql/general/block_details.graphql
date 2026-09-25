@@ -5,12 +5,16 @@ query BlockDetails($height: bigint, $signatureHeight: bigint) {
     messages
     success
     logs
+    fee
+    gasUsed: gas_used
+    gasWanted: gas_wanted
   }
   block(limit: 1, where: {height: {_eq: $height}}) {
     height
     hash
     timestamp
     txs: num_txs
+    totalGas: total_gas
     validator {
       validatorInfo: validator_info {
         operatorAddress: operator_address

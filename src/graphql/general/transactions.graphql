@@ -36,3 +36,16 @@ query EvmTransaction($ehash: String) {
     transaction_hash
   }
 }
+
+subscription LatestTransactionsListener($limit: Int = 8) {
+  transactions: transaction(limit: $limit, order_by: {height: desc}) {
+    height
+    hash
+    success
+    fee
+    messages
+    block {
+      timestamp
+    }
+  }
+}

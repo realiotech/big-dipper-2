@@ -1,10 +1,7 @@
 import Layout from '@/components/layout/layout';
 import { ThemeProvider } from 'next-themes';
 import { AppProps } from 'next/app';
-import {
-  ChakraProvider,
-  defaultSystem
-} from '@chakra-ui/react';
+import { ChakraProvider } from '@chakra-ui/react';
 import React from 'react';
 import { RecoilRoot } from 'recoil';
 import { DefaultSeo } from 'next-seo';
@@ -53,7 +50,7 @@ function App({
         client={apolloClient}
       >
         <RecoilRoot>
-          <ChakraProvider value={defaultSystem}>
+          <ChakraProvider value={system}>
             <ColorModeProvider>
             <ThemeProvider attribute="class" disableTransitionOnChange>
               <Layout>

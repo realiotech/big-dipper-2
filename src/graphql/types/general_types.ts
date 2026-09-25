@@ -24017,7 +24017,7 @@ export type BlockDetailsQueryVariables = Exact<{
 }>;
 
 
-export type BlockDetailsQuery = { transaction: Array<{ __typename?: 'transaction', height: any, hash: string, messages: any, success: boolean, logs?: any | null }>, block: Array<{ __typename?: 'block', height: any, hash: string, timestamp: any, txs?: number | null, validator?: { __typename?: 'validator', validatorInfo?: { __typename?: 'validator_info', operatorAddress: string } | null } | null }>, preCommitsAggregate: { __typename?: 'pre_commit_aggregate', aggregate?: { __typename?: 'pre_commit_aggregate_fields', sum?: { __typename?: 'pre_commit_sum_fields', votingPower?: any | null } | null } | null }, preCommits: Array<{ __typename?: 'pre_commit', validator: { __typename?: 'validator', validatorInfo?: { __typename?: 'validator_info', operatorAddress: string } | null } }> };
+export type BlockDetailsQuery = { transaction: Array<{ __typename?: 'transaction', height: any, hash: string, messages: any, success: boolean, logs?: any | null, fee: any, gasUsed?: any | null, gasWanted?: any | null }>, block: Array<{ __typename?: 'block', height: any, hash: string, timestamp: any, txs?: number | null, totalGas: any, validator?: { __typename?: 'validator', validatorInfo?: { __typename?: 'validator_info', operatorAddress: string } | null } | null }>, preCommitsAggregate: { __typename?: 'pre_commit_aggregate', aggregate?: { __typename?: 'pre_commit_aggregate_fields', sum?: { __typename?: 'pre_commit_sum_fields', votingPower?: any | null } | null } | null }, preCommits: Array<{ __typename?: 'pre_commit', validator: { __typename?: 'validator', validatorInfo?: { __typename?: 'validator_info', operatorAddress: string } | null } }> };
 
 export type LatestBlockHeightListenerSubscriptionVariables = Exact<{
   offset?: InputMaybe<Scalars['Int']>;
@@ -24060,6 +24060,21 @@ export type OldestBlocksQueryVariables = Exact<{
 
 
 export type OldestBlocksQuery = { blocks: Array<{ __typename?: 'block', height: any }> };
+
+export type LatestBlocksListenerSubscriptionVariables = Exact<{
+  limit?: InputMaybe<Scalars['Int']>;
+}>;
+
+
+export type LatestBlocksListenerSubscription = { blocks: Array<{ __typename?: 'block', height: any, txs?: number | null, hash: string, timestamp: any, totalGas: any, validator?: { __typename?: 'validator', validatorInfo?: { __typename?: 'validator_info', operatorAddress: string } | null } | null }> };
+
+export type BlocksByHeightQueryVariables = Exact<{
+  maxHeight: Scalars['bigint'];
+  limit?: InputMaybe<Scalars['Int']>;
+}>;
+
+
+export type BlocksByHeightQuery = { blocks: Array<{ __typename?: 'block', height: any, txs?: number | null, hash: string, timestamp: any, totalGas: any, validator?: { __typename?: 'validator', validatorInfo?: { __typename?: 'validator_info', operatorAddress: string } | null } | null }> };
 
 export type ChainIdQueryVariables = Exact<{ [key: string]: never; }>;
 
@@ -24213,6 +24228,13 @@ export type EvmTransactionQueryVariables = Exact<{
 
 
 export type EvmTransactionQuery = { etransaction: Array<{ __typename?: 'etransaction', ehash?: string | null, transaction_hash?: string | null }> };
+
+export type LatestTransactionsListenerSubscriptionVariables = Exact<{
+  limit?: InputMaybe<Scalars['Int']>;
+}>;
+
+
+export type LatestTransactionsListenerSubscription = { transactions: Array<{ __typename?: 'transaction', height: any, hash: string, success: boolean, fee: any, messages: any, block: { __typename?: 'block', timestamp: any } }> };
 
 export type LastHundredBlocksSubscriptionVariables = Exact<{
   address?: InputMaybe<Scalars['String']>;
@@ -24927,12 +24949,16 @@ export const BlockDetailsDocument = gql`
     messages
     success
     logs
+    fee
+    gasUsed: gas_used
+    gasWanted: gas_wanted
   }
   block(limit: 1, where: {height: {_eq: $height}}) {
     height
     hash
     timestamp
     txs: num_txs
+    totalGas: total_gas
     validator {
       validatorInfo: validator_info {
         operatorAddress: operator_address
@@ -25214,6 +25240,94 @@ export function useOldestBlocksLazyQuery(baseOptions?: Apollo.LazyQueryHookOptio
 export type OldestBlocksQueryHookResult = ReturnType<typeof useOldestBlocksQuery>;
 export type OldestBlocksLazyQueryHookResult = ReturnType<typeof useOldestBlocksLazyQuery>;
 export type OldestBlocksQueryResult = Apollo.QueryResult<OldestBlocksQuery, OldestBlocksQueryVariables>;
+export const LatestBlocksListenerDocument = gql`
+    subscription LatestBlocksListener($limit: Int = 25) {
+  blocks: block(limit: $limit, order_by: {height: desc}) {
+    height
+    txs: num_txs
+    hash
+    timestamp
+    totalGas: total_gas
+    validator {
+      validatorInfo: validator_info {
+        operatorAddress: operator_address
+      }
+    }
+  }
+}
+    `;
+
+/**
+ * __useLatestBlocksListenerSubscription__
+ *
+ * To run a query within a React component, call `useLatestBlocksListenerSubscription` and pass it any options that fit your needs.
+ * When your component renders, `useLatestBlocksListenerSubscription` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the subscription, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useLatestBlocksListenerSubscription({
+ *   variables: {
+ *      limit: // value for 'limit'
+ *   },
+ * });
+ */
+export function useLatestBlocksListenerSubscription(baseOptions?: Apollo.SubscriptionHookOptions<LatestBlocksListenerSubscription, LatestBlocksListenerSubscriptionVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useSubscription<LatestBlocksListenerSubscription, LatestBlocksListenerSubscriptionVariables>(LatestBlocksListenerDocument, options);
+      }
+export type LatestBlocksListenerSubscriptionHookResult = ReturnType<typeof useLatestBlocksListenerSubscription>;
+export type LatestBlocksListenerSubscriptionResult = Apollo.SubscriptionResult<LatestBlocksListenerSubscription>;
+export const BlocksByHeightDocument = gql`
+    query BlocksByHeight($maxHeight: bigint!, $limit: Int = 25) {
+  blocks: block(
+    limit: $limit
+    where: {height: {_lte: $maxHeight}}
+    order_by: {height: desc}
+  ) {
+    height
+    txs: num_txs
+    hash
+    timestamp
+    totalGas: total_gas
+    validator {
+      validatorInfo: validator_info {
+        operatorAddress: operator_address
+      }
+    }
+  }
+}
+    `;
+
+/**
+ * __useBlocksByHeightQuery__
+ *
+ * To run a query within a React component, call `useBlocksByHeightQuery` and pass it any options that fit your needs.
+ * When your component renders, `useBlocksByHeightQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useBlocksByHeightQuery({
+ *   variables: {
+ *      maxHeight: // value for 'maxHeight'
+ *      limit: // value for 'limit'
+ *   },
+ * });
+ */
+export function useBlocksByHeightQuery(baseOptions: Apollo.QueryHookOptions<BlocksByHeightQuery, BlocksByHeightQueryVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useQuery<BlocksByHeightQuery, BlocksByHeightQueryVariables>(BlocksByHeightDocument, options);
+      }
+export function useBlocksByHeightLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<BlocksByHeightQuery, BlocksByHeightQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return Apollo.useLazyQuery<BlocksByHeightQuery, BlocksByHeightQueryVariables>(BlocksByHeightDocument, options);
+        }
+export type BlocksByHeightQueryHookResult = ReturnType<typeof useBlocksByHeightQuery>;
+export type BlocksByHeightLazyQueryHookResult = ReturnType<typeof useBlocksByHeightLazyQuery>;
+export type BlocksByHeightQueryResult = Apollo.QueryResult<BlocksByHeightQuery, BlocksByHeightQueryVariables>;
 export const ChainIdDocument = gql`
     query ChainId {
   genesis(limit: 1, order_by: {time: desc}) {
@@ -26159,6 +26273,43 @@ export function useEvmTransactionLazyQuery(baseOptions?: Apollo.LazyQueryHookOpt
 export type EvmTransactionQueryHookResult = ReturnType<typeof useEvmTransactionQuery>;
 export type EvmTransactionLazyQueryHookResult = ReturnType<typeof useEvmTransactionLazyQuery>;
 export type EvmTransactionQueryResult = Apollo.QueryResult<EvmTransactionQuery, EvmTransactionQueryVariables>;
+export const LatestTransactionsListenerDocument = gql`
+    subscription LatestTransactionsListener($limit: Int = 8) {
+  transactions: transaction(limit: $limit, order_by: {height: desc}) {
+    height
+    hash
+    success
+    fee
+    messages
+    block {
+      timestamp
+    }
+  }
+}
+    `;
+
+/**
+ * __useLatestTransactionsListenerSubscription__
+ *
+ * To run a query within a React component, call `useLatestTransactionsListenerSubscription` and pass it any options that fit your needs.
+ * When your component renders, `useLatestTransactionsListenerSubscription` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the subscription, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useLatestTransactionsListenerSubscription({
+ *   variables: {
+ *      limit: // value for 'limit'
+ *   },
+ * });
+ */
+export function useLatestTransactionsListenerSubscription(baseOptions?: Apollo.SubscriptionHookOptions<LatestTransactionsListenerSubscription, LatestTransactionsListenerSubscriptionVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useSubscription<LatestTransactionsListenerSubscription, LatestTransactionsListenerSubscriptionVariables>(LatestTransactionsListenerDocument, options);
+      }
+export type LatestTransactionsListenerSubscriptionHookResult = ReturnType<typeof useLatestTransactionsListenerSubscription>;
+export type LatestTransactionsListenerSubscriptionResult = Apollo.SubscriptionResult<LatestTransactionsListenerSubscription>;
 export const LastHundredBlocksDocument = gql`
     subscription LastHundredBlocks($address: String) {
   block(offset: 1, order_by: {height: desc}, limit: 100) {

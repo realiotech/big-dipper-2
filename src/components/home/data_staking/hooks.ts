@@ -5,8 +5,8 @@ import {
   useMarketDataQuery,
 } from '@/graphql/types/general_types';
 import { chainConfig } from '@/configs';
-import numeral from 'numeral';
 import { formatTokenByExponent } from '@/utils';
+import { formatCompact } from '@/components/explorer/format';
 import Big from 'big.js';
 
 export const useDataStaking = () => {
@@ -43,7 +43,8 @@ export const useDataStaking = () => {
   };
 
   const formatCommunityPool = (data) => {
-    return `${numeral(formatTokenByExponent(data.amount, chainConfig.tokenUnits?.[data.denom]?.exponent)).format("0,0.00")} ${chainConfig.tokenUnits?.[data.denom]?.display?.toUpperCase()}`
+    const amount = parseFloat(formatTokenByExponent(data.amount, chainConfig.tokenUnits?.[data.denom]?.exponent));
+    return `${formatCompact(amount)} ${chainConfig.tokenUnits?.[data.denom]?.display?.toUpperCase()}`
   };
 
   useActiveValidatorCountQuery({

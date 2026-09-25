@@ -37,3 +37,33 @@ query OldestBlocks($limit: Int = 7) {
     height
   }
 }
+
+subscription LatestBlocksListener($limit: Int = 25) {
+  blocks: block(limit: $limit, order_by: {height: desc}) {
+    height
+    txs: num_txs
+    hash
+    timestamp
+    totalGas: total_gas
+    validator {
+      validatorInfo: validator_info {
+        operatorAddress: operator_address
+      }
+    }
+  }
+}
+
+query BlocksByHeight($maxHeight: bigint!, $limit: Int = 25) {
+  blocks: block(limit: $limit, where: {height: {_lte: $maxHeight}}, order_by: {height: desc}) {
+    height
+    txs: num_txs
+    hash
+    timestamp
+    totalGas: total_gas
+    validator {
+      validatorInfo: validator_info {
+        operatorAddress: operator_address
+      }
+    }
+  }
+}

@@ -1,210 +1,58 @@
-import React from "react";
-import {
-  Box,
-  Center,
-  Text,
-  Table,
-  VStack,
-  Flex,
-  useBreakpointValue,
-  Skeleton,
-} from "@chakra-ui/react";
+import { Flex, Link as ChakraLink, Text } from "@chakra-ui/react";
+import NextLink from "next/link";
 import numeral from "numeral";
-import dayjs from "@/utils/dayjs";
-
-import { useBlocks } from "./hooks";
-import Proposer from "../helper/proposer";
 import { getMiddleEllipsis } from "@/utils/get_middle_ellipsis";
-import { useProfileRecoil } from "@/recoil/profiles/hooks";
-import HelpLink from "../helper/help_link";
-import Pagination from "../layout/pagination";
+import { BLOCK_DETAILS } from "@/utils/go_to_page";
+import { Panel } from "@/components/explorer/panel";
+import { PageTitle } from "@/components/explorer/page_title";
+import { DataTable, Column } from "@/components/explorer/data_table";
+import { Pager } from "@/components/explorer/pager";
+import { ValidatorName } from "@/components/explorer/validator_name";
+import { timeAgo } from "@/components/explorer/format";
+import { PAGE_SIZE, useBlocks } from "./hooks";
+import type { BlockType } from "./types";
 
-const ROW_HEIGHT = "58px";      // fixed row height
-const TEXT_LINE_HEIGHT = "20px";
+const blockLink = (height: number) => (
+  <ChakraLink asChild color="explorer.link">
+    <NextLink href={BLOCK_DETAILS(height)}>{numeral(height).format("0,0")}</NextLink>
+  </ChakraLink>
+);
 
-const BlockItemMobile = ({ item, isItemLoaded, rowIndex }) => {
-  const { name, address, imageUrl } = useProfileRecoil(item.proposer);
+const columns: Column<BlockType>[] = [
+  { key: "height", header: "Height", width: "130px", render: (row) => blockLink(row.height) },
+  { key: "age", header: "Age", width: "150px", render: (row) => <Text color="explorer.muted">{timeAgo(row.timestamp)}</Text> },
+  { key: "proposer", header: "Proposed by", render: (row) => <ValidatorName address={row.proposer} /> },
+  { key: "txs", header: "Txns", align: "end", width: "80px", render: (row) => numeral(row.txs).format("0,0") },
+  { key: "gas", header: "Gas used", align: "end", width: "120px", render: (row) => numeral(row.gasUsed).format("0,0") },
+  {
+    key: "hash",
+    header: "Block hash",
+    width: "200px",
+    render: (row) => (
+      <ChakraLink asChild color="explorer.link">
+        <NextLink href={BLOCK_DETAILS(row.height)}>{getMiddleEllipsis(row.hash, { beginning: 10, ending: 8 })}</NextLink>
+      </ChakraLink>
+    ),
+  },
+];
 
-  if (!isItemLoaded(rowIndex)) {
-    return <Skeleton h="150px" w="full" borderRadius="10px" />;
-  }
+export const BlockList = () => {
+  const { items, loading, total, page, setPage } = useBlocks();
 
   return (
-    <Box p="5" w="full">
-      <VStack align="stretch">
-        <Flex direction="column" gap={1}>
-          <Text fontSize="sm">Height</Text>
-          <HelpLink
-            href={`/blocks/${item.height}`}
-            value={numeral(item.height).format("0,0")}
-          />
-        </Flex>
-
-        <Flex direction="column" gap={1}>
-          <Text fontSize="sm">Proposer</Text>
-          <Proposer address={address} image={imageUrl} name={name} />
-        </Flex>
-
-        <Flex direction="column" gap={1}>
-          <Text fontSize="sm">Hash</Text>
-          <Text>
-            {getMiddleEllipsis(item.hash, { beginning: 6, ending: 5 })}
-          </Text>
-        </Flex>
-
-        <Flex justify="space-between">
-          <Flex direction="column" gap={1}>
-            <Text fontSize="sm">Txs</Text>
-            <Text>{numeral(item.txs).format("0,0")}</Text>
+    <>
+      <PageTitle
+        title="Blocks"
+        subtitle={total ? `Showing ${PAGE_SIZE} of ${numeral(total).format("0,0")} blocks` : " "}
+      />
+      <Panel>
+        {total > 0 && (
+          <Flex justify="flex-end" mb="2">
+            <Pager count={total} pageSize={PAGE_SIZE} page={page} onPageChange={setPage} />
           </Flex>
-          <Flex direction="column" gap={1}>
-            <Text fontSize="sm">Time</Text>
-            <Text>{dayjs.utc(item.timestamp).fromNow()}</Text>
-          </Flex>
-        </Flex>
-      </VStack>
-    </Box>
+        )}
+        <DataTable columns={columns} rows={items} rowKey={(row) => row.height} loading={loading} skeletonRows={PAGE_SIZE} />
+      </Panel>
+    </>
   );
 };
-
-const BlockItemWindow = ({ item, isItemLoaded, rowIndex }) => {
-  const { name, address, imageUrl } = useProfileRecoil(item.proposer);
-
-  if (!isItemLoaded(rowIndex)) {
-    return null;
-  }
-
-  return (
-    <Table.Row
-      h={ROW_HEIGHT}
-      bg={{ base: "white", _dark: "#262626" }}
-      key={`block-${rowIndex}`}
-    >
-      <Table.Cell borderBottomColor={{ base: "gray.200", _dark: "gray.700" }} py={0} verticalAlign="middle">
-        <Text lineHeight={TEXT_LINE_HEIGHT}>
-          <HelpLink
-            href={`/blocks/${item.height}`}
-            value={numeral(item.height).format("0,0")}
-          />
-        </Text>
-      </Table.Cell>
-
-      <Table.Cell borderBottomColor={{ base: "gray.200", _dark: "gray.700" }} py={0} verticalAlign="middle">
-        <Proposer address={address} image={imageUrl} name={name} />
-      </Table.Cell>
-
-      <Table.Cell borderBottomColor={{ base: "gray.200", _dark: "gray.700" }} py={0} verticalAlign="middle">
-        <Text lineHeight={TEXT_LINE_HEIGHT}>
-          {getMiddleEllipsis(item.hash, { beginning: 6, ending: 5 })}
-        </Text>
-      </Table.Cell>
-
-      <Table.Cell borderBottomColor={{ base: "gray.200", _dark: "gray.700" }} py={0} verticalAlign="middle">
-        <Text lineHeight={TEXT_LINE_HEIGHT}>
-          {numeral(item.txs).format("0,0")}
-        </Text>
-      </Table.Cell>
-
-      <Table.Cell borderBottomColor={{ base: "gray.200", _dark: "gray.700" }} py={0} verticalAlign="middle">
-        <Text lineHeight={TEXT_LINE_HEIGHT}>
-          {dayjs.utc(item.timestamp).fromNow()}
-        </Text>
-      </Table.Cell>
-    </Table.Row>
-  );
-};
-
-const SkeletonBlockItem = ({ index }) => {
-  return (
-    <Table.Row
-      h={ROW_HEIGHT}
-      bg={{ base: "white", _dark: "#262626" }}
-      key={`block-skeleton-${index}`}
-    >
-      {Array.from({ length: 5 }).map((_, i) => (
-        <Table.Cell
-          key={i}
-          py={0}
-          verticalAlign="middle"
-          borderBottomColor={{ base: "gray.200", _dark: "gray.700" }}
-        >
-          <Skeleton bg={{ base: "gray.200", _dark: "#4f4f4fff" }} h={TEXT_LINE_HEIGHT} w="full" />
-        </Table.Cell>
-      ))}
-    </Table.Row>
-  );
-};
-
-export function BlockList() {
-  const { state, isItemLoaded, pageInfo, handlePageChange } = useBlocks();
-  const isMobile = useBreakpointValue({ base: true, md: false });
-
-  return (
-    <Box
-      borderRadius="20px"
-      bgColor={{ base: "#FAFBFC", _dark: "#0F0F0F" }}
-      py="5"
-      px="8"
-      minH="85vh"
-      w="full"
-    >
-      <Text fontSize="2xl" fontWeight="bold">
-        Latest Blocks
-      </Text>
-
-      {isMobile ? (
-        <VStack
-          divideY="1px"
-          divideColor={{ base: "gray.200", _dark: "gray.700" }}
-          bg={{ base: "white", _dark: "#262626" }}
-          borderRadius="10px"
-          gap={0}
-        >
-          {state.items.map((item, index) => (
-            <BlockItemMobile
-              key={index}
-              item={item}
-              rowIndex={index}
-              isItemLoaded={isItemLoaded}
-            />
-          ))}
-        </VStack>
-      ) : (
-        <Table.Root w="full">
-          <Table.Header>
-            <Table.Row h={ROW_HEIGHT} bg={{ base: "#FAFBFC", _dark: "#0F0F0F" }}>
-              {["Height", "Proposer", "Hash", "Txs", "Time"].map((label) => (
-                <Table.ColumnHeader key={label}>
-                  {label}
-                </Table.ColumnHeader>
-              ))}
-            </Table.Row>
-          </Table.Header>
-
-          <Table.Body bg={{ base: "white", _dark: "#262626" }}>
-            {!state.loading
-              ? state.items.map((item, index) => (
-                  <BlockItemWindow
-                    key={index}
-                    item={item}
-                    rowIndex={index}
-                    isItemLoaded={isItemLoaded}
-                  />
-                ))
-              : Array.from({ length: 20 }).map((_, index) => (
-                  <SkeletonBlockItem key={index} index={index} />
-                ))}
-          </Table.Body>
-        </Table.Root>
-      )}
-
-      <Center w="full" py="4">
-        <Pagination
-          pageInfo={pageInfo}
-          pageChangeFunc={handlePageChange}
-          pageSizeChangeFunc={() => {}}
-        />
-      </Center>
-    </Box>
-  );
-}
