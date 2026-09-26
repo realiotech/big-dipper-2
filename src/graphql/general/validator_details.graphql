@@ -122,3 +122,68 @@ query ValidatorAddress($address: String) {
     }
   }
 }
+
+query ValidatorPage($address: String!) {
+  validator(where: {validator_info: {operator_address: {_eq: $address}}}) {
+    validatorInfo: validator_info {
+      operatorAddress: operator_address
+      selfDelegateAddress: self_delegate_address
+      consensusAddress: consensus_address
+      maxRate: max_rate
+      maxChangeRate: max_change_rate
+    }
+    validatorDescriptions: validator_descriptions(order_by: {height: desc}, limit: 1) {
+      moniker
+      identity
+      website
+      securityContact: security_contact
+      details
+      avatarUrl: avatar_url
+    }
+    validatorStatuses: validator_statuses(order_by: {height: desc}, limit: 1) {
+      status
+      jailed
+    }
+    validatorSigningInfos: validator_signing_infos(order_by: {height: desc}, limit: 1) {
+      missedBlocksCounter: missed_blocks_counter
+      tombstoned
+    }
+    validatorCommissions: validator_commissions(order_by: {height: desc}, limit: 1) {
+      commission
+    }
+    validatorVotingPowers: validator_voting_powers(limit: 1, order_by: {height: desc}) {
+      votingPower: voting_power
+    }
+  }
+  validatorDenom: validator_denom(where: {validator: {validator_info: {operator_address: {_eq: $address}}}}) {
+    denom
+  }
+  slashingParams: slashing_params(order_by: {height: desc}, limit: 1) {
+    params
+  }
+  delegations: ms_locks_aggregate(where: {val_addr: {_eq: $address}}) {
+    aggregate {
+      count
+      max {
+        amount
+      }
+    }
+  }
+  latestBlock: block(limit: 1, order_by: {height: desc}) {
+    height
+  }
+}
+
+query ValidatorProposedBlocks($consensusAddress: String!, $sinceHeight: bigint!, $limit: Int = 10) {
+  blocks: block(limit: $limit, order_by: {height: desc}, where: {proposer_address: {_eq: $consensusAddress}}) {
+    height
+    timestamp
+    txs: num_txs
+    totalGas: total_gas
+  }
+  recent: block_aggregate(where: {proposer_address: {_eq: $consensusAddress}, height: {_gt: $sinceHeight}}) {
+    aggregate {
+      count
+    }
+  }
+}

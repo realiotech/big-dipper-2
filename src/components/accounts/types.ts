@@ -1,3 +1,5 @@
+import type { TxLabel } from '@/utils/tx_label';
+
 export interface OverviewType {
   address: string;
   evmAddress: string | undefined;
@@ -76,4 +78,19 @@ export type AssetBalanceMap = {
 
 export type AssetBalanceMergedMap = {
   [key: string]: AssetBalanceDetail
+}
+export type AccountTransaction = {
+  hash: string;
+  height: number;
+  success: boolean;
+  timestamp: string;
+  fee: number;
+  label: TxLabel;
+}
+
+export type AccountInfo = {
+  loading: boolean;
+  accountType: string;
+  publicKey: string;
+  rewards: number;
 }

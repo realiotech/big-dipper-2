@@ -1,6 +1,5 @@
-import { Skeleton, Table } from "@chakra-ui/react";
+import { Skeleton, Table, Text } from "@chakra-ui/react";
 import { ReactNode } from "react";
-import NoData from "@/components/helper/nodata";
 
 export type Column<T> = {
   key: string;
@@ -17,16 +16,24 @@ export function DataTable<T>({
   rowKey,
   loading = false,
   skeletonRows = 10,
+  emptyText = "Nothing to show",
 }: {
   columns: Column<T>[];
   rows: T[];
   rowKey: (row: T) => string | number;
   loading?: boolean;
   skeletonRows?: number;
+  emptyText?: string;
 }) {
   const cell = { borderColor: "explorer.border", px: "0", pr: "4", _last: { pr: "0" } } as const;
 
-  if (!loading && rows.length === 0) return <NoData />;
+  if (!loading && rows.length === 0) {
+    return (
+      <Text py="6" textAlign="center" fontSize="sm" color="explorer.muted">
+        {emptyText}
+      </Text>
+    );
+  }
 
   return (
     <Table.ScrollArea>

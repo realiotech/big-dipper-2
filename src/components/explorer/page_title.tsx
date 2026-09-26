@@ -40,9 +40,9 @@ export const PageTitle = ({
           {title}
         </Text>
         {subtitle && (
-          <Text mt="1" fontSize="sm" color="explorer.muted">
+          <Box mt="1" fontSize="sm" color="explorer.muted">
             {subtitle}
-          </Text>
+          </Box>
         )}
       </Box>
       {actions}

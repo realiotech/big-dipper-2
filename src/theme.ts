@@ -5,6 +5,16 @@ import { defineConfig, defaultConfig, createSystem } from "@chakra-ui/react"
 // the colour mode themselves.
 const config = defineConfig({
     theme: {
+        recipes: {
+            // Chakra's link recipe draws its focus ring on any :focus, so every
+            // clicked link got an outline. Keep the ring for keyboard focus only.
+            link: {
+                base: {
+                    focusRing: "none",
+                    focusVisibleRing: "outside",
+                },
+            },
+        },
         semanticTokens: {
             colors: {
                 explorer: {

@@ -11,7 +11,7 @@ export default function Home() {
       <Hero />
       <Stats />
       <StakingChart />
-      <SimpleGrid columns={{ base: 1, lg: 2 }} gap="5" alignItems="start">
+      <SimpleGrid columns={{ base: 1, lg: 2 }} gap="5">
         <Blocks />
         <Transactions />
       </SimpleGrid>

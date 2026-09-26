@@ -13,7 +13,7 @@ import { TransactionType } from "./types";
 const ROWS = 8;
 
 const TxRow = ({ item }: { item: TransactionType }) => (
-  <Flex justify="space-between" gap="4" py="3" borderTopWidth="1px" borderColor="explorer.border" _first={{ borderTopWidth: 0 }}>
+  <Flex flex="1" align="center" justify="space-between" gap="4" py="3" borderTopWidth="1px" borderColor="explorer.border" _first={{ borderTopWidth: 0 }}>
     <Box minW="0">
       <Flex align="center" gap="3" wrap="wrap">
         <ChakraLink asChild color="explorer.link" fontSize="sm">
@@ -50,7 +50,7 @@ const Transactions = () => {
   const { state } = useTransactions(ROWS);
 
   return (
-    <Panel>
+    <Panel display="flex" flexDirection="column">
       <PanelHeader title="Latest transactions" href="/transactions" />
       {state.loading ? (
         <Stack gap="3">
@@ -59,7 +59,9 @@ const Transactions = () => {
           ))}
         </Stack>
       ) : state.items.length ? (
-        state.items.map((item) => <TxRow key={item.hash} item={item} />)
+        <Flex direction="column" flex="1">
+          {state.items.map((item) => <TxRow key={item.hash} item={item} />)}
+        </Flex>
       ) : (
         <NoData />
       )}

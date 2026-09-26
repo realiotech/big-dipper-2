@@ -15,3 +15,10 @@ export const timeAgo = (timestamp: string) => {
   if (seconds < 86400) return unit(Math.floor(seconds / 3600), "hr");
   return unit(Math.floor(seconds / 86400), "day");
 };
+
+/**
+ * 5.56 -> "5.56%". Rounds first: numeral returns "NaN" for tiny values such
+ * as 1e-7, which happen for validators with almost no voting power.
+ */
+export const formatPercent = (percent: number, decimals = 2) =>
+  numeral(Number((percent || 0).toFixed(decimals)) / 100).format(`0.[${"0".repeat(decimals)}]%`);

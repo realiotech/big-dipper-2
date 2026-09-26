@@ -1,372 +1,158 @@
-import React, { useMemo } from "react";
-import {
-  Box,
-  Text,
-  Table,
-  Button,
-  Tabs,
-  VStack,
-  Skeleton,
-  Link,
-  useBreakpointValue,
-  Flex,
-  Center,
-  Grid,
-  StackSeparator,
-} from "@chakra-ui/react";
-import { ProgressBar, ProgressRoot } from "@/components/ui/progress";
-import { useValidators } from "./hooks";
-import useShallowMemo from "@/hooks/useShallowMemo";
-import { useProfilesRecoil } from "@/recoil/profiles";
-import Proposer from "../helper/proposer";
-import { ADDRESS_DETAILS, getValidatorStatus } from "@/utils";
+import React, { useMemo, useState } from "react";
+import { Box, Flex, Input, SimpleGrid, Text } from "@chakra-ui/react";
 import numeral from "numeral";
-import { Status } from "../ui/status";
-import useTranslation from "next-translate/useTranslation";
-import NextLink from "next/link";
-import SearchValidator from "./search";
-import { fetchColumns } from "./utils";
-import ColumnHeader from "./header";
-import Asset from "../helper/asset";
-import { readAsset } from "@/recoil/asset";
-import { useRecoilValue } from "recoil";
-import { DelegateDialog } from "./dialog";
+import { useProfilesRecoil } from "@/recoil/profiles/hooks";
+import { Panel } from "@/components/explorer/panel";
+import { PageTitle } from "@/components/explorer/page_title";
+import { StatCard } from "@/components/explorer/stat_card";
+import { DataTable, Column } from "@/components/explorer/data_table";
+import { ExplorerTabs } from "@/components/explorer/tabs";
+import { ValidatorName } from "@/components/explorer/validator_name";
+import { StatusTag, validatorStatus } from "@/components/explorer/badges";
+import { TokenDot } from "@/components/explorer/token";
+import { formatCompact, formatPercent } from "@/components/explorer/format";
+import { useValidators } from "./hooks";
+import type { ValidatorType } from "./types";
 
-const formatSelfStake = (value: number) => new Intl.NumberFormat('en-US', {
-  maximumFractionDigits: 2,
-  minimumFractionDigits: 2,
-}).format(Number.isFinite(value) ? value : 0);
+type Row = ValidatorType & { barWidth: number; position?: number };
 
-const SkeletonValidatorItems = ({ rowCount = 30 }) => {
-    return (
-      <>
-        {Array.from({ length: rowCount }).map((_, rowIndex) => (
-          <SkeletonItem key={`skeleton-item-${rowIndex}`} />
-        ))}
-      </>
-    );
+const VotingPower = ({ row }: { row: Row }) => (
+  <Flex align="center" justify="flex-end" gap="3">
+    <Text>{numeral(row.votingPower).format("0,0")}</Text>
+    <Box w="96px" h="3px" borderRadius="full" bg="explorer.inset" hideBelow="md">
+      <Box h="full" borderRadius="full" bg="explorer.accent" w={`${row.barWidth}%`} />
+    </Box>
+    <Text w="48px" textAlign="end" color="explorer.muted">
+      {formatPercent(row.votingPowerPercent)}
+    </Text>
+  </Flex>
+);
+
+const columns: Column<Row>[] = [
+  { key: "rank", header: "#", width: "48px", align: "end", render: (row) => <Text color="explorer.muted">{row.position}</Text> },
+  { key: "validator", header: "Validator", render: (row) => <Box pl="4"><ValidatorName address={row.validator} /></Box> },
+  { key: "token", header: "Staking token", width: "120px", render: (row) => <TokenDot denom={row.denom} /> },
+  { key: "power", header: "Voting power", align: "end", width: "300px", render: (row) => <VotingPower row={row} /> },
+  { key: "commission", header: "Commission", align: "end", width: "110px", render: (row) => formatPercent(row.commission) },
+  { key: "missed", header: "Missed blocks", align: "end", width: "120px", render: (row) => numeral(row.missedBlocks).format("0,0") },
+  {
+    key: "status",
+    header: "Status",
+    align: "end",
+    width: "110px",
+    render: (row) => {
+      const { label, tone } = validatorStatus(row.status, row.jailed, row.tombstoned);
+      return (
+        <Flex justify="flex-end">
+          <StatusTag tone={tone}>{label}</StatusTag>
+        </Flex>
+      );
+    },
+  },
+];
+
+const TABS = ["active", "inactive", "all"] as const;
+type Tab = (typeof TABS)[number];
+
+export default function ValidatorList() {
+  const { items, stats, loading } = useValidators();
+  const [tab, setTab] = useState<Tab>("active");
+  const [search, setSearch] = useState("");
+  const addresses = useMemo(() => items.map((item) => item.validator), [items]);
+  const { profiles } = useProfilesRecoil(addresses);
+
+  const allRows = useMemo(() => {
+    const top = items[0]?.votingPower || 1;
+    return items.map((item) => ({ ...item, barWidth: (item.votingPower / top) * 100 }));
+  }, [items]);
+  const counts = {
+    active: allRows.filter((x) => x.status === 3).length,
+    inactive: allRows.filter((x) => x.status !== 3).length,
+    all: allRows.length,
   };
 
-const ValidatorItemMobile = ({ item }) => {
-  const { t } = useTranslation("validators");
-  const status = getValidatorStatus(item.status, item.jailed, item.tombstoned);
-  const percentDisplay =
-    item.status === 3
-      ? `${numeral(item.votingPowerPercent.toFixed(6)).format("0.[00]")}`
-      : "0";
-  const votingPower = numeral(item.votingPower).format("0,0");
-  const selfStake = formatSelfStake(item.selfStake);
+  const rows = useMemo(() => {
+    const query = search.trim().toLowerCase();
+    return allRows.filter((row, index) => {
+      if (tab === "active" && row.status !== 3) return false;
+      if (tab === "inactive" && row.status === 3) return false;
+      if (!query) return true;
+      const name = profiles[index]?.name ?? "";
+      return name.toLowerCase().includes(query) || row.validator.toLowerCase().includes(query);
+    }).map((row, index) => ({ ...row, position: index + 1 }));
+  }, [allRows, tab, search, profiles]);
 
   return (
-    <Box
-      bg={{ base: "white", _dark: "#262626" }}
-      p={4}
-      //   boxShadow="sm"
-      w="full"
-      mb={4}
-    //   border="1px solid"
-    //   borderColor="gray.200"
-    >
-      <VStack align="stretch">
-        <Flex direction={"column"} justify="space-between" gap={1} mb={2}>
-          <Text>Validator</Text>
-          <Proposer
-            name={item.validator.name}
-            address={item.validator.address}
-            image={item.validator.imageUrl}
-          />
-        </Flex>
-        <Flex direction={"column"} justify="space-between" gap={1} mb={2}>
-          <Text>Voting Power</Text>
-          <Flex justify="space-between">
-            <Text>{votingPower}</Text>
-            <Text>{percentDisplay}%</Text>
-          </Flex>
-          <ProgressRoot
-            shape={"full"}
-            size="xs"
-            w="100%"
-            variant={"outline"}
-            value={item.votingPowerPercent * 2}
-            colorPalette={"purple.100"}
-          >
-            <ProgressBar />
-          </ProgressRoot>
-        </Flex>
-        <Flex justify="space-between" mb={2}>
-          <Flex direction={"column"} justify="space-between">
-            <Text>{t("selfStake")}</Text>
-            <Text>{selfStake}</Text>
-          </Flex>
-          <Flex direction={"column"} justify="space-between">
-            <Text>Status</Text>
-            <Status colorPalette={status.theme} color={status.theme}>
-              {t(status.status)}
-            </Status>
-          </Flex>
-          <Flex direction={"column"} justify="space-between">
-            <Text>Commission</Text>
-            <Text>{numeral(item.commission).format("0.[00]")}%</Text>
-          </Flex>
-        </Flex>
-        <Button
-          bg={"#707D8A"}
-          size="sm"
-          disabled={item.status !== 3}
-          as={NextLink}
-          href={ADDRESS_DETAILS(item.validator.address)}
-        >
-          Delegate
-        </Button>
-      </VStack>
-    </Box>
+    <>
+      <PageTitle
+        title="Validators"
+        subtitle={loading ? " " : `Showing ${counts.active} of ${counts.all} validators`}
+      />
+      <SimpleGrid columns={{ base: 1, md: 2, xl: 4 }} gap="4" mb="5">
+        <StatCard
+          label="Active set"
+          loading={loading}
+          value={stats.active}
+          suffix={stats.maxValidators ? `of ${stats.maxValidators} slots` : undefined}
+          rows={[
+            { label: "Known validators", value: stats.known },
+            { label: "Jailed", value: stats.jailed },
+          ]}
+        />
+        <StatCard
+          label="Bonded"
+          loading={loading}
+          value={formatCompact(stats.bonded)}
+          suffix="staked"
+          rows={[
+            { label: "Active voting power", value: numeral(stats.activePower).format("0,0") },
+            { label: "Staking tokens in use", value: stats.stakingTokens },
+          ]}
+        />
+        <StatCard
+          label="Nakamoto coefficient"
+          loading={loading}
+          value={stats.nakamoto}
+          rows={[
+            { label: "Validators holding over 1/3", value: `${stats.nakamoto} of ${stats.active}` },
+            { label: "Top 10 share", value: formatPercent(stats.top10Share) },
+          ]}
+        />
+        <StatCard
+          label="Median commission"
+          loading={loading}
+          value={formatPercent(stats.medianCommission)}
+          rows={[
+            { label: "Lowest", value: formatPercent(stats.minCommission) },
+            { label: "Highest", value: formatPercent(stats.maxCommission) },
+          ]}
+        />
+      </SimpleGrid>
+      <Panel>
+        <ExplorerTabs
+          value={tab}
+          onChange={(value) => setTab(value as Tab)}
+          items={[
+            { value: "active", label: "Active", count: counts.active },
+            { value: "inactive", label: "Inactive", count: counts.inactive },
+            { value: "all", label: "All", count: counts.all },
+          ]}
+          actions={
+            <Input
+              size="sm"
+              maxW="260px"
+              mb="2"
+              placeholder="Search validators"
+              value={search}
+              onChange={(e) => setSearch(e.target.value)}
+              bg="explorer.card"
+              borderColor="explorer.border"
+              _placeholder={{ color: "explorer.muted" }}
+            />
+          }
+        />
+        <DataTable columns={columns} rows={rows} rowKey={(row) => row.validator} loading={loading} skeletonRows={12} />
+      </Panel>
+    </>
   );
-};
-
-const SkeletonItem = () => {
-  return (
-    <Table.Row bg={{ base: "white", _dark: "#262626" }}>
-      <Table.Cell borderBottomColor={{base: 'gray.200', _dark: 'gray.700'}}>
-        <Skeleton bg={{ base: "gray.200", _dark: "#4f4f4fff" }} h={"20px"} w="full" mb="4" />
-      </Table.Cell>
-      <Table.Cell borderBottomColor={{base: 'gray.200', _dark: 'gray.700'}}>
-        <Skeleton bg={{ base: "gray.200", _dark: "#4f4f4fff" }} h={"20px"} w="full" mb="4" />
-      </Table.Cell>
-      <Table.Cell borderBottomColor={{base: 'gray.200', _dark: 'gray.700'}} w={"30%"}>
-        <Skeleton bg={{ base: "gray.200", _dark: "#4f4f4fff" }} h={"20px"} w="full" mb="4" />
-      </Table.Cell>
-      <Table.Cell borderBottomColor={{base: 'gray.200', _dark: 'gray.700'}} textAlign={"right"}>
-        <Skeleton bg={{ base: "gray.200", _dark: "#4f4f4fff" }} h={"20px"} w="full" mb="4" />
-      </Table.Cell>
-      <Table.Cell borderBottomColor={{base: 'gray.200', _dark: 'gray.700'}} textAlign={"right"}>
-        <Skeleton bg={{ base: "gray.200", _dark: "#4f4f4fff" }} h={"20px"} w="full" mb="4" />
-      </Table.Cell>
-      <Table.Cell borderBottomColor={{base: 'gray.200', _dark: 'gray.700'}} textAlign={"right"}>
-        <Skeleton bg={{ base: "gray.200", _dark: "#4f4f4fff" }} h={"20px"} w="full" mb="4" />
-      </Table.Cell>
-      <Table.Cell borderBottomColor={{base: 'gray.200', _dark: 'gray.700'}} textAlign={"left"} pl={6}>
-        <Skeleton bg={{ base: "gray.200", _dark: "#4f4f4fff" }} h={"20px"} w="full" mb="4" />
-      </Table.Cell>
-      <Table.Cell borderBottomColor={{base: 'gray.200', _dark: 'gray.700'}} width={'10%'} textAlign="left">
-        <Skeleton bg={{ base: "gray.200", _dark: "#4f4f4fff" }} h={"20px"} w="full" mb="4" />
-      </Table.Cell>
-    </Table.Row>
-  )
 }
-
-const ValidatorItem = ({ item, idx }) => {
-  const { t } = useTranslation("validators");
-  const asset = useRecoilValue(readAsset(item.denom))
-  const status = getValidatorStatus(item.status, item.jailed, item.tombstoned);
-  const percentDisplay =
-    item.status === 3
-      ? `${numeral(item.votingPowerPercent.toFixed(6)).format("0.[00]")}`
-      : "0";
-  const votingPower = numeral(item.votingPower).format("0,0");
-  const selfStake = formatSelfStake(item.selfStake);
-  return (
-    <Table.Row 
-    bg={{ base: "white", _dark: "#262626" }}
-    >
-      <Table.Cell borderBottomColor={{base: 'gray.200', _dark: 'gray.700'}}>#{idx + 1}</Table.Cell>
-      <Table.Cell borderBottomColor={{base: 'gray.200', _dark: 'gray.700'}}>
-        <Proposer
-          name={item.validator.name}
-          address={item.validator.address}
-          image={item.validator.imageUrl}
-        />
-      </Table.Cell>
-      <Table.Cell borderBottomColor={{base: 'gray.200', _dark: 'gray.700'}}>
-        <Asset
-          name={asset?.symbol}
-          denom={asset?.denom}
-          image={asset?.image}
-        />
-      </Table.Cell>
-      <Table.Cell borderBottomColor={{base: 'gray.200', _dark: 'gray.700'}} w={"30%"}>
-        <Box>
-          <Flex justify={"space-between"}>
-            <Text>{votingPower}</Text>
-            <Text>{percentDisplay}%</Text>
-          </Flex>
-          <ProgressRoot
-            shape={"full"}
-            h="50%"
-            size="sm"
-            w="100%"
-            variant={"subtle"}
-            value={item.votingPowerPercent * 2}
-          >
-            <ProgressBar />
-          </ProgressRoot>
-        </Box>
-      </Table.Cell>
-      <Table.Cell borderBottomColor={{base: 'gray.200', _dark: 'gray.700'}} textAlign={"right"}>
-        {selfStake}
-      </Table.Cell>
-      <Table.Cell borderBottomColor={{base: 'gray.200', _dark: 'gray.700'}} textAlign={"right"}>
-        {numeral(item.commission).format("0.[00]")}%
-      </Table.Cell>
-      <Table.Cell borderBottomColor={{base: 'gray.200', _dark: 'gray.700'}} textAlign={"left"} pl={6}>
-        <Status colorPalette={status.theme} color={status.theme}>
-          {t(status.status)}
-        </Status>
-      </Table.Cell>
-      <Table.Cell borderBottomColor={{base: 'gray.200', _dark: 'gray.700'}} textAlign="left">
-        <Link asChild>
-          {/* <NextLink href={ADDRESS_DETAILS(item?.validator.address)}> */}
-            <Button bg={{base: "#707D8A", _dark: "#242323"}} border={{base: 'none', _dark: '1px solid white'}} size="md" disabled={item.status !== 3}>
-              <DelegateDialog 
-              denom={asset?.denom}
-              denomSymbol={asset?.symbol}
-              decimal={asset?.decimals}
-              operatorAddress={item.validator.address}
-              operatorName={item.validator.name}
-              />
-            </Button>
-          {/* </NextLink> */}
-        </Link>
-      </Table.Cell>
-    </Table.Row>
-  );
-};
-
-const ValidatorList = () => {
-  const { t } = useTranslation("validators");
-  const { state, handleTabChange, handleSearch, handleSort, sortItems } =
-    useValidators();
-  const validatorsMemo = useShallowMemo(state.items.map((x) => x.validator));
-  const { profiles: dataProfiles } = useProfilesRecoil(validatorsMemo);
-  const items = useMemo(
-    () =>
-      sortItems(
-        state.items.map((x, i) => ({ ...x, validator: dataProfiles?.[i] }))
-      ),
-    [state.items, dataProfiles, sortItems]
-  );
-  const columns = fetchColumns(t);
-  const isMobile = useBreakpointValue({ base: true, md: false });
-
-  return (
-    <Box minHeight="100vh">
-      <Flex
-        direction={{ base: "column", lg: "row" }}
-        gap={3}
-        justify={"space-between"}
-        mb={4}
-      >
-        <Tabs.Root
-          value={state?.tab + 1}
-          variant="subtle"
-          onValueChange={(e) => handleTabChange(e, e.value - 1)}
-          size="lg"
-        >
-          <Tabs.List alignItems="center" justifyContent="center" gap={10}>
-            <Grid gridTemplateColumns={"repeat(3, 1fr)"}>
-              <Tabs.Trigger
-                value={1}
-                _selected={{
-                  bg: "#707D8A",
-                  color: "white",
-                  borderRadius: "100px",
-                }}
-                p={4}
-                w={{ base: "full", lg: "150px" }}
-              >
-                <Center w={"full"}>Active</Center>
-              </Tabs.Trigger>
-              <Tabs.Trigger
-                value={2}
-                _selected={{
-                  bg: "#707D8A",
-                  color: "white",
-                  borderRadius: "100px",
-                }}
-                p={4}
-                w={{ base: "full", lg: "150px" }}
-              >
-                <Center w={"full"}>Inactive</Center>
-              </Tabs.Trigger>
-              <Tabs.Trigger
-                value={3}
-                _selected={{
-                  bg: "#707D8A",
-                  color: "white",
-                  borderRadius: "100px",
-                }}
-                p={4}
-                w={{ base: "full", lg: "150px" }}
-              >
-                <Center w={"full"}>All Validators</Center>
-              </Tabs.Trigger>
-              <Tabs.Indicator bg="#707D8A" borderRadius="100px" />
-            </Grid>
-          </Tabs.List>
-        </Tabs.Root>
-        <Center w={"full"}>
-          <SearchValidator callback={handleSearch} />
-        </Center>
-      </Flex>
-      <Box bg={{ base: "#FAFBFC", _dark: "#0F0F0F" }} py={"5"} px={"8"} rounded={"2xl"}>
-        {isMobile ? (
-          <VStack
-          bg={{ base: "white", _dark: "#262626" }}
-            borderRadius="10px"
-            px={"3"}
-            separator={<StackSeparator />}
-            maxH={'95vh'}
-            overflow={'auto'}
-          >
-            {items.map((val, idx) => (
-              <ValidatorItemMobile key={`validator-${idx}`} item={val} />
-            ))}
-          </VStack>
-        ) : (
-          <Box rounded="lg" overflowX="auto">
-            <Table.Root  color={{ base: "black", _dark: "white" }} borderRadius="3xl">
-              <Table.Header>
-                <Table.Row bg={{ base: "#FAFBFC", _dark: "#0F0F0F" }}>
-                  {columns.map((item, index) => (
-                    <ColumnHeader
-                      key={`column-${index}`}
-                      column={item}
-                      sortKey={state?.sortKey}
-                      sortDirection={state?.sortDirection}
-                      handleSort={handleSort}
-                    />
-                  ))}
-                  {Array.from({ length: Math.max(0, 8 - columns.length) }).map(
-                    (_, idx) => (
-                      <Table.ColumnHeader key={`placeholder-${idx}`} />
-                    )
-                  )}
-                </Table.Row>
-              </Table.Header>
-              <Table.Body bg={{ base: "white", _dark: "#262626" }}
-                style={{
-                  borderRadius: "xl",
-                }}
-              >
-                {state.loading ? (
-                  <>
-                    <SkeletonValidatorItems />
-                  </>
-                ) : (
-                  items.map((val, idx) => (
-                    <ValidatorItem
-                      item={val}
-                      key={`$validator-${idx}`}
-                      idx={idx}
-                    />
-                  ))
-                )}
-              </Table.Body>
-            </Table.Root >
-          </Box>
-        )}
-      </Box>
-    </Box>
-  );
-};
-
-export default ValidatorList;

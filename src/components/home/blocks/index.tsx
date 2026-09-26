@@ -11,7 +11,7 @@ import { useBlocks } from "./hooks";
 const ROWS = 9;
 
 const BlockRow = ({ item }) => (
-  <Flex align="center" gap="4" py="3" borderTopWidth="1px" borderColor="explorer.border" _first={{ borderTopWidth: 0 }}>
+  <Flex flex="1" align="center" gap="4" py="3" borderTopWidth="1px" borderColor="explorer.border" _first={{ borderTopWidth: 0 }}>
     <Box w="96px" flexShrink={0}>
       <ChakraLink asChild color="explorer.link" fontSize="sm">
         <NextLink href={BLOCK_DETAILS(item.height)}>{numeral(item.height).format("0,0")}</NextLink>
@@ -33,7 +33,7 @@ const Blocks = () => {
   const { state } = useBlocks(ROWS);
 
   return (
-    <Panel>
+    <Panel display="flex" flexDirection="column">
       <PanelHeader title="Latest blocks" href="/blocks" />
       {state.loading ? (
         <Stack gap="3">
@@ -42,7 +42,9 @@ const Blocks = () => {
           ))}
         </Stack>
       ) : state.items.length ? (
-        state.items.map((item) => <BlockRow key={item.height} item={item} />)
+        <Flex direction="column" flex="1">
+          {state.items.map((item) => <BlockRow key={item.height} item={item} />)}
+        </Flex>
       ) : (
         <NoData />
       )}
