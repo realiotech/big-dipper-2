@@ -1674,6 +1674,7 @@ export type EvmAssetOverviewQueryResult = Apollo.QueryResult<EvmAssetOverviewQue
 export const EvmAssetHoldersDocument = gql`
     query EvmAssetHolders($address: ID!, $offset: Int = 1, $limit: Int = 10) {
   erc20Balances(
+    where: {account_not: null}
     orderBy: value
     orderDirection: desc
     first: $limit
