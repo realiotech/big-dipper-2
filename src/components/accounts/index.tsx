@@ -22,6 +22,8 @@ import { TokenDot } from "@/components/explorer/token";
 import { formatPercent, timeAgo } from "@/components/explorer/format";
 import { PAGE_SIZE, useAccountInfo, useErc20Balances, useOverview, useStaking, useTransactions } from "./hooks";
 import { AssetRow, DelegationRow, usePortfolio } from "./portfolio";
+import { BlockscoutAddress, useBlockscout } from "@/components/explorer/blockscout";
+import { CONTRACT_DETAILS } from "@/components/explorer/evm_address";
 import type { AccountTransaction } from "./types";
 
 ChartJS.register(ArcElement, Tooltip);
@@ -218,6 +220,8 @@ export default function AccountDetail() {
   const { delegations, unbondings } = useStaking(address);
   const info = useAccountInfo(address);
   const activity = useTransactions(address);
+  // The EVM side of the same account may be a contract.
+  const { data: evmInfo } = useBlockscout<BlockscoutAddress>(evmAddress ? `addresses/${evmAddress}` : null);
   const [tab, setTab] = useState("activity");
 
   const portfolio = usePortfolio({
@@ -261,7 +265,7 @@ export default function AccountDetail() {
   return (
     <Stack gap="5">
       <PageTitle
-        crumbs={[{ label: "Accounts" }, { label: getMiddleEllipsis(address ?? "", { beginning: 10, ending: 6 }) }]}
+        crumbs={[{ label: "Accounts", href: "/accounts" }, { label: getMiddleEllipsis(address ?? "", { beginning: 10, ending: 6 }) }]}
         title="Account"
         subtitle={
           <Flex as="span" align="center" gap="1">
@@ -288,6 +292,13 @@ export default function AccountDetail() {
             <Flex wrap="wrap" borderTopWidth="1px" borderColor="explorer.border" pt="3">
               <InfoItem label="Account type">{info.loading ? "…" : info.accountType || "—"}</InfoItem>
               <InfoItem label="Public key">{info.loading ? "…" : info.publicKey || "—"}</InfoItem>
+              {evmInfo?.is_contract && (
+                <InfoItem label="Contract">
+                  <ChakraLink asChild color="explorer.link">
+                    <NextLink href={CONTRACT_DETAILS(evmInfo.hash)}>{evmInfo.name || "View contract"}</NextLink>
+                  </ChakraLink>
+                </InfoItem>
+              )}
               <InfoItem label="Last activity">
                 {lastActivity ? (
                   <ChakraLink asChild color="explorer.text">

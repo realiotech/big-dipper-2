@@ -1,169 +1,60 @@
 import * as R from 'ramda';
 import {
-  useTransactionsQuery,
-  useTransactionsListenerSubscription,
-  TransactionsListenerSubscription,
-  useEvmTransactionQuery,
+  useLatestTransactionsListenerSubscription,
+  useTransactionsCountQuery,
+  useTransactionsPageQuery,
 } from '@/graphql/types/general_types';
+import { usePageParam } from '@/components/explorer/pager';
+import { toTxRow, TxRow, txLabel } from '@/utils/tx_label';
 import { convertMsgsToModels } from '@/components/msg/utils';
-import { TransactionsState, TransactionState } from './types';
+import { TransactionState } from './types';
 import { useRouter } from 'next/router';
-import { SyntheticEvent, useCallback, useEffect, useState } from 'react';
+import { SyntheticEvent, useCallback, useEffect, useMemo, useState } from 'react';
 import { TransactionDetailsQuery, useTransactionDetailsQuery } from '@/graphql/types/general_types';
 import { formatToken } from '@/utils/format_token';
-import { PageInfo } from "../layout/pagination";
 import { load } from 'js-yaml';
-import { TRANSACTION_DETAILS } from '@/utils';
 import { canonicalizeTendermintTxHash } from '@/utils/canonicalize_tendermint_tx_hash';
 
-const MAX_TXS = 500 * 20
-const PAGE_SIZE = 20
+export const PAGE_SIZE = 25;
+// Upper bound for "the newest transactions" before the latest height is known.
+const NEWEST = '9223372036854775807';
 
+/**
+ * Transactions are paged with offsets below an anchor height: the newest
+ * height seen, frozen while browsing older pages so rows do not shift as new
+ * transactions arrive. Page 1 follows the chain live.
+ */
 export const useTransactions = () => {
-  const [state, setState] = useState<TransactionsState>({
-    loading: true,
-    exists: true,
-    hasNextPage: true,
-    isNextPageLoading: false,
-    items: [],
-    oldestHeight: null,
-  });
-  const [pageInfo, SetPageInfo] = useState<PageInfo>({
-    count: MAX_TXS,
-    pageSize: 20,
-    currentPage: 1,
-  })
+  const { page, setPage } = usePageParam();
+  const [live, setLive] = useState<TxRow[]>([]);
+  const [anchor, setAnchor] = useState<number | null>(null);
 
-  const handlePageChange = (e) => {
-    loadPage(e.page);
-    SetPageInfo({
-      ...pageInfo,
-      currentPage: e.page,
-    });
-  }
-
-
-  const handleSetState = useCallback((stateChange: any) => {
-    setState((prevState) => {
-      const newState = stateChange(prevState);
-      if (R.equals(prevState, newState)) {
-        return prevState;
-      }
-      return newState;
-    });
-  }, []);
-
-  // This is a bandaid as it can get extremely
-  // expensive if there is too much data
-  /**
-   * Helps remove any possible duplication
-   * and sorts by height in case it bugs out
-   */
-  const uniqueAndSort = R.pipe(
-    R.uniqBy((r: Transactions) => r?.hash),
-    R.sort(R.descend((r) => r?.height))
-  );
-
-  // ================================
-  // tx subscription
-  // ================================
-  useTransactionsListenerSubscription({
-    variables: {
-      limit: 1,
-      offset: 0,
-    },
-    onSubscriptionData: (data) => {
-      if (pageInfo.currentPage === 1) {
-        const newTransactions = formatTransactions(data.subscriptionData.data);
-        handleSetState((prevState) => ({
-          ...prevState,
-          loading: false,
-          items: uniqueAndSort([...newTransactions, ...prevState.items]).slice(0, PAGE_SIZE),
-        }));
-      }
-    },
+  useLatestTransactionsListenerSubscription({
+    variables: { limit: PAGE_SIZE },
+    onData: ({ data }) => setLive(data.data?.transactions.map(toTxRow) ?? []),
   });
 
-  // ================================
-  // tx query
-  // ================================
-  const transactionQuery = useTransactionsQuery({
-    variables: {
-      limit: PAGE_SIZE,
-      offset: 0,
-    },
-    onError: () => {
-      handleSetState((prevState) => ({ ...prevState, loading: false }));
-    },
-    onCompleted: (data) => {
-      const transactions = formatTransactions(data);
-      const oldestTx = transactions[transactions.length - 1];
-
-      handleSetState((prevState) => ({
-        ...prevState,
-        loading: false,
-        items: uniqueAndSort([...transactions]),
-        hasNextPage: transactions.length === PAGE_SIZE,
-        isNextPageLoading: false,
-        oldestHeight: oldestTx?.height ?? null,
-      }));
-    },
+  const maxHeight = page === 1 ? NEWEST : anchor === null ? null : String(anchor);
+  const { data, loading } = useTransactionsPageQuery({
+    variables: { maxHeight, limit: PAGE_SIZE, offset: (page - 1) * PAGE_SIZE },
+    skip: maxHeight === null,
   });
+  const queried = useMemo(() => data?.transactions.map(toTxRow) ?? [], [data]);
 
-  const loadPage = (page: number) => {
-    if (!state.oldestHeight) return;
+  const newest = live[0]?.height ?? (page === 1 ? queried[0]?.height : undefined);
+  useEffect(() => {
+    if (newest && (page === 1 || anchor === null)) setAnchor(newest);
+  }, [newest, page, anchor]);
 
-    handleSetState((prevState) => ({
-      ...prevState,
-      isNextPageLoading: true,
-      loading: true,
-    }));
-
-    // refetch query
-    transactionQuery.refetch({
-      limit: PAGE_SIZE,
-      offset: (page - 1) * PAGE_SIZE,
-    }).then(({ data }) => {
-      const transactions = formatTransactions(data);
-      const oldestTx = transactions[transactions.length - 1];
-
-      // set new state
-      handleSetState((prevState) => ({
-        ...prevState,
-        items: uniqueAndSort([...transactions]),
-        isNextPageLoading: false,
-        loading: false,
-        hasNextPage: transactions.length === MAX_TXS,
-        oldestHeight: oldestTx?.height ?? null,
-      }));
-    });
-  };
-
-  const formatTransactions = (data: TransactionsListenerSubscription) => {
-    let formattedData = data.transactions;
-    if (data.transactions.length === 51) {
-      formattedData = data.transactions.slice(0, 51);
-    }
-
-    return formattedData.map((x) => {
-      const messages = convertMsgsToModels(x);
-      return ({
-        height: x.height,
-        hash: x.hash,
-        messages: {
-          count: x.messages.length,
-          items: messages,
-        },
-        success: x.success,
-        timestamp: x.block.timestamp,
-      });
-    });
-  };
+  const { data: countData } = useTransactionsCountQuery();
+  const items = page === 1 && live.length ? live : queried;
 
   return {
-    state,
-    pageInfo,
-    handlePageChange,
+    items,
+    loading: items.length === 0 && (loading || maxHeight === null),
+    total: Number(countData?.txs_count?.[0]?.count ?? 0),
+    page,
+    setPage,
   };
 };
 
@@ -224,27 +115,16 @@ const formatTransactionDetails = (data: TransactionDetailsQuery) => {
   stateChange.overview = formatOverview(data);
   stateChange.logs = formatLogs(data);
   stateChange.messages = formatMessages(data);
+  stateChange.rawMessages = data.transaction[0].messages ?? [];
+  stateChange.label = txLabel(data.transaction[0].messages);
   return stateChange;
 };
 
 export const useTransactionDetails = () => {
   const router = useRouter();
-  const [evmQueryCompleted, setEvmQueryCompleted] = useState(false);
-
   const txhash = router.query.tx as string;
-  const isEvmTransaction = txhash?.startsWith("0x");
-
-  // Run EVM query first if it's an EVM transaction
-  const { data: evmData } = useEvmTransactionQuery({
-    variables: { ehash: isEvmTransaction ? txhash : '' },
-    skip: !isEvmTransaction,
-    onCompleted: (data) => {
-      if (data?.etransaction?.length === 1) {
-        router.push(TRANSACTION_DETAILS(data.etransaction[0].transaction_hash));
-      }
-      setEvmQueryCompleted(true);
-    },
-  });
+  // 0x hashes are shown by the EVM transaction page instead.
+  const isEvmHash = txhash?.startsWith('0x');
 
   const [state, setState] = useState<TransactionState>({
     exists: true,
@@ -271,6 +151,7 @@ export const useTransactionDetails = () => {
       viewRaw: false,
       items: [],
     },
+    rawMessages: [],
   });
 
   const handleSetState = useCallback(
@@ -295,7 +176,7 @@ export const useTransactionDetails = () => {
     variables: {
       hash: canonicalizeTendermintTxHash(txhash),
     },
-    skip: isEvmTransaction && !evmQueryCompleted,
+    skip: !router.isReady || isEvmHash,
     onCompleted: (data) => {
       handleSetState((prevState) => ({ ...prevState, ...formatTransactionDetails(data) }));
     },
