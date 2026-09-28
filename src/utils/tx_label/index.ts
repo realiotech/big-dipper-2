@@ -67,12 +67,18 @@ export const evmMethodName = (raw?: string): string => {
     const to = fields[dataIndex - 2];
     const data = fields[dataIndex];
     if (!to?.length) return 'Contract Create';
-    if (!data?.length) return 'Transfer';
-    const selector = data.subarray(0, 4).toString('hex');
-    return EVM_METHODS[selector] ?? `0x${selector}`;
+    return evmMethodFromInput(`0x${data?.toString('hex') ?? ''}`);
   } catch {
     return 'Contract Call';
   }
+};
+
+/** Method name from call data ("0x42966c68…" -> "Burn"); plain value transfers have none. */
+export const evmMethodFromInput = (input?: string | null): string => {
+  const hex = (input ?? '').replace(/^0x/, '');
+  if (!hex) return 'Transfer';
+  const selector = hex.slice(0, 8).toLowerCase();
+  return EVM_METHODS[selector] ?? `0x${selector}`;
 };
 
 export const txLabel = (messages: Array<Record<string, any>> = []): TxLabel => {
@@ -87,3 +93,44 @@ export const txLabel = (messages: Array<Record<string, any>> = []): TxLabel => {
   const [name, tone] = MSG_NAMES[type] ?? [convertMsgType([type])[0] || type, 'neutral'];
   return { kind: 'cosmos', name, tone, extraCount };
 };
+
+const FEE_DENOM = 'ario';
+const FEE_DECIMALS = 18;
+
+/** Fee paid in RIO, from a transaction's `fee` column. */
+export const txFeeInRio = (fee?: { amount?: Array<{ denom: string; amount: string }> } | null): number =>
+  (fee?.amount ?? [])
+    .filter((coin) => coin.denom === FEE_DENOM)
+    .reduce((sum, coin) => sum + Number(coin.amount) / 10 ** FEE_DECIMALS, 0);
+
+/** The row shape the explorer's transaction lists share. */
+export type TxRow = {
+  hash: string;
+  height: number;
+  success: boolean;
+  timestamp: string;
+  fee: number;
+  gasUsed: number;
+  gasWanted: number;
+  label: TxLabel;
+};
+
+export const toTxRow = (tx: {
+  hash: string;
+  height: any;
+  success: boolean;
+  fee?: any;
+  gasUsed?: any;
+  gasWanted?: any;
+  messages?: any;
+  block?: { timestamp: any } | null;
+}): TxRow => ({
+  hash: tx.hash,
+  height: Number(tx.height),
+  success: tx.success,
+  timestamp: tx.block?.timestamp ?? '',
+  fee: txFeeInRio(tx.fee),
+  gasUsed: Number(tx.gasUsed ?? 0),
+  gasWanted: Number(tx.gasWanted ?? 0),
+  label: txLabel(tx.messages),
+});

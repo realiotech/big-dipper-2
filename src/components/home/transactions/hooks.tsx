@@ -3,12 +3,8 @@ import {
   useLatestTransactionsListenerSubscription,
   LatestTransactionsListenerSubscription,
 } from '@/graphql/types/general_types';
-import { formatTokenByExponent } from '@/utils';
-import { txLabel } from '@/utils/tx_label';
+import { toTxRow } from '@/utils/tx_label';
 import { TransactionsState } from './types';
-
-const FEE_DENOM = 'ario';
-const FEE_DECIMALS = 18;
 
 export const useTransactions = (limit = 8) => {
   const [state, setState] = useState<TransactionsState>({
@@ -29,21 +25,7 @@ export const useTransactions = (limit = 8) => {
     },
   });
 
-  const formatTransactions = (data: LatestTransactionsListenerSubscription) => {
-    return data.transactions.map((x) => {
-      const fee = (x.fee?.amount ?? [])
-        .filter((coin) => coin.denom === FEE_DENOM)
-        .reduce((sum, coin) => sum + parseFloat(formatTokenByExponent(coin.amount, FEE_DECIMALS)), 0);
-      return ({
-        height: x.height,
-        hash: x.hash,
-        success: x.success,
-        timestamp: x.block.timestamp,
-        fee,
-        label: txLabel(x.messages),
-      });
-    });
-  };
+  const formatTransactions = (data: LatestTransactionsListenerSubscription) => data.transactions.map(toTxRow);
 
   return {
     state,

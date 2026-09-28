@@ -11,8 +11,7 @@ import {
   useGetMessagesByAddressCountQuery,
 } from '@/graphql/types/general_types';
 
-import { formatTokenByExponent } from '@/utils';
-import { txLabel } from '@/utils/tx_label';
+import { txFeeInRio, txLabel } from '@/utils/tx_label';
 import { useRecoilValue } from 'recoil';
 import { readFilter } from '@/recoil/transactions_filter';
 import type { AccountInfo, AccountTransaction, OverviewType } from './types';
@@ -21,8 +20,9 @@ import { ACCOUNT_DETAILS } from '@/utils/go_to_page'
 import { useEvmBalancesQuery } from '@/graphql/types/subgraph';
 
 export const PAGE_SIZE = 20;
-const FEE_DENOM = 'ario';
-const FEE_DECIMALS = 18;
+// Staking rewards are paid in RIO.
+const REWARD_DENOM = 'ario';
+const REWARD_DECIMALS = 18;
 
 // messages_by_address returns one row per message, so a transaction with
 // several messages for this account appears more than once.
@@ -40,9 +40,7 @@ const formatTransactions = (data?: GetMessagesByAddressQuery): AccountTransactio
       success: transaction.success,
       timestamp: transaction.block.timestamp,
       label: txLabel(transaction.messages),
-      fee: (transaction.fee?.amount ?? [])
-        .filter((coin) => coin.denom === FEE_DENOM)
-        .reduce((sum, coin) => sum + parseFloat(formatTokenByExponent(coin.amount, FEE_DECIMALS)), 0),
+      fee: txFeeInRio(transaction.fee),
     });
   }
   return result;
@@ -85,13 +83,13 @@ export function useAccountInfo(address?: string) {
     ]).then(([auth, rewards]) => {
       const account = auth?.account;
       const pubKey = account?.pub_key ?? account?.base_account?.pub_key;
-      const reward = (rewards?.total ?? []).find((coin) => coin.denom === FEE_DENOM)?.amount ?? '0';
+      const reward = (rewards?.total ?? []).find((coin) => coin.denom === REWARD_DENOM)?.amount ?? '0';
       setInfo({
         loading: false,
         accountType: shortType(account?.['@type']),
         // "/ethermint.crypto.v1.ethsecp256k1.PubKey" -> "eth_secp256k1"
         publicKey: pubKey ? shortType(pubKey['@type'].replace(/\.PubKey$/, '')).replace('ethsecp256k1', 'eth_secp256k1') : '',
-        rewards: Big(reward.split('.')[0] || '0').div(Big(10).pow(FEE_DECIMALS)).toNumber(),
+        rewards: Big(reward.split('.')[0] || '0').div(Big(10).pow(REWARD_DECIMALS)).toNumber(),
       });
     });
   }, [address]);

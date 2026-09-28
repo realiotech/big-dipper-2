@@ -10,8 +10,7 @@ import {
   useOldestBlocksQuery,
 } from '@/graphql/types/general_types';
 import { usePageParam } from '@/components/explorer/pager';
-import { formatTokenByExponent } from '@/utils';
-import { txLabel } from '@/utils/tx_label';
+import { txFeeInRio, txLabel } from '@/utils/tx_label';
 import type { BlockType, BlockDetailState, BlockTransaction } from './types';
 
 export const PAGE_SIZE = 25;
@@ -76,17 +75,12 @@ export const useBlocks = () => {
 // ==========================
 // Block detail
 // ==========================
-const FEE_DENOM = 'ario';
-const FEE_DECIMALS = 18;
-
 const formatTransactions = (data: BlockDetailsQuery): BlockTransaction[] =>
   data.transaction.map((x) => ({
     hash: x.hash,
     success: x.success,
     label: txLabel(x.messages),
-    fee: (x.fee?.amount ?? [])
-      .filter((coin) => coin.denom === FEE_DENOM)
-      .reduce((sum, coin) => sum + parseFloat(formatTokenByExponent(coin.amount, FEE_DECIMALS)), 0),
+    fee: txFeeInRio(x.fee),
     gasUsed: Number(x.gasUsed ?? 0),
     gasWanted: Number(x.gasWanted ?? 0),
   }));

@@ -30,6 +30,8 @@ const config = defineConfig({
                     success: { value: { _light: "#107448", _dark: "#D6FFD1" } },
                     successMuted: { value: { _light: "#2E855F", _dark: "#BDE3BB" } },
                     danger: { value: { _light: "#C2410C", _dark: "#FDBA74" } },
+                    warning: { value: { _light: "#D97706", _dark: "#F59E6B" } },
+                    critical: { value: { _light: "#DC2626", _dark: "#F87171" } },
                     evm: { value: { _light: "#BF4A86", _dark: "#EF5DA8" } },
                     chart1: { value: { _light: "#5D5FEF", _dark: "#5D5FEF" } },
                     chart2: { value: { _light: "#BF4A86", _dark: "#EF5DA8" } },

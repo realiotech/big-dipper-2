@@ -49,9 +49,9 @@ export const StatCard = ({
               {row.label}
             </Text>
             <Skeleton loading={loading} mt="1" minH="20px">
-              <Text fontSize="sm" color="explorer.text">
+              <Box fontSize="sm" color="explorer.text">
                 {row.value}
-              </Text>
+              </Box>
             </Skeleton>
           </Box>
         ))}

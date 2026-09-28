@@ -22,3 +22,13 @@ export const timeAgo = (timestamp: string) => {
  */
 export const formatPercent = (percent: number, decimals = 2) =>
   numeral(Number((percent || 0).toFixed(decimals)) / 100).format(`0.[${"0".repeat(decimals)}]%`);
+
+/**
+ * Token amount with up to `decimals` places: 0.000504434 -> "0.000504".
+ * Rounds first because numeral returns "NaN" for values like 1e-12 (EVM fees).
+ */
+export const formatAmount = (value: number, decimals = 6) =>
+  numeral(Number((value || 0).toFixed(decimals))).format(`0,0.[${"0".repeat(decimals)}]`);
+
+/** "2026-07-27 14:30:26 UTC", or "—" for a missing time. */
+export const formatUtc = (time?: string) => (time ? dayjs.utc(time).format("YYYY-MM-DD HH:mm:ss [UTC]") : "—");

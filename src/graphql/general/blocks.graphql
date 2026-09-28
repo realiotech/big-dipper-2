@@ -1,69 +1,8 @@
-subscription BlocksListener($limit: Int = 7, $offset: Int = 0) {
-  blocks: block(limit: $limit, offset: $offset, order_by: {height: desc}) {
+
+
+query BlocksAtHeights($heights: [bigint!]!) {
+  blocks: block(where: {height: {_in: $heights}}, order_by: {height: asc}) {
     height
-    txs: num_txs
-    hash
     timestamp
-    validator {
-      validatorInfo: validator_info {
-        operatorAddress: operator_address
-      }
-    }
-  }
-}
-
-
-query Blocks($limit: Int = 7, $offset: Int = 0) {
-  blocks: block(limit: $limit, offset: $offset, order_by: {height: desc}) {
-    height
-    txs: num_txs
-    hash
-    timestamp
-    validator {
-      validatorInfo: validator_info {
-        operatorAddress: operator_address
-        self_delegate_address
-      }
-      validatorDescriptions: validator_descriptions(limit: 1, order_by: {height: desc}) {
-        moniker
-        identity
-      }
-    }
-  }
-}
-
-query OldestBlocks($limit: Int = 7) {
-  blocks: block(limit: $limit, order_by: {height: asc}) {
-    height
-  }
-}
-
-subscription LatestBlocksListener($limit: Int = 25) {
-  blocks: block(limit: $limit, order_by: {height: desc}) {
-    height
-    txs: num_txs
-    hash
-    timestamp
-    totalGas: total_gas
-    validator {
-      validatorInfo: validator_info {
-        operatorAddress: operator_address
-      }
-    }
-  }
-}
-
-query BlocksByHeight($maxHeight: bigint!, $limit: Int = 25) {
-  blocks: block(limit: $limit, where: {height: {_lte: $maxHeight}}, order_by: {height: desc}) {
-    height
-    txs: num_txs
-    hash
-    timestamp
-    totalGas: total_gas
-    validator {
-      validatorInfo: validator_info {
-        operatorAddress: operator_address
-      }
-    }
   }
 }

@@ -14,3 +14,55 @@ query Proposals ($limit: Int = 7, $offset: Int = 0) {
     }
   }
 }
+
+query GovernanceProposals {
+  proposals: proposal(order_by: {id: desc}) {
+    id
+    title
+    description
+    content
+    status
+    submitTime: submit_time
+    depositEndTime: deposit_end_time
+    votingStartTime: voting_start_time
+    votingEndTime: voting_end_time
+    proposerAddress: proposer_address
+    tally: proposal_tally_results(limit: 1) {
+      yes
+      no
+      noWithVeto: no_with_veto
+      abstain
+    }
+  }
+}
+
+query ProposalPage($id: Int!) {
+  proposal(where: {id: {_eq: $id}}) {
+    id
+    title
+    description
+    content
+    status
+    submitTime: submit_time
+    depositEndTime: deposit_end_time
+    votingStartTime: voting_start_time
+    votingEndTime: voting_end_time
+    proposerAddress: proposer_address
+    tally: proposal_tally_results(limit: 1) {
+      yes
+      no
+      noWithVeto: no_with_veto
+      abstain
+    }
+  }
+  stakingPool: proposal_staking_pool_snapshot(where: {proposal_id: {_eq: $id}}) {
+    bondedTokens: bonded_tokens
+  }
+  votes: proposal_vote(where: {proposal_id: {_eq: $id}}, order_by: {height: desc}) {
+    option
+    voterAddress: voter_address
+    height
+    timestamp
+    weight
+  }
+}

@@ -2,7 +2,6 @@ import { Box, Flex, IconButton, Link as ChakraLink, SimpleGrid, Stack, Text } fr
 import NextLink from "next/link";
 import numeral from "numeral";
 import { LuChevronLeft, LuChevronRight } from "react-icons/lu";
-import dayjs from "@/utils/dayjs";
 import { getMiddleEllipsis } from "@/utils/get_middle_ellipsis";
 import { BLOCK_DETAILS, TRANSACTION_DETAILS } from "@/utils/go_to_page";
 import { Panel } from "@/components/explorer/panel";
@@ -12,12 +11,10 @@ import { DataTable, Column } from "@/components/explorer/data_table";
 import { CopyButton } from "@/components/explorer/copy_button";
 import { TxNameTag, TxStatus, TxTypeTag } from "@/components/explorer/badges";
 import { ValidatorName } from "@/components/explorer/validator_name";
-import { timeAgo } from "@/components/explorer/format";
-import NoData from "@/components/helper/nodata";
+import { formatUtc as utc, timeAgo } from "@/components/explorer/format";
+import { NotFound } from "@/components/explorer/not_found";
 import { useBlockDetails } from "./hooks";
 import type { BlockTransaction } from "./types";
-
-const utc = (timestamp: string) => dayjs.utc(timestamp).format("YYYY-MM-DD HH:mm:ss [UTC]");
 
 const PanelTitle = ({ title, subtitle }: { title: string; subtitle?: string }) => (
   <Box mb="4">
@@ -91,14 +88,7 @@ export default function BlockDetails() {
   const crumbs = [{ label: "Blocks", href: "/blocks" }, { label: `#${numeral(height).format("0,0")}` }];
 
   if (!exists) {
-    return (
-      <>
-        <PageTitle crumbs={crumbs} title={`Block #${numeral(height).format("0,0")}`} />
-        <Panel>
-          <NoData />
-        </Panel>
-      </>
-    );
+    return <NotFound />;
   }
 
   return (
@@ -169,7 +159,11 @@ export default function BlockDetails() {
             ))}
           </SimpleGrid>
         ) : (
-          !loading && <NoData />
+          !loading && (
+            <Text py="6" textAlign="center" fontSize="sm" color="explorer.muted">
+              No signatures recorded
+            </Text>
+          )
         )}
       </Panel>
     </Stack>

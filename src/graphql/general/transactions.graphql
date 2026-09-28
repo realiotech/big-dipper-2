@@ -1,51 +1,7 @@
-subscription TransactionsListener($limit: Int = 7, $offset: Int = 0) {
-  transactions: transaction(limit: $limit, offset: $offset, order_by: {height: desc}) {
-    height
-    hash
-    success
-    block {
-      timestamp
-    }
-    messages
-    logs
-  }
-}
 
-query Transactions($limit: Int = 7, $offset: Int = 0) {
-  transactions: transaction(limit: $limit, offset: $offset, order_by: {height: desc}) {
-    height
-    hash
-    success
-    block {
-      timestamp
-    }
-    messages
-    logs
-  }
-}
 
-query TransactionsCount {
-  txs_count {
-    count
-  }
-}
-
-query EvmTransaction($ehash: String) {
-  etransaction(where: {ehash: {_eq: $ehash}}, limit: 1) {
+query EvmHashOf($hash: String!) {
+  etransaction(where: {transaction_hash: {_eq: $hash}}, limit: 1) {
     ehash
-    transaction_hash
-  }
-}
-
-subscription LatestTransactionsListener($limit: Int = 8) {
-  transactions: transaction(limit: $limit, order_by: {height: desc}) {
-    height
-    hash
-    success
-    fee
-    messages
-    block {
-      timestamp
-    }
   }
 }

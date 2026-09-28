@@ -2,16 +2,16 @@ import React from "react";
 import { Box, Flex, Grid, Link as ChakraLink, SimpleGrid, Stack, Text } from "@chakra-ui/react";
 import NextLink from "next/link";
 import numeral from "numeral";
-import { getMiddleEllipsis } from "@/utils/get_middle_ellipsis";
-import { ACCOUNT_DETAILS, BLOCK_DETAILS, VALIDATOR_DETAILS } from "@/utils/go_to_page";
+import { BLOCK_DETAILS, VALIDATOR_DETAILS } from "@/utils/go_to_page";
 import { Panel } from "@/components/explorer/panel";
 import { PageTitle } from "@/components/explorer/page_title";
 import { StatCard } from "@/components/explorer/stat_card";
 import { DataTable, Column } from "@/components/explorer/data_table";
 import { CopyButton } from "@/components/explorer/copy_button";
+import { AddressLink } from "@/components/explorer/address_link";
 import { StatusTag, ValidatorAvatar, validatorStatus } from "@/components/explorer/badges";
 import { formatPercent, timeAgo } from "@/components/explorer/format";
-import NoData from "@/components/helper/nodata";
+import { NotFound } from "@/components/explorer/not_found";
 import { DelegateDialog } from "../dialog";
 import { PROPOSED_WINDOW, useValidatorDetails } from "./hooks";
 
@@ -32,15 +32,6 @@ const blockColumns: Column<ProposedBlock>[] = [
   { key: "gas", header: "Gas used", align: "end", render: (row) => numeral(row.gasUsed).format("0,0") },
 ];
 
-const AddressLink = ({ href, value }: { href: string; value: string }) => (
-  <Flex align="center" gap="1" justify="flex-end">
-    <ChakraLink asChild color="explorer.link">
-      <NextLink href={href}>{getMiddleEllipsis(value, { beginning: 14, ending: 8 })}</NextLink>
-    </ChakraLink>
-    <CopyButton value={value} />
-  </Flex>
-);
-
 const ProfileRow = ({ label, children }: { label: string; children: React.ReactNode }) => (
   <Flex justify="space-between" gap="4" py="3" borderTopWidth="1px" borderColor="explorer.border" fontSize="sm">
     <Text color="explorer.muted" flexShrink={0}>
@@ -60,14 +51,7 @@ export default function ValidatorDetails() {
   const crumbs = [{ label: "Validators", href: "/validators" }, { label: v.loading ? "…" : v.moniker }];
 
   if (!v.exists) {
-    return (
-      <>
-        <PageTitle crumbs={crumbs} title="Validator not found" />
-        <Panel>
-          <NoData />
-        </Panel>
-      </>
-    );
+    return <NotFound />;
   }
 
   return (
@@ -166,10 +150,10 @@ export default function ValidatorDetails() {
             </Text>
           )}
           <ProfileRow label="Operator address">
-            <AddressLink href={VALIDATOR_DETAILS(v.address)} value={v.address} />
+            <AddressLink href={VALIDATOR_DETAILS(v.address)} address={v.address} beginning={14} />
           </ProfileRow>
           <ProfileRow label="Self delegate">
-            {v.selfDelegateAddress ? <AddressLink href={ACCOUNT_DETAILS(v.selfDelegateAddress)} value={v.selfDelegateAddress} /> : "—"}
+            {v.selfDelegateAddress ? <AddressLink address={v.selfDelegateAddress} beginning={14} /> : "—"}
           </ProfileRow>
           <ProfileRow label="Identity">{v.identity || "—"}</ProfileRow>
           <ProfileRow label="Security contact">{v.securityContact || "—"}</ProfileRow>
