@@ -5,7 +5,7 @@ import { useRouter } from 'next/router';
 import { useMemo } from 'react';
 
 // Redesigned pages render their own title and breadcrumbs.
-const REDESIGNED = new Set(['/', '/blocks', '/blocks/[height]', '/validators', '/validators/[address]', '/accounts/[address]']);
+const REDESIGNED = new Set(['/', '/blocks', '/blocks/[height]', '/validators', '/validators/[address]', '/accounts/[address]', '/transactions', '/transactions/[tx]', '/proposals', '/proposals/[id]', '/params', '/chart', '/search', '/assets', '/assets/[denom]', '/accounts', '/top-accounts', '/contracts', '/contracts/[address]', '/erc20/[address]']);
 
 export default function PageHeader() {
   const { pathname } = useRouter();

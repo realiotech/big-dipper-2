@@ -19,21 +19,21 @@ export const NAV_GROUPS: NavGroup[] = [
       { label: "Overview", href: "/", ready: true },
       { label: "Blocks", href: "/blocks", ready: true },
       { label: "Transactions", href: "/transactions", ready: true },
-      { label: "Accounts", href: "/accounts", ready: false },
-      { label: "Verified contracts", href: "/contracts", ready: false },
+      { label: "Accounts", href: "/accounts", ready: true },
+      { label: "Verified contracts", href: "/contracts", ready: true },
     ],
   },
   {
     label: "Staking",
     items: [
       { label: "Validators", href: "/validators", ready: true },
-      { label: "Top accounts", href: "/top-accounts", ready: false },
+      { label: "Top accounts", href: "/top-accounts", ready: true },
     ],
   },
   {
     label: "Assets",
     items: [
-      { label: "All assets", href: "/assets", ready: false },
+      { label: "All assets", href: "/assets", ready: true },
       { label: "Governance", href: "/proposals", ready: true },
     ],
   },
@@ -55,6 +55,11 @@ export const EXTERNAL_LINKS = [
   { label: "GitHub", href: "https://github.com/realiotech" },
 ];
 
+// Routes that live outside their nav item's path: ERC-20 token pages belong to "All assets".
+const ALIASES: Record<string, string[]> = { "/assets": ["/erc20"] };
+
 /** Whether a nav item matches the current route, so the header can highlight its group. */
 export const isActive = (href: string, pathname: string) =>
-  href === "/" ? pathname === "/" : pathname === href || pathname.startsWith(`${href}/`);
+  href === "/"
+    ? pathname === "/"
+    : [href, ...(ALIASES[href] ?? [])].some((path) => pathname === path || pathname.startsWith(`${path}/`));

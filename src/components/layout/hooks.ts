@@ -19,13 +19,19 @@ import { ethToRealionetwork } from '@realiotech/address-generator';
 import { searchData } from '@/configs';
 
 const { extra, prefix } = chainConfig;
-const consensusRegex = new RegExp(`^(${prefix.consensus})`);
-const validatorRegex = new RegExp(`^(${prefix.validator})`);
-const userRegex = new RegExp(`^(${prefix.account})`);
+// Full bech32 shape (prefix, separator "1", data), so names such as
+// "Realio Italy" are not mistaken for addresses.
+const bech32 = (hrp: string) => new RegExp(`^${hrp}1[02-9ac-hj-np-z]{38,}$`);
+const consensusRegex = bech32(prefix.consensus);
+const validatorRegex = bech32(prefix.validator);
+const userRegex = bech32(prefix.account);
 const evmRegex = new RegExp(`^(0x)`);
 import {
-    useEvmTransactionQuery
+    useEvmTransactionQuery,
+    ValidatorSearchDocument,
+    ValidatorSearchQuery,
 } from '@/graphql/types/general_types';
+import { useApolloClient } from '@apollo/client';
 
 export const useSearch = (callback: (value: string, clear?: () => void) => void) => {
     const [value, setValue] = useState('');
@@ -61,6 +67,7 @@ export const useSearch = (callback: (value: string, clear?: () => void) => void)
 
 export const useSearchBar = (t: TFunction) => {
     const router = useRouter();
+    const apollo = useApolloClient();
     const [evmTxHash, setEvmTxHash] = useState<string | null>(null);
 
     useEvmTransactionQuery({
@@ -119,17 +126,30 @@ export const useSearchBar = (t: TFunction) => {
                     } else {
                         router.push(PROFILE_DETAILS(parsedValue));
                     }
-                } else if (/^-?\d+$/.test(String(numeral(parsedValue).value()))) {
+                } else if (/^\d[\d,]*$/.test(parsedValue)) {
                     router.push(BLOCK_DETAILS(String(numeral(parsedValue).value())));
-                } else {
+                } else if (/^[0-9a-fA-F]{64}$/.test(parsedValue)) {
                     router.push(TRANSACTION_DETAILS(parsedValue));
+                } else {
+                    // Anything else is treated as part of a validator's name.
+                    const { data } = await apollo.query<ValidatorSearchQuery>({
+                        query: ValidatorSearchDocument,
+                        variables: { query: `%${value.trim()}%`, limit: 2 },
+                    });
+                    const matches = data?.matches ?? [];
+                    const operator = matches[0]?.validator?.validatorInfo?.operatorAddress;
+                    if (matches.length === 1 && operator) {
+                        router.push(VALIDATOR_DETAILS(operator));
+                    } else {
+                        router.push({ pathname: '/search', query: { q: value.trim() } });
+                    }
                 }
 
                 if (clear) {
                     clear();
                 }
             },
-        [router, t]
+        [apollo, router, t]
     );
 
     return {
