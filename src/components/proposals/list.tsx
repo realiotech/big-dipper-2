@@ -1,159 +1,156 @@
-import React from "react";
-import {
-  Box,
-  Text,
-  Flex,
-  Badge,
-  Link,
-  Stack,
-  StackSeparator,
-  useBreakpointValue,
-  Skeleton,
-} from "@chakra-ui/react";
-import { useProposals } from "./hooks";
-import useTranslation from "next-translate/useTranslation";
-import { getStatusInfo } from "./utils";
+import React, { useMemo, useState } from "react";
+import { Box, Flex, Grid, Link as ChakraLink, SimpleGrid, Skeleton, Stack, Text } from "@chakra-ui/react";
+import NextLink from "next/link";
+import dayjs from "@/utils/dayjs";
+import { Panel } from "@/components/explorer/panel";
+import { PageTitle } from "@/components/explorer/page_title";
+import { StatCard } from "@/components/explorer/stat_card";
+import { ExplorerTabs } from "@/components/explorer/tabs";
+import { StatusTag } from "@/components/explorer/badges";
+import { AddressLink } from "@/components/explorer/address_link";
+import { formatPercent, formatUtc as utc, timeAgo } from "@/components/explorer/format";
+import { Proposal, proposalStatus, useGovernance } from "./hooks";
+import { TallyBar } from "./tally";
 
-const ProposalItem = ({ proposal }) => {
-  const { t } = useTranslation("proposals");
-  const statusInfo = getStatusInfo(proposal.status, t);
-  const isMobile = useBreakpointValue({ base: true, md: false });
-  return isMobile ? (
-    <Box p={4} bg={{ base: "white", _dark: "#262626" }}>
-      <Flex
-        justify="space-between"
-        direction="column"
-        align="center"
-        gap={4}
-        w={"full"}
-      >
-        <Flex justify="space-between" w="full">
-          <Link
-            w={"60%"}
-            fontSize={"sm"}
-            href={`/proposals/${proposal.id}`}
-            fontWeight="bold"
-            color={{base: 'gray.700', _dark: 'white'}}
-          >
-            #{proposal.id} {proposal.title}
-          </Link>
-          <Badge
-            colorPalette={statusInfo.tag}
-            px={2}
-            py={1}
-            w={"80px"}
-            height={"30px"}
-            textAlign={"center"}
-            justifyContent={"center"}
-            fontSize={"sm"}
-            borderRadius="md"
-          >
-            {statusInfo.value}
-          </Badge>
+const TABS = {
+  all: () => true,
+  voting: (p: Proposal) => p.status === "PROPOSAL_STATUS_VOTING_PERIOD",
+  passed: (p: Proposal) => p.status === "PROPOSAL_STATUS_PASSED",
+  rejected: (p: Proposal) => p.status === "PROPOSAL_STATUS_REJECTED" || p.status === "PROPOSAL_STATUS_FAILED",
+};
+type Tab = keyof typeof TABS;
+
+const ProposalRow = ({ proposal }: { proposal: Proposal }) => {
+  const status = proposalStatus(proposal.status);
+  const votingOver = proposal.votingEndTime && dayjs.utc(proposal.votingEndTime).isBefore(dayjs.utc());
+
+  return (
+    <Grid
+      templateColumns={{ base: "1fr", lg: "1fr 320px" }}
+      gap={{ base: "4", lg: "10" }}
+      py="5"
+      borderTopWidth="1px"
+      borderColor="explorer.border"
+      _first={{ borderTopWidth: 0 }}
+    >
+      <Box minW="0">
+        <Flex align="center" gap="3" mb="2">
+          <Text fontSize="sm" color="explorer.muted">
+            #{proposal.id}
+          </Text>
+          <StatusTag tone={status.tone}>{status.label}</StatusTag>
         </Flex>
-        <Text lineClamp="2" color="gray.500" fontSize="sm">
+        <ChakraLink asChild color="explorer.link" fontSize="md" fontWeight="600">
+          <NextLink href={`/proposals/${proposal.id}`}>{proposal.title}</NextLink>
+        </ChakraLink>
+        <Text mt="2" fontSize="sm" color="explorer.muted" lineClamp={2} whiteSpace="pre-line">
           {proposal.description}
         </Text>
-      </Flex>
-    </Box>
-  ) : (
-    <Box bg={{ base: "white", _dark: "#262626" }} p={4}>
-      <Flex justify="space-between" align="center" mb={2} w={"full"}>
-        <Flex direction={"column"} w="80%">
-          <Link
-            href={`/proposals/${proposal.id}`}
-            fontWeight="bold"
-            color={{base: 'gray.700', _dark: 'white'}}
-          >
-            #{proposal.id} {proposal.title}
-          </Link>
-          <Text color="gray.500" lineClamp="2" fontSize="sm">
-            {proposal.description}
-          </Text>
+        <Flex mt="3" gap={{ base: "2", md: "5" }} wrap="wrap" fontSize="xs" color="explorer.muted">
+          <Text>Submitted {utc(proposal.submitTime)}</Text>
+          {proposal.votingEndTime && (
+            <Text>
+              {votingOver ? "Voting ended" : "Voting ends"} {utc(proposal.votingEndTime)}
+            </Text>
+          )}
+          {proposal.proposer && (
+            <Flex gap="2" align="center">
+              Proposer <AddressLink address={proposal.proposer} beginning={8} ending={8} />
+            </Flex>
+          )}
         </Flex>
-        <Badge
-          colorPalette={statusInfo.tag}
-          px={3}
-          py={1}
-          w={"140px"}
-          height={"50px"}
-          textAlign={"center"}
-          justifyContent={"center"}
-          fontSize={"md"}
-          borderRadius="md"
-        >
-          {statusInfo.value}
-        </Badge>
-      </Flex>
-    </Box>
+      </Box>
+      {proposal.tally.total > 0 ? (
+        <Box pt={{ base: "0", lg: "1" }}>
+          <TallyBar tally={proposal.tally} />
+        </Box>
+      ) : (
+        <Text fontSize="xs" color="explorer.muted" pt={{ base: "0", lg: "1" }}>
+          No votes yet
+        </Text>
+      )}
+    </Grid>
   );
 };
 
-const SkeletonItem = () => {
-  const isMobile = useBreakpointValue({ base: true, md: false });
-  return isMobile ? (
-    <Box bg={{ base: "white", _dark: "#262626" }} p={4}>
-      <Flex
-        justify="space-between"
-        direction="column"
-        align="center"
-        gap={4}
-        w={"full"}
-      >
-        <Flex justify="space-between" w="full">
-          <Skeleton bg={{ base: "gray.200", _dark: "#4f4f4fff" }} h={"20px"} w="full" mb="4" />
-        </Flex>
-        <Skeleton bg={{ base: "gray.200", _dark: "#4f4f4fff" }} h={"20px"} w="full"/>
-      </Flex>
-    </Box>
-  ) : (
-    <Box bg={{ base: "white", _dark: "#262626" }} p={4}>
-      <Flex justify="space-between" align="center"  w={"full"}>
-        <Flex direction={"column"} w="70%">
-          <Skeleton bg={{ base: "gray.200", _dark: "#4f4f4fff" }} h={"20px"} w="full" mb="4" />
-          <Skeleton bg={{ base: "gray.200", _dark: "#4f4f4fff" }} h={"20px"} w="full"/>
-        </Flex>
-        <Skeleton bg={{ base: "gray.200", _dark: "#4f4f4fff" }} h={"30px"} w="15%"/>
-      </Flex>
-    </Box>
+export default function ProposalList() {
+  const { proposals, stats, loading } = useGovernance();
+  const [tab, setTab] = useState<Tab>("all");
+  const rows = useMemo(() => proposals.filter(TABS[tab]), [proposals, tab]);
+  const counts = useMemo(
+    () => Object.fromEntries(Object.entries(TABS).map(([key, match]) => [key, proposals.filter(match).length])),
+    [proposals]
   );
-};
 
-const ProposalList = () => {
-  const { state } = useProposals();
   return (
-    <Box
-      bg={{ base: "#FAFBFC", _dark: "#0F0F0F" }}
-      py={5}
-      px={8}
-      overflowY="hidden"
-      overflowX="hidden"
-      maxH="auto"
-      minH={"85vh"}
-      borderRadius="md"
-    >
-      <Text fontSize="lg" fontWeight="bold" mb={4}>
-        A total of {state?.items?.length} proposals found
-      </Text>
-      <Stack
-        borderRadius="md"
-        boxShadow="sm"
-        bg={{ base: "white", _dark: "#262626" }}
-        gap={0}
-        separator={<StackSeparator borderTopColor={{base: 'gray.200', _dark: 'gray.700'}}/>}
-        px={3}
-      >
-        {!state.loading
-          ? state?.items?.length &&
-            state?.items.map((proposal, index) => (
-              <ProposalItem proposal={proposal} key={`proposal-${index}`} />
-            ))
-          : Array.from({ length: 10 }).map((_, index) => (
-              <SkeletonItem key={`proposal-${index}`} />
+    <>
+      <PageTitle
+        title="Governance"
+        subtitle={loading ? " " : `Showing ${rows.length} of ${stats.total} proposals`}
+      />
+      <SimpleGrid columns={{ base: 1, md: 2, xl: 4 }} gap="4" mb="5">
+        <StatCard
+          label="Proposals"
+          loading={loading}
+          value={stats.total}
+          rows={[
+            { label: "Passed", value: stats.passed },
+            { label: "Rejected or failed", value: stats.rejected },
+          ]}
+        />
+        <StatCard
+          label="In voting now"
+          loading={loading}
+          value={stats.voting}
+          rows={[
+            { label: "In deposit period", value: stats.deposit },
+            { label: "Latest proposal", value: stats.latest ? `#${stats.latest.id}` : "—" },
+          ]}
+        />
+        <StatCard
+          label="Pass rate"
+          loading={loading}
+          value={formatPercent(stats.passRate)}
+          rows={[
+            { label: "Decided proposals", value: stats.decided },
+            { label: "First proposal", value: stats.first ? `#${stats.first.id}` : "—" },
+          ]}
+        />
+        <StatCard
+          label="Latest activity"
+          loading={loading}
+          value={stats.latest?.submitTime ? timeAgo(stats.latest.submitTime) : "—"}
+          rows={[
+            { label: "Submitted", value: utc(stats.latest?.submitTime ?? "") },
+            { label: "Status", value: stats.latest ? proposalStatus(stats.latest.status).label : "—" },
+          ]}
+        />
+      </SimpleGrid>
+      <Panel>
+        <ExplorerTabs
+          value={tab}
+          onChange={(value) => setTab(value as Tab)}
+          items={[
+            { value: "all", label: "All", count: counts.all },
+            { value: "voting", label: "Voting", count: counts.voting },
+            { value: "passed", label: "Passed", count: counts.passed },
+            { value: "rejected", label: "Rejected", count: counts.rejected },
+          ]}
+        />
+        {loading ? (
+          <Stack gap="4" pt="3">
+            {Array.from({ length: 4 }).map((_, index) => (
+              <Skeleton key={index} h="96px" />
             ))}
-      </Stack>
-    </Box>
+          </Stack>
+        ) : rows.length ? (
+          rows.map((proposal) => <ProposalRow key={proposal.id} proposal={proposal} />)
+        ) : (
+          <Text py="6" textAlign="center" fontSize="sm" color="explorer.muted">
+            No proposals
+          </Text>
+        )}
+      </Panel>
+    </>
   );
-};
-
-export default ProposalList;
+}
