@@ -46,8 +46,7 @@ export const NAV_GROUPS: NavGroup[] = [
   },
 ];
 
-// Merged from feat/monitor once it lands on chains/realio.
-export const MONITOR_ITEM: NavItem = { label: "Wallet Monitor", href: "/monitor", ready: false };
+export const MONITOR_ITEM: NavItem = { label: "Wallet Monitor", href: "/monitor", ready: true };
 
 export const EXTERNAL_LINKS = [
   { label: "realio.network", href: "https://realio.network" },

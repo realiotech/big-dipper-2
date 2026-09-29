@@ -1,19 +1,18 @@
 import React, { useCallback, useEffect, useState } from 'react';
 import NextLink from 'next/link';
 import { useRouter } from 'next/router';
-import {
-  Box,
-  Button,
-  Flex,
-  Grid,
-  Input,
-  Link,
-  NativeSelect,
-  Table,
-  Text,
-} from '@chakra-ui/react';
-import { Status } from '@/components/ui/status';
-import Pagination from '@/components/layout/pagination';
+import { Box, Button, Flex, Grid, Input, Link as ChakraLink, NativeSelect, Stack, Text } from '@chakra-ui/react';
+import { LuSearch } from 'react-icons/lu';
+import { InputGroup } from '@/components/ui/input-group';
+import { Panel } from '@/components/explorer/panel';
+import { PageTitle } from '@/components/explorer/page_title';
+import { Column, DataTable } from '@/components/explorer/data_table';
+import { Pager } from '@/components/explorer/pager';
+import { AddressLink } from '@/components/explorer/address_link';
+import { Tag } from '@/components/explorer/badges';
+import { formatUtc } from '@/components/explorer/format';
+import { getMiddleEllipsis } from '@/utils/get_middle_ellipsis';
+import { ACCOUNT_DETAILS, BLOCK_DETAILS, TRANSACTION_DETAILS } from '@/utils/go_to_page';
 import type {
   DenomAmount,
   MonitorActivity,
@@ -21,7 +20,7 @@ import type {
   MonitorOverview,
   PageResult,
 } from './types';
-import { denomSymbol, formatBaseUnits, messageLabel, short } from './format';
+import { denomSymbol, formatBaseUnits, messageLabel } from './format';
 
 export type MonitorProps = {
   unauthorized?: boolean;
@@ -30,13 +29,6 @@ export type MonitorProps = {
   activity?: PageResult<MonitorActivity> & { types: string[] };
   filters?: Record<string, string>;
 };
-
-const panelBg = { base: '#FAFBFC', _dark: '#0F0F0F' };
-const rowBg = { base: 'white', _dark: '#262626' };
-const fieldBg = { base: 'white', _dark: 'black' };
-const borderColor = { base: 'gray.200', _dark: 'gray.700' };
-const mutedColor = { base: 'gray.600', _dark: 'gray.400' };
-const actionBg = { base: '#707D8A', _dark: '#242323' };
 
 const params = (
   filters: Record<string, string>,
@@ -55,93 +47,133 @@ const params = (
   return query ? `/monitor?${query}` : '/monitor';
 };
 
-const Amounts = ({ rows }: { rows: { denom: string; amount: string }[] }) => (
-  <>
-    {rows.length ? (
-      rows.map((row) => (
-        <Text key={row.denom} fontFamily="mono" whiteSpace="nowrap">
-          {formatBaseUnits(row.amount, row.denom)}
-        </Text>
-      ))
-    ) : (
-      <Text color={mutedColor}>—</Text>
-    )}
-  </>
+type Tone = 'success' | 'warning' | 'critical' | 'muted';
+
+const TONE_COLOR: Record<Tone, string> = {
+  success: 'explorer.success',
+  warning: 'explorer.warning',
+  critical: 'explorer.critical',
+  muted: 'explorer.muted',
+};
+
+/** Coloured dot and label, e.g. "Activity scan is current" or a tx result. */
+const Dot = ({ tone, children }: { tone: Tone; children: React.ReactNode }) => (
+  <Flex as="span" display="inline-flex" align="center" gap="1.5" fontSize="sm" color={TONE_COLOR[tone]} whiteSpace="nowrap">
+    <Box w="5px" h="5px" borderRadius="full" bg="currentColor" flexShrink={0} />
+    {children}
+  </Flex>
 );
 
-const PageBar = ({
+const SectionTitle = ({ title, subtitle, aside }: { title: string; subtitle?: React.ReactNode; aside?: React.ReactNode }) => (
+  <Flex justify="space-between" align={{ base: 'start', md: 'center' }} direction={{ base: 'column', md: 'row' }} gap="2" mb="4">
+    <Box>
+      <Text fontSize="md" fontWeight="600" color="explorer.text">
+        {title}
+      </Text>
+      {subtitle && (
+        <Text fontSize="sm" color="explorer.muted">
+          {subtitle}
+        </Text>
+      )}
+    </Box>
+    {aside && (
+      <Box fontSize="sm" color="explorer.muted">
+        {aside}
+      </Box>
+    )}
+  </Flex>
+);
+
+const Amounts = ({ rows }: { rows: { denom: string; amount: string }[] }) =>
+  rows.length ? (
+    <Stack gap="0.5">
+      {rows.map((row) => (
+        <Text key={row.denom} whiteSpace="nowrap" title={row.denom}>
+          {formatBaseUnits(row.amount, row.denom, 2, false)}{' '}
+          <Text as="span" fontSize="xs" color="explorer.muted">
+            {denomSymbol(row.denom)}
+          </Text>
+        </Text>
+      ))}
+    </Stack>
+  ) : (
+    <Text color="explorer.muted">—</Text>
+  );
+
+const PlainAddress = ({ address }: { address: string }) => (
+  <ChakraLink asChild color="explorer.link">
+    <NextLink href={ACCOUNT_DETAILS(address)}>{getMiddleEllipsis(address, { beginning: 9, ending: 7 })}</NextLink>
+  </ChakraLink>
+);
+
+const PageFooter = ({
+  shown,
   total,
+  label,
   pageSize,
   page,
   onPage,
 }: {
+  shown: number;
   total: number;
+  label: string;
   pageSize: number;
   page: number;
   onPage: (next: number) => void;
 }) =>
-  (total <= pageSize ? null : (
-    <Flex justify="center" pt="5">
-      <Pagination
-        page={page}
-        pageInfo={{ count: total, pageSize, currentPage: page }}
-        // The bundled Chakra typings lose zag's page field; the runtime detail
-        // object always carries it.
-        pageChangeFunc={(details) => onPage((details as unknown as { page: number }).page)}
-        pageSizeChangeFunc={() => {}}
-      />
+  total > 0 ? (
+    <Flex justify="space-between" align="center" mt="3" gap="3" wrap="wrap">
+      <Text fontSize="sm" color="explorer.muted">
+        Showing{' '}
+        <Text as="span" color="explorer.text">
+          {shown.toLocaleString()}
+        </Text>{' '}
+        of{' '}
+        <Text as="span" color="explorer.text">
+          {total.toLocaleString()}
+        </Text>{' '}
+        {label}
+      </Text>
+      {total > pageSize && <Pager count={total} pageSize={pageSize} page={page} onPageChange={onPage} />}
     </Flex>
-  ));
+  ) : null;
 
-const Section = ({
-  title,
-  summary,
+const fieldProps = {
+  h: '36px',
+  fontSize: 'sm',
+  bg: 'explorer.card',
+  color: 'explorer.text',
+  borderColor: 'explorer.border',
+  borderRadius: '6px',
+  _focusVisible: { borderColor: 'explorer.accent', outline: 'none' },
+} as const;
+
+const Select = ({
+  label,
+  value,
+  onChange,
+  width,
   children,
 }: {
-  title: string;
-  summary?: React.ReactNode;
+  label: string;
+  value: string;
+  onChange: (value: string) => void;
+  width: string;
   children: React.ReactNode;
 }) => (
-  <Box bg={panelBg} borderRadius="20px" py="5" px={{ base: '4', md: '8' }}>
-    <Flex
-      justify="space-between"
-      align={{ base: 'start', md: 'center' }}
-      direction={{ base: 'column', md: 'row' }}
-      gap="2"
-      mb="5"
-    >
-      <Text fontSize="2xl" fontWeight="bold">
-        {title}
-      </Text>
-      {summary ? (
-        <Text color={mutedColor} fontSize="sm">
-          {summary}
-        </Text>
-      ) : null}
-    </Flex>
-    {children}
-  </Box>
-);
-
-const EmptyRow = ({ columns }: { columns: number }) => (
-  <Table.Row bg={rowBg}>
-    <Table.Cell
-      colSpan={columns}
-      py="8"
-      textAlign="center"
-      color={mutedColor}
-      borderBottomColor={borderColor}
-    >
-      Nothing to show
-    </Table.Cell>
-  </Table.Row>
+  <NativeSelect.Root w={{ base: 'full', md: width }} size="sm">
+    <NativeSelect.Field aria-label={label} value={value} onChange={(event) => onChange(event.target.value)} {...fieldProps} px="3">
+      {children}
+    </NativeSelect.Field>
+    <NativeSelect.Indicator color="explorer.muted" />
+  </NativeSelect.Root>
 );
 
 function MonitorStatus({ data }: { data: MonitorOverview }) {
   const hasActivity = data.activity.sinceRestart > 0;
   const isStale =
     data.job.stale || data.job.status !== 'ok' || (data.job.lag ?? 1) > 0;
-  const statusValue = hasActivity ? 'error' : isStale ? 'warning' : 'success';
+  const tone: Tone = hasActivity ? 'critical' : isStale ? 'warning' : 'success';
   const statusLabel = hasActivity
     ? `${data.activity.sinceRestart} compromised-wallet events since restart`
     : isStale
@@ -149,76 +181,63 @@ function MonitorStatus({ data }: { data: MonitorOverview }) {
       : 'Activity scan is current';
 
   const stats = [
-    ['Compromised', data.watchlistSize.toLocaleString()],
-    ['Active stakers', data.stakers.toLocaleString()],
-    ['Stake positions', data.lockRows.toLocaleString()],
-    ['Validators', data.validators.toLocaleString()],
-    ['Unbonding', data.unbondingAddresses.toLocaleString()],
-    ['24h activity', data.activity.last24h.toLocaleString()],
+    ['Compromised', data.watchlistSize],
+    ['Active stakers', data.stakers],
+    ['Stake positions', data.lockRows],
+    ['Validators', data.validators],
+    ['Unbonding', data.unbondingAddresses],
+    ['24h activity', data.activity.last24h],
+  ] as const;
+
+  const meta = [
+    ['verified', data.job.verifiedThrough?.toLocaleString() ?? 'never'],
+    ['captured', data.job.capturedHead?.toLocaleString() ?? 'never'],
+    ['last run', data.job.ranAt ? formatUtc(data.job.ranAt) : 'never'],
+    ['status', data.job.status],
   ];
 
   return (
-    <Box bg={panelBg} borderRadius="20px" py="5" px={{ base: '4', md: '8' }}>
-      <Flex
-        justify="space-between"
-        align={{ base: 'start', md: 'center' }}
-        direction={{ base: 'column', md: 'row' }}
-        gap="3"
-      >
-        <Box>
-          <Text fontSize="2xl" fontWeight="bold">
-            Monitor status
-          </Text>
-          <Text color={mutedColor} fontSize="sm" mt="1">
-            {hasActivity
-              ? 'Review the matched activity below.'
-              : isStale
-                ? 'A quiet feed is not conclusive until the worker catches up.'
-                : 'No compromised-wallet activity has been detected since restart.'}
-          </Text>
-        </Box>
-        <Status value={statusValue}>{statusLabel}</Status>
-      </Flex>
-
+    <Panel>
+      <SectionTitle
+        title="Monitor status"
+        subtitle={
+          hasActivity
+            ? 'Review the matched activity below.'
+            : isStale
+              ? 'A quiet feed is not conclusive until the worker catches up.'
+              : 'No compromised-wallet activity has been detected since restart.'
+        }
+        aside={<Dot tone={tone}>{statusLabel}</Dot>}
+      />
       <Grid
         templateColumns={{ base: 'repeat(2, 1fr)', md: 'repeat(3, 1fr)', xl: 'repeat(6, 1fr)' }}
-        gap={{ base: '5', md: '7' }}
-        mt="6"
-        pt="5"
+        gap="5"
+        pt="4"
         borderTopWidth="1px"
-        borderColor={borderColor}
+        borderColor="explorer.border"
       >
         {stats.map(([label, value]) => (
           <Box key={label}>
-            <Text fontSize="sm" color={mutedColor}>
+            <Text fontSize="sm" color="explorer.muted">
               {label}
             </Text>
-            <Text fontSize="2xl" fontWeight="semibold" mt="1">
-              {value}
+            <Text fontSize="26px" lineHeight="36px" letterSpacing="-0.02em" color="explorer.text">
+              {value.toLocaleString()}
             </Text>
           </Box>
         ))}
       </Grid>
-
-      <Flex
-        gap={{ base: '3', md: '6' }}
-        wrap="wrap"
-        mt="5"
-        pt="4"
-        borderTopWidth="1px"
-        borderColor={borderColor}
-        color={mutedColor}
-        fontFamily="mono"
-        fontSize="xs"
-      >
-        <Text>verified {data.job.verifiedThrough?.toLocaleString() ?? 'never'}</Text>
-        <Text>captured {data.job.capturedHead?.toLocaleString() ?? 'never'}</Text>
-        <Text>
-          last run {data.job.ranAt ? new Date(data.job.ranAt).toLocaleString() : 'never'}
-        </Text>
-        <Text>status {data.job.status}</Text>
+      <Flex gap={{ base: '3', md: '6' }} wrap="wrap" mt="4" pt="3" borderTopWidth="1px" borderColor="explorer.border" fontSize="xs">
+        {meta.map(([label, value]) => (
+          <Text key={label} color="explorer.muted">
+            {label}{' '}
+            <Text as="span" color="explorer.text">
+              {value}
+            </Text>
+          </Text>
+        ))}
       </Flex>
-    </Box>
+    </Panel>
   );
 }
 
@@ -256,81 +275,32 @@ function BlacklistTotals({ data }: { data: MonitorOverview }) {
   const rows = denomTotals(data.stakeByDenom, data.balanceByDenom);
 
   return (
-    <Box bg={panelBg} borderRadius="20px" py="5" px={{ base: '4', md: '8' }} mt="6">
-      <Flex
-        justify="space-between"
-        align={{ base: 'start', md: 'center' }}
-        direction={{ base: 'column', md: 'row' }}
-        gap="2"
-        mb="5"
-      >
-        <Box>
-          <Text fontSize="2xl" fontWeight="bold">
-            Blacklist totals
-          </Text>
-          <Text color={mutedColor} fontSize="sm" mt="1">
-            Staked and wallet balances held by every blacklisted address, per
-            token, from the latest snapshot.
-          </Text>
-        </Box>
-        <Text color={mutedColor} fontSize="sm">
-          {data.stakers.toLocaleString()} staking ·{' '}
-          {data.balanceAddresses.toLocaleString()} with a balance ·{' '}
-          {data.watchlistSize.toLocaleString()} blacklisted
-        </Text>
-      </Flex>
-
+    <Panel>
+      <SectionTitle
+        title="Blacklist totals"
+        subtitle="Staked and wallet balances held by every blacklisted address, per token, from the latest snapshot."
+        aside={`${data.stakers.toLocaleString()} staking · ${data.balanceAddresses.toLocaleString()} with a balance · ${data.watchlistSize.toLocaleString()} blacklisted`}
+      />
       {rows.length ? (
-        <Grid
-          templateColumns={{ base: '1fr', sm: 'repeat(auto-fill, minmax(260px, 1fr))' }}
-          gap={{ base: '4', md: '5' }}
-        >
+        <Grid templateColumns={{ base: '1fr', sm: 'repeat(auto-fill, minmax(200px, 1fr))' }} gap="3">
           {rows.map((row) => (
-            <Box
-              key={row.denom}
-              bg={rowBg}
-              borderRadius="12px"
-              borderWidth="1px"
-              borderColor={borderColor}
-              p="4"
-              minW="0"
-            >
-              <Text
-                fontSize="sm"
-                color={mutedColor}
-                title={row.denom}
-                overflowWrap="anywhere"
-              >
+            <Box key={row.denom} bg="explorer.page" borderWidth="1px" borderColor="explorer.border" borderRadius="6px" p="4" minW="0">
+              <Text fontSize="sm" color="explorer.muted" title={row.denom} overflowWrap="anywhere">
                 {denomSymbol(row.denom)} total
               </Text>
-              <Text
-                fontSize="2xl"
-                fontWeight="semibold"
-                fontFamily="mono"
-                mt="1"
-                whiteSpace="nowrap"
-              >
+              <Text fontSize="22px" lineHeight="32px" letterSpacing="-0.02em" color="explorer.text" mt="1" whiteSpace="nowrap" overflow="hidden" textOverflow="ellipsis">
                 {formatBaseUnits(row.total, row.denom, 2, false)}
               </Text>
-              <Flex
-                justify="space-between"
-                gap="4"
-                wrap="wrap"
-                mt="3"
-                pt="3"
-                borderTopWidth="1px"
-                borderColor={borderColor}
-                fontSize="sm"
-              >
+              <Flex justify="space-between" gap="3" mt="3" fontSize="xs">
                 <Box minW="0">
-                  <Text color={mutedColor}>Staked</Text>
-                  <Text fontFamily="mono" whiteSpace="nowrap">
+                  <Text color="explorer.muted">Staked</Text>
+                  <Text color="explorer.text" whiteSpace="nowrap">
                     {formatBaseUnits(row.staked, row.denom, 2, false)}
                   </Text>
                 </Box>
                 <Box textAlign="end" minW="0">
-                  <Text color={mutedColor}>Balance</Text>
-                  <Text fontFamily="mono" whiteSpace="nowrap">
+                  <Text color="explorer.muted">Balance</Text>
+                  <Text color="explorer.text" whiteSpace="nowrap">
                     {formatBaseUnits(row.balance, row.denom, 2, false)}
                   </Text>
                 </Box>
@@ -339,21 +309,168 @@ function BlacklistTotals({ data }: { data: MonitorOverview }) {
           ))}
         </Grid>
       ) : (
-        <Text color={mutedColor}>No snapshot amounts captured yet.</Text>
+        <Text fontSize="sm" color="explorer.muted">
+          No snapshot amounts captured yet.
+        </Text>
       )}
-    </Box>
+    </Panel>
   );
 }
 
-const tableHeaderProps = {
-  bg: panelBg,
-  borderBottomColor: borderColor,
+function Coverage({ data }: { data: MonitorOverview }) {
+  const rows = [
+    {
+      key: 'evm',
+      title: 'EVM transactions',
+      body: (
+        <>
+          <Text>
+            Explorer message type{' '}
+            <Text as="span" color="explorer.text">
+              {data.evm.actualType}
+            </Text>
+          </Text>
+          <Text fontSize="xs">
+            Observed:{' '}
+            {data.evm.observedTypes.map((row) => `${messageLabel(row.type)} ${row.count}`).join(', ') || 'none in the stored range'}
+          </Text>
+        </>
+      ),
+      aside: <Dot tone={data.evm.covered ? 'success' : 'critical'}>{data.evm.covered ? 'Covered' : 'Not covered'}</Dot>,
+    },
+    ...data.classifications.map((item) => ({
+      key: `${item.tag}:${item.address}`,
+      title: item.label ?? tagLabel(item.tag),
+      body: <Text>Behavioral classification only, no ownership attribution.</Text>,
+      aside: (
+        <Flex gap="3" align="center" wrap="wrap">
+          <Text fontSize="xs" color="explorer.muted" textTransform="uppercase" letterSpacing="0.04em">
+            {item.tag.replace(/_/g, ' ')}
+          </Text>
+          <AddressLink address={item.address} beginning={12} ending={10} />
+        </Flex>
+      ),
+    })),
+  ];
+
+  return (
+    <Panel>
+      <SectionTitle title="Coverage" />
+      {rows.map((row, index) => (
+        <Flex
+          key={row.key}
+          justify="space-between"
+          align={{ base: 'start', md: 'center' }}
+          direction={{ base: 'column', md: 'row' }}
+          gap="2"
+          py="3"
+          borderTopWidth={index ? '1px' : '0'}
+          borderColor="explorer.border"
+        >
+          <Box fontSize="sm" color="explorer.muted">
+            <Text fontWeight="600" color="explorer.text" mb="1">
+              {row.title}
+            </Text>
+            {row.body}
+          </Box>
+          {row.aside}
+        </Flex>
+      ))}
+    </Panel>
+  );
+}
+
+const TAG_COLOR: Record<string, string> = {
+  compromised: 'explorer.warning',
+  suspected_sink: 'explorer.critical',
 };
 
-const tableCellProps = {
-  borderBottomColor: borderColor,
-  py: '3',
-};
+const tagLabel = (tag: string) => tag.replace(/_/g, ' ').replace(/^./, (c) => c.toUpperCase());
+
+const addressColumns: Column<MonitorAddress>[] = [
+  { key: 'address', header: 'Address', render: (row) => <AddressLink address={row.address} beginning={10} ending={8} /> },
+  {
+    key: 'tags',
+    header: 'Classification',
+    render: (row) => (
+      <Flex gap="1" wrap="wrap">
+        {row.tags.map((tag) => (
+          <Tag key={tag} color={TAG_COLOR[tag] ?? 'explorer.muted'}>
+            {tagLabel(tag)}
+          </Tag>
+        ))}
+      </Flex>
+    ),
+  },
+  { key: 'stake', header: 'Staked', render: (row) => <Amounts rows={row.stake} /> },
+  { key: 'balances', header: 'Balances', render: (row) => <Amounts rows={row.balances} /> },
+  { key: 'validators', header: 'Delegated validators', align: 'end', render: (row) => row.validators },
+  {
+    key: 'activity',
+    header: 'Last activity',
+    align: 'end',
+    render: (row) =>
+      row.lastActivityHeight ? (
+        <ChakraLink asChild color="explorer.link">
+          <NextLink href={BLOCK_DETAILS(row.lastActivityHeight)}>{row.lastActivityHeight.toLocaleString()}</NextLink>
+        </ChakraLink>
+      ) : (
+        <Text color="explorer.muted">—</Text>
+      ),
+  },
+];
+
+const activityColumns: Column<MonitorActivity>[] = [
+  {
+    key: 'block',
+    header: 'Block / time',
+    render: (row) => (
+      <Stack gap="0.5">
+        <ChakraLink asChild color="explorer.link">
+          <NextLink href={TRANSACTION_DETAILS(row.txHash)}>{row.height.toLocaleString()}</NextLink>
+        </ChakraLink>
+        <Text fontSize="xs" color="explorer.muted">
+          {row.blockTime ? formatUtc(row.blockTime) : '—'}
+        </Text>
+        <Text fontSize="xs" color="explorer.muted" title={row.txHash}>
+          {getMiddleEllipsis(row.txHash, { beginning: 6, ending: 6 })}
+        </Text>
+      </Stack>
+    ),
+  },
+  { key: 'wallet', header: 'Wallet', render: (row) => <PlainAddress address={row.address} /> },
+  {
+    key: 'message',
+    header: 'Message',
+    render: (row) => (
+      <Flex>
+        <Tag color="explorer.text">{messageLabel(row.type)}</Tag>
+      </Flex>
+    ),
+  },
+  { key: 'direction', header: 'Direction', render: (row) => <Text textTransform="capitalize">{row.direction}</Text> },
+  {
+    key: 'counterparties',
+    header: 'Counterparties',
+    render: (row) =>
+      row.counterparties.length ? (
+        <Stack gap="0.5">
+          {row.counterparties.map((address) => (
+            <PlainAddress key={address} address={address} />
+          ))}
+        </Stack>
+      ) : (
+        <Text color="explorer.muted">—</Text>
+      ),
+  },
+  {
+    key: 'result',
+    header: 'Result',
+    align: 'end',
+    render: (row) =>
+      row.success === true ? <Dot tone="success">Success</Dot> : row.success === false ? <Dot tone="critical">Failed</Dot> : <Dot tone="muted">Unknown</Dot>,
+  },
+];
 
 export default function Monitor({
   unauthorized,
@@ -391,14 +508,12 @@ export default function Monitor({
 
   if (unauthorized || !summary || !addresses || !activity) {
     return (
-      <Box bg={panelBg} borderRadius="20px" p={{ base: '5', md: '8' }}>
-        <Text fontSize="2xl" fontWeight="bold">
-          Authentication required
-        </Text>
-        <Text mt="2" color={mutedColor}>
-          Enter the monitor credentials in the browser prompt.
-        </Text>
-      </Box>
+      <Stack gap="5">
+        <PageTitle title="Wallet Monitor" />
+        <Panel>
+          <SectionTitle title="Authentication required" subtitle="Enter the monitor credentials in the browser prompt." />
+        </Panel>
+      </Stack>
     );
   }
 
@@ -416,435 +531,145 @@ export default function Monitor({
     ]),
   ];
   const sortDenom = filters.denom || 'ario';
+  const pendingStyle = { opacity: pending ? 0.55 : 1, transition: 'opacity 0.15s' };
 
   return (
-    <Box pb="10">
-      <Flex
-        justify="space-between"
-        align={{ base: 'start', md: 'center' }}
-        direction={{ base: 'column', md: 'row' }}
-        gap="3"
-        mb="5"
-      >
-        <Text color={mutedColor} maxW="760px">
-          Internal incident view for compromised-wallet staking exposure and
-          decoded on-chain activity.
-        </Text>
-        <Button
-          asChild
-          bg={actionBg}
-          color="white"
-          border={{ base: 'none', _dark: '1px solid white' }}
-          _hover={{ opacity: 0.9 }}
-        >
-          <a href="/api/monitor/export">Export staking CSV</a>
-        </Button>
-      </Flex>
+    <Stack gap="5">
+      <PageTitle
+        title="Wallet Monitor"
+        subtitle="Internal incident view for compromised-wallet staking exposure and decoded on-chain activity."
+        actions={
+          <Button asChild size="sm" variant="outline" fontWeight="400" color="explorer.text" borderColor="explorer.border" flexShrink={0}>
+            <a href="/api/monitor/export">Export staking CSV</a>
+          </Button>
+        }
+      />
 
       <MonitorStatus data={summary} />
-
       <BlacklistTotals data={summary} />
+      <Coverage data={summary} />
 
-      <Box bg={panelBg} borderRadius="20px" py="5" px={{ base: '4', md: '8' }} mt="6">
-        <Text fontSize="2xl" fontWeight="bold">
-          Coverage
-        </Text>
-        <Flex
-          justify="space-between"
-          gap="4"
-          align={{ base: 'start', md: 'center' }}
-          direction={{ base: 'column', md: 'row' }}
-          py="4"
-          mt="2"
-          borderBottomWidth={summary.classifications.length ? '1px' : '0'}
-          borderColor={borderColor}
-        >
-          <Box>
-            <Text fontWeight="semibold">EVM transactions</Text>
-            <Text fontSize="sm" color={mutedColor} mt="1">
-              Explorer message type <code>{summary.evm.actualType}</code>
-            </Text>
-            <Text fontSize="xs" color={mutedColor} mt="1">
-              Observed:{' '}
-              {summary.evm.observedTypes
-                .map((row) => `${messageLabel(row.type)} ${row.count}`)
-                .join(', ') || 'none in the stored range'}
-            </Text>
-          </Box>
-          <Status value={summary.evm.covered ? 'success' : 'error'}>
-            {summary.evm.covered ? 'Covered' : 'Not covered'}
-          </Status>
-        </Flex>
-
-        {summary.classifications.map((item, index) => (
-          <Flex
-            key={`${item.tag}:${item.address}`}
-            justify="space-between"
-            align={{ base: 'start', md: 'center' }}
-            direction={{ base: 'column', md: 'row' }}
-            gap="2"
-            py="4"
-            borderBottomWidth={index < summary.classifications.length - 1 ? '1px' : '0'}
-            borderColor={borderColor}
-          >
-            <Box>
-              <Text fontWeight="semibold">{item.label}</Text>
-              <Text fontSize="sm" color={mutedColor} mt="1">
-                Behavioral classification only; no ownership attribution.
-              </Text>
-            </Box>
-            <Flex gap="3" align="center" wrap="wrap">
-              <Text fontSize="xs" color={mutedColor} textTransform="uppercase">
-                {item.tag.replace('_', ' ')}
-              </Text>
-              <Link asChild colorPalette="blue" fontFamily="mono" fontSize="sm">
-                <NextLink href={`/accounts/${item.address}`}>
-                  {short(item.address, 12)}
-                </NextLink>
-              </Link>
-            </Flex>
-          </Flex>
-        ))}
-      </Box>
-
-      <Box mt="6">
-        <Section
+      <Panel>
+        <SectionTitle
           title="Staking exposure"
-          summary={
+          aside={
             <>
               {addresses.total.toLocaleString()} addresses
-              {stakerDelta == null
-                ? ''
-                : ` · ${stakerDelta >= 0 ? '+' : ''}${stakerDelta} vs prior snapshot`}
+              {stakerDelta == null ? '' : ` · ${stakerDelta >= 0 ? '+' : ''}${stakerDelta} vs prior snapshot`}
             </>
           }
+        />
+        <form
+          onSubmit={(event) => {
+            event.preventDefault();
+            go({ q: query, sPage: 1 });
+          }}
         >
-          <form
-            onSubmit={(event) => {
-              event.preventDefault();
-              go({ q: query, sPage: 1 });
-            }}
-          >
-            <Flex gap="3" wrap="wrap" mb="5">
+          <Flex gap="3" wrap="wrap" mb="2">
+            <InputGroup w={{ base: 'full', md: '320px' }} startElement={<LuSearch />} startElementProps={{ color: 'explorer.muted' }}>
               <Input
                 aria-label="Search address"
                 name="q"
                 value={query}
                 onChange={(event) => setQuery(event.target.value)}
                 placeholder="Search address"
-                bg={fieldBg}
-                borderRadius="full"
-                w={{ base: 'full', md: '360px' }}
+                _placeholder={{ color: 'explorer.muted' }}
+                {...fieldProps}
               />
-              <NativeSelect.Root w={{ base: 'full', md: '240px' }}>
-                <NativeSelect.Field
-                  aria-label="Sort addresses"
-                  name="sort"
-                  value={filters.sort || 'stake'}
-                  onChange={(event) => go({ sort: event.target.value, sPage: 1 })}
-                  bg={fieldBg}
-                  borderRadius="full"
-                  px="4"
-                >
-                  <option value="stake">Stake high to low</option>
-                  <option value="stake_asc">Stake low to high</option>
-                  <option value="balance">Balance high to low</option>
-                  <option value="balance_asc">Balance low to high</option>
-                  <option value="validators">Validator count</option>
-                  <option value="activity">Recent activity</option>
-                  <option value="address">Address</option>
-                </NativeSelect.Field>
-                <NativeSelect.Indicator />
-              </NativeSelect.Root>
-              {sortDenoms.length > 1 ? (
-                <NativeSelect.Root w={{ base: 'full', md: '140px' }}>
-                  <NativeSelect.Field
-                    aria-label="Token to sort by"
-                    name="denom"
-                    value={sortDenom}
-                    onChange={(event) => go({ denom: event.target.value, sPage: 1 })}
-                    bg={fieldBg}
-                    borderRadius="full"
-                    px="4"
-                  >
-                    {sortDenoms.map((denom) => (
-                      <option key={denom} value={denom} title={denom}>
-                        {denomSymbol(denom)}
-                      </option>
-                    ))}
-                  </NativeSelect.Field>
-                  <NativeSelect.Indicator />
-                </NativeSelect.Root>
-              ) : null}
-              <Button
-                type="submit"
-                bg={actionBg}
-                color="white"
-                border={{ base: 'none', _dark: '1px solid white' }}
-                _hover={{ opacity: 0.9 }}
-                disabled={pending}
-              >
-                Search
-              </Button>
-            </Flex>
-          </form>
-
-          <Table.ScrollArea
-            border="none"
-            borderRadius="10px"
-            opacity={pending ? 0.55 : 1}
-            transition="opacity 0.15s"
-          >
-            <Table.Root color={{ base: 'black', _dark: 'white' }} size="sm">
-              <Table.Header>
-                <Table.Row {...tableHeaderProps}>
-                  <Table.ColumnHeader>Address</Table.ColumnHeader>
-                  <Table.ColumnHeader>Classification</Table.ColumnHeader>
-                  <Table.ColumnHeader>Staked</Table.ColumnHeader>
-                  <Table.ColumnHeader>Balances</Table.ColumnHeader>
-                  <Table.ColumnHeader textAlign="end">Delegated validators</Table.ColumnHeader>
-                  <Table.ColumnHeader>Last activity</Table.ColumnHeader>
-                </Table.Row>
-              </Table.Header>
-              <Table.Body>
-                {addresses.rows.length ? (
-                  addresses.rows.map((row) => (
-                    <Table.Row key={row.address} bg={rowBg}>
-                      <Table.Cell {...tableCellProps} fontFamily="mono">
-                        <Link asChild colorPalette="blue">
-                          <NextLink href={`/accounts/${row.address}`}>
-                            {short(row.address, 10)}
-                          </NextLink>
-                        </Link>
-                      </Table.Cell>
-                      <Table.Cell {...tableCellProps}>
-                        <Text fontSize="xs" textTransform="uppercase" color={mutedColor}>
-                          {row.tags.map((tag) => tag.replace('_', ' ')).join(', ')}
-                        </Text>
-                      </Table.Cell>
-                      <Table.Cell {...tableCellProps}>
-                        <Amounts rows={row.stake} />
-                      </Table.Cell>
-                      <Table.Cell {...tableCellProps}>
-                        <Amounts rows={row.balances} />
-                      </Table.Cell>
-                      <Table.Cell {...tableCellProps} textAlign="end">
-                        {row.validators}
-                      </Table.Cell>
-                      <Table.Cell {...tableCellProps}>
-                        {row.lastActivityHeight?.toLocaleString() ?? '—'}
-                      </Table.Cell>
-                    </Table.Row>
-                  ))
-                ) : (
-                  <EmptyRow columns={6} />
-                )}
-              </Table.Body>
-            </Table.Root>
-          </Table.ScrollArea>
-          <PageBar
-            total={addresses.total}
-            pageSize={addresses.pageSize}
-            page={addresses.page}
-            onPage={(next) => go({ sPage: next })}
-          />
-        </Section>
-      </Box>
-
-      <Box mt="6">
-        <Section
-          title="Activity"
-          summary={`${activity.total.toLocaleString()} matches · one row per watched wallet in a message`}
-        >
-          <Flex gap="3" wrap="wrap" mb="5">
-            <NativeSelect.Root w={{ base: 'full', md: '220px' }}>
-              <NativeSelect.Field
-                aria-label="Message type"
-                name="type"
-                value={filters.type || ''}
-                onChange={(event) => go({ type: event.target.value, aPage: 1 })}
-                bg={fieldBg}
-                borderRadius="full"
-                px="4"
-              >
-                <option value="">All message types</option>
-                {activity.types.map((type) => (
-                  <option key={type} value={type}>
-                    {messageLabel(type)}
+            </InputGroup>
+            <Select label="Sort addresses" value={filters.sort || 'stake'} onChange={(sort) => go({ sort, sPage: 1 })} width="190px">
+              <option value="stake">Stake high to low</option>
+              <option value="stake_asc">Stake low to high</option>
+              <option value="balance">Balance high to low</option>
+              <option value="balance_asc">Balance low to high</option>
+              <option value="validators">Validator count</option>
+              <option value="activity">Recent activity</option>
+              <option value="address">Address</option>
+            </Select>
+            {sortDenoms.length > 1 ? (
+              <Select label="Token to sort by" value={sortDenom} onChange={(denom) => go({ denom, sPage: 1 })} width="130px">
+                {sortDenoms.map((denom) => (
+                  <option key={denom} value={denom} title={denom}>
+                    {denomSymbol(denom)}
                   </option>
                 ))}
-              </NativeSelect.Field>
-              <NativeSelect.Indicator />
-            </NativeSelect.Root>
-            <NativeSelect.Root w={{ base: 'full', md: '180px' }}>
-              <NativeSelect.Field
-                aria-label="Direction"
-                name="direction"
-                value={filters.direction || ''}
-                onChange={(event) => go({ direction: event.target.value, aPage: 1 })}
-                bg={fieldBg}
-                borderRadius="full"
-                px="4"
-              >
-                <option value="">All directions</option>
-                <option value="incoming">Incoming</option>
-                <option value="outgoing">Outgoing</option>
-                <option value="self">Self</option>
-                <option value="involved">Involved</option>
-              </NativeSelect.Field>
-              <NativeSelect.Indicator />
-            </NativeSelect.Root>
-            <NativeSelect.Root w={{ base: 'full', md: '160px' }}>
-              <NativeSelect.Field
-                aria-label="Result"
-                name="success"
-                value={filters.success || ''}
-                onChange={(event) => go({ success: event.target.value, aPage: 1 })}
-                bg={fieldBg}
-                borderRadius="full"
-                px="4"
-              >
-                <option value="">All results</option>
-                <option value="success">Success</option>
-                <option value="failed">Failed</option>
-                <option value="unknown">Unknown</option>
-              </NativeSelect.Field>
-              <NativeSelect.Indicator />
-            </NativeSelect.Root>
-            <Flex
-              as="label"
-              align="center"
-              gap="2"
-              px="3"
-              minH="10"
-              fontSize="sm"
-              color={mutedColor}
-            >
-              <input
-                type="checkbox"
-                name="sinceRestart"
-                value="1"
-                checked={filters.sinceRestart === '1'}
-                onChange={(event) => go({ sinceRestart: event.target.checked ? '1' : '', aPage: 1 })}
-              />
-              Since restart
-            </Flex>
+              </Select>
+            ) : null}
+            <Button type="submit" size="sm" h="36px" px="4" fontWeight="400" bg="explorer.accent" color="white" _hover={{ opacity: 0.9 }} disabled={pending}>
+              Search
+            </Button>
           </Flex>
+        </form>
+        <Box {...pendingStyle}>
+          <DataTable columns={addressColumns} rows={addresses.rows} rowKey={(row) => row.address} emptyText="No matching addresses" />
+        </Box>
+        <PageFooter
+          shown={addresses.rows.length}
+          total={addresses.total}
+          label="addresses"
+          pageSize={addresses.pageSize}
+          page={addresses.page}
+          onPage={(next) => go({ sPage: next })}
+        />
+      </Panel>
 
-          <Table.ScrollArea
-            border="none"
-            borderRadius="10px"
-            opacity={pending ? 0.55 : 1}
-            transition="opacity 0.15s"
-          >
-            <Table.Root color={{ base: 'black', _dark: 'white' }} size="sm">
-              <Table.Header>
-                <Table.Row {...tableHeaderProps}>
-                  <Table.ColumnHeader>Block / time</Table.ColumnHeader>
-                  <Table.ColumnHeader>Wallet</Table.ColumnHeader>
-                  <Table.ColumnHeader>Message</Table.ColumnHeader>
-                  <Table.ColumnHeader>Direction</Table.ColumnHeader>
-                  <Table.ColumnHeader>Counterparties</Table.ColumnHeader>
-                  <Table.ColumnHeader>Result</Table.ColumnHeader>
-                </Table.Row>
-              </Table.Header>
-              <Table.Body>
-                {activity.rows.length ? (
-                  activity.rows.map((row) => (
-                    <Table.Row
-                      key={`${row.height}:${row.txHash}:${row.msgIndex}:${row.address}`}
-                      bg={rowBg}
-                    >
-                      <Table.Cell {...tableCellProps}>
-                        <Link asChild colorPalette="blue">
-                          <NextLink href={`/transactions/${row.txHash}`}>
-                            {row.height.toLocaleString()}
-                          </NextLink>
-                        </Link>
-                        <Text fontSize="xs" color={mutedColor}>
-                          {row.blockTime
-                            ? new Date(row.blockTime).toLocaleString()
-                            : '—'}
-                        </Text>
-                        <Text
-                          fontSize="xs"
-                          fontFamily="mono"
-                          color={mutedColor}
-                          title={row.txHash}
-                        >
-                          {short(row.txHash, 6)}
-                        </Text>
-                      </Table.Cell>
-                      <Table.Cell {...tableCellProps} fontFamily="mono">
-                        <Link asChild colorPalette="blue">
-                          <NextLink href={`/accounts/${row.address}`}>
-                            {short(row.address)}
-                          </NextLink>
-                        </Link>
-                      </Table.Cell>
-                      <Table.Cell {...tableCellProps}>
-                        {messageLabel(row.type)}
-                      </Table.Cell>
-                      <Table.Cell {...tableCellProps} textTransform="capitalize">
-                        {row.direction}
-                      </Table.Cell>
-                      <Table.Cell {...tableCellProps}>
-                        {row.counterparties.length ? (
-                          row.counterparties.map((address) => (
-                            <Text key={address} fontFamily="mono">
-                              <Link asChild colorPalette="blue">
-                                <NextLink href={`/accounts/${address}`}>
-                                  {short(address)}
-                                </NextLink>
-                              </Link>
-                            </Text>
-                          ))
-                        ) : (
-                          <Text color={mutedColor}>—</Text>
-                        )}
-                      </Table.Cell>
-                      <Table.Cell {...tableCellProps}>
-                        <Status
-                          value={
-                            row.success === true
-                              ? 'success'
-                              : row.success === false
-                                ? 'error'
-                                : 'info'
-                          }
-                        >
-                          {row.success === true
-                            ? 'Success'
-                            : row.success === false
-                              ? 'Failed'
-                              : 'Unknown'}
-                        </Status>
-                      </Table.Cell>
-                    </Table.Row>
-                  ))
-                ) : (
-                  <EmptyRow columns={6} />
-                )}
-              </Table.Body>
-            </Table.Root>
-          </Table.ScrollArea>
-          <PageBar
-            total={activity.total}
-            pageSize={activity.pageSize}
-            page={activity.page}
-            onPage={(next) => go({ aPage: next })}
+      <Panel>
+        <SectionTitle title="Activity" aside={`${activity.total.toLocaleString()} matches · one row per watched wallet in a message`} />
+        <Flex gap="3" wrap="wrap" mb="2" align="center">
+          <Select label="Message type" value={filters.type || ''} onChange={(type) => go({ type, aPage: 1 })} width="200px">
+            <option value="">All message types</option>
+            {activity.types.map((type) => (
+              <option key={type} value={type}>
+                {messageLabel(type)}
+              </option>
+            ))}
+          </Select>
+          <Select label="Direction" value={filters.direction || ''} onChange={(direction) => go({ direction, aPage: 1 })} width="170px">
+            <option value="">All directions</option>
+            <option value="incoming">Incoming</option>
+            <option value="outgoing">Outgoing</option>
+            <option value="self">Self</option>
+            <option value="involved">Involved</option>
+          </Select>
+          <Select label="Result" value={filters.success || ''} onChange={(success) => go({ success, aPage: 1 })} width="170px">
+            <option value="">All results</option>
+            <option value="success">Success</option>
+            <option value="failed">Failed</option>
+            <option value="unknown">Unknown</option>
+          </Select>
+          <Flex as="label" align="center" gap="2" px="1" fontSize="sm" color="explorer.muted" cursor="pointer">
+            <input
+              type="checkbox"
+              name="sinceRestart"
+              value="1"
+              checked={filters.sinceRestart === '1'}
+              onChange={(event) => go({ sinceRestart: event.target.checked ? '1' : '', aPage: 1 })}
+            />
+            Since restart
+          </Flex>
+        </Flex>
+        <Box {...pendingStyle}>
+          <DataTable
+            columns={activityColumns}
+            rows={activity.rows}
+            rowKey={(row) => `${row.height}:${row.txHash}:${row.msgIndex}:${row.address}`}
+            emptyText="No matching activity"
           />
-        </Section>
-      </Box>
+        </Box>
+        <PageFooter
+          shown={activity.rows.length}
+          total={activity.total}
+          label="matches"
+          pageSize={activity.pageSize}
+          page={activity.page}
+          onPage={(next) => go({ aPage: next })}
+        />
+      </Panel>
 
-      <Text mt="6" fontSize="sm" color={mutedColor}>
-        Snapshot{' '}
-        {summary.snapshotAt
-          ? new Date(summary.snapshotAt).toLocaleString()
-          : 'not yet captured'}{' '}
-        at block {summary.snapshotHead?.toLocaleString() ?? '—'}. “Suspected
-        sink” is a behavioral label, not an ownership attribution.
+      <Text fontSize="sm" color="explorer.muted">
+        Snapshot {summary.snapshotAt ? formatUtc(summary.snapshotAt) : 'not yet captured'} at block{' '}
+        {summary.snapshotHead?.toLocaleString() ?? '—'}. “Suspected sink” is a behavioral label, not an ownership attribution.
       </Text>
-    </Box>
+    </Stack>
   );
 }
