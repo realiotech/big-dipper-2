@@ -18,11 +18,17 @@ import { CopyButton } from "@/components/explorer/copy_button";
 import { StatusTag } from "@/components/explorer/badges";
 import { formatPercent } from "@/components/explorer/format";
 import { MODULE_LABELS } from "@/components/assets/hooks";
-import { HolderRow, useHolderList } from "@/components/holders/hooks";
+import { HOLDER_TOKENS, HolderRow, useBlacklistedHolderList, useHolderList } from "@/components/holders/hooks";
+import { useBlacklistCheck } from "@/components/accounts/blacklist";
 
 const PAGE_SIZE = 50;
-const STATUSES = ["all", "standard", "module"] as const;
+const STATUSES = ["all", "standard", "module", "blacklisted"] as const;
+const STATUS_LABEL: Record<Status, string> = { all: "All accounts", standard: "Standard", module: "Module", blacklisted: "Blacklisted" };
 type Status = (typeof STATUSES)[number];
+
+// Status column: module accounts first, then the chain's blacklist, else a standard account.
+const statusOf = (row: HolderRow, blacklisted: Set<string>) =>
+  row.isModule ? { label: "Module", tone: "accent" as const } : blacklisted.has(row.address) ? { label: "Blacklisted", tone: "warning" as const } : { label: "Standard", tone: "neutral" as const };
 
 const Chip = ({ active, onClick, children }: { active: boolean; onClick: () => void; children: React.ReactNode }) => (
   <Button
@@ -55,12 +61,14 @@ const FilterRow = ({ label, children }: { label: string; children: React.ReactNo
 export default function AccountsPage() {
   const router = useRouter();
   const { assetArr } = useRecoilValue(readAssets);
-  const tokens = assetArr.filter((asset) => !asset.denom.startsWith("erc20:"));
+  const tokens = HOLDER_TOKENS.flatMap((symbol) => assetArr.filter((asset) => asset.symbol === symbol));
   const [denom, setDenom] = useState("ario");
   const [status, setStatus] = useState<Status>("all");
   const [query, setQuery] = useState("");
   const [page, setPage] = useState(1);
   const list = useHolderList(denom, page, PAGE_SIZE);
+  // Blacklisted accounts are spread across the whole ranking, so the server ranks them separately.
+  const blacklistedList = useBlacklistedHolderList(denom, page, PAGE_SIZE, status === "blacklisted");
   const symbol = list.asset?.symbol ?? "";
 
   // Module accounts are a fixed, known set, so they can be listed directly.
@@ -79,12 +87,23 @@ export default function AccountsPage() {
         })
         .sort((a, b) => b.amount - a.amount)
         .map((row, index) => ({ ...row, rank: index + 1 }));
-    } else if (status === "standard") {
-      result = result.filter((row) => !row.isModule);
+    } else if (status === "blacklisted") {
+      result = blacklistedList.rows;
     }
     const q = query.trim().toLowerCase();
     return q ? result.filter((row) => row.address.toLowerCase().includes(q) || row.label.toLowerCase().includes(q)) : result;
-  }, [denom, list.asset, list.rows, list.supply, moduleBalances, query, status]);
+  }, [blacklistedList.rows, denom, list.asset, list.rows, list.supply, moduleBalances, query, status]);
+
+  // One check per loaded page of the ranking: search keystrokes and status
+  // switches leave that page, and so the request, unchanged. The Blacklisted
+  // view needs no check, since every row there is on the list.
+  const checked = useBlacklistCheck(useMemo(() => list.rows.map((row) => row.address), [list.rows]));
+  const blacklisted = useMemo(
+    () => (status === "blacklisted" ? new Set(blacklistedList.rows.map((row) => row.address)) : checked),
+    [blacklistedList.rows, checked, status]
+  );
+  // "Standard" leaves out module and blacklisted accounts; both are known once the page's check returns.
+  const shown = status === "standard" ? rows.filter((row) => !row.isModule && !blacklisted.has(row.address)) : rows;
 
   const openAddress = () => {
     const value = query.trim();
@@ -125,7 +144,13 @@ export default function AccountsPage() {
         </Flex>
       ),
     },
-    { key: "balance", header: `Balance (${symbol})`, align: "end", render: (row) => numeral(Number(row.amount.toFixed(2))).format("0,0.[00]") },
+    {
+      key: "balance",
+      header: `Balance (${symbol})`,
+      align: "end",
+      // Drained accounts keep dust such as 0.002; "0" would read as empty.
+      render: (row) => (row.amount > 0 && row.amount < 0.01 ? "< 0.01" : numeral(Number(row.amount.toFixed(2))).format("0,0.[00]")),
+    },
     { key: "share", header: "Share at snapshot", align: "end", render: (row) => formatPercent(row.share, 4) },
     {
       key: "status",
@@ -133,7 +158,7 @@ export default function AccountsPage() {
       align: "end",
       render: (row) => (
         <Flex justify="flex-end">
-          <StatusTag tone={row.isModule ? "accent" : "neutral"}>{row.isModule ? "Module" : "Standard"}</StatusTag>
+          <StatusTag tone={statusOf(row, blacklisted).tone}>{statusOf(row, blacklisted).label}</StatusTag>
         </Flex>
       ),
     },
@@ -161,8 +186,15 @@ export default function AccountsPage() {
         </FilterRow>
         <FilterRow label="Status">
           {STATUSES.map((value) => (
-            <Chip key={value} active={status === value} onClick={() => setStatus(value)}>
-              {value === "all" ? "All accounts" : value === "module" ? "Module" : "Standard"}
+            <Chip
+              key={value}
+              active={status === value}
+              onClick={() => {
+                setStatus(value);
+                setPage(1);
+              }}
+            >
+              {STATUS_LABEL[value]}
             </Chip>
           ))}
         </FilterRow>
@@ -197,14 +229,25 @@ export default function AccountsPage() {
         </FilterRow>
       </Panel>
       <Panel>
-        <DataTable columns={columns} rows={rows} rowKey={(row) => row.address} loading={list.loading} skeletonRows={12} emptyText="No accounts match these filters" />
+        <DataTable
+          columns={columns}
+          rows={shown}
+          rowKey={(row) => row.address}
+          loading={status === "blacklisted" ? blacklistedList.loading : list.loading}
+          skeletonRows={12}
+          emptyText="No accounts match these filters"
+        />
         <Flex justify="space-between" align="center" mt="3" gap="3" wrap="wrap">
           <Text fontSize="sm" color="explorer.muted">
             {status === "module"
-              ? `${rows.length} module accounts hold ${symbol}`
-              : `Showing ${rows.length} of ${numeral(list.count).format("0,0")} accounts${status === "standard" ? " on this page" : ""}`}
+              ? `${shown.length} module accounts hold ${symbol}`
+              : status === "blacklisted"
+                ? `Showing ${shown.length} of ${numeral(blacklistedList.count).format("0,0")} blacklisted accounts holding ${symbol}`
+                : `Showing ${shown.length} of ${numeral(list.count).format("0,0")} accounts${status === "standard" ? " on this page" : ""}`}
           </Text>
-          {status !== "module" && list.count > PAGE_SIZE && <Pager count={list.count} pageSize={PAGE_SIZE} page={page} onPageChange={setPage} />}
+          {status === "blacklisted"
+            ? blacklistedList.count > PAGE_SIZE && <Pager count={blacklistedList.count} pageSize={PAGE_SIZE} page={page} onPageChange={setPage} />
+            : status !== "module" && list.count > PAGE_SIZE && <Pager count={list.count} pageSize={PAGE_SIZE} page={page} onPageChange={setPage} />}
         </Flex>
       </Panel>
     </>

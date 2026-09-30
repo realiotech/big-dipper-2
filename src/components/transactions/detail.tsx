@@ -56,14 +56,29 @@ export default function TransactionDetails() {
   const { state } = useTransactionDetails();
   const { overview, logs, messages, rawMessages, label, loading, exists } = state;
 
-  // An Ethereum transaction is shown on its EVM page, found through the indexer's hash mapping.
-  const { data: evm } = useEvmHashOfQuery({ variables: { hash: overview.hash }, skip: label?.kind !== "evm" || !overview.hash });
+  // Lists link Ethereum transactions by their Cosmos hash; those are shown on
+  // their EVM page. The lookup starts with the page, alongside the Cosmos
+  // query, and the Cosmos view waits for it so it never flashes first.
+  const cosmosHash = String(router.query.tx ?? "").toUpperCase();
+  const { data: evm, loading: evmLoading } = useEvmHashOfQuery({ variables: { hash: cosmosHash }, skip: !router.isReady || !cosmosHash });
   const evmHash = evm?.etransaction?.[0]?.ehash;
   useEffect(() => {
     if (evmHash) router.replace(TRANSACTION_DETAILS(evmHash));
   }, [evmHash, router]);
   const crumbs = [{ label: "Transactions", href: "/transactions" }, { label: "Details" }];
   const gasRatio = overview.gasWanted ? (overview.gasUsed / overview.gasWanted) * 100 : 0;
+
+  if (!router.isReady || evmLoading || evmHash) {
+    return (
+      <Stack gap="5">
+        <PageTitle crumbs={crumbs} title="Transaction" />
+        <Panel>
+          <PanelTitle title="Overview" />
+          <DetailRows loading rows={["Status", "Block", "Time", "Fee", "Gas"].map((label) => ({ label, value: null }))} />
+        </Panel>
+      </Stack>
+    );
+  }
 
   if (!exists) {
     return <NotFound />;

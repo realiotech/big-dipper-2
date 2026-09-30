@@ -44,11 +44,12 @@ export const TxNameTag = ({ label }: { label: TxLabel }) => (
   </Tag>
 );
 
-export type StatusTone = "success" | "danger" | "neutral" | "accent";
+export type StatusTone = "success" | "danger" | "warning" | "neutral" | "accent";
 
 const STATUS_COLOR: Record<StatusTone, string> = {
   success: "explorer.success",
   danger: "explorer.danger",
+  warning: "explorer.warning",
   neutral: "explorer.muted",
   accent: "explorer.link",
 };

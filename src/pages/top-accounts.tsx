@@ -15,14 +15,14 @@ import { Pager } from "@/components/explorer/pager";
 import { AddressLink } from "@/components/explorer/address_link";
 import { Tag } from "@/components/explorer/badges";
 import { formatCompact, formatPercent } from "@/components/explorer/format";
-import { HolderRow, useHolderList } from "@/components/holders/hooks";
+import { HOLDER_TOKENS, HolderRow, useHolderList } from "@/components/holders/hooks";
 
 const PAGE_SIZE = 50;
 
 export default function TopAccountsPage() {
   const { assetArr } = useRecoilValue(readAssets);
   // Bank-module tokens only: ERC-20 balances live in the EVM, not in these tables.
-  const tokens = assetArr.filter((asset) => !asset.denom.startsWith("erc20:"));
+  const tokens = HOLDER_TOKENS.flatMap((symbol) => assetArr.filter((asset) => asset.symbol === symbol));
   const [denom, setDenom] = useState("ario");
   const [page, setPage] = useState(1);
   const list = useHolderList(denom, page, PAGE_SIZE);
@@ -48,11 +48,15 @@ export default function TopAccountsPage() {
       key: "seen",
       header: "Last seen",
       align: "end",
-      render: (row) => (
-        <ChakraLink asChild color="explorer.muted">
-          <NextLink href={BLOCK_DETAILS(row.height)}>{numeral(row.height).format("0,0")}</NextLink>
-        </ChakraLink>
-      ),
+      // ERC-20 balances come from the token's subgraph, which records no snapshot height.
+      render: (row) =>
+        row.height ? (
+          <ChakraLink asChild color="explorer.muted">
+            <NextLink href={BLOCK_DETAILS(row.height)}>{numeral(row.height).format("0,0")}</NextLink>
+          </ChakraLink>
+        ) : (
+          <Text color="explorer.muted">—</Text>
+        ),
     },
   ];
 
@@ -90,7 +94,7 @@ export default function TopAccountsPage() {
           suffix={symbol}
           rows={[
             { label: "Rows", value: list.rows.length },
-            { label: "Snapshot height spread", value: numeral(list.heightSpread).format("0,0") },
+            { label: "Snapshot height spread", value: list.heightSpread || list.rows.some((row) => row.height) ? numeral(list.heightSpread).format("0,0") : "—" },
           ]}
         />
         <StatCard

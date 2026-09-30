@@ -91,3 +91,17 @@ query EvmBalances($address: String) {
     }
   }
 }
+
+query EvmTokenHolders($address: ID!, $first: Int = 1000) {
+  erc20Contract(id: $address) {
+    totalSupply {
+      valueExact
+    }
+  }
+  erc20Balances(first: $first, orderBy: valueExact, orderDirection: desc, where: {account_not: null, valueExact_gt: "0"}) {
+    account {
+      id
+    }
+    valueExact
+  }
+}

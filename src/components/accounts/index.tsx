@@ -16,7 +16,7 @@ import { DataTable, Column } from "@/components/explorer/data_table";
 import { ExplorerTabs, TabPanel } from "@/components/explorer/tabs";
 import { Pager } from "@/components/explorer/pager";
 import { CopyButton } from "@/components/explorer/copy_button";
-import { TxNameTag, TxStatus, TxTypeTag } from "@/components/explorer/badges";
+import { StatusTag, TxNameTag, TxStatus, TxTypeTag } from "@/components/explorer/badges";
 import { ValidatorName } from "@/components/explorer/validator_name";
 import { TokenDot } from "@/components/explorer/token";
 import { formatPercent, timeAgo } from "@/components/explorer/format";
@@ -25,6 +25,7 @@ import { AssetRow, DelegationRow, usePortfolio } from "./portfolio";
 import { BlockscoutAddress, useBlockscout } from "@/components/explorer/blockscout";
 import { CONTRACT_DETAILS } from "@/components/explorer/evm_address";
 import type { AccountTransaction } from "./types";
+import { BlacklistBanner, useBlacklisted } from "./blacklist";
 
 ChartJS.register(ArcElement, Tooltip);
 
@@ -223,6 +224,7 @@ export default function AccountDetail() {
   // The EVM side of the same account may be a contract.
   const { data: evmInfo } = useBlockscout<BlockscoutAddress>(evmAddress ? `addresses/${evmAddress}` : null);
   const [tab, setTab] = useState("activity");
+  const blacklisted = useBlacklisted(address);
 
   const portfolio = usePortfolio({
     balances,
@@ -266,7 +268,12 @@ export default function AccountDetail() {
     <Stack gap="5">
       <PageTitle
         crumbs={[{ label: "Accounts", href: "/accounts" }, { label: getMiddleEllipsis(address ?? "", { beginning: 10, ending: 6 }) }]}
-        title="Account"
+        title={
+          <Flex as="span" align="center" gap="3">
+            Account
+            {blacklisted && <StatusTag tone="warning">Blacklisted</StatusTag>}
+          </Flex>
+        }
         subtitle={
           <Flex as="span" align="center" gap="1">
             <Text as="span" color="explorer.link" wordBreak="break-all">
@@ -276,6 +283,8 @@ export default function AccountDetail() {
           </Flex>
         }
       />
+
+      {blacklisted && <BlacklistBanner />}
 
       <Grid templateColumns={{ base: "1fr", lg: "1fr 444px" }} gap="5" alignItems="start">
         <Stack gap="5" minW="0">

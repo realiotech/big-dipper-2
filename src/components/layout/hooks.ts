@@ -27,7 +27,6 @@ const validatorRegex = bech32(prefix.validator);
 const userRegex = bech32(prefix.account);
 const evmRegex = new RegExp(`^(0x)`);
 import {
-    useEvmTransactionQuery,
     ValidatorSearchDocument,
     ValidatorSearchQuery,
 } from '@/graphql/types/general_types';
@@ -68,20 +67,6 @@ export const useSearch = (callback: (value: string, clear?: () => void) => void)
 export const useSearchBar = (t: TFunction) => {
     const router = useRouter();
     const apollo = useApolloClient();
-    const [evmTxHash, setEvmTxHash] = useState<string | null>(null);
-
-    useEvmTransactionQuery({
-        variables: { ehash: evmTxHash ?? '' },
-        skip: !evmTxHash,
-        onCompleted: (data) => {
-            if (data?.etransaction?.length === 1) {
-                router.push(TRANSACTION_DETAILS(data.etransaction[0].transaction_hash));
-            } else if (evmTxHash) {
-                toast<string>(t('common:invalidTx'));
-            }
-            setEvmTxHash(null);
-        },
-    });
 
     const handleOnSubmit = useRecoilCallback(
         ({ snapshot }) =>
@@ -116,7 +101,8 @@ export const useSearchBar = (t: TFunction) => {
                         toast<string>(t('common:invalidAddress'));
                     }
                 } else if (parsedValue.length === 66 && evmRegex.test(parsedValue)) {
-                    setEvmTxHash(parsedValue.toLowerCase()); // This will trigger the useEvmTransactionQuery
+                    // The EVM page reads Blockscout, which also has transactions older than the indexer.
+                    router.push(TRANSACTION_DETAILS(parsedValue.toLowerCase()));
                 } else if (/^@/.test(parsedValue)) {
                     const configProfile = extra.profile;
                     if (!configProfile) {

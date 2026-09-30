@@ -1882,3 +1882,60 @@ export function useEvmAssetBurnsLazyQuery(baseOptions?: Apollo.LazyQueryHookOpti
 export type EvmAssetBurnsQueryHookResult = ReturnType<typeof useEvmAssetBurnsQuery>;
 export type EvmAssetBurnsLazyQueryHookResult = ReturnType<typeof useEvmAssetBurnsLazyQuery>;
 export type EvmAssetBurnsQueryResult = Apollo.QueryResult<EvmAssetBurnsQuery, EvmAssetBurnsQueryVariables>;
+export type EvmTokenHoldersQueryVariables = Exact<{
+  address: Scalars['ID'];
+  first?: InputMaybe<Scalars['Int']>;
+}>;
+
+
+export type EvmTokenHoldersQuery = { erc20Contract?: { __typename?: 'ERC20Contract', totalSupply: { __typename?: 'ERC20Balance', valueExact: any } } | null, erc20Balances: Array<{ __typename?: 'ERC20Balance', valueExact: any, account?: { __typename?: 'Account', id: any } | null }> };
+
+export const EvmTokenHoldersDocument = gql`
+    query EvmTokenHolders($address: ID!, $first: Int = 1000) {
+  erc20Contract(id: $address) {
+    totalSupply {
+      valueExact
+    }
+  }
+  erc20Balances(
+    first: $first
+    orderBy: valueExact
+    orderDirection: desc
+    where: {account_not: null, valueExact_gt: "0"}
+  ) {
+    account {
+      id
+    }
+    valueExact
+  }
+}
+    `;
+
+/**
+ * __useEvmTokenHoldersQuery__
+ *
+ * To run a query within a React component, call `useEvmTokenHoldersQuery` and pass it any options that fit your needs.
+ * When your component renders, `useEvmTokenHoldersQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useEvmTokenHoldersQuery({
+ *   variables: {
+ *      address: // value for 'address'
+ *      first: // value for 'first'
+ *   },
+ * });
+ */
+export function useEvmTokenHoldersQuery(baseOptions: Apollo.QueryHookOptions<EvmTokenHoldersQuery, EvmTokenHoldersQueryVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useQuery<EvmTokenHoldersQuery, EvmTokenHoldersQueryVariables>(EvmTokenHoldersDocument, options);
+      }
+export function useEvmTokenHoldersLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<EvmTokenHoldersQuery, EvmTokenHoldersQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return Apollo.useLazyQuery<EvmTokenHoldersQuery, EvmTokenHoldersQueryVariables>(EvmTokenHoldersDocument, options);
+        }
+export type EvmTokenHoldersQueryHookResult = ReturnType<typeof useEvmTokenHoldersQuery>;
+export type EvmTokenHoldersLazyQueryHookResult = ReturnType<typeof useEvmTokenHoldersLazyQuery>;
+export type EvmTokenHoldersQueryResult = Apollo.QueryResult<EvmTokenHoldersQuery, EvmTokenHoldersQueryVariables>;
