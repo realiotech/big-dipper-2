@@ -1,11 +1,11 @@
 import { Box, Flex, Link as ChakraLink, Skeleton, Stack, Text } from "@chakra-ui/react";
 import NextLink from "next/link";
 import numeral from "numeral";
-import { getMiddleEllipsis } from "@/utils/get_middle_ellipsis";
-import { BLOCK_DETAILS, TRANSACTION_DETAILS } from "@/utils/go_to_page";
+import { BLOCK_DETAILS } from "@/utils/go_to_page";
 import { Panel, PanelHeader } from "@/components/explorer/panel";
 import { TxNameTag, TxStatus, TxTypeTag } from "@/components/explorer/badges";
 import { timeAgo } from "@/components/explorer/format";
+import { TxHashLink } from "@/components/explorer/tx_hash_link";
 import NoData from "@/components/helper/nodata";
 import { useTransactions } from "./hooks";
 import { TransactionType } from "./types";
@@ -16,11 +16,9 @@ const TxRow = ({ item }: { item: TransactionType }) => (
   <Flex flex="1" align="center" justify="space-between" gap="4" py="3" borderTopWidth="1px" borderColor="explorer.border" _first={{ borderTopWidth: 0 }}>
     <Box minW="0">
       <Flex align="center" gap="3" wrap="wrap">
-        <ChakraLink asChild color="explorer.link" fontSize="sm">
-          <NextLink href={TRANSACTION_DETAILS(item.hash)}>
-            {getMiddleEllipsis(item.hash, { beginning: 10, ending: 6 })}
-          </NextLink>
-        </ChakraLink>
+        <Box fontSize="sm">
+          <TxHashLink hash={item.hash} label={item.label} copy={false} />
+        </Box>
         <TxStatus success={item.success} />
       </Flex>
       <Flex align="center" gap="2" mt="1.5" wrap="wrap">

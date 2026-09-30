@@ -1,14 +1,13 @@
 import { Flex, Link as ChakraLink, Text } from "@chakra-ui/react";
 import NextLink from "next/link";
 import numeral from "numeral";
-import { getMiddleEllipsis } from "@/utils/get_middle_ellipsis";
-import { BLOCK_DETAILS, TRANSACTION_DETAILS } from "@/utils/go_to_page";
+import { BLOCK_DETAILS } from "@/utils/go_to_page";
 import type { TxRow } from "@/utils/tx_label";
 import { Panel } from "@/components/explorer/panel";
+import { TxHashLink } from "@/components/explorer/tx_hash_link";
 import { PageTitle } from "@/components/explorer/page_title";
 import { DataTable, Column } from "@/components/explorer/data_table";
 import { Pager } from "@/components/explorer/pager";
-import { CopyButton } from "@/components/explorer/copy_button";
 import { TxNameTag, TxStatus, TxTypeTag } from "@/components/explorer/badges";
 import { formatAmount, timeAgo } from "@/components/explorer/format";
 import { PAGE_SIZE, useTransactions } from "./hooks";
@@ -17,14 +16,7 @@ export const txColumns: Column<TxRow>[] = [
   {
     key: "hash",
     header: "Transaction hash",
-    render: (row) => (
-      <Flex align="center" gap="1">
-        <ChakraLink asChild color="explorer.link">
-          <NextLink href={TRANSACTION_DETAILS(row.hash)}>{getMiddleEllipsis(row.hash, { beginning: 10, ending: 6 })}</NextLink>
-        </ChakraLink>
-        <CopyButton value={row.hash} label="Copy transaction hash" />
-      </Flex>
-    ),
+    render: (row) => <TxHashLink hash={row.hash} label={row.label} />,
   },
   { key: "type", header: "Type", render: (row) => <Flex><TxTypeTag kind={row.label.kind} /></Flex> },
   { key: "name", header: "Name", render: (row) => <Flex><TxNameTag label={row.label} /></Flex> },

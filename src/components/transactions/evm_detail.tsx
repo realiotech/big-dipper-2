@@ -4,7 +4,7 @@ import NextLink from "next/link";
 import { useRouter } from "next/router";
 import numeral from "numeral";
 import { useEvmTransactionQuery } from "@/graphql/types/general_types";
-import { BLOCK_DETAILS, TRANSACTION_DETAILS } from "@/utils/go_to_page";
+import { BLOCK_DETAILS } from "@/utils/go_to_page";
 import { evmMethodFromInput, TxLabel } from "@/utils/tx_label";
 import { Panel } from "@/components/explorer/panel";
 import { PageTitle } from "@/components/explorer/page_title";
@@ -171,10 +171,14 @@ export default function EvmTransactionDetails() {
                 ...(cosmosHash
                   ? [{
                       label: "Cosmos transaction",
+                      // Plain text: the Cosmos hash's page redirects back to this one.
                       value: (
-                        <ChakraLink asChild color="explorer.link" wordBreak="break-all">
-                          <NextLink href={TRANSACTION_DETAILS(cosmosHash)}>{cosmosHash}</NextLink>
-                        </ChakraLink>
+                        <Flex as="span" align="center" gap="1">
+                          <Text as="span" wordBreak="break-all">
+                            {cosmosHash}
+                          </Text>
+                          <CopyButton value={cosmosHash} label="Copy Cosmos transaction hash" />
+                        </Flex>
                       ),
                     }]
                   : []),

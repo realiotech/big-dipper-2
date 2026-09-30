@@ -1,10 +1,10 @@
-import { Box, Flex, IconButton, Link as ChakraLink, SimpleGrid, Stack, Text } from "@chakra-ui/react";
+import { Box, Flex, IconButton, SimpleGrid, Stack, Text } from "@chakra-ui/react";
 import NextLink from "next/link";
 import numeral from "numeral";
 import { LuChevronLeft, LuChevronRight } from "react-icons/lu";
-import { getMiddleEllipsis } from "@/utils/get_middle_ellipsis";
-import { BLOCK_DETAILS, TRANSACTION_DETAILS } from "@/utils/go_to_page";
+import { BLOCK_DETAILS } from "@/utils/go_to_page";
 import { Panel } from "@/components/explorer/panel";
+import { TxHashLink } from "@/components/explorer/tx_hash_link";
 import { PageTitle } from "@/components/explorer/page_title";
 import { DetailRows } from "@/components/explorer/detail_rows";
 import { DataTable, Column } from "@/components/explorer/data_table";
@@ -48,14 +48,7 @@ const txColumns: Column<BlockTransaction>[] = [
   {
     key: "hash",
     header: "Transaction hash",
-    render: (row) => (
-      <Flex align="center" gap="1">
-        <ChakraLink asChild color="explorer.link">
-          <NextLink href={TRANSACTION_DETAILS(row.hash)}>{getMiddleEllipsis(row.hash, { beginning: 10, ending: 6 })}</NextLink>
-        </ChakraLink>
-        <CopyButton value={row.hash} label="Copy transaction hash" />
-      </Flex>
-    ),
+    render: (row) => <TxHashLink hash={row.hash} label={row.label} />,
   },
   { key: "type", header: "Type", render: (row) => <Flex><TxTypeTag kind={row.label.kind} /></Flex> },
   { key: "name", header: "Name", render: (row) => <Flex><TxNameTag label={row.label} /></Flex> },

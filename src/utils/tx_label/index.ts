@@ -1,4 +1,4 @@
-import { rlp, toBuffer } from 'ethereumjs-util';
+import { keccak256, rlp, toBuffer } from 'ethereumjs-util';
 import { convertMsgType } from '@/utils/convert_msg_type';
 
 export type TxTone = 'accent' | 'success' | 'evm' | 'neutral';
@@ -8,6 +8,8 @@ export type TxLabel = {
   name: string;
   tone: TxTone;
   extraCount: number;
+  /** The Ethereum (0x) hash of an EVM transaction, which its page is keyed by. */
+  evmHash?: string;
 };
 
 const ETHEREUM_TX = 'MsgEthereumTx';
@@ -81,13 +83,31 @@ export const evmMethodFromInput = (input?: string | null): string => {
   return EVM_METHODS[selector] ?? `0x${selector}`;
 };
 
+/**
+ * The 0x hash of a MsgEthereumTx, from the message itself: older messages
+ * (/os.evm.v1) carry it as `hash`; current ones (/cosmos.evm.vm.v1) carry the
+ * signed transaction as `raw`, whose keccak256 is the Ethereum tx hash.
+ */
+export const evmTxHash = (message: Record<string, any>): string | undefined => {
+  if (typeof message.hash === 'string' && /^0x[0-9a-fA-F]{64}$/.test(message.hash)) return message.hash.toLowerCase();
+  if (!message.raw) return undefined;
+  try {
+    return `0x${keccak256(toBuffer(message.raw)).toString('hex')}`;
+  } catch {
+    return undefined;
+  }
+};
+
+/** The hash a transaction list links to and shows: 0x for EVM transactions. */
+export const txListHash = (row: { hash: string; label?: TxLabel | null }) => row.label?.evmHash ?? row.hash;
+
 export const txLabel = (messages: Array<Record<string, any>> = []): TxLabel => {
   const first = messages[0] ?? {};
   const type = shortType(first['@type']);
   const extraCount = Math.max(messages.length - 1, 0);
 
   if (type === ETHEREUM_TX) {
-    return { kind: 'evm', name: evmMethodName(first.raw), tone: 'evm', extraCount };
+    return { kind: 'evm', name: evmMethodName(first.raw), tone: 'evm', extraCount, evmHash: evmTxHash(first) };
   }
 
   const [name, tone] = MSG_NAMES[type] ?? [convertMsgType([type])[0] || type, 'neutral'];
