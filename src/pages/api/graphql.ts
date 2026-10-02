@@ -10,7 +10,7 @@ export default async function handler(
   }
 
   try {
-    const hasuraUrl = process.env.NEXT_PUBLIC_GRAPHQL_URL;
+    const hasuraUrl = process.env.GRAPHQL_URL_INTERNAL || process.env.NEXT_PUBLIC_GRAPHQL_URL;
     const hasuraAdminSecret = process.env.HASURA_ADMIN_SECRET;
 
     if (!hasuraUrl) {
