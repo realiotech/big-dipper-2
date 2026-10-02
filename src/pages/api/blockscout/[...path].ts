@@ -5,7 +5,7 @@ const BLOCKSCOUT_API_URL = process.env.BLOCKSCOUT_API_URL || 'https://blockscout
 // Only the read endpoints the explorer's EVM pages use are forwarded.
 const ALLOWED = [
   /^transactions\/0x[0-9a-fA-F]{64}(\/(token-transfers|internal-transactions|logs|state-changes|raw-trace))?$/,
-  /^addresses\/0x[0-9a-fA-F]{40}(\/(counters|transactions|token-transfers|tokens|internal-transactions|logs))?$/,
+  /^addresses\/0x[0-9a-fA-F]{40}(\/(counters|transactions|token-transfers|tokens|token-balances|internal-transactions|logs))?$/,
   /^smart-contracts(\/counters|\/0x[0-9a-fA-F]{40})?$/,
 ];
 

@@ -1,5 +1,5 @@
 import { useRouter } from 'next/router';
-import { useEffect, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 
 import Big from 'big.js';
 import {
@@ -17,7 +17,8 @@ import { readFilter } from '@/recoil/transactions_filter';
 import type { AccountInfo, AccountTransaction, OverviewType } from './types';
 import { realioNetworkToEth, ethToRealionetwork } from "@realiotech/address-generator"
 import { ACCOUNT_DETAILS } from '@/utils/go_to_page'
-import { useEvmBalancesQuery } from '@/graphql/types/subgraph';
+import { useBlockscout } from '@/components/explorer/blockscout';
+import { formatTokenByExponent } from '@/utils';
 
 export const PAGE_SIZE = 20;
 // Staking rewards are paid in RIO.
@@ -214,26 +215,29 @@ export const useStaking = (
   };
 };
 
-export const useErc20Balances = (
-  evmAddress?: string
-) => {
-  const [balances, setBalances] = useState([])
+type BlockscoutTokenBalance = {
+  value: string;
+  token: { address_hash: string; decimals: string | null; type: string };
+};
 
-  useEvmBalancesQuery({
-    context: {
-      apiName: "subgraph"
-    },
-    variables: {
-      address: evmAddress
-    },
-    onCompleted: (data) => {
-      setBalances(data.erc20Balances)
-    },
-    onError: (e) => {
-      console.error(e)
-    }
-  })
-  return balances;
+/**
+ * ERC-20 balances in whole tokens, from Blockscout (which reads balanceOf).
+ * The subgraph misses tokens moved into the erc20 module when they are
+ * staked, so its balances can still count tokens the account no longer holds.
+ */
+export const useErc20Balances = (
+  evmAddress?: string,
+) => {
+  const { data } = useBlockscout<BlockscoutTokenBalance[]>(evmAddress ? `addresses/${evmAddress}/token-balances` : null);
+  return useMemo(
+    () => (data ?? [])
+      .filter((row) => row.token.type === 'ERC-20')
+      .map((row) => ({
+        value: formatTokenByExponent(row.value, Number(row.token.decimals ?? 18)),
+        contract: { id: row.token.address_hash.toLowerCase() },
+      })),
+    [data],
+  );
 };
 
 // Hook to get ERC20 balance using direct balanceOf JSON RPC call

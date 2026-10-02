@@ -28,7 +28,9 @@ export const useTokenSupplies = () => {
     assetArr.forEach((asset) => {
       const erc20 = tokenArr.find((token) => token.symbol === asset.symbol);
       let supply = Number(erc20?.supply ?? 0);
-      const coin = coins.find((item) => item.denom === asset.denom);
+      // The bank's "erc20:0x…" coin only counts tokens escrowed in the erc20
+      // module (mostly staked), not the token's total supply.
+      const coin = asset.denom.startsWith("erc20:") ? undefined : coins.find((item) => item.denom === asset.denom);
       if (coin) {
         supply = parseFloat(formatTokenByExponent(coin.amount, asset.decimals));
         if (asset.denom === "ario") {
