@@ -24374,7 +24374,7 @@ export type ValidatorPageQueryVariables = Exact<{
 }>;
 
 
-export type ValidatorPageQuery = { validator: Array<{ __typename?: 'validator', validatorInfo?: { __typename?: 'validator_info', operatorAddress: string, selfDelegateAddress?: string | null, consensusAddress: string, maxRate: string, maxChangeRate: string } | null, validatorDescriptions: Array<{ __typename?: 'validator_description', moniker?: string | null, identity?: string | null, website?: string | null, securityContact?: string | null, details?: string | null, avatarUrl?: string | null }>, validatorStatuses: Array<{ __typename?: 'validator_status', status: number, jailed: boolean }>, validatorSigningInfos: Array<{ __typename?: 'validator_signing_info', missedBlocksCounter: any, tombstoned: boolean }>, validatorCommissions: Array<{ __typename?: 'validator_commission', commission: any }>, validatorVotingPowers: Array<{ __typename?: 'validator_voting_power', votingPower: any }> }>, validatorDenom: Array<{ __typename?: 'validator_denom', denom: string }>, slashingParams: Array<{ __typename?: 'slashing_params', params: any }>, delegations: { __typename?: 'ms_locks_aggregate', aggregate?: { __typename?: 'ms_locks_aggregate_fields', count: number, max?: { __typename?: 'ms_locks_max_fields', amount?: any | null } | null } | null }, latestBlock: Array<{ __typename?: 'block', height: any }> };
+export type ValidatorPageQuery = { validator: Array<{ __typename?: 'validator', validatorInfo?: { __typename?: 'validator_info', operatorAddress: string, selfDelegateAddress?: string | null, consensusAddress: string, maxRate: string, maxChangeRate: string } | null, validatorDescriptions: Array<{ __typename?: 'validator_description', moniker?: string | null, identity?: string | null, website?: string | null, securityContact?: string | null, details?: string | null, avatarUrl?: string | null }>, validatorStatuses: Array<{ __typename?: 'validator_status', status: number, jailed: boolean }>, validatorSigningInfos: Array<{ __typename?: 'validator_signing_info', missedBlocksCounter: any, tombstoned: boolean }>, validatorCommissions: Array<{ __typename?: 'validator_commission', commission: any }>, validatorVotingPowers: Array<{ __typename?: 'validator_voting_power', votingPower: any }> }>, validatorDenom: Array<{ __typename?: 'validator_denom', denom: string }>, slashingParams: Array<{ __typename?: 'slashing_params', params: any }>, delegations: { __typename?: 'ms_locks_aggregate', aggregate?: { __typename?: 'ms_locks_aggregate_fields', count: number } | null }, largestDelegation: Array<{ __typename?: 'ms_locks', amount?: string | null }>, latestBlock: Array<{ __typename?: 'block', height: any }> };
 
 export type ValidatorProposedBlocksQueryVariables = Exact<{
   consensusAddress: Scalars['String'];
@@ -27292,10 +27292,11 @@ export const ValidatorPageDocument = gql`
   delegations: ms_locks_aggregate(where: {val_addr: {_eq: $address}}) {
     aggregate {
       count
-      max {
-        amount
-      }
     }
+  }
+  # ms_locks.amount is text, so an aggregate max compares it as a string.
+  largestDelegation: get_ms_locks_sorted(args: {p_val_addr: $address, p_order_direction: "desc", p_limit: 1, p_offset: 0}) {
+    amount
   }
   latestBlock: block(limit: 1, order_by: {height: desc}) {
     height

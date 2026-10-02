@@ -32,8 +32,8 @@ ChartJS.register(ArcElement, Tooltip);
 
 // Hex values of the explorer.chart* tokens; chart.js cannot read CSS variables.
 const DONUT_COLORS = {
-  light: ["#5D5FEF", "#BF4A86", "#7879F1", "#2E855F"],
-  dark: ["#5D5FEF", "#EF5DA8", "#A5A6F6", "#8CA98E"],
+  light: ["#5D5FEF", "#BF4A86", "#166534", "#2E855F"],
+  dark: ["#5D5FEF", "#EF5DA8", "#2F9E62", "#8CA98E"],
 };
 
 const usd = (value: number) => `$${numeral(value).format("0,0.00")}`;
@@ -79,19 +79,25 @@ const assetColumns: Column<AssetRow>[] = [
       </Flex>
     ),
   },
-  {
-    key: "balance",
-    header: "Balance",
+  ...([
+    ["spendable", "Spendable"],
+    ["delegated", "Delegated"],
+  ] as const).map(([key, header]): Column<AssetRow> => ({
+    key,
+    header,
     align: "end",
-    render: (row) => (
-      <>
-        {tokens(row.balance)}{" "}
-        <Text as="span" color="explorer.muted" fontSize="xs">
-          {row.symbol}
-        </Text>
-      </>
-    ),
-  },
+    render: (row) =>
+      row[key] ? (
+        <>
+          {tokens(row[key])}{" "}
+          <Text as="span" color="explorer.muted" fontSize="xs">
+            {row.symbol}
+          </Text>
+        </>
+      ) : (
+        "—"
+      ),
+  })),
   { key: "price", header: "Price", align: "end", render: (row) => (row.price ? `$${numeral(row.price).format("0,0.[000000]")}` : "—") },
   { key: "value", header: "Value", align: "end", render: (row) => (row.price ? usd(row.value) : "—") },
   { key: "share", header: "Share of supply", align: "end", render: (row) => formatPercent(row.shareOfSupply, 4) },
