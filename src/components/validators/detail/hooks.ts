@@ -1,10 +1,16 @@
-import { useMemo } from 'react';
+import { useMemo, useState } from 'react';
 import { useRouter } from 'next/router';
 import { useRecoilValue } from 'recoil';
-import { useValidatorPageQuery, useValidatorProposedBlocksQuery } from '@/graphql/types/general_types';
+import {
+  useValidatorDelegationsQuery,
+  useValidatorPageQuery,
+  useValidatorProposedBlocksQuery,
+  useValidatorUndelegationsQuery,
+} from '@/graphql/types/general_types';
 import { readAssets } from '@/recoil/asset';
 import { formatTokenByExponent } from '@/utils';
 import { formatValAddress } from '@/utils/format_address';
+import { PAGE_SIZE } from '@/components/assets/parts';
 import { useValidators } from '../hooks';
 
 // "Blocks proposed (recent window)" counts over this many blocks.
@@ -76,4 +82,64 @@ export const useValidatorDetails = () => {
       },
     };
   }, [address, assetMap, blocksData, blocksLoading, data, items, loading, router.isReady, stats.activePower, validator]);
+};
+
+export type DelegationRow = { rank: number; address: string; amount: number; bondWeight: number; power: number; share: number };
+export type UnbondingRow = { address: string; amount: number; height: number };
+
+/**
+ * The validator's delegations and unbondings, one page each, largest first.
+ * A delegation's voting power is amount × bond weight; these add up to the
+ * validator's voting power, so `share` is each delegator's part of it.
+ */
+export const useValidatorStaking = (address: string, decimals: number, votingPower: number) => {
+  const [delegationsPage, setDelegationsPage] = useState(1);
+  const [unbondingsPage, setUnbondingsPage] = useState(1);
+  const toTokens = (amount?: string | null) => Number(amount ?? 0) / 10 ** decimals;
+
+  const delegations = useValidatorDelegationsQuery({
+    variables: { validatorAddress: address, limit: PAGE_SIZE, offset: (delegationsPage - 1) * PAGE_SIZE },
+    skip: !address,
+  });
+  const unbondings = useValidatorUndelegationsQuery({
+    variables: { validatorAddress: address, limit: PAGE_SIZE, offset: (unbondingsPage - 1) * PAGE_SIZE },
+    skip: !address,
+  });
+
+  return useMemo(
+    () => ({
+      delegations: {
+        loading: delegations.loading,
+        page: delegationsPage,
+        setPage: setDelegationsPage,
+        count: Number(delegations.data?.locks_count_by_val?.[0]?.count ?? 0),
+        rows: (delegations.data?.get_ms_locks_sorted ?? []).map((row, index): DelegationRow => {
+          const amount = toTokens(row.amount);
+          const bondWeight = Number(row.bond_weight ?? 1);
+          return {
+            rank: (delegationsPage - 1) * PAGE_SIZE + index + 1,
+            address: row.staker_addr,
+            amount,
+            bondWeight,
+            power: amount * bondWeight,
+            share: votingPower ? ((amount * bondWeight) / votingPower) * 100 : 0,
+          };
+        }),
+      },
+      unbondings: {
+        loading: unbondings.loading,
+        page: unbondingsPage,
+        setPage: setUnbondingsPage,
+        count: Number(unbondings.data?.unlocks_count_by_val?.[0]?.count ?? 0),
+        rows: (unbondings.data?.get_ms_unlocks_sorted ?? []).map((row): UnbondingRow => ({
+          address: row.staker_addr,
+          amount: toTokens(row.amount),
+          height: Number(row.creation_height ?? 0),
+        })),
+      },
+    }),
+    // toTokens only depends on decimals.
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    [decimals, delegations.data, delegations.loading, delegationsPage, unbondings.data, unbondings.loading, unbondingsPage, votingPower]
+  );
 };

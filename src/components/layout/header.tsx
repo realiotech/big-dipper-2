@@ -32,7 +32,7 @@ const NavMenu = ({ label, items, pathname }: { label: string; items: NavItem[]; 
           <Menu.Content minW="200px" bg="explorer.card" borderWidth="1px" borderColor="explorer.border" boxShadow="lg" p="1">
             {items.map((item) =>
               item.ready ? (
-                <Menu.Item key={item.href} value={item.href} asChild color={isActive(item.href, pathname) ? "explorer.link" : "explorer.text"}>
+                <Menu.Item key={item.href} value={item.href} asChild cursor="pointer" color={isActive(item.href, pathname) ? "explorer.link" : "explorer.text"}>
                   <NextLink href={item.href}>{item.label}</NextLink>
                 </Menu.Item>
               ) : (

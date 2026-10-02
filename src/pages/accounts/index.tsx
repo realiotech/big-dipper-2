@@ -137,7 +137,8 @@ export default function AccountsPage() {
       header: "Tokens held",
       render: (row) => (
         <Flex gap="1">
-          {row.tokens.map((token) => {
+          {/* Only the tokens this page ranks by (RIO, RST, DSTRX); LMX is left out. */}
+          {row.tokens.filter((token) => HOLDER_TOKENS.includes(token)).map((token) => {
             const asset = assetArr.find((a) => a.symbol === token);
             return asset?.image ? <Image key={token} src={asset.image} alt={token} title={token} boxSize="18px" borderRadius="full" /> : null;
           })}

@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import { Box, Flex, Grid, Link as ChakraLink, SimpleGrid, Stack, Text } from "@chakra-ui/react";
 import NextLink from "next/link";
 import numeral from "numeral";
@@ -12,8 +12,10 @@ import { AddressLink } from "@/components/explorer/address_link";
 import { StatusTag, ValidatorAvatar, validatorStatus } from "@/components/explorer/badges";
 import { formatPercent, timeAgo } from "@/components/explorer/format";
 import { NotFound } from "@/components/explorer/not_found";
+import { ExplorerTabs, TabPanel } from "@/components/explorer/tabs";
+import { Paged, tokens } from "@/components/assets/parts";
 import { DelegateDialog } from "../dialog";
-import { PROPOSED_WINDOW, useValidatorDetails } from "./hooks";
+import { DelegationRow, PROPOSED_WINDOW, UnbondingRow, useValidatorDetails, useValidatorStaking } from "./hooks";
 
 type ProposedBlock = { height: number; timestamp: string; txs: number; gasUsed: number };
 
@@ -32,6 +34,30 @@ const blockColumns: Column<ProposedBlock>[] = [
   { key: "gas", header: "Gas used", align: "end", render: (row) => numeral(row.gasUsed).format("0,0") },
 ];
 
+const delegationColumns = (symbol: string): Column<DelegationRow>[] => [
+  { key: "rank", header: "#", width: "56px", align: "end", render: (row) => <Text color="explorer.muted">{row.rank}</Text> },
+  { key: "delegator", header: "Delegator", render: (row) => <Box pl="4"><AddressLink address={row.address} beginning={14} ending={8} /></Box> },
+  { key: "amount", header: `Amount (${symbol})`, align: "end", render: (row) => tokens(row.amount) },
+  { key: "weight", header: "Bond weight", align: "end", render: (row) => numeral(row.bondWeight).format("0.0[0]") },
+  { key: "power", header: "Voting power", align: "end", render: (row) => tokens(row.power) },
+  { key: "share", header: "Share of validator", align: "end", render: (row) => formatPercent(row.share) },
+];
+
+const unbondingColumns = (symbol: string): Column<UnbondingRow>[] => [
+  { key: "delegator", header: "Delegator", render: (row) => <AddressLink address={row.address} beginning={14} ending={8} /> },
+  { key: "amount", header: `Amount (${symbol})`, align: "end", render: (row) => tokens(row.amount) },
+  {
+    key: "height",
+    header: "Started at block",
+    align: "end",
+    render: (row) => (
+      <ChakraLink asChild color="explorer.link">
+        <NextLink href={BLOCK_DETAILS(row.height)}>{numeral(row.height).format("0,0")}</NextLink>
+      </ChakraLink>
+    ),
+  },
+];
+
 const ProfileRow = ({ label, children }: { label: string; children: React.ReactNode }) => (
   <Flex justify="space-between" gap="4" py="3" borderTopWidth="1px" borderColor="explorer.border" fontSize="sm">
     <Text color="explorer.muted" flexShrink={0}>
@@ -47,6 +73,9 @@ const percent = (value: number) => formatPercent(value);
 
 export default function ValidatorDetails() {
   const v = useValidatorDetails();
+  const staking = useValidatorStaking(v.address, v.asset?.decimals ?? 18, v.votingPower);
+  const [tab, setTab] = useState("delegations");
+  const symbol = v.asset?.symbol ?? "";
   const status = validatorStatus(v.status, v.jailed, v.tombstoned);
   const crumbs = [{ label: "Validators", href: "/validators" }, { label: v.loading ? "…" : v.moniker }];
 
@@ -126,7 +155,8 @@ export default function ValidatorDetails() {
         />
       </SimpleGrid>
 
-      <Grid templateColumns={{ base: "1fr", lg: "440px 1fr" }} gap="5" alignItems="start">
+      {/* minmax(0, …): a plain 1fr track would grow to the blocks table's minimum width on phones. */}
+      <Grid templateColumns={{ base: "minmax(0, 1fr)", lg: "440px minmax(0, 1fr)" }} gap="5" alignItems="start">
         <Panel>
           <Text fontSize="md" fontWeight="600" mb="4">
             Profile
@@ -178,6 +208,44 @@ export default function ValidatorDetails() {
           />
         </Panel>
       </Grid>
+
+      <Panel>
+        <Text fontSize="md" fontWeight="600">
+          Delegations
+        </Text>
+        <Text fontSize="sm" color="explorer.muted" mb="3">
+          Accounts staking {symbol || "tokens"} with this validator, largest first
+        </Text>
+        <ExplorerTabs
+          value={tab}
+          onChange={setTab}
+          items={[
+            { value: "delegations", label: "Delegations", count: staking.delegations.count },
+            { value: "unbondings", label: "Unbondings", count: staking.unbondings.count },
+          ]}
+        >
+          <TabPanel value="delegations" pt="0">
+            <DataTable
+              columns={delegationColumns(symbol)}
+              rows={staking.delegations.rows}
+              rowKey={(row) => row.address}
+              loading={staking.delegations.loading}
+              emptyText="No delegations"
+            />
+            <Paged count={staking.delegations.count} page={staking.delegations.page} setPage={staking.delegations.setPage} label="delegations" />
+          </TabPanel>
+          <TabPanel value="unbondings" pt="0">
+            <DataTable
+              columns={unbondingColumns(symbol)}
+              rows={staking.unbondings.rows}
+              rowKey={(row) => `${row.address}:${row.height}:${row.amount}`}
+              loading={staking.unbondings.loading}
+              emptyText="No unbondings"
+            />
+            <Paged count={staking.unbondings.count} page={staking.unbondings.page} setPage={staking.unbondings.setPage} label="unbondings" />
+          </TabPanel>
+        </ExplorerTabs>
+      </Panel>
     </Stack>
   );
 }
