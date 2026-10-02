@@ -15,8 +15,8 @@ ChartJS.register(CategoryScale, LinearScale, BarElement, Tooltip);
 // Hex values of the explorer.chart* tokens; chart.js draws on a canvas and
 // cannot read CSS variables.
 const CHART_COLORS = {
-  light: ["#5D5FEF", "#BF4A86", "#7879F1", "#2E855F"],
-  dark: ["#5D5FEF", "#EF5DA8", "#A5A6F6", "#8CA98E"],
+  light: ["#5D5FEF", "#BF4A86", "#166534", "#2E855F"],
+  dark: ["#5D5FEF", "#EF5DA8", "#2F9E62", "#8CA98E"],
 };
 
 // LMX is not shown in the design's staking breakdown.

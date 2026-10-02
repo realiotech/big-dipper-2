@@ -35,7 +35,7 @@ const config = defineConfig({
                     evm: { value: { _light: "#BF4A86", _dark: "#EF5DA8" } },
                     chart1: { value: { _light: "#5D5FEF", _dark: "#5D5FEF" } },
                     chart2: { value: { _light: "#BF4A86", _dark: "#EF5DA8" } },
-                    chart3: { value: { _light: "#7879F1", _dark: "#A5A6F6" } },
+                    chart3: { value: { _light: "#166534", _dark: "#2F9E62" } },
                     chart4: { value: { _light: "#2E855F", _dark: "#8CA98E" } },
                     button: { value: { _light: "#070C0E", _dark: "#FFFFFF" } },
                     buttonText: { value: { _light: "#FFFFFF", _dark: "#070C0E" } },

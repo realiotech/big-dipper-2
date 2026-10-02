@@ -88,7 +88,7 @@ export default function ValidatorList() {
         title="Validators"
         subtitle={loading ? " " : `Showing ${counts.active} of ${counts.all} validators`}
       />
-      <SimpleGrid columns={{ base: 1, md: 2, xl: 4 }} gap="4" mb="5">
+      <SimpleGrid columns={{ base: 1, md: 3 }} gap="4" mb="5">
         <StatCard
           label="Active set"
           loading={loading}
@@ -96,7 +96,7 @@ export default function ValidatorList() {
           suffix={stats.maxValidators ? `of ${stats.maxValidators} slots` : undefined}
           rows={[
             { label: "Known validators", value: stats.known },
-            { label: "Jailed", value: stats.jailed },
+            { label: "Inactive", value: stats.known - stats.active },
           ]}
         />
         <StatCard
@@ -107,15 +107,6 @@ export default function ValidatorList() {
           rows={[
             { label: "Active voting power", value: numeral(stats.activePower).format("0,0") },
             { label: "Staking tokens in use", value: stats.stakingTokens },
-          ]}
-        />
-        <StatCard
-          label="Nakamoto coefficient"
-          loading={loading}
-          value={stats.nakamoto}
-          rows={[
-            { label: "Validators holding over 1/3", value: `${stats.nakamoto} of ${stats.active}` },
-            { label: "Top 10 share", value: formatPercent(stats.top10Share) },
           ]}
         />
         <StatCard

@@ -4,6 +4,7 @@ import { useRecoilValue } from 'recoil';
 import { useValidatorPageQuery, useValidatorProposedBlocksQuery } from '@/graphql/types/general_types';
 import { readAssets } from '@/recoil/asset';
 import { formatTokenByExponent } from '@/utils';
+import { formatValAddress } from '@/utils/format_address';
 import { useValidators } from '../hooks';
 
 // "Blocks proposed (recent window)" counts over this many blocks.
@@ -35,7 +36,7 @@ export const useValidatorDetails = () => {
     const votingPower = Number(validator?.validatorVotingPowers?.[0]?.votingPower ?? 0);
     // Rank within the active set, by voting power.
     const rankIndex = items.filter((item) => item.status === 3).findIndex((item) => item.validator === address);
-    const largest = data?.delegations?.aggregate?.max?.amount;
+    const largest = data?.largestDelegation?.[0]?.amount;
 
     return {
       address,
@@ -47,7 +48,7 @@ export const useValidatorDetails = () => {
       details: description?.details ?? '',
       identity: description?.identity ?? '',
       securityContact: description?.securityContact ?? '',
-      selfDelegateAddress: validator?.validatorInfo?.selfDelegateAddress ?? '',
+      selfDelegateAddress: validator ? formatValAddress(validator.validatorInfo?.operatorAddress ?? address) : '',
       status: status?.status ?? 0,
       jailed: status?.jailed ?? false,
       tombstoned: signing?.tombstoned ?? false,
