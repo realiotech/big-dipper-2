@@ -56,32 +56,50 @@ const byAmountDesc = (a: BlacklistedHolder, b: BlacklistedHolder) => {
   return x === y ? a.address.localeCompare(b.address) : x > y ? -1 : 1;
 };
 
-// ERC-20 balances (DSTRX) are EVM state the indexer does not hold; the
-// token's subgraph lists every holder, few enough to read in one request.
-const ERC20_HOLDERS = `query BlacklistErc20Holders($first: Int!) {
-  erc20Balances(first: $first, where: {account_not: null, valueExact_gt: "0"}) { account { id } valueExact }
+// ERC-20 balances (DSTRX) are EVM state the indexer does not hold. The
+// token's subgraph lists every account that ever held it, but its balances
+// miss staking (tokens move to the erc20 module without a Transfer event), so
+// the blacklisted accounts' balances are read on chain with balanceOf.
+const ERC20_ACCOUNTS = `query BlacklistErc20Accounts($first: Int!) {
+  erc20Balances(first: $first, where: {account_not: null}) { account { id } }
 }`;
 
-const fetchErc20Holders = async () => {
-  const url = process.env.NEXT_PUBLIC_SUBGRAPHQL_URL;
-  if (!url) throw new Error('NEXT_PUBLIC_SUBGRAPHQL_URL is not configured');
-  const response = await fetch(url, {
+const fetchErc20Holders = async (denom: string) => {
+  const contract = denom.slice('erc20:'.length).toLowerCase();
+  const subgraph = process.env.NEXT_PUBLIC_SUBGRAPHQL_URL;
+  const rpc = process.env.NEXT_PUBLIC_JSON_RPC_URL;
+  if (!subgraph || !rpc) throw new Error('NEXT_PUBLIC_SUBGRAPHQL_URL and NEXT_PUBLIC_JSON_RPC_URL must be configured');
+  const response = await fetch(subgraph, {
     method: 'POST',
     headers: { 'content-type': 'application/json' },
-    body: JSON.stringify({ query: ERC20_HOLDERS, variables: { first: 1000 } }),
+    body: JSON.stringify({ query: ERC20_ACCOUNTS, variables: { first: 1000 } }),
     signal: AbortSignal.timeout(30000),
   });
   if (!response.ok) throw new Error(`subgraph HTTP ${response.status}`);
-  const body = (await response.json()) as { data?: { erc20Balances: { account: { id: string }; valueExact: string }[] }; errors?: { message: string }[] };
+  const body = (await response.json()) as { data?: { erc20Balances: { account: { id: string } }[] }; errors?: { message: string }[] };
   if (body.errors?.length || !body.data) throw new Error(body.errors?.map((e) => e.message).join('; ') ?? 'subgraph returned no data');
-  return body.data.erc20Balances
-    .map((b) => ({ address: ethToRealionetwork(b.account.id), amount: b.valueExact }))
-    .filter((holder) => isBlacklisted(holder.address))
+
+  const accounts = body.data.erc20Balances
+    .map((b) => ({ evm: b.account.id.toLowerCase(), address: ethToRealionetwork(b.account.id) }))
+    .filter((account) => isBlacklisted(account.address));
+  if (!accounts.length) return [];
+  // balanceOf(address): selector 0x70a08231 and the address padded to 32 bytes.
+  const balances = await fetch(rpc, {
+    method: 'POST',
+    headers: { 'content-type': 'application/json' },
+    body: JSON.stringify(accounts.map((account, id) => ({ jsonrpc: '2.0', id, method: 'eth_call', params: [{ to: contract, data: `0x70a08231${account.evm.slice(2).padStart(64, '0')}` }, 'latest'] }))),
+    signal: AbortSignal.timeout(30000),
+  });
+  if (!balances.ok) throw new Error(`JSON-RPC HTTP ${balances.status}`);
+  const results = (await balances.json()) as Array<{ id: number; result?: string }>;
+  return results
+    .map((r) => ({ address: accounts[r.id].address, amount: BigInt(r.result && r.result !== '0x' ? r.result : '0x0').toString() }))
+    .filter((holder) => holder.amount !== '0')
     .sort(byAmountDesc);
 };
 
 const fetchHolders = async (denom: string) => {
-  if (denom.startsWith('erc20:')) return fetchErc20Holders();
+  if (denom.startsWith('erc20:')) return fetchErc20Holders(denom);
   const list = [...addresses()];
   const chunks = Array.from({ length: Math.ceil(list.length / CHUNK) }, (_, i) => list.slice(i * CHUNK, (i + 1) * CHUNK));
   const results = await Promise.all(chunks.map((chunk) => indexer<{ balance: BlacklistedHolder[] }>(BALANCES, { addresses: chunk, denom })));

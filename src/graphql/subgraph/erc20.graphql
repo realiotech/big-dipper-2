@@ -98,7 +98,7 @@ query EvmTokenHolders($address: ID!, $first: Int = 1000) {
       valueExact
     }
   }
-  erc20Balances(first: $first, orderBy: valueExact, orderDirection: desc, where: {account_not: null, valueExact_gt: "0"}) {
+  erc20Balances(first: $first, orderBy: valueExact, orderDirection: desc, where: {account_not: null}) {
     account {
       id
     }

@@ -17,7 +17,7 @@ import { readFilter } from '@/recoil/transactions_filter';
 import type { AccountInfo, AccountTransaction, OverviewType } from './types';
 import { realioNetworkToEth, ethToRealionetwork } from "@realiotech/address-generator"
 import { ACCOUNT_DETAILS } from '@/utils/go_to_page'
-import { useBlockscout } from '@/components/explorer/blockscout';
+import { readAssets } from '@/recoil/asset';
 import { formatTokenByExponent } from '@/utils';
 
 export const PAGE_SIZE = 20;
@@ -215,29 +215,56 @@ export const useStaking = (
   };
 };
 
-type BlockscoutTokenBalance = {
-  value: string;
-  token: { address_hash: string; decimals: string | null; type: string };
-};
-
 /**
- * ERC-20 balances in whole tokens, from Blockscout (which reads balanceOf).
- * The subgraph misses tokens moved into the erc20 module when they are
- * staked, so its balances can still count tokens the account no longer holds.
+ * ERC-20 balances in whole tokens, read from the chain with balanceOf for
+ * each listed ERC-20 asset (DSTRX), in one batched JSON-RPC request.
+ * Staking moves tokens out of the wallet without a Transfer event, so the
+ * subgraph and Blockscout's cached token balances can keep showing a balance
+ * the account has already staked; balanceOf is always current.
  */
 export const useErc20Balances = (
   evmAddress?: string,
 ) => {
-  const { data } = useBlockscout<BlockscoutTokenBalance[]>(evmAddress ? `addresses/${evmAddress}/token-balances` : null);
-  return useMemo(
-    () => (data ?? [])
-      .filter((row) => row.token.type === 'ERC-20')
-      .map((row) => ({
-        value: formatTokenByExponent(row.value, Number(row.token.decimals ?? 18)),
-        contract: { id: row.token.address_hash.toLowerCase() },
-      })),
-    [data],
+  const { assetArr } = useRecoilValue(readAssets);
+  const tokens = useMemo(
+    () => assetArr
+      .filter((asset) => asset.denom.startsWith('erc20:'))
+      .map((asset) => ({ contract: asset.denom.slice('erc20:'.length).toLowerCase(), decimals: asset.decimals })),
+    [assetArr],
   );
+  const [balances, setBalances] = useState<Array<{ value: string; contract: { id: string } }>>([]);
+  const key = tokens.map((token) => token.contract).join(',');
+
+  useEffect(() => {
+    setBalances([]);
+    if (!evmAddress || !tokens.length || !process.env.NEXT_PUBLIC_JSON_RPC_URL) return;
+    const controller = new AbortController();
+    // balanceOf(address): selector 0x70a08231 and the address padded to 32 bytes.
+    const data = `0x70a08231${evmAddress.slice(2).toLowerCase().padStart(64, '0')}`;
+    fetch(process.env.NEXT_PUBLIC_JSON_RPC_URL, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(tokens.map((token, id) => ({ jsonrpc: '2.0', id, method: 'eth_call', params: [{ to: token.contract, data }, 'latest'] }))),
+      signal: controller.signal,
+    })
+      .then((res) => res.json())
+      .then((results: Array<{ id: number; result?: string }>) =>
+        setBalances(
+          results
+            .filter((r) => r.result && r.result !== '0x')
+            .map((r) => ({
+              value: formatTokenByExponent(BigInt(r.result as string).toString(), tokens[r.id].decimals),
+              contract: { id: tokens[r.id].contract },
+            })),
+        ),
+      )
+      .catch((error) => error?.name !== 'AbortError' && console.error('ERC-20 balanceOf failed:', error));
+    return () => controller.abort();
+    // tokens is derived from key.
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [evmAddress, key]);
+
+  return balances;
 };
 
 // Hook to get ERC20 balance using direct balanceOf JSON RPC call

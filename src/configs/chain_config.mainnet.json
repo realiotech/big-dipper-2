@@ -32,6 +32,10 @@
       "address": "realio1jv65s3grqf6v6jl3dp4t6c9t9rk99cd8w2qk49"
     },
     {
+      "name": "Erc20",
+      "address": "realio1glht96kr2rseywuvhhay894qw7ekuc4qr3hs4u"
+    },
+    {
       "name": "Evm",
       "address": "realio1vqu8rska6swzdmnhf90zuv0xmelej4lqy8p7gj"
     },

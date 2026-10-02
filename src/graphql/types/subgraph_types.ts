@@ -1901,7 +1901,7 @@ export const EvmTokenHoldersDocument = gql`
     first: $first
     orderBy: valueExact
     orderDirection: desc
-    where: {account_not: null, valueExact_gt: "0"}
+    where: {account_not: null}
   ) {
     account {
       id

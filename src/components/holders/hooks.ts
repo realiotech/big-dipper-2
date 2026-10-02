@@ -73,23 +73,65 @@ const useHolderRows = (denom: string, holders: Holder[], rankOffset: number, sup
   }, [asset, assetMap, balances, decimals, erc20, holders, overview, rankOffset, supplyOverride]);
 };
 
-// Largest first, as base-unit strings; realio1 addresses like the rest of the explorer.
+/**
+ * Every account holding an ERC-20, largest first, as base-unit strings and
+ * realio1 addresses. The subgraph lists the accounts that ever held the
+ * token, but its balances miss staking (tokens move to the erc20 module
+ * without a Transfer event), so each account's balance is read on chain with
+ * balanceOf, in one batched JSON-RPC request, as the account page does.
+ */
 const useErc20Holders = (denom: string) => {
   const enabled = isErc20Denom(denom);
+  const contract = denom.slice('erc20:'.length).toLowerCase();
   const { data, loading } = useEvmTokenHoldersQuery({
     context: { apiName: 'subgraph' },
-    variables: { address: denom.slice('erc20:'.length).toLowerCase() },
+    variables: { address: contract },
     skip: !enabled,
   });
+  const accounts = useMemo(() => (data?.erc20Balances ?? []).map((b) => String(b.account?.id ?? '')).filter(Boolean), [data]);
+  const [onchain, setOnchain] = useState<{ key: string; holders: Holder[] } | null>(null);
+  const key = `${contract}:${accounts.length}`;
+
+  useEffect(() => {
+    if (!enabled || !accounts.length || !process.env.NEXT_PUBLIC_JSON_RPC_URL) return;
+    const controller = new AbortController();
+    // balanceOf(address): selector 0x70a08231 and the address padded to 32 bytes.
+    const calls = accounts.map((account, id) => ({
+      jsonrpc: '2.0',
+      id,
+      method: 'eth_call',
+      params: [{ to: contract, data: `0x70a08231${account.slice(2).padStart(64, '0')}` }, 'latest'],
+    }));
+    fetch(process.env.NEXT_PUBLIC_JSON_RPC_URL, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(calls),
+      signal: controller.signal,
+    })
+      .then((res) => res.json())
+      .then((results: Array<{ id: number; result?: string }>) => {
+        const holders = results
+          .map((r) => ({ account: accounts[r.id], amount: BigInt(r.result && r.result !== '0x' ? r.result : '0x0') }))
+          .filter((h) => h.amount > BigInt(0))
+          // Base-unit amounts are too large for floats to order exactly.
+          .sort((x, y) => (x.amount === y.amount ? 0 : x.amount > y.amount ? -1 : 1))
+          .map((h): Holder => ({ address: ethToRealionetwork(h.account), amount: h.amount.toString() }));
+        setOnchain({ key, holders });
+      })
+      .catch((error) => error?.name !== 'AbortError' && console.error('ERC-20 balanceOf failed:', error));
+    return () => controller.abort();
+    // accounts and contract are captured by key.
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [enabled, key]);
+
+  const ready = onchain?.key === key;
   return useMemo(
     () => ({
-      loading: enabled && loading,
+      loading: enabled && (loading || !ready),
       supply: data?.erc20Contract?.totalSupply?.valueExact as string | undefined,
-      holders: (data?.erc20Balances ?? [])
-        .filter((b) => b.account?.id)
-        .map((b): Holder => ({ address: ethToRealionetwork(String(b.account?.id)), amount: String(b.valueExact) })),
+      holders: ready ? onchain.holders : [],
     }),
-    [data, enabled, loading]
+    [data, enabled, loading, onchain, ready]
   );
 };
 
