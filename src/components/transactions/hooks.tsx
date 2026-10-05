@@ -1,10 +1,20 @@
 import * as R from 'ramda';
+import { useApolloClient } from '@apollo/client';
 import {
+  TransactionsExportDocument,
+  TransactionsExportQuery,
+  TransactionsFilteredDocument,
+  TransactionsFilteredQuery,
   useLatestTransactionsListenerSubscription,
   useTransactionsCountQuery,
+  useTransactionsFilteredCountQuery,
+  useTransactionsFilteredQuery,
   useTransactionsPageQuery,
 } from '@/graphql/types/general_types';
 import { usePageParam } from '@/components/explorer/pager';
+import { rangeFilePart, transactionWhere, TxFilters, useTxFilters } from '@/components/explorer/tx_filters';
+import { readAllPages } from '@/components/explorer/tx_export';
+import { buildTxCsv, downloadCsv } from '@/utils/csv_export';
 import { toTxRow, TxRow, txLabel } from '@/utils/tx_label';
 import { convertMsgsToModels } from '@/components/msg/utils';
 import { TransactionState } from './types';
@@ -20,24 +30,36 @@ export const PAGE_SIZE = 25;
 const NEWEST = '9223372036854775807';
 
 /**
+ * Count variables for the filters. Counting "not EVM" directly is slow, so
+ * Cosmos counts are all matches minus the EVM ones.
+ */
+const countVariables = (filters: TxFilters) =>
+  filters.source === 'cosmos'
+    ? { where: transactionWhere(filters, 'all'), evmWhere: transactionWhere(filters, 'evm'), subtractEvm: true }
+    : { where: transactionWhere(filters), subtractEvm: false };
+
+/**
  * Transactions are paged with offsets below an anchor height: the newest
  * height seen, frozen while browsing older pages so rows do not shift as new
- * transactions arrive. Page 1 follows the chain live.
+ * transactions arrive. Page 1 follows the chain live. With any filter set the
+ * list comes from a filtered query instead.
  */
 export const useTransactions = () => {
   const { page, setPage } = usePageParam();
+  const { filters, setFilters, active } = useTxFilters();
   const [live, setLive] = useState<TxRow[]>([]);
   const [anchor, setAnchor] = useState<number | null>(null);
 
   useLatestTransactionsListenerSubscription({
     variables: { limit: PAGE_SIZE },
+    skip: active,
     onData: ({ data }) => setLive(data.data?.transactions.map(toTxRow) ?? []),
   });
 
   const maxHeight = page === 1 ? NEWEST : anchor === null ? null : String(anchor);
   const { data, loading } = useTransactionsPageQuery({
     variables: { maxHeight, limit: PAGE_SIZE, offset: (page - 1) * PAGE_SIZE },
-    skip: maxHeight === null,
+    skip: active || maxHeight === null,
   });
   const queried = useMemo(() => data?.transactions.map(toTxRow) ?? [], [data]);
 
@@ -46,16 +68,73 @@ export const useTransactions = () => {
     if (newest && (page === 1 || anchor === null)) setAnchor(newest);
   }, [newest, page, anchor]);
 
-  const { data: countData } = useTransactionsCountQuery();
-  const items = page === 1 && live.length ? live : queried;
+  const { data: countData } = useTransactionsCountQuery({ skip: active });
 
+  const where = useMemo(() => transactionWhere(filters), [filters]);
+  const filtered = useTransactionsFilteredQuery({
+    variables: { where, limit: PAGE_SIZE, offset: (page - 1) * PAGE_SIZE },
+    skip: !active,
+  });
+  const filteredRows = useMemo(() => filtered.data?.transactions.map(toTxRow) ?? [], [filtered.data]);
+  const filteredCount = useTransactionsFilteredCountQuery({ variables: countVariables(filters), skip: !active });
+  const counts = filteredCount.data;
+  const matching = counts ? (counts.total.aggregate?.count ?? 0) - (counts.evm?.aggregate?.count ?? 0) : null;
+
+  if (active) {
+    return {
+      items: filteredRows,
+      loading: filtered.loading,
+      total: matching ?? 0,
+      matching,
+      page,
+      setPage,
+      filters,
+      setFilters,
+    };
+  }
+
+  const items = page === 1 && live.length ? live : queried;
+  const total = Number(countData?.txs_count?.[0]?.count ?? 0);
   return {
     items,
     loading: items.length === 0 && (loading || maxHeight === null),
-    total: Number(countData?.txs_count?.[0]?.count ?? 0),
+    total,
+    matching: countData ? total : null,
     page,
     setPage,
+    filters,
+    setFilters,
   };
+};
+
+/**
+ * Saves every transaction matching the filters as CSV. The newest matching
+ * height is pinned first so the pages read stay consistent.
+ */
+export const useTransactionsExport = (filters: TxFilters) => {
+  const client = useApolloClient();
+
+  return useCallback(async () => {
+    const where = transactionWhere(filters);
+    const top = await client.query<TransactionsFilteredQuery>({ query: TransactionsFilteredDocument, variables: { where, limit: 1 } });
+    if (top.errors?.length) throw new Error(top.errors[0].message);
+    const anchor = top.data.transactions[0]?.height;
+    if (anchor === undefined) return 0;
+
+    const pinned = { _and: [where, { height: { _lte: anchor } }] };
+    const rows = await readAllPages(async (offset, limit) => {
+      const result = await client.query<TransactionsExportQuery>({
+        query: TransactionsExportDocument,
+        variables: { where: pinned, limit, offset },
+      });
+      if (result.errors?.length) throw new Error(result.errors[0].message);
+      return result.data.transactions;
+    });
+
+    const scope = [filters.source, filters.type].filter(Boolean).join('_');
+    downloadCsv(buildTxCsv(rows), `transactions_${scope}_${rangeFilePart(filters.range)}.csv`);
+    return rows.length;
+  }, [client, filters]);
 };
 
 const formatOverview = (data: TransactionDetailsQuery) => {

@@ -1,8 +1,11 @@
 import { useRouter } from 'next/router';
-import { useEffect, useMemo, useState } from 'react';
+import { useCallback, useEffect, useMemo, useState } from 'react';
+import { useApolloClient } from '@apollo/client';
 
 import Big from 'big.js';
 import {
+  GetMessagesByAddressExportDocument,
+  GetMessagesByAddressExportQuery,
   GetMessagesByAddressQuery,
   useAccountDelegationsQuery,
   useAccountUndelegationsQuery,
@@ -13,7 +16,9 @@ import {
 
 import { txFeeInRio, txLabel } from '@/utils/tx_label';
 import { useRecoilValue } from 'recoil';
-import { readFilter } from '@/recoil/transactions_filter';
+import { messageTypesArg, messageWhere, rangeFilePart, TxFilters } from '@/components/explorer/tx_filters';
+import { readAllPages, uniqueByHash } from '@/components/explorer/tx_export';
+import { buildTxCsv, downloadCsv } from '@/utils/csv_export';
 import type { AccountInfo, AccountTransaction, OverviewType } from './types';
 import { realioNetworkToEth, ethToRealionetwork } from "@realiotech/address-generator"
 import { ACCOUNT_DETAILS } from '@/utils/go_to_page'
@@ -47,12 +52,14 @@ const formatTransactions = (data?: GetMessagesByAddressQuery): AccountTransactio
   return result;
 };
 
-export function useTransactions(address?: string) {
-  const msgTypes = useRecoilValue(readFilter);
+export function useTransactions(address: string | undefined, filters: TxFilters) {
   const [page, setPage] = useState(1);
-  useEffect(() => setPage(1), [address, msgTypes]);
+  const variables = useMemo(
+    () => ({ address: `{${address ?? ''}}`, types: messageTypesArg(filters), where: messageWhere(filters) }),
+    [address, filters]
+  );
+  useEffect(() => setPage(1), [variables]);
 
-  const variables = { address: `{${address ?? ''}}`, types: msgTypes };
   const { data: countData } = useGetMessagesByAddressCountQuery({ variables, skip: !address });
   const { data, loading } = useGetMessagesByAddressQuery({
     variables: { ...variables, limit: PAGE_SIZE, offset: (page - 1) * PAGE_SIZE },
@@ -63,9 +70,49 @@ export function useTransactions(address?: string) {
     items: formatTransactions(data),
     loading,
     total: countData?.messagesByAddressAggregate.aggregate?.count ?? 0,
+    counted: Boolean(countData),
     page,
     setPage,
   };
+}
+
+/** Height of the account's newest transaction, whatever the Activity filters are. */
+export function useLastActivity(address?: string) {
+  const { data } = useGetMessagesByAddressQuery({ variables: { address: `{${address ?? ''}}`, limit: 1 }, skip: !address });
+  const height = data?.messagesByAddress[0]?.transaction?.height;
+  return height === undefined ? undefined : Number(height);
+}
+
+/**
+ * Saves the account's transactions matching the filters as CSV, one row per
+ * transaction. The newest matching height is pinned first so the pages read
+ * stay consistent.
+ */
+export function useAccountExport(address: string | undefined, filters: TxFilters) {
+  const client = useApolloClient();
+
+  return useCallback(async () => {
+    if (!address) return 0;
+    const base = { address: `{${address}}`, types: messageTypesArg(filters) };
+    const readPage = async (where: object, offset: number, limit: number) => {
+      const result = await client.query<GetMessagesByAddressExportQuery>({
+        query: GetMessagesByAddressExportDocument,
+        variables: { ...base, where, limit, offset },
+      });
+      if (result.errors?.length) throw new Error(result.errors[0].message);
+      return result.data.messagesByAddress.flatMap(({ transaction }) => (transaction ? [transaction] : []));
+    };
+
+    const where = messageWhere(filters);
+    const [top] = await readPage(where, 0, 1);
+    if (!top) return 0;
+
+    const pinned = { _and: [where, { height: { _lte: top.height } }] };
+    const rows = uniqueByHash(await readAllPages((offset, limit) => readPage(pinned, offset, limit)));
+    const scope = [address, filters.type].filter(Boolean).join('_');
+    downloadCsv(buildTxCsv(rows), `transactions_${scope}_${rangeFilePart(filters.range)}.csv`);
+    return rows.length;
+  }, [address, client, filters]);
 }
 
 /** Account type, public key type and pending staking rewards, read from the chain's REST API. */

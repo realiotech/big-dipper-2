@@ -24123,9 +24123,10 @@ export type SuppliesQuery = { supply: Array<{ __typename?: 'supply', coins: Arra
 
 export type GetMessagesByAddressQueryVariables = Exact<{
   address?: InputMaybe<Scalars['_text']>;
-  limit?: InputMaybe<Scalars['bigint']>;
-  offset?: InputMaybe<Scalars['bigint']>;
+  limit?: InputMaybe<Scalars['Int']>;
+  offset?: InputMaybe<Scalars['Int']>;
   types?: InputMaybe<Scalars['_text']>;
+  where?: InputMaybe<Message_Bool_Exp>;
 }>;
 
 
@@ -24134,6 +24135,7 @@ export type GetMessagesByAddressQuery = { messagesByAddress: Array<{ __typename?
 export type GetMessagesByAddressCountQueryVariables = Exact<{
   address?: InputMaybe<Scalars['_text']>;
   types?: InputMaybe<Scalars['_text']>;
+  where?: InputMaybe<Message_Bool_Exp>;
 }>;
 
 
@@ -24141,11 +24143,10 @@ export type GetMessagesByAddressCountQuery = { messagesByAddressAggregate: { __t
 
 export type GetMessagesByAddressExportQueryVariables = Exact<{
   address?: InputMaybe<Scalars['_text']>;
-  limit?: InputMaybe<Scalars['bigint']>;
-  offset?: InputMaybe<Scalars['bigint']>;
+  limit?: InputMaybe<Scalars['Int']>;
+  offset?: InputMaybe<Scalars['Int']>;
   types?: InputMaybe<Scalars['_text']>;
-  startDate?: InputMaybe<Scalars['timestamp']>;
-  endDate?: InputMaybe<Scalars['timestamp']>;
+  where?: InputMaybe<Message_Bool_Exp>;
 }>;
 
 
@@ -24304,6 +24305,33 @@ export type TransactionsPageQueryVariables = Exact<{
 
 
 export type TransactionsPageQuery = { transactions: Array<{ __typename?: 'transaction', height: any, hash: string, success: boolean, fee: any, gasUsed?: any | null, gasWanted?: any | null, messages: any, block: { __typename?: 'block', timestamp: any } }> };
+
+export type TransactionsFilteredQueryVariables = Exact<{
+  where: Transaction_Bool_Exp;
+  limit?: InputMaybe<Scalars['Int']>;
+  offset?: InputMaybe<Scalars['Int']>;
+}>;
+
+
+export type TransactionsFilteredQuery = { transactions: Array<{ __typename?: 'transaction', height: any, hash: string, success: boolean, fee: any, gasUsed?: any | null, gasWanted?: any | null, messages: any, block: { __typename?: 'block', timestamp: any } }> };
+
+export type TransactionsFilteredCountQueryVariables = Exact<{
+  where: Transaction_Bool_Exp;
+  evmWhere?: InputMaybe<Transaction_Bool_Exp>;
+  subtractEvm: Scalars['Boolean'];
+}>;
+
+
+export type TransactionsFilteredCountQuery = { total: { __typename?: 'transaction_aggregate', aggregate?: { __typename?: 'transaction_aggregate_fields', count: number } | null }, evm?: { __typename?: 'transaction_aggregate', aggregate?: { __typename?: 'transaction_aggregate_fields', count: number } | null } };
+
+export type TransactionsExportQueryVariables = Exact<{
+  where: Transaction_Bool_Exp;
+  limit?: InputMaybe<Scalars['Int']>;
+  offset?: InputMaybe<Scalars['Int']>;
+}>;
+
+
+export type TransactionsExportQuery = { transactions: Array<{ __typename?: 'transaction', height: any, hash: string, success: boolean, fee: any, gasUsed?: any | null, gasWanted?: any | null, messages: any, block: { __typename?: 'block', timestamp: any }, rawLog?: string | null }> };
 
 export type LastHundredBlocksSubscriptionVariables = Exact<{
   address?: InputMaybe<Scalars['String']>;
@@ -25691,9 +25719,13 @@ export type SuppliesQueryHookResult = ReturnType<typeof useSuppliesQuery>;
 export type SuppliesLazyQueryHookResult = ReturnType<typeof useSuppliesLazyQuery>;
 export type SuppliesQueryResult = Apollo.QueryResult<SuppliesQuery, SuppliesQueryVariables>;
 export const GetMessagesByAddressDocument = gql`
-    query GetMessagesByAddress($address: _text, $limit: bigint = 50, $offset: bigint = 0, $types: _text = "{}") {
+    query GetMessagesByAddress($address: _text, $limit: Int = 50, $offset: Int = 0, $types: _text = "{}", $where: message_bool_exp = {}) {
   messagesByAddress: messages_by_address(
-    args: {addresses: $address, types: $types, limit: $limit, offset: $offset}
+    args: {addresses: $address, types: $types, limit: 100000, offset: 0}
+    where: $where
+    limit: $limit
+    offset: $offset
+    order_by: [{height: desc}, {transaction_hash: asc}, {index: asc}]
   ) {
     transaction {
       height
@@ -25727,6 +25759,7 @@ export const GetMessagesByAddressDocument = gql`
  *      limit: // value for 'limit'
  *      offset: // value for 'offset'
  *      types: // value for 'types'
+ *      where: // value for 'where'
  *   },
  * });
  */
@@ -25742,10 +25775,10 @@ export type GetMessagesByAddressQueryHookResult = ReturnType<typeof useGetMessag
 export type GetMessagesByAddressLazyQueryHookResult = ReturnType<typeof useGetMessagesByAddressLazyQuery>;
 export type GetMessagesByAddressQueryResult = Apollo.QueryResult<GetMessagesByAddressQuery, GetMessagesByAddressQueryVariables>;
 export const GetMessagesByAddressCountDocument = gql`
-    query GetMessagesByAddressCount($address: _text, $types: _text = "{}") {
+    query GetMessagesByAddressCount($address: _text, $types: _text = "{}", $where: message_bool_exp = {}) {
   messagesByAddressAggregate: messages_by_address_aggregate(
     args: {addresses: $address, types: $types, limit: 100000, offset: 0}
-    where: {}
+    where: $where
   ) {
     aggregate {
       count
@@ -25768,6 +25801,7 @@ export const GetMessagesByAddressCountDocument = gql`
  *   variables: {
  *      address: // value for 'address'
  *      types: // value for 'types'
+ *      where: // value for 'where'
  *   },
  * });
  */
@@ -25783,11 +25817,13 @@ export type GetMessagesByAddressCountQueryHookResult = ReturnType<typeof useGetM
 export type GetMessagesByAddressCountLazyQueryHookResult = ReturnType<typeof useGetMessagesByAddressCountLazyQuery>;
 export type GetMessagesByAddressCountQueryResult = Apollo.QueryResult<GetMessagesByAddressCountQuery, GetMessagesByAddressCountQueryVariables>;
 export const GetMessagesByAddressExportDocument = gql`
-    query GetMessagesByAddressExport($address: _text, $limit: bigint = 50, $offset: bigint = 0, $types: _text = "{}", $startDate: timestamp, $endDate: timestamp) {
+    query GetMessagesByAddressExport($address: _text, $limit: Int = 1000, $offset: Int = 0, $types: _text = "{}", $where: message_bool_exp = {}) {
   messagesByAddress: messages_by_address(
-    args: {addresses: $address, types: $types, limit: $limit, offset: $offset}
-    where: {transaction: {block: {timestamp: {_gte: $startDate, _lte: $endDate}}}}
-    order_by: {height: desc}
+    args: {addresses: $address, types: $types, limit: 100000, offset: 0}
+    where: $where
+    limit: $limit
+    offset: $offset
+    order_by: [{height: desc}, {transaction_hash: asc}, {index: asc}]
   ) {
     transaction {
       height
@@ -25824,8 +25860,7 @@ export const GetMessagesByAddressExportDocument = gql`
  *      limit: // value for 'limit'
  *      offset: // value for 'offset'
  *      types: // value for 'types'
- *      startDate: // value for 'startDate'
- *      endDate: // value for 'endDate'
+ *      where: // value for 'where'
  *   },
  * });
  */
@@ -26847,6 +26882,143 @@ export function useTransactionsPageLazyQuery(baseOptions?: Apollo.LazyQueryHookO
 export type TransactionsPageQueryHookResult = ReturnType<typeof useTransactionsPageQuery>;
 export type TransactionsPageLazyQueryHookResult = ReturnType<typeof useTransactionsPageLazyQuery>;
 export type TransactionsPageQueryResult = Apollo.QueryResult<TransactionsPageQuery, TransactionsPageQueryVariables>;
+export const TransactionsFilteredDocument = gql`
+    query TransactionsFiltered($where: transaction_bool_exp!, $limit: Int = 25, $offset: Int = 0) {
+  transactions: transaction(limit: $limit, offset: $offset, where: $where, order_by: [{height: desc}, {hash: asc}]) {
+    height
+    hash
+    success
+    fee
+    gasUsed: gas_used
+    gasWanted: gas_wanted
+    messages
+    block {
+      timestamp
+    }
+  }
+}
+    `;
+
+/**
+ * __useTransactionsFilteredQuery__
+ *
+ * To run a query within a React component, call `useTransactionsFilteredQuery` and pass it any options that fit your needs.
+ * When your component renders, `useTransactionsFilteredQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useTransactionsFilteredQuery({
+ *   variables: {
+ *      where: // value for 'where'
+ *      limit: // value for 'limit'
+ *      offset: // value for 'offset'
+ *   },
+ * });
+ */
+export function useTransactionsFilteredQuery(baseOptions: Apollo.QueryHookOptions<TransactionsFilteredQuery, TransactionsFilteredQueryVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useQuery<TransactionsFilteredQuery, TransactionsFilteredQueryVariables>(TransactionsFilteredDocument, options);
+      }
+export function useTransactionsFilteredLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<TransactionsFilteredQuery, TransactionsFilteredQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return Apollo.useLazyQuery<TransactionsFilteredQuery, TransactionsFilteredQueryVariables>(TransactionsFilteredDocument, options);
+        }
+export type TransactionsFilteredQueryHookResult = ReturnType<typeof useTransactionsFilteredQuery>;
+export type TransactionsFilteredLazyQueryHookResult = ReturnType<typeof useTransactionsFilteredLazyQuery>;
+export type TransactionsFilteredQueryResult = Apollo.QueryResult<TransactionsFilteredQuery, TransactionsFilteredQueryVariables>;
+export const TransactionsFilteredCountDocument = gql`
+    query TransactionsFilteredCount($where: transaction_bool_exp!, $evmWhere: transaction_bool_exp = {}, $subtractEvm: Boolean!) {
+  total: transaction_aggregate(where: $where) {
+    aggregate {
+      count
+    }
+  }
+  evm: transaction_aggregate(where: $evmWhere) @include(if: $subtractEvm) {
+    aggregate {
+      count
+    }
+  }
+}
+    `;
+
+/**
+ * __useTransactionsFilteredCountQuery__
+ *
+ * To run a query within a React component, call `useTransactionsFilteredCountQuery` and pass it any options that fit your needs.
+ * When your component renders, `useTransactionsFilteredCountQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useTransactionsFilteredCountQuery({
+ *   variables: {
+ *      where: // value for 'where'
+ *      evmWhere: // value for 'evmWhere'
+ *      subtractEvm: // value for 'subtractEvm'
+ *   },
+ * });
+ */
+export function useTransactionsFilteredCountQuery(baseOptions: Apollo.QueryHookOptions<TransactionsFilteredCountQuery, TransactionsFilteredCountQueryVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useQuery<TransactionsFilteredCountQuery, TransactionsFilteredCountQueryVariables>(TransactionsFilteredCountDocument, options);
+      }
+export function useTransactionsFilteredCountLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<TransactionsFilteredCountQuery, TransactionsFilteredCountQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return Apollo.useLazyQuery<TransactionsFilteredCountQuery, TransactionsFilteredCountQueryVariables>(TransactionsFilteredCountDocument, options);
+        }
+export type TransactionsFilteredCountQueryHookResult = ReturnType<typeof useTransactionsFilteredCountQuery>;
+export type TransactionsFilteredCountLazyQueryHookResult = ReturnType<typeof useTransactionsFilteredCountLazyQuery>;
+export type TransactionsFilteredCountQueryResult = Apollo.QueryResult<TransactionsFilteredCountQuery, TransactionsFilteredCountQueryVariables>;
+export const TransactionsExportDocument = gql`
+    query TransactionsExport($where: transaction_bool_exp!, $limit: Int = 1000, $offset: Int = 0) {
+  transactions: transaction(limit: $limit, offset: $offset, where: $where, order_by: [{height: desc}, {hash: asc}]) {
+    height
+    hash
+    success
+    fee
+    gasUsed: gas_used
+    gasWanted: gas_wanted
+    messages
+    rawLog: raw_log
+    block {
+      timestamp
+    }
+  }
+}
+    `;
+
+/**
+ * __useTransactionsExportQuery__
+ *
+ * To run a query within a React component, call `useTransactionsExportQuery` and pass it any options that fit your needs.
+ * When your component renders, `useTransactionsExportQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useTransactionsExportQuery({
+ *   variables: {
+ *      where: // value for 'where'
+ *      limit: // value for 'limit'
+ *      offset: // value for 'offset'
+ *   },
+ * });
+ */
+export function useTransactionsExportQuery(baseOptions: Apollo.QueryHookOptions<TransactionsExportQuery, TransactionsExportQueryVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useQuery<TransactionsExportQuery, TransactionsExportQueryVariables>(TransactionsExportDocument, options);
+      }
+export function useTransactionsExportLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<TransactionsExportQuery, TransactionsExportQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return Apollo.useLazyQuery<TransactionsExportQuery, TransactionsExportQueryVariables>(TransactionsExportDocument, options);
+        }
+export type TransactionsExportQueryHookResult = ReturnType<typeof useTransactionsExportQuery>;
+export type TransactionsExportLazyQueryHookResult = ReturnType<typeof useTransactionsExportLazyQuery>;
+export type TransactionsExportQueryResult = Apollo.QueryResult<TransactionsExportQuery, TransactionsExportQueryVariables>;
 export const LastHundredBlocksDocument = gql`
     subscription LastHundredBlocks($address: String) {
   block(offset: 1, order_by: {height: desc}, limit: 100) {

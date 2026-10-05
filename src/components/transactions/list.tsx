@@ -10,7 +10,9 @@ import { DataTable, Column } from "@/components/explorer/data_table";
 import { Pager } from "@/components/explorer/pager";
 import { TxNameTag, TxStatus, TxTypeTag } from "@/components/explorer/badges";
 import { formatAmount, timeAgo } from "@/components/explorer/format";
-import { PAGE_SIZE, useTransactions } from "./hooks";
+import { ExportCsvButton, SourceTabs, TxTypeMenu } from "@/components/explorer/tx_toolbar";
+import { TimeRangePicker } from "@/components/explorer/time_range_picker";
+import { PAGE_SIZE, useTransactions, useTransactionsExport } from "./hooks";
 
 export const txColumns: Column<TxRow>[] = [
   {
@@ -54,21 +56,38 @@ export const txColumns: Column<TxRow>[] = [
 ];
 
 export function TransactionList() {
-  const { items, loading, total, page, setPage } = useTransactions();
+  const { items, loading, total, matching, page, setPage, filters, setFilters } = useTransactions();
+  const exportCsv = useTransactionsExport(filters);
+  const shown = Math.min(PAGE_SIZE, Math.max(total - (page - 1) * PAGE_SIZE, 0));
 
   return (
     <>
       <PageTitle
         title="Transactions"
-        subtitle={total ? `Showing ${PAGE_SIZE} of ${numeral(total).format("0,0")} transactions` : " "}
+        subtitle={matching !== null ? `Showing ${shown} of ${numeral(total).format("0,0")} transactions` : " "}
       />
       <Panel>
-        {total > 0 && (
-          <Flex justify="flex-end" mb="2">
+        <Flex justify="space-between" align="center" gap="3" wrap="wrap" mb="2">
+          <SourceTabs value={filters.source} onChange={(source) => setFilters({ source })} />
+          <Flex align="center" gap="2" wrap="wrap" justify="flex-end">
+            <TxTypeMenu value={filters.type} onChange={(type) => setFilters({ type })} />
+            <TimeRangePicker value={filters.range} onChange={(range) => setFilters({ range })} />
+            <ExportCsvButton count={matching} needsRange={!filters.range} onExport={exportCsv} />
+          </Flex>
+        </Flex>
+        <DataTable
+          columns={txColumns}
+          rows={items}
+          rowKey={(row) => row.hash}
+          loading={loading}
+          skeletonRows={PAGE_SIZE}
+          emptyText="No transactions match these filters"
+        />
+        {total > PAGE_SIZE && (
+          <Flex justify="flex-end" mt="3">
             <Pager count={total} pageSize={PAGE_SIZE} page={page} onPageChange={setPage} />
           </Flex>
         )}
-        <DataTable columns={txColumns} rows={items} rowKey={(row) => row.hash} loading={loading} skeletonRows={PAGE_SIZE} />
       </Panel>
     </>
   );

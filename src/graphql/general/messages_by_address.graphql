@@ -1,5 +1,11 @@
-query GetMessagesByAddress($address: _text, $limit: bigint = 50, $offset: bigint = 0 $types: _text = "{}") {
-  messagesByAddress: messages_by_address(args: {addresses: $address, types: $types, limit: $limit, offset: $offset}) {
+query GetMessagesByAddress($address: _text, $limit: Int = 50, $offset: Int = 0, $types: _text = "{}", $where: message_bool_exp = {}) {
+  messagesByAddress: messages_by_address(
+    args: {addresses: $address, types: $types, limit: 100000, offset: 0}
+    where: $where
+    limit: $limit
+    offset: $offset
+    order_by: [{height: desc}, {transaction_hash: asc}, {index: asc}]
+  ) {
     transaction {
       height
       hash

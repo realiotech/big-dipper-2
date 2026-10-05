@@ -1,4 +1,4 @@
-import React, { useEffect, useMemo, useState } from "react";
+import React, { useMemo, useState } from "react";
 import { Box, Flex, Grid, Image, Link as ChakraLink, Stack, Text } from "@chakra-ui/react";
 import NextLink from "next/link";
 import numeral from "numeral";
@@ -21,7 +21,10 @@ import { StatusTag, TxNameTag, TxStatus, TxTypeTag } from "@/components/explorer
 import { ValidatorName } from "@/components/explorer/validator_name";
 import { TokenDot } from "@/components/explorer/token";
 import { formatPercent, timeAgo } from "@/components/explorer/format";
-import { PAGE_SIZE, useAccountInfo, useErc20Balances, useOverview, useStaking, useTransactions } from "./hooks";
+import { ExportCsvButton, TxTypeMenu } from "@/components/explorer/tx_toolbar";
+import { TimeRangePicker } from "@/components/explorer/time_range_picker";
+import { useTxFilters } from "@/components/explorer/tx_filters";
+import { PAGE_SIZE, useAccountExport, useAccountInfo, useErc20Balances, useLastActivity, useOverview, useStaking, useTransactions } from "./hooks";
 import { AssetRow, DelegationRow, usePortfolio } from "./portfolio";
 import { BlockscoutAddress, useBlockscout } from "@/components/explorer/blockscout";
 import { CONTRACT_DETAILS } from "@/components/explorer/evm_address";
@@ -220,7 +223,9 @@ export default function AccountDetail() {
   const erc20Balances = useErc20Balances(evmAddress);
   const { delegations, unbondings } = useStaking(address);
   const info = useAccountInfo(address);
-  const activity = useTransactions(address);
+  const { filters, setFilters, active: filtered } = useTxFilters();
+  const activity = useTransactions(address, filters);
+  const exportCsv = useAccountExport(address, filters);
   // The EVM side of the same account may be a contract.
   const { data: evmInfo } = useBlockscout<BlockscoutAddress>(evmAddress ? `addresses/${evmAddress}` : null);
   const [tab, setTab] = useState("activity");
@@ -234,12 +239,7 @@ export default function AccountDetail() {
     rewards: info.rewards,
   });
 
-  // The newest activity is the first row of the first page.
-  const [lastActivity, setLastActivity] = useState<number>();
-  useEffect(() => setLastActivity(undefined), [address]);
-  useEffect(() => {
-    if (activity.page === 1 && activity.items[0]) setLastActivity(activity.items[0].height);
-  }, [activity.page, activity.items]);
+  const lastActivity = useLastActivity(address);
 
   const { assetMap } = useRecoilValue(readAssets);
   const stakeRows = useMemo(() => {
@@ -341,14 +341,22 @@ export default function AccountDetail() {
               actions={
                 tab === "activity" &&
                 address && (
-                  <ChakraLink asChild fontSize="sm" color="explorer.link" mb="2">
-                    <NextLink href={`/accounts/export?a=${address}`}>Export CSV</NextLink>
-                  </ChakraLink>
+                  <Flex align="center" gap="2" wrap="wrap" justify="flex-end" mb="2">
+                    <TxTypeMenu value={filters.type} onChange={(type) => setFilters({ type })} />
+                    <TimeRangePicker value={filters.range} onChange={(range) => setFilters({ range })} />
+                    <ExportCsvButton count={activity.counted ? activity.total : null} needsRange={!filters.range} onExport={exportCsv} />
+                  </Flex>
                 )
               }
             >
               <TabPanel value="activity" pt="0">
-                <DataTable columns={activityColumns} rows={activity.items} rowKey={(row) => row.hash} loading={activity.loading} emptyText="No activity yet" />
+                <DataTable
+                  columns={activityColumns}
+                  rows={activity.items}
+                  rowKey={(row) => row.hash}
+                  loading={activity.loading}
+                  emptyText={filtered ? "No activity matches these filters" : "No activity yet"}
+                />
                 {activity.total > PAGE_SIZE && (
                   <Flex justify="space-between" align="center" mt="3" gap="3" wrap="wrap">
                     <Text fontSize="sm" color="explorer.muted">
