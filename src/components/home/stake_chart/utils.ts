@@ -18,12 +18,12 @@ export function formatStakingData(bonded: any, unbonding: any, assetArr: any[]) 
   // Calculate raw values first
   const bondedDataWithoutWeight = assetArr.map((item) => {
     let bondedValue = bonded[item.denom.toLowerCase()] ?? "0";
-    return parseFloat(formatTokenByExponent(bondedValue, item.decimals));
+    return Math.round(parseFloat(formatTokenByExponent(bondedValue, item.decimals)));
   });
 
   const unbondingDataWithoutWeight = assetArr.map((item) => {
     let unbondingValue = unbonding[item.denom.toLowerCase()] ?? "0";
-    return parseFloat(formatTokenByExponent(unbondingValue, item.decimals));
+    return Math.round(parseFloat(formatTokenByExponent(unbondingValue, item.decimals)));
   });
 
   // For chart display, ensure minimum visibility for non-zero values
@@ -43,7 +43,6 @@ export function formatStakingData(bonded: any, unbonding: any, assetArr: any[]) 
 
   const unbondingData = unbondingDataWithoutWeight.map((value: number) => {
     if (value === 0) return 0;
-
     // Find the maximum value across both datasets for consistent scaling
     const maxBonded = Math.max(...bondedDataWithoutWeight);
     const maxUnbonding = Math.max(...unbondingDataWithoutWeight);
