@@ -1,5 +1,7 @@
+import Big from "big.js";
 import numeral from "numeral";
 import dayjs from "@/utils/dayjs";
+import { formatNumber } from "@/utils/format_token";
 
 /** 135461234 -> "135.46M" */
 export const formatCompact = (value: number) =>
@@ -24,11 +26,16 @@ export const formatPercent = (percent: number, decimals = 2) =>
   numeral(Number((percent || 0).toFixed(decimals)) / 100).format(`0.[${"0".repeat(decimals)}]%`);
 
 /**
- * Token amount with up to `decimals` places: 0.000504434 -> "0.000504".
- * Rounds first because numeral returns "NaN" for values like 1e-12 (EVM fees).
+ * Base-unit amount rounded for tables: ("2965490000000000") -> "0.002965".
+ * Non-zero amounts too small to show read "<0.000001", never "0". Works on
+ * strings, so 18-decimal amounts keep every digit until rounded.
  */
-export const formatAmount = (value: number, decimals = 6) =>
-  numeral(Number((value || 0).toFixed(decimals))).format(`0,0.[${"0".repeat(decimals)}]`);
+export const shortUnits = (amount: string, decimals = 18, places = 6) => {
+  const value = Big(amount || "0").div(Big(10).pow(decimals));
+  const rounded = value.round(places, Big.roundHalfUp);
+  if (rounded.eq(0) && !value.eq(0)) return `<${Big(1).div(Big(10).pow(places)).toFixed(places)}`;
+  return formatNumber(rounded.toFixed(places));
+};
 
 /** "2026-07-27 14:30:26 UTC", or "—" for a missing time. */
 export const formatUtc = (time?: string) => (time ? dayjs.utc(time).format("YYYY-MM-DD HH:mm:ss [UTC]") : "—");

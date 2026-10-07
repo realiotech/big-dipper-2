@@ -5,6 +5,7 @@ import { BLOCK_DETAILS } from "@/utils/go_to_page";
 import { Panel, PanelHeader } from "@/components/explorer/panel";
 import { TxNameTag, TxStatus, TxTypeTag } from "@/components/explorer/badges";
 import { timeAgo } from "@/components/explorer/format";
+import { RioAmount } from "@/components/explorer/rio_amount";
 import { TxHashLink } from "@/components/explorer/tx_hash_link";
 import NoData from "@/components/helper/nodata";
 import { useTransactions } from "./hooks";
@@ -31,11 +32,7 @@ const TxRow = ({ item }: { item: TransactionType }) => (
     </Box>
     <Box textAlign="end" flexShrink={0}>
       <Text fontSize="sm" color="explorer.text">
-        {/* numeral returns NaN for tiny values such as EVM fees (~1e-12) */}
-        {numeral(Number(item.fee.toFixed(4))).format("0,0.[0000]")}{" "}
-        <Text as="span" color="explorer.muted">
-          RIO
-        </Text>
+        <RioAmount wei={item.fee} />
       </Text>
       <Text fontSize="xs" color="explorer.muted" mt="1.5">
         {timeAgo(item.timestamp)}

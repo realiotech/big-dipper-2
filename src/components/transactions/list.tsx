@@ -9,7 +9,8 @@ import { PageTitle } from "@/components/explorer/page_title";
 import { DataTable, Column } from "@/components/explorer/data_table";
 import { Pager } from "@/components/explorer/pager";
 import { TxNameTag, TxStatus, TxTypeTag } from "@/components/explorer/badges";
-import { formatAmount, timeAgo } from "@/components/explorer/format";
+import { timeAgo } from "@/components/explorer/format";
+import { RioAmount } from "@/components/explorer/rio_amount";
 import { ExportCsvButton, SourceTabs, TxTypeMenu } from "@/components/explorer/tx_toolbar";
 import { TimeRangePicker } from "@/components/explorer/time_range_picker";
 import { PAGE_SIZE, useTransactions, useTransactionsExport } from "./hooks";
@@ -38,12 +39,7 @@ export const txColumns: Column<TxRow>[] = [
     header: "Fee",
     align: "end",
     render: (row) => (
-      <>
-        {formatAmount(row.fee)}{" "}
-        <Text as="span" color="explorer.muted" fontSize="xs">
-          RIO
-        </Text>
-      </>
+      <RioAmount wei={row.fee} />
     ),
   },
   {

@@ -22,7 +22,8 @@ export interface BlockTransaction {
   hash: string;
   success: boolean;
   label: TxLabel;
-  fee: number;
+  /** Fee in ario. */
+  fee: string;
   gasUsed: number;
   gasWanted: number;
 }

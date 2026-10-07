@@ -84,7 +84,8 @@ export type AccountTransaction = {
   height: number;
   success: boolean;
   timestamp: string;
-  fee: number;
+  /** Fee in ario. */
+  fee: string;
   label: TxLabel;
 }
 

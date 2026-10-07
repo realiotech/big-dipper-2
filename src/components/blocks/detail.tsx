@@ -13,6 +13,7 @@ import { TxNameTag, TxStatus, TxTypeTag } from "@/components/explorer/badges";
 import { ValidatorName } from "@/components/explorer/validator_name";
 import { formatUtc as utc, timeAgo } from "@/components/explorer/format";
 import { NotFound } from "@/components/explorer/not_found";
+import { RioAmount } from "@/components/explorer/rio_amount";
 import { useBlockDetails } from "./hooks";
 import type { BlockTransaction } from "./types";
 
@@ -58,13 +59,7 @@ const txColumns: Column<BlockTransaction>[] = [
     header: "Fee",
     align: "end",
     render: (row) => (
-      <>
-        {/* numeral returns NaN for tiny values such as EVM fees (~1e-12) */}
-        {numeral(Number(row.fee.toFixed(6))).format("0,0.[000000]")}{" "}
-        <Text as="span" color="explorer.muted">
-          RIO
-        </Text>
-      </>
+      <RioAmount wei={row.fee} />
     ),
   },
   {

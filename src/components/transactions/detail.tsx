@@ -13,7 +13,8 @@ import { DetailRows } from "@/components/explorer/detail_rows";
 import { CopyButton } from "@/components/explorer/copy_button";
 import { CodeBlock } from "@/components/explorer/code_block";
 import { TxNameTag, TxStatus, TxTypeTag } from "@/components/explorer/badges";
-import { formatAmount, formatUtc, timeAgo } from "@/components/explorer/format";
+import { formatUtc, timeAgo } from "@/components/explorer/format";
+import { formatNumber } from "@/utils/format_token";
 import { NotFound } from "@/components/explorer/not_found";
 import { getMessageByType } from "../msg/utils";
 import { useTransactionDetails } from "./hooks";
@@ -137,7 +138,8 @@ export default function TransactionDetails() {
               label: "Fee",
               value: (
                 <>
-                  {formatAmount(Number(overview.fee.value))}{" "}
+                  {/* Exact: fees run to 18 decimals, e.g. 0.00296549 or 0.000000000003710588 RIO */}
+                  {formatNumber(overview.fee.value)}{" "}
                   <Text as="span" color="explorer.muted">
                     {overview.fee.displayDenom?.toUpperCase()}
                   </Text>

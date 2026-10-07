@@ -20,6 +20,7 @@ import { CopyButton } from "@/components/explorer/copy_button";
 import { StatusTag, TxNameTag, TxStatus, TxTypeTag } from "@/components/explorer/badges";
 import { ValidatorName } from "@/components/explorer/validator_name";
 import { TokenDot } from "@/components/explorer/token";
+import { RioAmount } from "@/components/explorer/rio_amount";
 import { formatPercent, timeAgo } from "@/components/explorer/format";
 import { ExportCsvButton, TxTypeMenu } from "@/components/explorer/tx_toolbar";
 import { TimeRangePicker } from "@/components/explorer/time_range_picker";
@@ -130,12 +131,7 @@ const activityColumns: Column<AccountTransaction>[] = [
     header: "Fee",
     align: "end",
     render: (row) => (
-      <>
-        {numeral(Number(row.fee.toFixed(6))).format("0,0.[000000]")}{" "}
-        <Text as="span" color="explorer.muted" fontSize="xs">
-          RIO
-        </Text>
-      </>
+      <RioAmount wei={row.fee} />
     ),
   },
   { key: "age", header: "Age", align: "end", render: (row) => <Text color="explorer.muted">{timeAgo(row.timestamp)}</Text> },

@@ -14,7 +14,7 @@ import {
   useGetMessagesByAddressCountQuery,
 } from '@/graphql/types/general_types';
 
-import { txFeeInRio, txLabel } from '@/utils/tx_label';
+import { txFeeWei, txLabel } from '@/utils/tx_label';
 import { useRecoilValue } from 'recoil';
 import { messageTypesArg, messageWhere, rangeFilePart, TxFilters } from '@/components/explorer/tx_filters';
 import { readAllPages, uniqueByHash } from '@/components/explorer/tx_export';
@@ -46,7 +46,7 @@ const formatTransactions = (data?: GetMessagesByAddressQuery): AccountTransactio
       success: transaction.success,
       timestamp: transaction.block.timestamp,
       label: txLabel(transaction.messages),
-      fee: txFeeInRio(transaction.fee),
+      fee: txFeeWei(transaction.fee),
     });
   }
   return result;

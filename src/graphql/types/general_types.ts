@@ -24281,7 +24281,7 @@ export type EvmTransactionQueryVariables = Exact<{
 }>;
 
 
-export type EvmTransactionQuery = { etransaction: Array<{ __typename?: 'etransaction', ehash?: string | null, transaction_hash?: string | null }> };
+export type EvmTransactionQuery = { etransaction: Array<{ __typename?: 'etransaction', ehash?: string | null, transaction_hash?: string | null, transaction?: { __typename?: 'transaction', logs?: any | null } | null }> };
 
 export type EvmHashOfQueryVariables = Exact<{
   hash: Scalars['String'];
@@ -26731,6 +26731,9 @@ export const EvmTransactionDocument = gql`
   etransaction(where: {ehash: {_eq: $ehash}}, limit: 1) {
     ehash
     transaction_hash
+    transaction {
+      logs
+    }
   }
 }
     `;

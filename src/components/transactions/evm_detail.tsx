@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useMemo, useState } from "react";
 import { Box, Flex, Link as ChakraLink, Stack, Text } from "@chakra-ui/react";
 import NextLink from "next/link";
 import { useRouter } from "next/router";
@@ -18,6 +18,8 @@ import { Tag, TxNameTag, TxStatus, TxTypeTag } from "@/components/explorer/badge
 import { EvmAddress } from "@/components/explorer/evm_address";
 import { formatUtc, timeAgo } from "@/components/explorer/format";
 import { NotFound } from "@/components/explorer/not_found";
+import { ValueRow } from "@/components/evm/value_row";
+import { cosmosActivity } from "@/utils/cosmos_activity";
 import { BlockscoutAddress, useBlockscout, useBlockscoutList } from "@/components/explorer/blockscout";
 import {
   InternalTx,
@@ -58,9 +60,18 @@ type EvmTx = {
   method?: string | null;
   decoded_input?: { method_call?: string } | null;
   token_transfers?: TokenTransfer[] | null;
+  token_transfers_overflow?: boolean | null;
   nonce: number;
   position: number;
   type?: number;
+};
+
+/** "Tokens minted" / "Tokens burnt" when every transfer is one kind, as in the design. */
+const transfersTitle = (transfers: TokenTransfer[]) => {
+  const kinds = new Set(transfers.map((t) => transferKind(t).label));
+  if (kinds.size === 1 && kinds.has("Mint")) return "Tokens minted";
+  if (kinds.size === 1 && kinds.has("Burn")) return "Tokens burnt";
+  return "Token transfers";
 };
 
 const PanelTitle = ({ title, subtitle }: { title: string; subtitle?: string }) => (
@@ -84,6 +95,8 @@ export default function EvmTransactionDetails() {
   const { data: tx, loading, notFound } = useBlockscout<EvmTx>(valid ? `transactions/${hash}` : null);
   const { data: mapping } = useEvmTransactionQuery({ variables: { ehash: hash.toLowerCase() }, skip: !valid });
   const cosmosHash = mapping?.etransaction?.[0]?.transaction_hash;
+  // Coins moved by Cosmos modules (precompile calls); not part of the EVM value.
+  const activity = useMemo(() => cosmosActivity(mapping?.etransaction?.[0]?.transaction?.logs), [mapping]);
 
   const base = valid && tab !== "details" ? `transactions/${hash}` : null;
   const transfers = useBlockscoutList<TokenTransfer>(tab === "transfers" ? `${base}/token-transfers` : null);
@@ -187,7 +200,20 @@ export default function EvmTransactionDetails() {
                 tx?.created_contract
                   ? { label: "Contract created", value: <EvmAddress address={tx.created_contract} /> }
                   : { label: "Interacted with", value: <EvmAddress address={tx?.to} /> },
-                { label: "Value", value: rio(tx?.value) },
+                {
+                  label: "Value",
+                  value: tx && (
+                    <ValueRow
+                      value={tx.value}
+                      input={tx.raw_input}
+                      to={tx.created_contract ?? tx.to}
+                      activity={activity}
+                      transfers={tx.token_transfers ?? []}
+                      transfersOverflow={Boolean(tx.token_transfers_overflow)}
+                      onViewTransfers={() => setTab("transfers")}
+                    />
+                  ),
+                },
                 { label: "Transaction fee", value: rio(tx?.fee?.value) },
               ]}
             />
@@ -216,7 +242,7 @@ export default function EvmTransactionDetails() {
 
       {tab === "details" && tx && (tx.token_transfers?.length ?? 0) > 0 && (
         <Panel>
-          <PanelTitle title="Token transfers" subtitle="Token transfer events emitted while executing this transaction." />
+          <PanelTitle title={transfersTitle(tx.token_transfers!)} subtitle="Token transfer events emitted while executing this transaction." />
           <Stack gap="2">
             {tx.token_transfers!.map((t, i) => {
               const kind = transferKind(t);

@@ -10,7 +10,7 @@ import {
   useOldestBlocksQuery,
 } from '@/graphql/types/general_types';
 import { usePageParam } from '@/components/explorer/pager';
-import { txFeeInRio, txLabel } from '@/utils/tx_label';
+import { txFeeWei, txLabel } from '@/utils/tx_label';
 import type { BlockType, BlockDetailState, BlockTransaction } from './types';
 
 export const PAGE_SIZE = 25;
@@ -80,7 +80,7 @@ const formatTransactions = (data: BlockDetailsQuery): BlockTransaction[] =>
     hash: x.hash,
     success: x.success,
     label: txLabel(x.messages),
-    fee: txFeeInRio(x.fee),
+    fee: txFeeWei(x.fee),
     gasUsed: Number(x.gasUsed ?? 0),
     gasWanted: Number(x.gasWanted ?? 0),
   }));

@@ -1,3 +1,4 @@
+import Big from 'big.js';
 import { keccak256, rlp, toBuffer } from 'ethereumjs-util';
 import { convertMsgType } from '@/utils/convert_msg_type';
 
@@ -201,13 +202,17 @@ export const txLabel = (messages: Array<Record<string, any>> = []): TxLabel => {
 };
 
 const FEE_DENOM = 'ario';
-const FEE_DECIMALS = 18;
 
-/** Fee paid in RIO, from a transaction's `fee` column. */
-export const txFeeInRio = (fee?: { amount?: Array<{ denom: string; amount: string }> } | null): number =>
+/**
+ * Fee paid, in ario (RIO has 18 decimals), from a transaction's `fee` column.
+ * Kept as an exact integer string: fees range from ~1e-12 to whole RIO, more
+ * digits than a JS number holds.
+ */
+export const txFeeWei = (fee?: { amount?: Array<{ denom: string; amount: string }> } | null): string =>
   (fee?.amount ?? [])
     .filter((coin) => coin.denom === FEE_DENOM)
-    .reduce((sum, coin) => sum + Number(coin.amount) / 10 ** FEE_DECIMALS, 0);
+    .reduce((sum, coin) => sum.plus(Big(coin.amount || '0')), Big(0))
+    .toFixed(0);
 
 /** The row shape the explorer's transaction lists share. */
 export type TxRow = {
@@ -215,7 +220,8 @@ export type TxRow = {
   height: number;
   success: boolean;
   timestamp: string;
-  fee: number;
+  /** Fee in ario, see `txFeeWei`. */
+  fee: string;
   gasUsed: number;
   gasWanted: number;
   label: TxLabel;
@@ -235,7 +241,7 @@ export const toTxRow = (tx: {
   height: Number(tx.height),
   success: tx.success,
   timestamp: tx.block?.timestamp ?? '',
-  fee: txFeeInRio(tx.fee),
+  fee: txFeeWei(tx.fee),
   gasUsed: Number(tx.gasUsed ?? 0),
   gasWanted: Number(tx.gasWanted ?? 0),
   label: txLabel(tx.messages),
