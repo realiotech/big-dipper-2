@@ -117,7 +117,7 @@ export function useAccountExport(address: string | undefined, filters: TxFilters
 
 /** Account type, public key type and pending staking rewards, read from the chain's REST API. */
 export function useAccountInfo(address?: string) {
-  const [info, setInfo] = useState<AccountInfo>({ loading: true, accountType: '', publicKey: '', rewards: 0 });
+  const [info, setInfo] = useState<AccountInfo>({ loading: true, accountType: '', publicKey: '', rewards: 0, rewardsWei: '0' });
 
   useEffect(() => {
     if (!address) return;
@@ -138,6 +138,7 @@ export function useAccountInfo(address?: string) {
         // "/ethermint.crypto.v1.ethsecp256k1.PubKey" -> "eth_secp256k1"
         publicKey: pubKey ? shortType(pubKey['@type'].replace(/\.PubKey$/, '')).replace('ethsecp256k1', 'eth_secp256k1') : '',
         rewards: Big(reward.split('.')[0] || '0').div(Big(10).pow(REWARD_DECIMALS)).toNumber(),
+        rewardsWei: reward.split('.')[0] || '0',
       });
     });
   }, [address]);

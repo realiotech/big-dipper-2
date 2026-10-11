@@ -2,7 +2,7 @@ import React, { useCallback, useEffect, useState } from 'react';
 import NextLink from 'next/link';
 import { useRouter } from 'next/router';
 import { Box, Button, Flex, Grid, Input, Link as ChakraLink, NativeSelect, Stack, Text } from '@chakra-ui/react';
-import { LuSearch } from 'react-icons/lu';
+import { LuArrowRight, LuSearch } from 'react-icons/lu';
 import { InputGroup } from '@/components/ui/input-group';
 import { Panel } from '@/components/explorer/panel';
 import { PageTitle } from '@/components/explorer/page_title';
@@ -10,14 +10,16 @@ import { Column, DataTable } from '@/components/explorer/data_table';
 import { Pager } from '@/components/explorer/pager';
 import { AddressLink } from '@/components/explorer/address_link';
 import { Tag } from '@/components/explorer/badges';
+import { TxHashLink } from '@/components/explorer/tx_hash_link';
 import { formatUtc } from '@/components/explorer/format';
 import { getMiddleEllipsis } from '@/utils/get_middle_ellipsis';
-import { ACCOUNT_DETAILS, BLOCK_DETAILS, TRANSACTION_DETAILS } from '@/utils/go_to_page';
+import { ACCOUNT_DETAILS, BLOCK_DETAILS, VALIDATOR_DETAILS } from '@/utils/go_to_page';
 import type {
   DenomAmount,
   MonitorActivity,
   MonitorAddress,
   MonitorOverview,
+  MonitorParty,
   PageResult,
 } from './types';
 import { denomSymbol, formatBaseUnits, messageLabel } from './format';
@@ -84,12 +86,12 @@ const SectionTitle = ({ title, subtitle, aside }: { title: string; subtitle?: Re
   </Flex>
 );
 
-const Amounts = ({ rows }: { rows: { denom: string; amount: string }[] }) =>
+const Amounts = ({ rows, digits = 2 }: { rows: { denom: string; amount: string }[]; digits?: number }) =>
   rows.length ? (
     <Stack gap="0.5">
       {rows.map((row) => (
-        <Text key={row.denom} whiteSpace="nowrap" title={row.denom}>
-          {formatBaseUnits(row.amount, row.denom, 2, false)}{' '}
+        <Text key={row.denom} whiteSpace="nowrap" title={`${formatBaseUnits(row.amount, row.denom, 18, false)} ${row.denom}`}>
+          {formatBaseUnits(row.amount, row.denom, digits, false)}{' '}
           <Text as="span" fontSize="xs" color="explorer.muted">
             {denomSymbol(row.denom)}
           </Text>
@@ -102,7 +104,9 @@ const Amounts = ({ rows }: { rows: { denom: string; amount: string }[] }) =>
 
 const PlainAddress = ({ address }: { address: string }) => (
   <ChakraLink asChild color="explorer.link">
-    <NextLink href={ACCOUNT_DETAILS(address)}>{getMiddleEllipsis(address, { beginning: 9, ending: 7 })}</NextLink>
+    <NextLink href={address.startsWith('realiovaloper') ? VALIDATOR_DETAILS(address) : ACCOUNT_DETAILS(address)}>
+      {getMiddleEllipsis(address, { beginning: 9, ending: 7 })}
+    </NextLink>
   </ChakraLink>
 );
 
@@ -175,25 +179,26 @@ function MonitorStatus({ data }: { data: MonitorOverview }) {
     data.job.stale || data.job.status !== 'ok' || (data.job.lag ?? 1) > 0;
   const tone: Tone = hasActivity ? 'critical' : isStale ? 'warning' : 'success';
   const statusLabel = hasActivity
-    ? `${data.activity.sinceRestart} compromised-wallet events since restart`
+    ? `${data.activity.sinceRestart} compromised-wallet messages since restart`
     : isStale
       ? 'Coverage needs attention'
       : 'Activity scan is current';
 
+  // What each number counts, shown under it: the labels alone were too terse.
   const stats = [
-    ['Compromised', data.watchlistSize],
-    ['Active stakers', data.stakers],
-    ['Stake positions', data.lockRows],
-    ['Validators', data.validators],
-    ['Unbonding', data.unbondingAddresses],
-    ['24h activity', data.activity.last24h],
+    ['Compromised', data.watchlistSize, 'Wallets on the blacklist from the August 2026 drain'],
+    ['Active stakers', data.stakers, 'Blacklisted wallets that still have tokens staked'],
+    ['Stake positions', data.lockRows, 'Their stakes counted per validator and token; one wallet can hold several'],
+    ['Validators', data.validators, 'Validators holding stake from blacklisted wallets'],
+    ['Unbonding', data.unbondingAddresses, 'Blacklisted wallets with tokens waiting to unlock'],
+    ['24h activity', data.activity.last24h, 'Messages involving a blacklisted wallet in the last 24 hours'],
   ] as const;
 
   const meta = [
-    ['verified', data.job.verifiedThrough?.toLocaleString() ?? 'never'],
-    ['captured', data.job.capturedHead?.toLocaleString() ?? 'never'],
-    ['last run', data.job.ranAt ? formatUtc(data.job.ranAt) : 'never'],
-    ['status', data.job.status],
+    ['verified', data.job.verifiedThrough?.toLocaleString() ?? 'never', 'Every block up to this height has been scanned for activity'],
+    ['captured', data.job.capturedHead?.toLocaleString() ?? 'never', 'Chain height when the scanner last ran'],
+    ['last run', data.job.ranAt ? formatUtc(data.job.ranAt) : 'never', 'When the scanner last ran'],
+    ['status', data.job.status, 'Result of the last scanner run'],
   ];
 
   return (
@@ -216,7 +221,7 @@ function MonitorStatus({ data }: { data: MonitorOverview }) {
         borderTopWidth="1px"
         borderColor="explorer.border"
       >
-        {stats.map(([label, value]) => (
+        {stats.map(([label, value, hint]) => (
           <Box key={label}>
             <Text fontSize="sm" color="explorer.muted">
               {label}
@@ -224,12 +229,15 @@ function MonitorStatus({ data }: { data: MonitorOverview }) {
             <Text fontSize="26px" lineHeight="36px" letterSpacing="-0.02em" color="explorer.text">
               {value.toLocaleString()}
             </Text>
+            <Text fontSize="xs" color="explorer.muted" mt="1">
+              {hint}
+            </Text>
           </Box>
         ))}
       </Grid>
       <Flex gap={{ base: '3', md: '6' }} wrap="wrap" mt="4" pt="3" borderTopWidth="1px" borderColor="explorer.border" fontSize="xs">
-        {meta.map(([label, value]) => (
-          <Text key={label} color="explorer.muted">
+        {meta.map(([label, value, hint]) => (
+          <Text key={label} color="explorer.muted" title={hint} cursor="help">
             {label}{' '}
             <Text as="span" color="explorer.text">
               {value}
@@ -420,48 +428,76 @@ const addressColumns: Column<MonitorAddress>[] = [
   },
 ];
 
+/** Marks a compromised wallet; the activity panel's subtitle carries the legend. */
+const CompromisedDot = () => (
+  <Box as="span" title="Compromised wallet" w="6px" h="6px" borderRadius="full" bg="explorer.warning" flexShrink={0} />
+);
+
+/** An account, marked when it is one of the compromised wallets; or a named party (the bridge). */
+const Party = ({ party, watched }: { party: MonitorParty; watched: string[] }) =>
+  party.address ? (
+    <Flex align="center" gap="1.5">
+      {watched.includes(party.address) && <CompromisedDot />}
+      <PlainAddress address={party.address} />
+    </Flex>
+  ) : (
+    <Text color="explorer.text">{party.label || '—'}</Text>
+  );
+
+const Parties = ({ parties, watched }: { parties: MonitorParty[]; watched: string[] }) =>
+  parties.length ? (
+    <Stack gap="0.5">
+      {parties.map((party) => (
+        <Party key={party.address ?? party.label} party={party} watched={watched} />
+      ))}
+    </Stack>
+  ) : (
+    <Text color="explorer.muted">—</Text>
+  );
+
 const activityColumns: Column<MonitorActivity>[] = [
+  { key: 'tx', header: 'Tx hash', render: (row) => <TxHashLink hash={row.txHash} /> },
   {
     key: 'block',
     header: 'Block / time',
     render: (row) => (
       <Stack gap="0.5">
         <ChakraLink asChild color="explorer.link">
-          <NextLink href={TRANSACTION_DETAILS(row.txHash)}>{row.height.toLocaleString()}</NextLink>
+          <NextLink href={BLOCK_DETAILS(row.height)}>{row.height.toLocaleString()}</NextLink>
         </ChakraLink>
         <Text fontSize="xs" color="explorer.muted">
           {row.blockTime ? formatUtc(row.blockTime) : '—'}
         </Text>
-        <Text fontSize="xs" color="explorer.muted" title={row.txHash}>
-          {getMiddleEllipsis(row.txHash, { beginning: 6, ending: 6 })}
-        </Text>
       </Stack>
     ),
   },
-  { key: 'wallet', header: 'Wallet', render: (row) => <PlainAddress address={row.address} /> },
   {
     key: 'message',
     header: 'Message',
     render: (row) => (
-      <Flex>
+      <Stack gap="1" align="start">
         <Tag color="explorer.text">{messageLabel(row.type)}</Tag>
+        {row.amounts.length > 0 && <Amounts rows={row.amounts} digits={6} />}
+      </Stack>
+    ),
+  },
+  {
+    key: 'flow',
+    header: 'From → To',
+    render: (row) => (
+      <Flex align="center" gap="2" wrap="wrap">
+        <Parties parties={row.from} watched={row.watched} />
+        <Box color="explorer.muted" flexShrink={0}>
+          <LuArrowRight />
+        </Box>
+        <Parties parties={row.to} watched={row.watched} />
       </Flex>
     ),
   },
-  { key: 'direction', header: 'Direction', render: (row) => <Text textTransform="capitalize">{row.direction}</Text> },
   {
-    key: 'counterparties',
-    header: 'Counterparties',
-    render: (row) =>
-      row.counterparties.length ? (
-        <Stack gap="0.5">
-          {row.counterparties.map((address) => (
-            <PlainAddress key={address} address={address} />
-          ))}
-        </Stack>
-      ) : (
-        <Text color="explorer.muted">—</Text>
-      ),
+    key: 'signer',
+    header: 'Signed by',
+    render: (row) => (row.signer ? <Party party={{ address: row.signer }} watched={row.watched} /> : <Text color="explorer.muted">—</Text>),
   },
   {
     key: 'result',
@@ -614,7 +650,18 @@ export default function Monitor({
       </Panel>
 
       <Panel>
-        <SectionTitle title="Activity" aside={`${activity.total.toLocaleString()} matches · one row per watched wallet in a message`} />
+        <SectionTitle
+          title="Activity"
+          subtitle={
+            <>
+              Each row is one message that involves a compromised wallet: what moved, from whom to whom, and which account signed it.{' '}
+              <Flex as="span" display="inline-flex" align="center" gap="1.5">
+                <CompromisedDot /> marks a compromised wallet.
+              </Flex>
+            </>
+          }
+          aside={`${activity.total.toLocaleString()} messages`}
+        />
         <Flex gap="3" wrap="wrap" mb="2" align="center">
           <Select label="Message type" value={filters.type || ''} onChange={(type) => go({ type, aPage: 1 })} width="200px">
             <option value="">All message types</option>
@@ -624,12 +671,12 @@ export default function Monitor({
               </option>
             ))}
           </Select>
-          <Select label="Direction" value={filters.direction || ''} onChange={(direction) => go({ direction, aPage: 1 })} width="170px">
+          <Select label="Direction" value={filters.direction || ''} onChange={(direction) => go({ direction, aPage: 1 })} width="260px">
             <option value="">All directions</option>
-            <option value="incoming">Incoming</option>
-            <option value="outgoing">Outgoing</option>
-            <option value="self">Self</option>
-            <option value="involved">Involved</option>
+            <option value="outgoing">Sent by a compromised wallet</option>
+            <option value="incoming">Received by a compromised wallet</option>
+            <option value="self">Compromised wallet to itself</option>
+            <option value="involved">Compromised wallet otherwise involved</option>
           </Select>
           <Select label="Result" value={filters.success || ''} onChange={(success) => go({ success, aPage: 1 })} width="170px">
             <option value="">All results</option>
@@ -652,14 +699,14 @@ export default function Monitor({
           <DataTable
             columns={activityColumns}
             rows={activity.rows}
-            rowKey={(row) => `${row.height}:${row.txHash}:${row.msgIndex}:${row.address}`}
+            rowKey={(row) => `${row.height}:${row.txHash}:${row.msgIndex}`}
             emptyText="No matching activity"
           />
         </Box>
         <PageFooter
           shown={activity.rows.length}
           total={activity.total}
-          label="matches"
+          label="messages"
           pageSize={activity.pageSize}
           page={activity.page}
           onPage={(next) => go({ aPage: next })}

@@ -37,5 +37,22 @@ export const shortUnits = (amount: string, decimals = 18, places = 6) => {
   return formatNumber(rounded.toFixed(places));
 };
 
+/**
+ * Dollar amount: 1234.5 -> "$1,234.50". Rounds first, because numeral returns
+ * "NaN" for tiny values such as 1.3e-8 (a few ario of pending rewards), and
+ * shows "<$0.01" for non-zero amounts that round to nothing.
+ */
+export const formatUsd = (value: number) => {
+  const amount = Number.isFinite(value) ? value : 0;
+  if (amount > 0 && amount < 0.005) return "<$0.01";
+  return `$${numeral(Number(amount.toFixed(2))).format("0,0.00")}`;
+};
+
+/** A small number in plain decimals with 6 significant digits: 6.734e-10 -> "0.000000000673428". */
+export const formatPrecise = (value: number) => {
+  if (!Number.isFinite(value) || value === 0) return "0";
+  return Big(value.toPrecision(6)).toFixed().replace(/(\.\d*?)0+$/, "$1").replace(/\.$/, "");
+};
+
 /** "2026-07-27 14:30:26 UTC", or "—" for a missing time. */
 export const formatUtc = (time?: string) => (time ? dayjs.utc(time).format("YYYY-MM-DD HH:mm:ss [UTC]") : "—");

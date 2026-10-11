@@ -21,12 +21,13 @@ import { StatusTag, TxNameTag, TxStatus, TxTypeTag } from "@/components/explorer
 import { ValidatorName } from "@/components/explorer/validator_name";
 import { TokenDot } from "@/components/explorer/token";
 import { RioAmount } from "@/components/explorer/rio_amount";
-import { formatPercent, timeAgo } from "@/components/explorer/format";
+import { formatPercent, formatPrecise, formatUsd, timeAgo } from "@/components/explorer/format";
+import { Tooltip as HoverTip } from "@/components/ui/tooltip";
 import { ExportCsvButton, TxTypeMenu } from "@/components/explorer/tx_toolbar";
 import { TimeRangePicker } from "@/components/explorer/time_range_picker";
 import { useTxFilters } from "@/components/explorer/tx_filters";
 import { PAGE_SIZE, useAccountExport, useAccountInfo, useErc20Balances, useLastActivity, useOverview, useStaking, useTransactions } from "./hooks";
-import { AssetRow, DelegationRow, usePortfolio } from "./portfolio";
+import { AssetRow, DelegationRow, PortfolioSegment, usePortfolio } from "./portfolio";
 import { BlockscoutAddress, useBlockscout } from "@/components/explorer/blockscout";
 import { CONTRACT_DETAILS } from "@/components/explorer/evm_address";
 import type { AccountTransaction } from "./types";
@@ -40,8 +41,9 @@ const DONUT_COLORS = {
   dark: ["#5D5FEF", "#EF5DA8", "#2F9E62", "#8CA98E"],
 };
 
-const usd = (value: number) => `$${numeral(value).format("0,0.00")}`;
-const tokens = (value: number) => numeral(Number(value.toFixed(6))).format("0,0.[00]");
+const usd = formatUsd;
+// Tiny non-zero amounts (a few ario of rewards) read "<0.01", not "0".
+const tokens = (value: number) => (value > 0 && value < 0.005 ? "<0.01" : numeral(Number(value.toFixed(6))).format("0,0.[00]"));
 
 const PanelTitle = ({ title, subtitle }: { title: string; subtitle?: string }) => (
   <Box mb="4">
@@ -148,7 +150,22 @@ const stakeColumns = (withHeight: boolean): Column<StakeRow>[] => [
     : []),
 ];
 
-const Portfolio = ({ segments, inUsd, total, loading }: { segments: { label: string; value: number }[]; inUsd: boolean; total: string; loading: boolean }) => {
+/**
+ * An amount that may round to "<$0.01" / "<0.01": then the exact figure shows
+ * on hover, as fees do in the transaction tables.
+ */
+const SmallAmount = ({ text, exact }: { text: string; exact: string }) =>
+  text.startsWith("<") ? (
+    <HoverTip content={exact} openDelay={150} showArrow>
+      <Text as="span" color="explorer.text" cursor="help" textDecoration="underline dotted" textUnderlineOffset="3px">
+        {text}
+      </Text>
+    </HoverTip>
+  ) : (
+    <Text color="explorer.text">{text}</Text>
+  );
+
+const Portfolio = ({ segments, inUsd, total, loading }: { segments: PortfolioSegment[]; inUsd: boolean; total: string; loading: boolean }) => {
   const colors = useColorModeValue(DONUT_COLORS.light, DONUT_COLORS.dark);
   const border = useColorModeValue("#FFFFFF", "#0C1317");
   const sum = segments.reduce((acc, segment) => acc + segment.value, 0);
@@ -177,7 +194,10 @@ const Portfolio = ({ segments, inUsd, total, loading }: { segments: { label: str
                   <Text color="explorer.muted" fontSize="xs">
                     {segment.label}
                   </Text>
-                  <Text color="explorer.text">{inUsd ? usd(segment.value) : tokens(segment.value)}</Text>
+                  <SmallAmount
+                    text={inUsd ? usd(segment.value) : tokens(segment.value)}
+                    exact={segment.exact ?? (inUsd ? `$${formatPrecise(segment.value)}` : formatPrecise(segment.value))}
+                  />
                 </Box>
               </Flex>
               <Text color="explorer.text">{formatPercent(sum ? (segment.value / sum) * 100 : 0)}</Text>
@@ -233,6 +253,7 @@ export default function AccountDetail() {
     delegations: delegations.data,
     unbondings: unbondings.data,
     rewards: info.rewards,
+    rewardsWei: info.rewardsWei,
   });
 
   const lastActivity = useLastActivity(address);

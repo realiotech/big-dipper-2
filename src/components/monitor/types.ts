@@ -13,9 +13,14 @@ export type MonitorAddress = {
   address: string; tags: string[]; validators: number; stake: DenomAmount[]; balances: DenomAmount[];
   unbonding: number; lastActivityHeight: number | null; lastActivityAt: string | null; activityCount: number; primaryAmount: string; primaryBalance: string;
 };
+/** One side of a message: an account, or a named party such as the bridge. */
+export type MonitorParty = { address?: string; label?: string };
+/** One message involving at least one compromised wallet. */
 export type MonitorActivity = {
-  height: number; txHash: string; msgIndex: number; address: string; type: string;
-  direction: 'incoming'|'outgoing'|'self'|'involved'; counterparties: string[];
+  height: number; txHash: string; msgIndex: number; type: string;
   success: boolean | null; blockTime: string | null;
+  from: MonitorParty[]; to: MonitorParty[]; signer: string | null; amounts: DenomAmount[];
+  /** Compromised wallets that appear in the message. */
+  watched: string[];
 };
 export type PageResult<T> = { rows: T[]; total: number; page: number; pageSize: number; pages: number };

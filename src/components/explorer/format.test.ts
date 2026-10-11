@@ -1,4 +1,4 @@
-import { shortUnits } from '@/components/explorer/format';
+import { formatPrecise, formatUsd, shortUnits } from '@/components/explorer/format';
 import { formatUnits } from '@/components/explorer/blockscout';
 import { txFeeWei } from '@/utils/tx_label';
 
@@ -31,5 +31,25 @@ describe('txFeeWei', () => {
   it('is 0 without a fee', () => {
     expect(txFeeWei(null)).toBe('0');
     expect(txFeeWei({ amount: [] })).toBe('0');
+  });
+});
+
+describe('formatUsd', () => {
+  it('never shows NaN for tiny or invalid amounts', () => {
+    expect(formatUsd(1.3468557080942376e-8 * 0.05)).toBe('<$0.01');
+    expect(formatUsd(0)).toBe('$0.00');
+    expect(formatUsd(Number.NaN)).toBe('$0.00');
+    expect(formatUsd(1234.567)).toBe('$1,234.57');
+    expect(formatUsd(0.005)).toBe('$0.01');
+  });
+});
+
+describe('formatPrecise', () => {
+  it('writes tiny numbers in plain decimals with 6 significant digits', () => {
+    expect(formatPrecise(6.734278540471188e-10)).toBe('0.000000000673428');
+    expect(formatPrecise(1.3468557080942376e-8)).toBe('0.0000000134686');
+    expect(formatPrecise(0.0042)).toBe('0.0042');
+    expect(formatPrecise(0)).toBe('0');
+    expect(formatPrecise(Number.NaN)).toBe('0');
   });
 });

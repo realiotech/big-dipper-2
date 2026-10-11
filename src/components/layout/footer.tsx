@@ -1,9 +1,9 @@
 import { Box, Flex, Grid, Link as ChakraLink, SimpleGrid, Stack, Text } from "@chakra-ui/react";
 import NextLink from "next/link";
-import { EXTERNAL_LINKS, MONITOR_ITEM, NAV_GROUPS } from "./nav";
+import { EXTERNAL_LINKS, NAV_GROUPS } from "./nav";
 import { Logo } from "./brand";
 
-const columns = [...NAV_GROUPS, { label: "Monitor", items: [MONITOR_ITEM] }];
+const columns = NAV_GROUPS;
 
 export default function Footer() {
   return (

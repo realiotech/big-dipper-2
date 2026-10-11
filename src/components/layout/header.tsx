@@ -1,4 +1,4 @@
-import { Box, Button, Flex, Link as ChakraLink, Menu, Portal } from "@chakra-ui/react";
+import { Box, Button, Flex, Menu, Portal } from "@chakra-ui/react";
 import NextLink from "next/link";
 import { useRouter } from "next/router";
 import { LuChevronDown } from "react-icons/lu";
@@ -6,7 +6,7 @@ import { SearchInput } from "../explorer/search_input";
 import MenuDrawer from "./menudrawer";
 import { Logo, SoonTag, ThemeToggle } from "./brand";
 import WalletPopover from "./wallet-popover";
-import { MONITOR_ITEM, NAV_GROUPS, NavItem, isActive } from "./nav";
+import { NAV_GROUPS, NavItem, isActive } from "./nav";
 
 const NavMenu = ({ label, items, pathname }: { label: string; items: NavItem[]; pathname: string }) => {
   const active = items.some((item) => item.ready && isActive(item.href, pathname));
@@ -67,16 +67,6 @@ export default function Header() {
           {NAV_GROUPS.map((group) => (
             <NavMenu key={group.label} label={group.label} items={group.items} pathname={pathname} />
           ))}
-          {MONITOR_ITEM.ready ? (
-            <ChakraLink asChild px="2" fontSize="sm" color={isActive(MONITOR_ITEM.href, pathname) ? "explorer.text" : "explorer.muted"}>
-              <NextLink href={MONITOR_ITEM.href}>Monitor</NextLink>
-            </ChakraLink>
-          ) : (
-            <Flex align="center" gap="1.5" px="2" fontSize="sm" color="explorer.muted">
-              Monitor
-              <SoonTag />
-            </Flex>
-          )}
         </Flex>
         <Flex align="center" gap="3" ml={{ base: "auto", lg: "2" }}>
           <ThemeToggle />

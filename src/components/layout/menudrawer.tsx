@@ -15,10 +15,10 @@ import {
   DrawerTrigger,
 } from "@/components/ui/drawer";
 import WalletPopover from "./wallet-popover";
-import { MONITOR_ITEM, NAV_GROUPS, isActive } from "./nav";
+import { NAV_GROUPS, isActive } from "./nav";
 import { Logo, SoonTag } from "./brand";
 
-const groups = [...NAV_GROUPS, { label: "Monitor", items: [MONITOR_ITEM] }];
+const groups = NAV_GROUPS;
 
 export default function MenuDrawer() {
   const { pathname, asPath } = useRouter();

@@ -94,4 +94,6 @@ export type AccountInfo = {
   accountType: string;
   publicKey: string;
   rewards: number;
+  /** Pending rewards in ario, exact, for showing every digit on hover. */
+  rewardsWei: string;
 }

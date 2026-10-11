@@ -2,6 +2,7 @@ import type Database from 'better-sqlite3';
 import type { DenomAmount, MonitorActivity, MonitorAddress, MonitorOverview, PageResult } from '@/components/monitor/types';
 import { CHAIN_RESTART_HEIGHT, EVM_TYPES, JOB_STALE_MS } from './config';
 import { latestSnapshotId, monitorDb } from './db';
+import { messageFlow } from './activity';
 
 const compareAmount = (a: string, b: string) => BigInt(a) < BigInt(b) ? -1 : BigInt(a) > BigInt(b) ? 1 : 0;
 const json = <T,>(value: string | null, fallback: T): T => { try { return value ? JSON.parse(value) as T : fallback; } catch { return fallback; } };
@@ -38,9 +39,10 @@ export function overview(database: Database.Database = monitorDb(), now = Date.n
     stakeByDenom: totalsByDenom(amountRows('stake_snapshot')),
     balanceByDenom: totalsByDenom(amountRows('balance_snapshot')),
     activity: {
-      total: count("SELECT COUNT(*) n FROM activity_match WHERE tag='compromised'"),
-      sinceRestart: count("SELECT COUNT(*) n FROM activity_match WHERE tag='compromised' AND height>=?", CHAIN_RESTART_HEIGHT),
-      last24h: count("SELECT COUNT(*) n FROM activity_match x JOIN activity_message m USING(height,tx_hash,msg_index) WHERE x.tag='compromised' AND m.block_time>=datetime('now','-1 day')"),
+      // Messages, as the activity table lists them, not one count per wallet.
+      total: count("SELECT COUNT(*) n FROM (SELECT DISTINCT height,tx_hash,msg_index FROM activity_match WHERE tag='compromised')"),
+      sinceRestart: count("SELECT COUNT(*) n FROM (SELECT DISTINCT height,tx_hash,msg_index FROM activity_match WHERE tag='compromised' AND height>=?)", CHAIN_RESTART_HEIGHT),
+      last24h: count("SELECT COUNT(*) n FROM (SELECT DISTINCT x.height,x.tx_hash,x.msg_index FROM activity_match x JOIN activity_message m USING(height,tx_hash,msg_index) WHERE x.tag='compromised' AND m.block_time>=datetime('now','-1 day'))"),
       distinctAddresses: count("SELECT COUNT(DISTINCT address) n FROM activity_match WHERE tag='compromised'"),
       ...(() => { const row = database.prepare("SELECT m.height,m.block_time FROM activity_match x JOIN activity_message m USING(height,tx_hash,msg_index) WHERE x.tag='compromised' ORDER BY m.height DESC,m.tx_hash DESC,m.msg_index DESC,x.address ASC LIMIT 1").get() as any; return {lastHeight:row?.height ?? null,lastAt:row?.block_time ?? null}; })(),
     },
@@ -94,12 +96,20 @@ export function addressPage(options: {page:number;pageSize:number;q:string;sort:
   return {rows:mapped.slice(start,start+options.pageSize),total,page,pageSize:options.pageSize,pages:Math.ceil(total/options.pageSize)};
 }
 
+/**
+ * Messages involving compromised wallets, one row per message: a transfer
+ * between two watched wallets is one row, not one per wallet. Direction and
+ * address filters keep messages where some watched wallet matches.
+ */
 export function activityPage(options:{page:number;pageSize:number;type:string;direction:string;success:string;address:string;sinceRestart:boolean},database:Database.Database=monitorDb()):PageResult<MonitorActivity>&{types:string[]}{
-  const where=["x.tag='compromised'"];const params:any[]=[];
-  if(options.type){where.push('m.type=?');params.push(options.type);} if(options.direction){where.push('x.direction=?');params.push(options.direction);} if(options.address){where.push('x.address=?');params.push(options.address);} if(options.success==='success'){where.push('m.success=1');} if(options.success==='failed'){where.push('m.success=0');} if(options.success==='unknown'){where.push('m.success IS NULL');} if(options.sinceRestart){where.push('m.height>=?');params.push(CHAIN_RESTART_HEIGHT);}
-  const from=`FROM activity_match x JOIN activity_message m USING(height,tx_hash,msg_index) WHERE ${where.join(' AND ')}`;
+  const sameMessage='x.height=m.height AND x.tx_hash=m.tx_hash AND x.msg_index=m.msg_index';
+  const match=[sameMessage,"x.tag='compromised'"];const params:any[]=[];
+  if(options.direction){match.push('x.direction=?');params.push(options.direction);} if(options.address){match.push('x.address=?');params.push(options.address);}
+  const where=[`EXISTS (SELECT 1 FROM activity_match x WHERE ${match.join(' AND ')})`];
+  if(options.type){where.push('m.type=?');params.push(options.type);} if(options.success==='success'){where.push('m.success=1');} if(options.success==='failed'){where.push('m.success=0');} if(options.success==='unknown'){where.push('m.success IS NULL');} if(options.sinceRestart){where.push('m.height>=?');params.push(CHAIN_RESTART_HEIGHT);}
+  const from=`FROM activity_message m WHERE ${where.join(' AND ')}`;
   const total=(database.prepare(`SELECT COUNT(*) n ${from}`).get(...params) as any).n; const page=Math.max(1,options.page);const offset=(page-1)*options.pageSize;
-  const rows=database.prepare(`SELECT m.height,m.tx_hash,m.msg_index,m.type,m.success,m.block_time,x.address,x.direction,x.counterparties ${from} ORDER BY m.height DESC,m.tx_hash DESC,m.msg_index DESC,x.address ASC LIMIT ? OFFSET ?`).all(...params,options.pageSize,offset) as any[];
+  const rows=database.prepare(`SELECT m.height,m.tx_hash,m.msg_index,m.type,m.success,m.block_time,m.value,(SELECT json_group_array(x.address) FROM activity_match x WHERE ${sameMessage} AND x.tag='compromised') watched ${from} ORDER BY m.height DESC,m.tx_hash DESC,m.msg_index DESC LIMIT ? OFFSET ?`).all(...params,options.pageSize,offset) as any[];
   const types=(database.prepare("SELECT DISTINCT m.type FROM activity_match x JOIN activity_message m USING(height,tx_hash,msg_index) WHERE x.tag='compromised' ORDER BY m.type").all() as any[]).map((row)=>row.type);
-  return {rows:rows.map((row)=>({height:row.height,txHash:row.tx_hash,msgIndex:row.msg_index,address:row.address,type:row.type,direction:row.direction,counterparties:json(row.counterparties,[]),success:row.success==null?null:Boolean(row.success),blockTime:row.block_time})),total,page,pageSize:options.pageSize,pages:Math.ceil(total/options.pageSize),types};
+  return {rows:rows.map((row)=>({height:row.height,txHash:row.tx_hash,msgIndex:row.msg_index,type:row.type,success:row.success==null?null:Boolean(row.success),blockTime:row.block_time,...messageFlow(row.type,json(row.value,{})),watched:json<string[]>(row.watched,[]).sort()})),total,page,pageSize:options.pageSize,pages:Math.ceil(total/options.pageSize),types};
 }

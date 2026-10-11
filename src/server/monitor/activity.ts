@@ -13,7 +13,7 @@ const RECIPIENTS = new Set([
   'validator_src_address', 'validator_dst_address', 'granter',
 ]);
 
-function normalizeAddress(value: string): string | null {
+export function normalizeAddress(value: string): string | null {
   if (ACCOUNT.test(value)) return value;
   let bytes: Uint8Array | null = null;
   if (/^0x[0-9a-fA-F]{40}$/.test(value)) bytes = Uint8Array.from(Buffer.from(value.slice(2), 'hex'));
@@ -66,3 +66,71 @@ export function directionFor(address: string, roles: AddressRoles): Direction {
 
 export const counterpartiesFor = (address: string, roles: AddressRoles) =>
   roles.participants.filter((candidate) => candidate !== address);
+
+/** One side of a message: an account, or a named party with no account here (the bridge). */
+export type Party = { address?: string; label?: string };
+export type MessageFlow = {
+  from: Party[]; to: Party[]; signer: string | null; amounts: { denom: string; amount: string }[];
+};
+
+// The account that signs a message, by the field each Cosmos message names its
+// signer with; the first one present wins. MsgExec is signed by the grantee,
+// grants and revocations by the granter.
+const SIGNER_FIELDS = [
+  'signer', 'grantee', 'from_address', 'sender', 'delegator_address', 'voter',
+  'depositor', 'proposer', 'authority', 'from',
+];
+// Multistaking reports delegations in its internal unit, not a real token.
+const INTERNAL_DENOMS = new Set(['stake']);
+const BRIDGE: Party = { label: 'Bridge' };
+
+const accountOf = (raw: unknown) => (typeof raw === 'string' ? normalizeAddress(raw) : null);
+const accounts = (...raws: unknown[]): Party[] =>
+  [...new Set(raws.map(accountOf).filter((address): address is string => Boolean(address)))].map((address) => ({ address }));
+const coins = (raw: unknown) =>
+  (Array.isArray(raw) ? raw : raw ? [raw] : [])
+    .filter((coin) => coin && typeof coin.denom === 'string' && coin.amount != null && !INTERNAL_DENOMS.has(coin.denom))
+    .map((coin) => ({ denom: coin.denom as string, amount: String(coin.amount) }));
+
+/**
+ * Who sent what to whom in a message, and who signed it, for reading the
+ * activity feed. Staking flows are shown the way funds move: an undelegation
+ * or a reward withdrawal goes from the validator to the delegator.
+ */
+export function messageFlow(type: string, value: unknown): MessageFlow {
+  const msg = (value && typeof value === 'object' ? value : {}) as Record<string, any>;
+  const kind = type.slice(type.lastIndexOf('.') + 1);
+  const signerField = kind === 'MsgGrant' || kind === 'MsgRevoke' ? 'granter' : SIGNER_FIELDS.find((key) => accountOf(msg[key]));
+  const signer = signerField ? accountOf(msg[signerField]) : null;
+  const flow = (from: Party[], to: Party[], amounts = coins(msg.amount)): MessageFlow => ({ from, to, signer, amounts });
+
+  switch (kind) {
+    case 'MsgSend':
+      return flow(accounts(msg.from_address), accounts(msg.to_address));
+    case 'MsgMultiSend':
+      return flow(
+        accounts(...(msg.inputs ?? []).map((input: any) => input?.address)),
+        accounts(...(msg.outputs ?? []).map((output: any) => output?.address)),
+        (msg.inputs ?? []).flatMap((input: any) => coins(input?.coins))
+      );
+    case 'MsgDelegate':
+      return flow(accounts(msg.delegator_address), accounts(msg.validator_address));
+    case 'MsgUndelegate':
+    case 'MsgCancelUnbondingDelegation':
+      return flow(accounts(msg.validator_address), accounts(msg.delegator_address));
+    case 'MsgBeginRedelegate':
+      return flow(accounts(msg.validator_src_address), accounts(msg.validator_dst_address));
+    case 'MsgWithdrawDelegatorReward':
+      return flow(accounts(msg.validator_address), accounts(msg.delegator_address), []);
+    case 'MsgBridgeIn':
+      return flow([BRIDGE], accounts(msg.receiver), coins(msg.coin));
+    case 'MsgBridgeOut':
+      return flow(accounts(msg.signer), [BRIDGE], coins(msg.coin));
+    case 'MsgTransfer':
+      return flow(accounts(msg.sender), accountOf(msg.receiver) ? accounts(msg.receiver) : [{ label: String(msg.receiver ?? '') }], coins(msg.token));
+    default: {
+      const roles = addressRoles(msg);
+      return flow(roles.senders.map((address) => ({ address })), roles.recipients.map((address) => ({ address })), coins(msg.amount ?? msg.coin ?? msg.token));
+    }
+  }
+}

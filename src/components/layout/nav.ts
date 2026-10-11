@@ -46,8 +46,6 @@ export const NAV_GROUPS: NavGroup[] = [
   },
 ];
 
-export const MONITOR_ITEM: NavItem = { label: "Wallet Monitor", href: "/monitor", ready: true };
-
 export const EXTERNAL_LINKS = [
   { label: "realio.network", href: "https://realio.network" },
   { label: "Docs", href: "https://docs.realio.network/" },

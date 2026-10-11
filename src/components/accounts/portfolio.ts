@@ -3,6 +3,8 @@ import { useRecoilValue } from 'recoil';
 import { readAssets } from '@/recoil/asset';
 import { formatTokenByExponent } from '@/utils';
 import { useTokenSupplies } from '@/components/home/hero/hooks';
+import { formatUnits } from '@/components/explorer/blockscout';
+import { formatPrecise } from '@/components/explorer/format';
 import type { Balance } from './types';
 
 type StakeRow = { amount?: string | null; denom?: string | null; val_addr: string };
@@ -24,6 +26,9 @@ export type AssetRow = {
 
 export type DelegationRow = { validator: string; symbol: string; amount: number; share: number };
 
+/** A slice of the portfolio; `exact` is the full amount shown on hover when the value rounds away. */
+export type PortfolioSegment = { label: string; value: number; exact?: string };
+
 const RIO = 'ario';
 
 /**
@@ -36,12 +41,14 @@ export const usePortfolio = ({
   delegations,
   unbondings,
   rewards,
+  rewardsWei = '0',
 }: {
   balances: Balance[];
   erc20Balances: Erc20Balance[];
   delegations: StakeRow[];
   unbondings: StakeRow[];
   rewards: number;
+  rewardsWei?: string;
 }) => {
   const { assetArr } = useRecoilValue(readAssets);
   const { tokens } = useTokenSupplies();
@@ -86,8 +93,13 @@ export const usePortfolio = ({
       { label: 'Spendable', value: assets.reduce((sum, row) => sum + weigh(row, row.spendable), 0) },
       { label: 'Delegated', value: assets.reduce((sum, row) => sum + weigh(row, row.delegated), 0) },
       { label: 'Unbonding', value: assets.reduce((sum, row) => sum + weigh(row, row.unbonding), 0) },
-      { label: 'Rewards', value: inUsd ? rewards * rioPrice : rewards },
-    ];
+      {
+        label: 'Rewards',
+        value: inUsd ? rewards * rioPrice : rewards,
+        // Exact pending rewards, for the hover on amounts too small to show.
+        exact: `${formatUnits(rewardsWei)} RIO${inUsd ? ` ≈ $${formatPrecise(rewards * rioPrice)}` : ''}`,
+      },
+    ] as PortfolioSegment[];
 
     const byValidator = new Map<string, DelegationRow>();
     delegations.forEach((row) => {
@@ -109,5 +121,5 @@ export const usePortfolio = ({
       totalValue: assets.reduce((sum, row) => sum + row.value, 0) + (inUsd ? rewards * rioPrice : 0),
       delegations: delegationRows,
     };
-  }, [assetArr, balances, delegations, erc20Balances, rewards, tokens, unbondings]);
+  }, [assetArr, balances, delegations, erc20Balances, rewards, rewardsWei, tokens, unbondings]);
 };
