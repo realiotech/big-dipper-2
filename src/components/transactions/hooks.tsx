@@ -1,18 +1,33 @@
 import * as R from 'ramda';
 import { useApolloClient } from '@apollo/client';
 import {
+  TransactionsByMessageDocument,
+  TransactionsByMessageExportDocument,
+  TransactionsByMessageExportQuery,
+  TransactionsByMessageQuery,
   TransactionsExportDocument,
   TransactionsExportQuery,
   TransactionsFilteredDocument,
   TransactionsFilteredQuery,
   useLatestTransactionsListenerSubscription,
+  useTransactionsByMessageCountQuery,
+  useTransactionsByMessageQuery,
   useTransactionsCountQuery,
   useTransactionsFilteredCountQuery,
   useTransactionsFilteredQuery,
   useTransactionsPageQuery,
 } from '@/graphql/types/general_types';
 import { usePageParam } from '@/components/explorer/pager';
-import { rangeFilePart, transactionWhere, TxFilters, useTxFilters } from '@/components/explorer/tx_filters';
+import {
+  filtersByMessage,
+  HeightRange,
+  messageFilter,
+  rangeFilePart,
+  transactionFilter,
+  TxFilters,
+  useHeightRange,
+  useTxFilters,
+} from '@/components/explorer/tx_filters';
 import { readAllPages } from '@/components/explorer/tx_export';
 import { buildTxCsv, downloadCsv } from '@/utils/csv_export';
 import { toTxRow, TxRow, txLabel } from '@/utils/tx_label';
@@ -29,20 +44,18 @@ export const PAGE_SIZE = 25;
 // Upper bound for "the newest transactions" before the latest height is known.
 const NEWEST = '9223372036854775807';
 
-/**
- * Count variables for the filters. Counting "not EVM" directly is slow, so
- * Cosmos counts are all matches minus the EVM ones.
- */
-const countVariables = (filters: TxFilters) =>
-  filters.source === 'cosmos'
-    ? { where: transactionWhere(filters, 'all'), evmWhere: transactionWhere(filters, 'evm'), subtractEvm: true }
-    : { where: transactionWhere(filters), subtractEvm: false };
+type MessageRows = { messages: Array<{ transaction?: Parameters<typeof toTxRow>[0] | null }> };
+const messageTransactions = <T,>(data?: { messages: Array<{ transaction?: T | null }> }) =>
+  (data?.messages ?? []).flatMap((row) => (row.transaction ? [row.transaction] : []));
 
 /**
  * Transactions are paged with offsets below an anchor height: the newest
  * height seen, frozen while browsing older pages so rows do not shift as new
- * transactions arrive. Page 1 follows the chain live. With any filter set the
- * list comes from a filtered query instead.
+ * transactions arrive. Page 1 follows the chain live.
+ *
+ * With filters set, a type or source filter reads the `message` table (one row
+ * per transaction) and a time range alone reads `transaction`; both compare
+ * block heights resolved from the range.
  */
 export const useTransactions = () => {
   const { page, setPage } = usePageParam();
@@ -70,22 +83,33 @@ export const useTransactions = () => {
 
   const { data: countData } = useTransactionsCountQuery({ skip: active });
 
-  const where = useMemo(() => transactionWhere(filters), [filters]);
-  const filtered = useTransactionsFilteredQuery({
-    variables: { where, limit: PAGE_SIZE, offset: (page - 1) * PAGE_SIZE },
-    skip: !active,
-  });
-  const filteredRows = useMemo(() => filtered.data?.transactions.map(toTxRow) ?? [], [filtered.data]);
-  const filteredCount = useTransactionsFilteredCountQuery({ variables: countVariables(filters), skip: !active });
-  const counts = filteredCount.data;
-  const matching = counts ? (counts.total.aggregate?.count ?? 0) - (counts.evm?.aggregate?.count ?? 0) : null;
+  const { heights, ready } = useHeightRange(filters.range);
+  const byMessage = filtersByMessage(filters);
+  const offset = (page - 1) * PAGE_SIZE;
+  const messageWhere = useMemo(() => messageFilter(filters, heights), [filters, heights]);
+  const txWhere = useMemo(() => transactionFilter(heights), [heights]);
+  const skipMessages = !active || !ready || !byMessage;
+  const skipTransactions = !active || !ready || byMessage;
+
+  const byMessagePage = useTransactionsByMessageQuery({ variables: { where: messageWhere, limit: PAGE_SIZE, offset }, skip: skipMessages });
+  const byMessageCount = useTransactionsByMessageCountQuery({ variables: { where: messageWhere }, skip: skipMessages });
+  const byTxPage = useTransactionsFilteredQuery({ variables: { where: txWhere, limit: PAGE_SIZE, offset }, skip: skipTransactions });
+  const byTxCount = useTransactionsFilteredCountQuery({ variables: { where: txWhere }, skip: skipTransactions });
+
+  const filteredRows = useMemo(
+    () => (byMessage ? messageTransactions(byMessagePage.data as MessageRows | undefined) : byTxPage.data?.transactions ?? []).map(toTxRow),
+    [byMessage, byMessagePage.data, byTxPage.data]
+  );
+  const countResult = byMessage ? byMessageCount.data?.matching : byTxCount.data?.total;
+  const matching = countResult ? countResult.aggregate?.count ?? 0 : null;
 
   if (active) {
     return {
       items: filteredRows,
-      loading: filtered.loading,
+      loading: !ready || (byMessage ? byMessagePage.loading : byTxPage.loading),
       total: matching ?? 0,
       matching,
+      heights,
       page,
       setPage,
       filters,
@@ -100,6 +124,7 @@ export const useTransactions = () => {
     loading: items.length === 0 && (loading || maxHeight === null),
     total,
     matching: countData ? total : null,
+    heights,
     page,
     setPage,
     filters,
@@ -111,30 +136,44 @@ export const useTransactions = () => {
  * Saves every transaction matching the filters as CSV. The newest matching
  * height is pinned first so the pages read stay consistent.
  */
-export const useTransactionsExport = (filters: TxFilters) => {
+export const useTransactionsExport = (filters: TxFilters, heights: HeightRange | null) => {
   const client = useApolloClient();
 
   return useCallback(async () => {
-    const where = transactionWhere(filters);
-    const top = await client.query<TransactionsFilteredQuery>({ query: TransactionsFilteredDocument, variables: { where, limit: 1 } });
-    if (top.errors?.length) throw new Error(top.errors[0].message);
-    const anchor = top.data.transactions[0]?.height;
+    if (filters.range && !heights) throw new Error('the time range is still loading, try again in a moment');
+    const byMessage = filtersByMessage(filters);
+    const read = async <Q, R>(query: any, variables: object, pick: (data: Q) => R[]) => {
+      const result = await client.query<Q>({ query, variables });
+      if (result.errors?.length) throw new Error(result.errors[0].message);
+      return pick(result.data);
+    };
+
+    const where = byMessage ? messageFilter(filters, heights) : transactionFilter(heights);
+    const top = byMessage
+      ? await read<TransactionsByMessageQuery, { height: any }>(TransactionsByMessageDocument, { where, limit: 1 }, messageTransactions)
+      : await read<TransactionsFilteredQuery, { height: any }>(TransactionsFilteredDocument, { where, limit: 1 }, (data) => data.transactions);
+    const anchor = top[0]?.height;
     if (anchor === undefined) return 0;
 
     const pinned = { _and: [where, { height: { _lte: anchor } }] };
-    const rows = await readAllPages(async (offset, limit) => {
-      const result = await client.query<TransactionsExportQuery>({
-        query: TransactionsExportDocument,
-        variables: { where: pinned, limit, offset },
-      });
-      if (result.errors?.length) throw new Error(result.errors[0].message);
-      return result.data.transactions;
-    });
+    const rows = await readAllPages((offset, limit) =>
+      byMessage
+        ? read<TransactionsByMessageExportQuery, NonNullable<TransactionsByMessageExportQuery['messages'][number]['transaction']>>(
+          TransactionsByMessageExportDocument,
+          { where: pinned, limit, offset },
+          messageTransactions
+        )
+        : read<TransactionsExportQuery, TransactionsExportQuery['transactions'][number]>(
+          TransactionsExportDocument,
+          { where: pinned, limit, offset },
+          (data) => data.transactions
+        )
+    );
 
     const scope = [filters.source, filters.type].filter(Boolean).join('_');
     downloadCsv(buildTxCsv(rows), `transactions_${scope}_${rangeFilePart(filters.range)}.csv`);
     return rows.length;
-  }, [client, filters]);
+  }, [client, filters, heights]);
 };
 
 const formatOverview = (data: TransactionDetailsQuery) => {

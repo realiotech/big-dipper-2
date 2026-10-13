@@ -2,6 +2,7 @@ import { useRouter } from 'next/router';
 import { useCallback, useMemo } from 'react';
 import dayjs from 'dayjs';
 import { EVM_MSG_TYPES, txTypeOption } from '@/utils/tx_types';
+import { useBlockHeightRangeQuery } from '@/graphql/types/general_types';
 
 export type TxSource = 'all' | 'evm' | 'cosmos';
 
@@ -73,17 +74,70 @@ export const timestampBounds = (range: TimeRange) => ({
   _lt: hasuraTime(dayjs(range.to).add(1, 'minute').toDate()),
 });
 
-const EVM_MATCH = { messagesByPartitionIdTransactionHash: { type: { _in: EVM_MSG_TYPES } } };
+/** Block heights a time range covers, inclusive (see `useHeightRange`). */
+export type HeightRange = { from: number; to: number };
 
-/** `transaction` filter for the given filters. The source can be overridden, for counting. */
-export const transactionWhere = (filters: TxFilters, source: TxSource = filters.source) => {
-  const and: Record<string, unknown>[] = [];
-  if (filters.range) and.push({ block: { timestamp: timestampBounds(filters.range) } });
+/** Variables for `BlockHeightRange`: the blocks just before each end of the range. */
+export const heightRangeVariables = (range: TimeRange) => {
+  const bounds = timestampBounds(range);
+  return { before: bounds._gte, until: bounds._lt };
+};
+
+/**
+ * Heights from `BlockHeightRange`: the range starts after the last block before
+ * it and ends at the last block inside it. An empty range comes out with
+ * `from > to`, which matches nothing.
+ */
+export const heightRangeFrom = (data: { before: { height: any }[]; last: { height: any }[] }): HeightRange => ({
+  from: Number(data.before[0]?.height ?? 0) + 1,
+  to: Number(data.last[0]?.height ?? 0),
+});
+
+/**
+ * Message types a filter keeps, or null when it keeps every transaction. An
+ * EVM transaction holds a single MsgEthereumTx, so the EVM tab is those types
+ * and the Cosmos tab every other type.
+ */
+const messageTypeMatch = (filters: TxFilters): Record<string, string[]> | null => {
   const option = txTypeOption(filters.type);
-  if (option) and.push({ messagesByPartitionIdTransactionHash: { type: { _in: option.types } } });
-  if (source === 'evm') and.push(EVM_MATCH);
-  if (source === 'cosmos') and.push({ _not: EVM_MATCH });
-  return { _and: and };
+  const isEvm = (type: string) => EVM_MSG_TYPES.includes(type);
+  if (filters.source === 'evm') return { _in: option ? option.types.filter(isEvm) : EVM_MSG_TYPES };
+  if (filters.source === 'cosmos') return option ? { _in: option.types.filter((type) => !isEvm(type)) } : { _nin: EVM_MSG_TYPES };
+  return option ? { _in: option.types } : null;
+};
+
+/**
+ * Whether the filters select by message (type or source). Those are read from
+ * the `message` table, one row per transaction, through the `message ->
+ * transaction` relationship every callisto Hasura has; a time range alone reads
+ * `transaction` directly.
+ */
+export const filtersByMessage = (filters: TxFilters) => messageTypeMatch(filters) !== null;
+
+const heightBounds = (heights: HeightRange) => ({ _gte: heights.from, _lte: heights.to });
+
+/** `message` filter: the kept types, within the range's heights. */
+export const messageFilter = (filters: TxFilters, heights: HeightRange | null) => {
+  const where: Record<string, unknown> = {};
+  const type = messageTypeMatch(filters);
+  if (type) where.type = type;
+  if (heights) where.height = heightBounds(heights);
+  return where;
+};
+
+/** `transaction` filter for a time range alone. */
+export const transactionFilter = (heights: HeightRange | null) => (heights ? { height: heightBounds(heights) } : {});
+
+/**
+ * The block heights a time range covers. Filters compare heights rather than
+ * joining each row to its block's time: `block.timestamp` is not indexed on
+ * every Hasura, and the join is several times slower on mainnet.
+ */
+export const useHeightRange = (range: TimeRange | null) => {
+  const variables = useMemo(() => (range ? heightRangeVariables(range) : null), [range]);
+  const { data } = useBlockHeightRangeQuery({ variables: variables ?? { before: '', until: '' }, skip: !variables });
+  const heights = useMemo(() => (data ? heightRangeFrom(data) : null), [data]);
+  return { heights, ready: !range || heights !== null };
 };
 
 /** `types` argument of `messages_by_address`, a Postgres text array literal. */

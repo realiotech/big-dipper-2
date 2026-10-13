@@ -24317,12 +24317,43 @@ export type TransactionsFilteredQuery = { transactions: Array<{ __typename?: 'tr
 
 export type TransactionsFilteredCountQueryVariables = Exact<{
   where: Transaction_Bool_Exp;
-  evmWhere?: InputMaybe<Transaction_Bool_Exp>;
-  subtractEvm: Scalars['Boolean'];
 }>;
 
 
-export type TransactionsFilteredCountQuery = { total: { __typename?: 'transaction_aggregate', aggregate?: { __typename?: 'transaction_aggregate_fields', count: number } | null }, evm?: { __typename?: 'transaction_aggregate', aggregate?: { __typename?: 'transaction_aggregate_fields', count: number } | null } };
+export type TransactionsFilteredCountQuery = { total: { __typename?: 'transaction_aggregate', aggregate?: { __typename?: 'transaction_aggregate_fields', count: number } | null } };
+
+export type BlockHeightRangeQueryVariables = Exact<{
+  before: Scalars['timestamp'];
+  until: Scalars['timestamp'];
+}>;
+
+
+export type BlockHeightRangeQuery = { before: Array<{ __typename?: 'block', height: any }>, last: Array<{ __typename?: 'block', height: any }> };
+
+export type TransactionsByMessageQueryVariables = Exact<{
+  where: Message_Bool_Exp;
+  limit?: InputMaybe<Scalars['Int']>;
+  offset?: InputMaybe<Scalars['Int']>;
+}>;
+
+
+export type TransactionsByMessageQuery = { messages: Array<{ __typename?: 'message', transaction?: { __typename?: 'transaction', height: any, hash: string, success: boolean, fee: any, gasUsed?: any | null, gasWanted?: any | null, messages: any, block: { __typename?: 'block', timestamp: any } } | null }> };
+
+export type TransactionsByMessageCountQueryVariables = Exact<{
+  where: Message_Bool_Exp;
+}>;
+
+
+export type TransactionsByMessageCountQuery = { matching: { __typename?: 'message_aggregate', aggregate?: { __typename?: 'message_aggregate_fields', count: number } | null } };
+
+export type TransactionsByMessageExportQueryVariables = Exact<{
+  where: Message_Bool_Exp;
+  limit?: InputMaybe<Scalars['Int']>;
+  offset?: InputMaybe<Scalars['Int']>;
+}>;
+
+
+export type TransactionsByMessageExportQuery = { messages: Array<{ __typename?: 'message', transaction?: { __typename?: 'transaction', height: any, hash: string, success: boolean, fee: any, gasUsed?: any | null, gasWanted?: any | null, messages: any, block: { __typename?: 'block', timestamp: any }, rawLog?: string | null } | null }> };
 
 export type TransactionsExportQueryVariables = Exact<{
   where: Transaction_Bool_Exp;
@@ -26932,13 +26963,8 @@ export type TransactionsFilteredQueryHookResult = ReturnType<typeof useTransacti
 export type TransactionsFilteredLazyQueryHookResult = ReturnType<typeof useTransactionsFilteredLazyQuery>;
 export type TransactionsFilteredQueryResult = Apollo.QueryResult<TransactionsFilteredQuery, TransactionsFilteredQueryVariables>;
 export const TransactionsFilteredCountDocument = gql`
-    query TransactionsFilteredCount($where: transaction_bool_exp!, $evmWhere: transaction_bool_exp = {}, $subtractEvm: Boolean!) {
+    query TransactionsFilteredCount($where: transaction_bool_exp!) {
   total: transaction_aggregate(where: $where) {
-    aggregate {
-      count
-    }
-  }
-  evm: transaction_aggregate(where: $evmWhere) @include(if: $subtractEvm) {
     aggregate {
       count
     }
@@ -26959,8 +26985,6 @@ export const TransactionsFilteredCountDocument = gql`
  * const { data, loading, error } = useTransactionsFilteredCountQuery({
  *   variables: {
  *      where: // value for 'where'
- *      evmWhere: // value for 'evmWhere'
- *      subtractEvm: // value for 'subtractEvm'
  *   },
  * });
  */
@@ -27022,6 +27046,179 @@ export function useTransactionsExportLazyQuery(baseOptions?: Apollo.LazyQueryHoo
 export type TransactionsExportQueryHookResult = ReturnType<typeof useTransactionsExportQuery>;
 export type TransactionsExportLazyQueryHookResult = ReturnType<typeof useTransactionsExportLazyQuery>;
 export type TransactionsExportQueryResult = Apollo.QueryResult<TransactionsExportQuery, TransactionsExportQueryVariables>;
+export const BlockHeightRangeDocument = gql`
+    query BlockHeightRange($before: timestamp!, $until: timestamp!) {
+  before: block(where: {timestamp: {_lt: $before}}, order_by: {height: desc}, limit: 1) {
+    height
+  }
+  last: block(where: {timestamp: {_lt: $until}}, order_by: {height: desc}, limit: 1) {
+    height
+  }
+}
+    `;
+
+/**
+ * __useBlockHeightRangeQuery__
+ *
+ * To run a query within a React component, call `useBlockHeightRangeQuery` and pass it any options that fit your needs.
+ * When your component renders, `useBlockHeightRangeQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useBlockHeightRangeQuery({
+ *   variables: {
+ *      before: // value for 'before'
+ *      until: // value for 'until'
+ *   },
+ * });
+ */
+export function useBlockHeightRangeQuery(baseOptions: Apollo.QueryHookOptions<BlockHeightRangeQuery, BlockHeightRangeQueryVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useQuery<BlockHeightRangeQuery, BlockHeightRangeQueryVariables>(BlockHeightRangeDocument, options);
+      }
+export function useBlockHeightRangeLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<BlockHeightRangeQuery, BlockHeightRangeQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return Apollo.useLazyQuery<BlockHeightRangeQuery, BlockHeightRangeQueryVariables>(BlockHeightRangeDocument, options);
+        }
+export type BlockHeightRangeQueryHookResult = ReturnType<typeof useBlockHeightRangeQuery>;
+export type BlockHeightRangeLazyQueryHookResult = ReturnType<typeof useBlockHeightRangeLazyQuery>;
+export type BlockHeightRangeQueryResult = Apollo.QueryResult<BlockHeightRangeQuery, BlockHeightRangeQueryVariables>;
+export const TransactionsByMessageDocument = gql`
+    query TransactionsByMessage($where: message_bool_exp!, $limit: Int = 25, $offset: Int = 0) {
+  messages: message(where: $where, distinct_on: [height, transaction_hash], order_by: [{height: desc}, {transaction_hash: asc}], limit: $limit, offset: $offset) {
+    transaction {
+      height
+      hash
+      success
+      fee
+      gasUsed: gas_used
+      gasWanted: gas_wanted
+      messages
+      block {
+        timestamp
+      }
+    }
+  }
+}
+    `;
+
+/**
+ * __useTransactionsByMessageQuery__
+ *
+ * To run a query within a React component, call `useTransactionsByMessageQuery` and pass it any options that fit your needs.
+ * When your component renders, `useTransactionsByMessageQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useTransactionsByMessageQuery({
+ *   variables: {
+ *      where: // value for 'where'
+ *      limit: // value for 'limit'
+ *      offset: // value for 'offset'
+ *   },
+ * });
+ */
+export function useTransactionsByMessageQuery(baseOptions: Apollo.QueryHookOptions<TransactionsByMessageQuery, TransactionsByMessageQueryVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useQuery<TransactionsByMessageQuery, TransactionsByMessageQueryVariables>(TransactionsByMessageDocument, options);
+      }
+export function useTransactionsByMessageLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<TransactionsByMessageQuery, TransactionsByMessageQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return Apollo.useLazyQuery<TransactionsByMessageQuery, TransactionsByMessageQueryVariables>(TransactionsByMessageDocument, options);
+        }
+export type TransactionsByMessageQueryHookResult = ReturnType<typeof useTransactionsByMessageQuery>;
+export type TransactionsByMessageLazyQueryHookResult = ReturnType<typeof useTransactionsByMessageLazyQuery>;
+export type TransactionsByMessageQueryResult = Apollo.QueryResult<TransactionsByMessageQuery, TransactionsByMessageQueryVariables>;
+export const TransactionsByMessageCountDocument = gql`
+    query TransactionsByMessageCount($where: message_bool_exp!) {
+  matching: message_aggregate(where: $where, distinct_on: [height, transaction_hash]) {
+    aggregate {
+      count
+    }
+  }
+}
+    `;
+
+/**
+ * __useTransactionsByMessageCountQuery__
+ *
+ * To run a query within a React component, call `useTransactionsByMessageCountQuery` and pass it any options that fit your needs.
+ * When your component renders, `useTransactionsByMessageCountQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useTransactionsByMessageCountQuery({
+ *   variables: {
+ *      where: // value for 'where'
+ *   },
+ * });
+ */
+export function useTransactionsByMessageCountQuery(baseOptions: Apollo.QueryHookOptions<TransactionsByMessageCountQuery, TransactionsByMessageCountQueryVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useQuery<TransactionsByMessageCountQuery, TransactionsByMessageCountQueryVariables>(TransactionsByMessageCountDocument, options);
+      }
+export function useTransactionsByMessageCountLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<TransactionsByMessageCountQuery, TransactionsByMessageCountQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return Apollo.useLazyQuery<TransactionsByMessageCountQuery, TransactionsByMessageCountQueryVariables>(TransactionsByMessageCountDocument, options);
+        }
+export type TransactionsByMessageCountQueryHookResult = ReturnType<typeof useTransactionsByMessageCountQuery>;
+export type TransactionsByMessageCountLazyQueryHookResult = ReturnType<typeof useTransactionsByMessageCountLazyQuery>;
+export type TransactionsByMessageCountQueryResult = Apollo.QueryResult<TransactionsByMessageCountQuery, TransactionsByMessageCountQueryVariables>;
+export const TransactionsByMessageExportDocument = gql`
+    query TransactionsByMessageExport($where: message_bool_exp!, $limit: Int = 1000, $offset: Int = 0) {
+  messages: message(where: $where, distinct_on: [height, transaction_hash], order_by: [{height: desc}, {transaction_hash: asc}], limit: $limit, offset: $offset) {
+    transaction {
+      height
+      hash
+      success
+      fee
+      gasUsed: gas_used
+      gasWanted: gas_wanted
+      messages
+      block {
+        timestamp
+      }
+      rawLog: raw_log
+    }
+  }
+}
+    `;
+
+/**
+ * __useTransactionsByMessageExportQuery__
+ *
+ * To run a query within a React component, call `useTransactionsByMessageExportQuery` and pass it any options that fit your needs.
+ * When your component renders, `useTransactionsByMessageExportQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useTransactionsByMessageExportQuery({
+ *   variables: {
+ *      where: // value for 'where'
+ *      limit: // value for 'limit'
+ *      offset: // value for 'offset'
+ *   },
+ * });
+ */
+export function useTransactionsByMessageExportQuery(baseOptions: Apollo.QueryHookOptions<TransactionsByMessageExportQuery, TransactionsByMessageExportQueryVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useQuery<TransactionsByMessageExportQuery, TransactionsByMessageExportQueryVariables>(TransactionsByMessageExportDocument, options);
+      }
+export function useTransactionsByMessageExportLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<TransactionsByMessageExportQuery, TransactionsByMessageExportQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return Apollo.useLazyQuery<TransactionsByMessageExportQuery, TransactionsByMessageExportQueryVariables>(TransactionsByMessageExportDocument, options);
+        }
+export type TransactionsByMessageExportQueryHookResult = ReturnType<typeof useTransactionsByMessageExportQuery>;
+export type TransactionsByMessageExportLazyQueryHookResult = ReturnType<typeof useTransactionsByMessageExportLazyQuery>;
+export type TransactionsByMessageExportQueryResult = Apollo.QueryResult<TransactionsByMessageExportQuery, TransactionsByMessageExportQueryVariables>;
 export const LastHundredBlocksDocument = gql`
     subscription LastHundredBlocks($address: String) {
   block(offset: 1, order_by: {height: desc}, limit: 100) {

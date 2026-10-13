@@ -52,8 +52,8 @@ export const txColumns: Column<TxRow>[] = [
 ];
 
 export function TransactionList() {
-  const { items, loading, total, matching, page, setPage, filters, setFilters } = useTransactions();
-  const exportCsv = useTransactionsExport(filters);
+  const { items, loading, total, matching, heights, page, setPage, filters, setFilters } = useTransactions();
+  const exportCsv = useTransactionsExport(filters, heights);
   const shown = Math.min(PAGE_SIZE, Math.max(total - (page - 1) * PAGE_SIZE, 0));
 
   return (

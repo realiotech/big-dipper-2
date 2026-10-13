@@ -1,5 +1,15 @@
 import { buildTxCsv, CsvTransaction } from '@/utils/csv_export';
-import { messageTypesArg, rangeFilePart, timestampBounds, transactionWhere, TxFilters } from '@/components/explorer/tx_filters';
+import {
+  filtersByMessage,
+  heightRangeFrom,
+  heightRangeVariables,
+  messageFilter,
+  messageTypesArg,
+  rangeFilePart,
+  timestampBounds,
+  transactionFilter,
+  TxFilters,
+} from '@/components/explorer/tx_filters';
 import { readAllPages, uniqueByHash, EXPORT_LIMIT } from '@/components/explorer/tx_export';
 
 // Minimal RFC 4180 reader, enough to check what spreadsheets will see.
@@ -97,16 +107,30 @@ describe('transaction filters', () => {
     expect(timestampBounds(range)).toEqual({ _gte: '2026-09-29T00:00:00.000', _lt: '2026-10-06T00:00:00.000' });
   });
 
-  it('combines range, type and source', () => {
-    const where = transactionWhere(filters);
-    expect(where._and).toHaveLength(3);
-    expect(where._and[1]).toEqual({
-      messagesByPartitionIdTransactionHash: {
-        type: { _in: ['/cosmos.gov.v1.MsgVote', '/cosmos.gov.v1beta1.MsgVote', '/cosmos.gov.v1.MsgVoteWeighted', '/cosmos.gov.v1beta1.MsgVoteWeighted'] },
-      },
-    });
-    expect(where._and[2]).toHaveProperty('_not');
-    expect(transactionWhere(filters, 'all')._and).toHaveLength(2);
+  it('turns a time range into block heights', () => {
+    expect(heightRangeVariables(range)).toEqual({ before: '2026-09-29T00:00:00.000', until: '2026-10-06T00:00:00.000' });
+    expect(heightRangeFrom({ before: [{ height: '19609093' }], last: [{ height: 20066495 }] })).toEqual({ from: 19609094, to: 20066495 });
+    // No block before the range: it starts at the first block. No block in it: from > to, which matches nothing.
+    expect(heightRangeFrom({ before: [], last: [] })).toEqual({ from: 1, to: 0 });
+  });
+
+  it('reads type and source filters from messages, within the heights', () => {
+    const heights = { from: 10, to: 20 };
+    const EVM = ['/cosmos.evm.vm.v1.MsgEthereumTx', '/os.evm.v1.MsgEthereumTx'];
+    expect(messageFilter({ source: 'evm', type: null, range }, heights)).toEqual({ type: { _in: EVM }, height: { _gte: 10, _lte: 20 } });
+    expect(messageFilter({ source: 'cosmos', type: null, range: null }, null)).toEqual({ type: { _nin: EVM } });
+    expect(messageFilter({ source: 'all', type: 'delegate', range: null }, null)).toEqual({ type: { _in: ['/cosmos.staking.v1beta1.MsgDelegate'] } });
+    // A Cosmos type on the EVM tab, or the EVM type on the Cosmos tab, matches nothing.
+    expect(messageFilter({ source: 'evm', type: 'delegate', range: null }, null)).toEqual({ type: { _in: [] } });
+    expect(messageFilter({ source: 'cosmos', type: 'ethereum-tx', range: null }, null)).toEqual({ type: { _in: [] } });
+    expect(messageFilter(filters, null).type).toEqual({ _in: ['/cosmos.gov.v1.MsgVote', '/cosmos.gov.v1beta1.MsgVote', '/cosmos.gov.v1.MsgVoteWeighted', '/cosmos.gov.v1beta1.MsgVoteWeighted'] });
+  });
+
+  it('reads a time range alone from transactions', () => {
+    expect(filtersByMessage({ source: 'all', type: null, range })).toBe(false);
+    expect(filtersByMessage({ source: 'cosmos', type: null, range: null })).toBe(true);
+    expect(transactionFilter({ from: 10, to: 20 })).toEqual({ height: { _gte: 10, _lte: 20 } });
+    expect(transactionFilter(null)).toEqual({});
   });
 
   it('builds the messages_by_address types argument', () => {
