@@ -15,7 +15,15 @@ export type TokenTransfer = {
 
 export type InternalTx = { index: number; type: string; from: BlockscoutAddress; to?: BlockscoutAddress | null; value: string; success: boolean; gas_limit?: string };
 export type Log = { index: number; transaction_hash?: string; address: BlockscoutAddress; topics: Array<string | null>; data: string; decoded?: { method_call?: string } | null };
-export type StateChange = { address: BlockscoutAddress; type: string; balance_before?: string | null; balance_after?: string | null; change?: string | unknown };
+export type StateChange = {
+  address: BlockscoutAddress;
+  /** "coin" is native RIO; "token" rows carry the token they belong to. */
+  type: string;
+  balance_before?: string | null;
+  balance_after?: string | null;
+  change?: string | unknown;
+  token?: { symbol?: string | null; name?: string | null; decimals?: string | null; type?: string | null } | null;
+};
 
 export const rio = (wei?: string | null) => (
   <>
@@ -50,11 +58,50 @@ export const internalColumns: Column<InternalTx>[] = [
   { key: "value", header: "Value", align: "end", render: (row) => rio(row.value) },
   { key: "status", header: "Status", align: "end", render: (row) => <Flex justify="flex-end"><TxStatus success={row.success} /></Flex> },
 ];
+const ZERO_ADDRESS = /^0x0{40}$/i;
+
+/** A state-change amount in its own unit: RIO for "coin" rows, the row's token otherwise (NFT balances are counts). */
+const stateAmount = (row: StateChange, value: string) => {
+  if (row.type === "coin" || !row.token) return rio(value);
+  const decimals = /^ERC-20$/.test(row.token.type ?? "") ? Number(row.token.decimals ?? 18) : Number(row.token.decimals ?? 0);
+  return (
+    <>
+      {formatUnits(value, decimals)}{" "}
+      <Text as="span" color="explorer.muted">
+        {row.token.symbol ?? row.token.name ?? ""}
+      </Text>
+    </>
+  );
+};
+
+/** Signed change, e.g. "+1,255" or "−0.000000000000504518"; NFT changes (lists of token ids) show "—". */
+const stateChange = (row: StateChange) => {
+  if (typeof row.change !== "string" || !/^-?\d+$/.test(row.change)) return <Text color="explorer.muted">—</Text>;
+  const negative = row.change.startsWith("-");
+  const amount = stateAmount(row, negative ? row.change.slice(1) : row.change);
+  return (
+    <Text as="span" color={negative ? "explorer.danger" : "explorer.success"} whiteSpace="nowrap">
+      {negative ? "−" : "+"}
+      {amount}
+    </Text>
+  );
+};
+
 export const stateColumns: Column<StateChange>[] = [
-  { key: "address", header: "Address", render: (row) => <EvmAddress address={row.address} short /> },
+  {
+    key: "address",
+    header: "Address",
+    render: (row) => (
+      <Flex align="center" gap="2" wrap="wrap">
+        <EvmAddress address={row.address} short />
+        {ZERO_ADDRESS.test(row.address?.hash ?? "") && <Tag>Burn address</Tag>}
+      </Flex>
+    ),
+  },
   { key: "type", header: "Type", render: (row) => <Flex><Tag>{row.type}</Tag></Flex> },
-  { key: "before", header: "Before", align: "end", render: (row) => (row.balance_before ? rio(row.balance_before) : "—") },
-  { key: "after", header: "After", align: "end", render: (row) => (row.balance_after ? rio(row.balance_after) : "—") },
+  { key: "before", header: "Before", align: "end", render: (row) => (row.balance_before ? stateAmount(row, row.balance_before) : "—") },
+  { key: "after", header: "After", align: "end", render: (row) => (row.balance_after ? stateAmount(row, row.balance_after) : "—") },
+  { key: "change", header: "Change", align: "end", render: stateChange },
 ];
 
 
