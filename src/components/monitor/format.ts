@@ -4,6 +4,7 @@ const DENOMS: Record<string, DenomMeta> = {
   ario: { symbol: 'RIO', exponent: 18 },
   arst: { symbol: 'RST', exponent: 18 },
   almx: { symbol: 'LMX', exponent: 18 },
+  // Mainnet DSTRX: the monitor watches mainnet wallets on every deployment.
   'erc20:0xb841F365D5221Bed66d60E69094418D8C2aa5A44': { symbol: 'DSTRX', exponent: 18 },
 };
 

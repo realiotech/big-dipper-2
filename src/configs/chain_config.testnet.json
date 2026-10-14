@@ -64,6 +64,7 @@
       "address": "realio1yl6hdjhmkf37639730gffanpzndzdpmh82jrte"
     }
   ],
+  "dstrxAddress": "0x9b81cFe34C25131DaE2248c5e508829a3b52518b",
   "primaryTokenUnit": "ario",
   "votingPowerTokenUnit": "ario",
   "tokenUnits": {

@@ -165,17 +165,20 @@ export const DelegateDialog = ({
     }
   };
 
+  // "Delegate DSTRX" when staking an ERC-20 token, as on testnet.
+  const actionLabel = isERC20 ? `Delegate ${denomSymbol}` : "Delegate";
+
   return (
     <DialogRoot size="md"  placement={"center"} motionPreset="slide-in-bottom">
       <DialogTrigger asChild>
         <Button bg="explorer.button" color="explorer.buttonText" size="xs" h="28px" px="3" borderRadius="full" _hover={{ opacity: 0.85 }}>
-          Delegate
+          {actionLabel}
         </Button>
       </DialogTrigger>
       <DialogContent>
         <DialogHeader>
           <Flex justify={"space-between"}>
-            <DialogTitle>{"Delegate"}</DialogTitle>
+            <DialogTitle>{actionLabel}</DialogTitle>
             <DialogTrigger style={{ cursor: "pointer" }}>
               <IoCloseOutline size={30} />
             </DialogTrigger>
@@ -313,7 +316,7 @@ export const DelegateDialog = ({
                 {loading ? (
                   <AiOutlineLoading className={styles.spin} />
                 ) : (
-                  "Delegate"
+                  actionLabel
                 )}
               </Button>
             </DialogFooter>
