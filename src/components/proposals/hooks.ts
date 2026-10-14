@@ -1,434 +1,125 @@
+import { useMemo } from 'react';
 import { useRouter } from 'next/router';
-import { bech32 } from 'bech32';
-import {
-  ProposalsQuery, useProposalsQuery,
-  ProposalDetailsQuery, useProposalDetailsQuery,
-  ProposalDetailsTallyQuery, useProposalDetailsTallyQuery,
-  ProposalDetailsVotesQuery, useProposalDetailsVotesQuery,
-} from '@/graphql/types/general_types';
-import type { ProposalsState, ProposalType, ProposalState, VotesGraphState, VoteState } from './types';
-import * as R from 'ramda';
-import { useCallback, useState, SyntheticEvent } from 'react';
-import xss from 'xss';
-import { chainConfig } from '@/configs';
-import { formatToken } from '@/utils/format_token';
 import dayjs from '@/utils/dayjs';
-import Big from 'big.js';
+import {
+  GovernanceProposalsQuery,
+  useGovernanceProposalsQuery,
+  useProposalPageQuery,
+} from '@/graphql/types/general_types';
+import type { StatusTone } from '@/components/explorer/badges';
 
-const EXPIRED_DEPOSIT_STATUS = 'PROPOSAL_STATUS_DEPOSIT_EXPIRED';
+type RawProposal = GovernanceProposalsQuery['proposals'][number];
 
-const getDisplayStatus = (
-  status: string,
-  depositEndTime?: string | null,
-  votingStartTime?: string | null
-) => {
-  if (
-    status === 'PROPOSAL_STATUS_DEPOSIT_PERIOD'
-    && depositEndTime
-    && !votingStartTime
-    && dayjs.utc(depositEndTime).isValid()
-    && dayjs.utc(depositEndTime).isBefore(dayjs.utc())
-  ) {
-    return EXPIRED_DEPOSIT_STATUS;
-  }
+export type Tally = { yes: number; no: number; noWithVeto: number; abstain: number; total: number };
 
-  return status;
+export type Proposal = {
+  id: number;
+  title: string;
+  description: string;
+  status: string;
+  submitTime: string;
+  depositEndTime: string;
+  votingStartTime: string;
+  votingEndTime: string;
+  proposer: string;
+  tally: Tally;
 };
 
-const formatProposals = (data?: ProposalsQuery): ProposalType[] => {
-  if (!data?.proposals) return [];
+const STATUS: Record<string, { label: string; tone: StatusTone }> = {
+  PROPOSAL_STATUS_PASSED: { label: 'Passed', tone: 'success' },
+  PROPOSAL_STATUS_REJECTED: { label: 'Rejected', tone: 'danger' },
+  PROPOSAL_STATUS_FAILED: { label: 'Failed', tone: 'danger' },
+  PROPOSAL_STATUS_VOTING_PERIOD: { label: 'Voting', tone: 'accent' },
+  PROPOSAL_STATUS_DEPOSIT_PERIOD: { label: 'Deposit', tone: 'neutral' },
+  DEPOSIT_EXPIRED: { label: 'Deposit expired', tone: 'neutral' },
+  VOTING_ENDED: { label: 'Voting ended', tone: 'neutral' },
+};
 
-  return data.proposals.map((x) => ({
-    description: xss(x?.description?.replace(/\\n\s?/g, '<br/>')) ?  xss(x?.description?.replace(/\\n\s?/g, '<br/>')) : x.content?.[0] && x.content[0].content ?  xss(x.content[0].content.description.replace(/\\n\s?/g, '<br/>')) : '',
-    id: x.proposalId,
-    title: x.title ? x.title : x.content?.[0] && x.content[0].content ? x.content[0].content.title : '',
-    status: getDisplayStatus(x.status ?? '', x.depositEndTime, x.votingStartTime),
+export const proposalStatus = (status: string) => STATUS[status] ?? { label: status.replace('PROPOSAL_STATUS_', ''), tone: 'neutral' as StatusTone };
+
+// Tally amounts are in the bond denom's base unit (18 decimals).
+const toPower = (value?: string) => Number(value ?? 0) / 1e18;
+
+const formatProposal = (x: RawProposal): Proposal => {
+  const content = Array.isArray(x.content) ? x.content[0]?.content : undefined;
+  const tally = x.tally?.[0];
+  const yes = toPower(tally?.yes);
+  const no = toPower(tally?.no);
+  const noWithVeto = toPower(tally?.noWithVeto);
+  const abstain = toPower(tally?.abstain);
+  const past = (time?: string | null) => Boolean(time && dayjs.utc(time).isBefore(dayjs.utc()));
+  // A deposit period that ended without voting starting never reached voting.
+  const depositExpired = x.status === 'PROPOSAL_STATUS_DEPOSIT_PERIOD' && !x.votingStartTime && past(x.depositEndTime);
+  // The indexer can miss the final result (proposal #33), leaving a finished
+  // vote marked as still voting.
+  const votingEnded = x.status === 'PROPOSAL_STATUS_VOTING_PERIOD' && past(x.votingEndTime);
+
+  return {
+    id: x.id,
+    title: x.title || content?.title || `Proposal #${x.id}`,
+    // Descriptions are stored with escaped newlines.
+    description: (x.description || content?.description || '').replace(/\\n/g, '\n'),
+    status: depositExpired ? 'DEPOSIT_EXPIRED' : votingEnded ? 'VOTING_ENDED' : x.status ?? '',
+    submitTime: x.submitTime ?? '',
     depositEndTime: x.depositEndTime ?? '',
-  }));
-};
-
-export const useProposals = () => {
-  const [state, setState] = useState<ProposalsState>({
-    loading: true,
-    exists: true,
-    items: [],
-    hasNextPage: false,
-    isNextPageLoading: true,
-    rawDataTotal: 0,
-  });
-
-  const handleSetState = useCallback(
-    (stateChange: (prevState: ProposalsState) => ProposalsState) => {
-      setState((prevState) => {
-        const newState = stateChange(prevState);
-        return R.equals(prevState, newState) ? prevState : newState;
-      });
-    },
-    []
-  );
-
-  // ================================
-  // proposals query
-  // ================================
-
-  const proposalQuery = useProposalsQuery({
-    variables: {
-      limit: 50,
-      offset: 0,
-    },
-    onCompleted: (data) => {
-      const newItems = R.uniq([...state.items, ...formatProposals(data)]);
-      handleSetState((prevState) => ({
-        ...prevState,
-        loading: false,
-        items: newItems,
-        hasNextPage: newItems.length < (data.total?.aggregate?.count ?? 0),
-        isNextPageLoading: false,
-        rawDataTotal: data.total?.aggregate?.count ?? prevState.rawDataTotal,
-      }));
-    },
-  });
-
-  const loadNextPage = async () => {
-    handleSetState((prevState) => ({ ...prevState, isNextPageLoading: true }));
-    // refetch query
-    await proposalQuery
-      .fetchMore({
-        variables: {
-          offset: state.items.length,
-          limit: 50,
-        },
-      })
-      .then(({ data }) => {
-        const newItems = R.uniq([...state.items, ...formatProposals(data)]);
-        // set new state
-        handleSetState((prevState) => ({
-          ...prevState,
-          items: newItems,
-          isNextPageLoading: false,
-          hasNextPage: newItems.length < (data.total?.aggregate?.count ?? 0),
-          rawDataTotal: data.total?.aggregate?.count ?? prevState.rawDataTotal,
-        }));
-      });
-  };
-
-  const itemCount = state.hasNextPage ? state.items.length + 1 : state.items.length;
-  const loadMoreItems = state.isNextPageLoading ? () => null : loadNextPage;
-  const isItemLoaded = (index: number) => !state.hasNextPage || index < state.items.length;
-
-  return {
-    state,
-    loadNextPage,
-    itemCount,
-    loadMoreItems,
-    isItemLoaded,
+    votingStartTime: x.votingStartTime ?? '',
+    votingEndTime: x.votingEndTime ?? '',
+    proposer: x.proposerAddress,
+    tally: { yes, no, noWithVeto, abstain, total: yes + no + noWithVeto + abstain },
   };
 };
 
-// =========================
-// overview
-// =========================
-const formatOverview = (data: ProposalDetailsQuery) => {
-  const DEFAULT_TIME = '0001-01-01T00:00:00';
-  let votingStartTime = data?.proposal?.[0]?.votingStartTime ?? DEFAULT_TIME;
-  votingStartTime = votingStartTime === DEFAULT_TIME ? '' : votingStartTime;
-  let votingEndTime = data?.proposal?.[0]?.votingEndTime ?? DEFAULT_TIME;
-  votingEndTime = votingEndTime === DEFAULT_TIME ? '' : votingEndTime;
+export const useGovernance = () => {
+  const { data, loading } = useGovernanceProposalsQuery();
 
-  if ( !data?.proposal ) {
-    return {}
-  }
+  return useMemo(() => {
+    const proposals = (data?.proposals ?? []).map(formatProposal);
+    const count = (status: string) => proposals.filter((p) => p.status === status).length;
+    const passed = count('PROPOSAL_STATUS_PASSED');
+    const rejected = count('PROPOSAL_STATUS_REJECTED') + count('PROPOSAL_STATUS_FAILED');
+    const latest = proposals[0];
 
-  let proposal = data?.proposal?.[0];
-  let propsalType = proposal.content?.[0] ? proposal.content[0].content ? proposal.content[0].content['@type'] : proposal.content[0]['@type']  : ''
-  let description = proposal.description ? proposal.description : proposal.content?.[0] && proposal.content[0].content ? proposal.content[0].content.description : ''
-  let title = proposal.title ? proposal.title : proposal.content?.[0] && proposal.content[0].content ? proposal.content[0].content.title : ''
-
-  const overview = {
-    proposer: proposal?.proposer ?? '',
-    content: proposal.content ?? '',
-    title: title,
-    id: proposal.proposalId ?? '',
-    description: description,
-    status: getDisplayStatus(
-      proposal.status ?? '',
-      proposal.depositEndTime,
-      proposal.votingStartTime
-    ),
-    submitTime: proposal.submitTime ?? '',
-    proposalType: propsalType.length > 0 ? propsalType.substring(1) : propsalType,
-    depositEndTime: proposal.depositEndTime ?? '',
-    votingStartTime,
-    votingEndTime,
-  };
-
-  return overview;
-};
-
-// ==========================
-// parsers
-// ==========================
-const formatProposalQuery = (data: ProposalDetailsQuery) => {
-  const stateChange: Partial<ProposalState> = {
-    loading: false,
-  };
-
-  if (!data.proposal.length) {
-    stateChange.exists = false;
-    return stateChange;
-  }
-
-  stateChange.overview = formatOverview(data);
-
-  return stateChange;
-};
-
-export const useProposalDetails = () => {
-  const router = useRouter();
-  const [state, setState] = useState<ProposalState>({
-    loading: true,
-    exists: true,
-    overview: {
-      proposer: '',
-      content: {
-        recipient: '',
-        amount: [],
+    return {
+      loading,
+      proposals,
+      stats: {
+        total: proposals.length,
+        passed,
+        rejected,
+        voting: count('PROPOSAL_STATUS_VOTING_PERIOD'),
+        deposit: count('PROPOSAL_STATUS_DEPOSIT_PERIOD'),
+        decided: passed + rejected,
+        passRate: passed + rejected ? (passed / (passed + rejected)) * 100 : 0,
+        latest,
+        first: proposals[proposals.length - 1],
       },
-      title: '',
-      id: 0,
-      description: '',
-      status: '',
-      submitTime: '',
-      proposalType: '',
-      depositEndTime: '',
-      votingStartTime: '',
-      votingEndTime: '',
-    },
-  });
-
-  const handleSetState = useCallback((stateChange: (prevState: ProposalState) => ProposalState) => {
-    setState((prevState) => {
-      const newState = stateChange(prevState);
-      return R.equals(prevState, newState) ? prevState : newState;
-    });
-  }, []);
-
-  // ==========================
-  // fetch data
-  // ==========================
-  useProposalDetailsQuery({
-    variables: {
-      proposalId: parseFloat((router?.query?.id as string) ?? '0'),
-    },
-    onCompleted: (data) => {
-      handleSetState((prevState) => ({ ...prevState, ...formatProposalQuery(data) }));
-    },
-    onError: (error) => {
-      console.log('error', error);
-    }
-  });
-
-  return {
-    state,
-  };
+    };
+  }, [data, loading]);
 };
 
-const { votingPowerTokenUnit } = chainConfig;
-const { prefix } = chainConfig;
-
-const validatorToDelegatorAddress = (validatorAddress: string) => {
-  try {
-    if (!validatorAddress) {
-      return '';
-    }
-
-    return bech32.encode(prefix.account, bech32.decode(validatorAddress).words);
-  } catch {
-    return '';
-  }
-};
-
-const defaultTokenUnit: TokenUnit = {
-  value: '0',
-  baseDenom: '',
-  displayDenom: '',
-  exponent: 0,
-};
-
-export const useVotesGraph = () => {
+export const useProposal = () => {
   const router = useRouter();
-  const [state, setState] = useState<VotesGraphState>({
-    votes: {
-      yes: defaultTokenUnit,
-      no: defaultTokenUnit,
-      abstain: defaultTokenUnit,
-      veto: defaultTokenUnit,
-    },
-    bonded: defaultTokenUnit,
-    quorum: '0',
-  });
+  const id = Number(router.query.id);
+  const { data, loading } = useProposalPageQuery({ variables: { id }, skip: !router.isReady || !id });
 
-  const handleSetState = useCallback(
-    (stateChange: (prevState: VotesGraphState) => VotesGraphState) => {
-      setState((prevState) => {
-        const newState = stateChange(prevState);
-        return R.equals(prevState, newState) ? prevState : newState;
-      });
-    },
-    []
-  );
-
-  useProposalDetailsTallyQuery({
-    variables: {
-      proposalId: parseFloat((router?.query?.id as string) ?? '0'),
-    },
-    onCompleted: (data) => {
-      handleSetState((prevState) => ({ ...prevState, ...foramtProposalTally(data) }));
-    },
-    onError: (error) => {
-      console.log('error', error);
-    }
-  });
-
-  const foramtProposalTally = (data: ProposalDetailsTallyQuery) => {
-    const quorumRaw = data.quorum?.[0]?.tallyParams?.quorum ?? '0';
+  return useMemo(() => {
+    const raw = data?.proposal?.[0];
+    const proposal = raw ? formatProposal(raw) : undefined;
+    const bonded = toPower(data?.stakingPool?.[0]?.bondedTokens);
 
     return {
-      votes: {
-        yes: formatToken(data?.proposalTallyResult?.[0]?.yes ?? '0', votingPowerTokenUnit),
-        no: formatToken(data?.proposalTallyResult?.[0]?.no ?? '0', votingPowerTokenUnit),
-        veto: formatToken(data?.proposalTallyResult?.[0]?.noWithVeto ?? '0', votingPowerTokenUnit),
-        abstain: formatToken(data?.proposalTallyResult?.[0]?.abstain ?? '0', votingPowerTokenUnit),
-      },
-      bonded: formatToken(data?.stakingPool?.[0]?.bondedTokens ?? '0', votingPowerTokenUnit),
-      quorum: Big(quorumRaw)?.times(100).toFixed(2),
+      id,
+      loading: loading || !router.isReady,
+      exists: loading || !router.isReady || Boolean(raw),
+      proposal,
+      turnout: proposal && bonded ? (proposal.tally.total / bonded) * 100 : 0,
+      votes: (data?.votes ?? []).map((vote) => ({
+        voter: vote.voterAddress,
+        option: vote.option,
+        weight: Number(vote.weight ?? 1) * 100,
+        height: Number(vote.height),
+        timestamp: vote.timestamp ?? '',
+      })),
     };
-  };
-
-  return {
-    state,
-  };
-};
-
-const formatVotes = (data: ProposalDetailsVotesQuery) => {
-  const validatorDict: { [key: string]: boolean } = {};
-  const validators = data.validatorStatuses.map((x) => {
-    const selfDelegateAddress = x?.validator?.validatorInfo?.selfDelegateAddress ?? '';
-    const operatorAddress = x?.validator?.validatorInfo?.operatorAddress ?? '';
-    const operatorAccountAddress = validatorToDelegatorAddress(operatorAddress);
-
-    if (selfDelegateAddress) {
-      validatorDict[selfDelegateAddress] = false;
-    }
-
-    if (operatorAccountAddress) {
-      validatorDict[operatorAccountAddress] = false;
-    }
-
-    return {
-      operatorAddress,
-      operatorAccountAddress,
-      selfDelegateAddress,
-    };
-  });
-
-  let yes = 0;
-  let no = 0;
-  let abstain = 0;
-  let veto = 0;
-
-  const votes = data.proposalVote.map((x) => {
-    if (x.option === 'VOTE_OPTION_YES') {
-      yes += 1;
-    }
-    if (x.option === 'VOTE_OPTION_ABSTAIN') {
-      abstain += 1;
-    }
-    if (x.option === 'VOTE_OPTION_NO') {
-      no += 1;
-    }
-    if (x.option === 'VOTE_OPTION_NO_WITH_VETO') {
-      veto += 1;
-    }
-    if (validatorDict[x.voterAddress] === false) {
-      validatorDict[x.voterAddress] = true;
-    }
-
-    return {
-      user: x.voterAddress,
-      vote: x.option,
-    };
-  });
-
-  // =====================================
-  // Get data for active validators that did not vote
-  // =====================================
-  const validatorsNotVoted = validators
-    .filter((x) => ![
-      x.selfDelegateAddress,
-      x.operatorAccountAddress,
-    ].some((address) => address && validatorDict[address] === true))
-    .map((validator) => ({
-      user: validator.operatorAddress,
-      vote: 'NOT_VOTED',
-    }));
-
-  return {
-    data: votes,
-    validatorsNotVoted,
-    voteCount: {
-      yes,
-      no,
-      veto,
-      abstain,
-      didNotVote: validatorsNotVoted.length,
-    },
-  };
-};
-
-export const useVotes = (resetPagination: () => void) => {
-  const router = useRouter();
-  const [state, setState] = useState<VoteState>({
-    data: [],
-    validatorsNotVoted: [],
-    voteCount: {
-      yes: 0,
-      no: 0,
-      abstain: 0,
-      veto: 0,
-      didNotVote: 0,
-    },
-    tab: 0,
-  });
-
-  const handleSetState = useCallback((stateChange: (prevState: VoteState) => VoteState) => {
-    setState((prevState) => {
-      const newState = stateChange(prevState);
-      return R.equals(prevState, newState) ? prevState : newState;
-    });
-  }, []);
-
-  const handleTabChange = useCallback(
-    (_event: SyntheticEvent<Element, globalThis.Event>, newValue: number) => {
-      if (resetPagination) {
-        resetPagination();
-      }
-      handleSetState((prevState) => ({ ...prevState, tab: newValue }));
-    },
-    [handleSetState, resetPagination]
-  );
-
-  useProposalDetailsVotesQuery({
-    variables: {
-      proposalId: parseFloat((router?.query?.id as string) ?? '0'),
-    },
-    onCompleted: (data) => {
-      handleSetState((prevState) => ({ ...prevState, ...formatVotes(data) }));
-    },
-  });
-
-  return {
-    state,
-    handleTabChange,
-  };
+  }, [data, id, loading, router.isReady]);
 };

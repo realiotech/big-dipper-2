@@ -1,9 +1,10 @@
 import type { NextApiRequest, NextApiResponse } from "next";
 import { fetchUsdPrices } from "@/utils/spot_prices";
+import { chainConfig } from "@/configs";
 
 const ERC20_METADATA = [
     {
-        address: process.env.NEXT_PUBLIC_CHAIN_TYPE == "testnet" ? "0x9b81cFe34C25131DaE2248c5e508829a3b52518b" : "0xb841f365d5221bed66d60e69094418d8c2aa5a44",
+        address: chainConfig.dstrxAddress,
         symbol: 'DSTRX',
         name: 'Districts token',
         description: 'Districts token for LandBank',

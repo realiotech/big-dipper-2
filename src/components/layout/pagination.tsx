@@ -16,8 +16,8 @@ export type PageInfo = {
     currentPage: number;
 }
 
-export default function Pagination({pageInfo, pageChangeFunc, pageSizeChangeFunc}: 
-    {pageInfo: PageInfo, pageChangeFunc: pageChangeFunc, pageSizeChangeFunc: pageSizeChangeFunc}) {
+export default function Pagination({pageInfo, pageChangeFunc, pageSizeChangeFunc, page}: 
+    {pageInfo: PageInfo, pageChangeFunc: pageChangeFunc, pageSizeChangeFunc: pageSizeChangeFunc, page?: number}) {
       const isMobile = useBreakpointValue({ base: true, md: false });
 
     return (
@@ -25,7 +25,7 @@ export default function Pagination({pageInfo, pageChangeFunc, pageSizeChangeFunc
             size={isMobile ? 'xs' : 'lg'}
             count={pageInfo.count} 
             pageSize={pageInfo.pageSize} 
-            defaultPage={1}
+            {...(page ? { page } : { defaultPage: 1 })}
             onPageChange={pageChangeFunc}
             onPageSizeChange={pageSizeChangeFunc}
         >

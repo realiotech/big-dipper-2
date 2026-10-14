@@ -33,11 +33,9 @@ const httpLink = createHttpLink({
 
     if (apiName === 'subgraph') return process.env.NEXT_PUBLIC_SUBGRAPHQL_URL;
 
-    if (typeof window === 'undefined' && process.env.GRAPHQL_URL_INTERNAL) {
-      return process.env.GRAPHQL_URL_INTERNAL;
-    }
-
-    return process.env.NEXT_PUBLIC_GRAPHQL_URL
+    // IMPORTANT: Always use the backend proxy for security
+    // The proxy adds the admin secret on the backend only
+    return '/api/graphql'
   }
 });
 
@@ -45,6 +43,14 @@ const wsLink = typeof window !== 'undefined' ? new WebSocketLink({
   uri: process.env.NEXT_PUBLIC_GRAPHQL_WS ?? 'wss://localhost:3000',
   options: {
     reconnect: true,
+    // Add authentication headers for WebSocket subscriptions
+    connectionParams: async () => {
+      return {
+        headers: {
+          'Content-Type': 'application/json',
+        },
+      };
+    },
   },
   webSocketImpl: WebSocket,
 }) : null;
@@ -63,6 +69,9 @@ const link = typeof window !== 'undefined' ? split(
 const authMiddleware = new ApolloLink((operation, forward) => {
   operation.setContext({
     headers: {
+      'Content-Type': 'application/json',
+      // Note: Admin secret is NOT added here for security reasons
+      // It should only be on the backend via the API proxy
     },
   });
 

@@ -18,7 +18,7 @@ const formatBlocks = (data: BlocksListenerSubscription) =>
     };
   }) ?? [];
 
-export const useBlocks = () => {
+export const useBlocks = (limit = 7) => {
   const [state, setState] = useState<BlocksState>({
     loading: true,
     items: [],
@@ -35,6 +35,7 @@ export const useBlocks = () => {
   // block subscription
   // ================================
   useBlocksListenerSubscription({
+    variables: { limit },
     onData: (data) => {
       handleSetState((prevState) => ({
         ...prevState,

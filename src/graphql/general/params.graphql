@@ -1,17 +1,23 @@
-query Params {
-  stakingParams: staking_params(limit: 1, order_by: {height: desc}) {
+
+
+query ChainParams {
+  staking: staking_params(limit: 1, order_by: {height: desc}) {
     params
+    height
   }
-  slashingParams: slashing_params(limit: 1, order_by: {height: desc}) {
+  slashing: slashing_params(limit: 1, order_by: {height: desc}) {
     params
+    height
   }
-  mintParams: mint_params(limit: 1, order_by: {height: desc}) {
+  mint: mint_params(limit: 1, order_by: {height: desc}) {
     params
+    height
   }
-  distributionParams: distribution_params(limit: 1, order_by: {height: desc}) {
+  distribution: distribution_params(limit: 1, order_by: {height: desc}) {
     params
+    height
   }
-  govParams: gov_params(limit: 1, order_by: {height: desc}) {
+  gov: gov_params(limit: 1, order_by: {height: desc}) {
     params
     height
   }

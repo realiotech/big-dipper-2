@@ -25,6 +25,7 @@ export const useTokenRecoil = () => {
         tokensData.forEach((item: any, idx: number) => {
           let convertedItem = { ...item, idx: idx }
           tokenMap[item.address] = convertedItem
+          tokenMap[item.address.toLowerCase()] = convertedItem
           newData.push(convertedItem)
         })
 
@@ -56,12 +57,15 @@ export const useTokenRecoil = () => {
 
         // Merge supply data with token metadata
         supplyResults.forEach(supplyData => {
-          if (tokenMap[supplyData.address]) {
-            tokenMap[supplyData.address] = {
-              ...tokenMap[supplyData.address],
+          const tokenKey = supplyData.address.toLowerCase();
+          if (tokenMap[tokenKey]) {
+            const token = {
+              ...tokenMap[tokenKey],
               supply: supplyData.supply,
               holders: supplyData.holders
             };
+            tokenMap[token.address] = token;
+            tokenMap[token.address.toLowerCase()] = token;
           }
         });
 

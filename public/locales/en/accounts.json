@@ -33,5 +33,10 @@
   "creationTime": "Creation Time",
   "bio": "Bio",
   "status": "Status",
-  "completionTime": "Completion Time"
+  "completionTime": "Completion Time",
+  "exportTransactions": "Export Transactions",
+  "startDate": "Start Date",
+  "endDate": "End Date",
+  "query": "Query",
+  "noTransactionsFound": "No transactions found for the selected date range"
 }

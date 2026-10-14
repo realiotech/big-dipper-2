@@ -1,6 +1,8 @@
+import type { TxLabel } from '@/utils/tx_label';
+
 export interface OverviewType {
   address: string;
-  evmAddress: string;
+  evmAddress: string | undefined;
   balances: Balance[];
   completed: boolean;
 }
@@ -76,4 +78,22 @@ export type AssetBalanceMap = {
 
 export type AssetBalanceMergedMap = {
   [key: string]: AssetBalanceDetail
+}
+export type AccountTransaction = {
+  hash: string;
+  height: number;
+  success: boolean;
+  timestamp: string;
+  /** Fee in ario. */
+  fee: string;
+  label: TxLabel;
+}
+
+export type AccountInfo = {
+  loading: boolean;
+  accountType: string;
+  publicKey: string;
+  rewards: number;
+  /** Pending rewards in ario, exact, for showing every digit on hover. */
+  rewardsWei: string;
 }

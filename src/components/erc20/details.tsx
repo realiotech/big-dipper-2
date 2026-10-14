@@ -1,167 +1,203 @@
 import React, { useState } from "react";
-import {
-  Flex,
-  Text,
-  VStack,
-  HStack,
-  Tabs,
-  Center,
-  Grid,
-  GridItem,
-  Spinner,
-} from "@chakra-ui/react";
-import Erc20Overview from "./overview";
-import Activities from "./activities";
-import Staking from "./staking";
-import { Avatar } from "../ui/avatar";
-import Holders from "./holders";
-import { useRecoilValue } from "recoil";
-import { readToken } from "@/recoil/erc20";
-import { useRouter } from "next/router";
-import { useEnsureTokenLoaded } from "@/recoil/erc20/hooks";
+import { Flex, Grid, Image, Link as ChakraLink, SimpleGrid, Stack, Text } from "@chakra-ui/react";
+import NextLink from "next/link";
+import numeral from "numeral";
+import { Panel } from "@/components/explorer/panel";
+import { PageTitle } from "@/components/explorer/page_title";
+import { StatCard } from "@/components/explorer/stat_card";
+import { Column, DataTable } from "@/components/explorer/data_table";
+import { ExplorerTabs, TabPanel } from "@/components/explorer/tabs";
+import { AddressLink } from "@/components/explorer/address_link";
+import { StatusTag, ValidatorAvatar } from "@/components/explorer/badges";
+import { CopyButton } from "@/components/explorer/copy_button";
+import { CONTRACT_DETAILS } from "@/components/explorer/evm_address";
+import { formatPercent, timeAgo } from "@/components/explorer/format";
+import { NotFound } from "@/components/explorer/not_found";
+import { Paged, Segmented, SupplyComposition, TokenInformation, holderColumns, stakeColumns, tokens } from "@/components/assets/parts";
+import { getMiddleEllipsis } from "@/utils/get_middle_ellipsis";
+import { TRANSACTION_DETAILS } from "@/utils/go_to_page";
+import { TransferKind, TransferRow, useErc20Details } from "./hooks";
 
-const Erc20Details = () => {
-  const router = useRouter();
-  const address = router.query.address as string;
-  const [selectedTab, setSelectedTab] = useState("holders");
+const ContractLink = ({ address, beginning = 8, ending = 6 }: { address: string; beginning?: number; ending?: number }) => (
+  <AddressLink address={address} href={CONTRACT_DETAILS(address)} beginning={beginning} ending={ending} />
+);
 
-  // Get the token details from recoil state
-  const erc20Details = useRecoilValue(readToken(address));
+const Party = ({ address }: { address: string }) => (address ? <AddressLink address={address} beginning={8} ending={6} /> : <Text color="explorer.muted">—</Text>);
 
-  // Ensure token data is loaded if not already available
-  const { loading: tokenLoading, error: tokenError } = useEnsureTokenLoaded(address);
+const transferColumns: Column<TransferRow>[] = [
+  {
+    key: "hash",
+    header: "Tx hash",
+    render: (row) => (
+      <Flex as="span" display="inline-flex" align="center" gap="1">
+        <ChakraLink asChild color="explorer.link">
+          <NextLink href={TRANSACTION_DETAILS(row.hash)}>{getMiddleEllipsis(row.hash, { beginning: 10, ending: 6 })}</NextLink>
+        </ChakraLink>
+        <CopyButton value={row.hash} label="Copy hash" />
+      </Flex>
+    ),
+  },
+  { key: "from", header: "From", render: (row) => <Party address={row.from} /> },
+  { key: "to", header: "To", render: (row) => <Party address={row.to} /> },
+  { key: "amount", header: "Amount", align: "end", render: (row) => tokens(row.amount) },
+  { key: "age", header: "Age", align: "end", render: (row) => <Text color="explorer.muted">{timeAgo(row.timestamp)}</Text> },
+];
 
-  // Show loading state while router is not ready or token is loading
-  if (!router.isReady || !address) {
-    return (
-      <Center h="200px">
-        <Spinner size="lg" />
-      </Center>
-    );
-  }
+// Holders are EVM accounts, which carry no module labels.
+const evmHolderColumns = holderColumns.filter((column) => column.key !== "label");
 
-  if (tokenError) {
-    return (
-      <Center h="200px">
-        <VStack>
-          <Text color="red.500" fontSize="lg" fontWeight="bold">
-            Error loading token
-          </Text>
-          <Text color="gray.500">{tokenError}</Text>
-        </VStack>
-      </Center>
-    );
-  }
+const TRANSFER_VIEWS: Array<{ value: TransferKind; label: string }> = [
+  { value: "transfers", label: "Transfers" },
+  { value: "mints", label: "Mints" },
+  { value: "burns", label: "Burns" },
+];
+
+export default function Erc20Details() {
+  const t = useErc20Details();
+  const [tab, setTab] = useState("holders");
+  const [transferView, setTransferView] = useState<TransferKind>("transfers");
+  const [stakingView, setStakingView] = useState<"delegations" | "unbondings">("delegations");
+  const symbol = t.asset?.symbol ?? "ERC-20";
+  const price = t.asset?.price ?? 0;
+  const activity = t.transfers[transferView];
+  const activityCount = TRANSFER_VIEWS.reduce((sum, view) => sum + t.transfers[view.value].count, 0);
+
+  if (!t.exists) return <NotFound />;
 
   return (
-    <Grid templateColumns="repeat(6, 1fr)" gap={"1.5rem"} minH="auto">
-      <GridItem
-        colSpan={6}
-        direction={"row"}
-        bg={{ base: "white", _dark: "black" }}
-        p={6}
-        height={"auto"}
-        borderRadius="lg"
-        bgColor={"#FAFBFC"}
-        maxH={"300px"}
-      >
-        <Flex justify="space-between">
-          <HStack>
-            <Avatar src={erc20Details?.image} size="xl" />
-            <VStack align="flex-start" gap={0}>
-              <Text fontSize="lg" fontWeight="bold">
-                {`${erc20Details?.name} (${erc20Details?.symbol})`}
-              </Text>
-              <Text color="gray.500">Token Overview</Text>
-            </VStack>
-          </HStack>
-        </Flex>
-      </GridItem>
-      <Erc20Overview address={address} metadata={erc20Details}/>
-      <Center>
-        <Tabs.Root
-          value={selectedTab}
-          onValueChange={(e) => setSelectedTab(e.value)}
-          size="md"
-          variant={"subtle"}
-        >
-          <Tabs.List bg={{ base: "white", _dark: "black" }}>
-            <Tabs.Trigger
-              _selected={{
-                bg: "#707D8A",
-                color: "white",
-                borderRadius: "100px",
-                border: "none",
-              }}
-              p={4}
-              w={{ base: "full", lg: "150px" }}
-              value="holders"
-            >
-              <Center w={"full"}>Holders</Center>
-            </Tabs.Trigger>
-            <Tabs.Trigger
-              _selected={{
-                bg: "#707D8A",
-                color: "white",
-                borderRadius: "100px",
-                border: "none",
-              }}
-              p={4}
-              w={{ base: "full", lg: "150px" }}
-              value="transactions"
-            >
-              <Center w={"full"}>Transactions</Center>
-            </Tabs.Trigger>
-            <Tabs.Trigger
-              _selected={{
-                bg: "#707D8A",
-                color: "white",
-                borderRadius: "100px",
-                border: "none",
-              }}
-              p={4}
-              w={{ base: "full", lg: "150px" }}
-              value="staking"
-            >
-              <Center w={"full"}>Staking</Center>
-            </Tabs.Trigger>
-            <Tabs.Indicator bg="#707D8A" borderRadius="100px" />
-          </Tabs.List>
-        </Tabs.Root>
-      </Center>
-      <GridItem
-        borderRadius="lg"
-        colSpan={6}
-        bg={{ base: "#FAFBFC", _dark: "#0F0F0F" }}
-      >
-        <Tabs.Root
-          value={selectedTab}
-          onValueChange={(e) => setSelectedTab(e.value)}
-          size="md"
-        >
-          <Tabs.ContentGroup>
-            <Tabs.Content p={0} value="holders">
-              <Holders address={address} />
-            </Tabs.Content>
-            <Tabs.Content
-              bg={{ base: "#FAFBFC", _dark: "#0F0F0F" }}
-              p={0}
-              value="transactions"
-            >
-              <Activities address={address} />
-            </Tabs.Content>
-            <Tabs.Content
-              bg={{ base: "#FAFBFC", _dark: "#0F0F0F" }}
-              p={0}
-              value="staking"
-            >
-              <Staking address={address} />
-            </Tabs.Content>
-          </Tabs.ContentGroup>
-        </Tabs.Root>
-      </GridItem>
-    </Grid>
-  );
-};
+    <Stack gap="5">
+      <PageTitle
+        crumbs={[{ label: "Assets", href: "/assets" }, { label: symbol }]}
+        title={
+          <Flex as="span" align="center" gap="3">
+            {t.asset?.image ? <Image src={t.asset.image} alt="" boxSize="40px" borderRadius="full" /> : <ValidatorAvatar name={symbol} size="40px" />}
+            {t.asset?.name ?? symbol}
+          </Flex>
+        }
+        subtitle="Token overview"
+        actions={
+          <Flex gap="2">
+            <StatusTag tone="accent">{symbol}</StatusTag>
+            <StatusTag tone="neutral">ERC-20</StatusTag>
+            {t.stakeable && <StatusTag tone="success">Stakeable</StatusTag>}
+          </Flex>
+        }
+      />
 
-export default Erc20Details;
+      <SimpleGrid columns={{ base: 1, md: 2, xl: 4 }} gap="4">
+        <StatCard
+          label="Price"
+          loading={t.loading}
+          value={price ? `$${numeral(price).format("0,0.[000000]")}` : "—"}
+          rows={[
+            { label: "Market cap", value: price ? `$${numeral(price * t.supply).format("0,0.00")}` : "—" },
+            { label: "Contract", value: <ContractLink address={t.address} /> },
+          ]}
+        />
+        <StatCard
+          label="Total supply"
+          loading={t.loading}
+          value={tokens(t.supply)}
+          suffix={symbol}
+          rows={[
+            { label: "Decimals", value: t.asset?.decimals ?? 18 },
+            { label: "Symbol", value: symbol },
+          ]}
+        />
+        <StatCard
+          label="Holders"
+          loading={t.loading}
+          value={numeral(t.holderCount).format("0,0")}
+          rows={[
+            { label: "Top holder share", value: formatPercent(t.topHolderShare) },
+            { label: "Top holder", value: t.topHolder ? <AddressLink address={t.topHolder} beginning={8} ending={6} /> : "—" },
+          ]}
+        />
+        <StatCard
+          label="Bonded"
+          loading={t.loading}
+          value={tokens(t.bonded)}
+          suffix={symbol}
+          rows={[
+            { label: "Bonded ratio", value: formatPercent(t.supply ? (t.bonded / t.supply) * 100 : 0) },
+            { label: "Delegations", value: numeral(t.delegations.count).format("0,0") },
+          ]}
+        />
+      </SimpleGrid>
+
+      <Grid templateColumns={{ base: "1fr", lg: "1fr 444px" }} gap="5">
+        <SupplyComposition
+          supply={t.supply}
+          bonded={t.bonded}
+          unbonding={t.unbonding}
+          symbol={symbol}
+          footer={{ label: "Token transfers", value: numeral(activityCount).format("0,0") }}
+        />
+        <TokenInformation
+          rows={[
+            ["Contract", <ContractLink key="contract" address={t.address} beginning={10} ending={8} />],
+            ["Denom", <Text key="denom" title={t.denom}>{getMiddleEllipsis(t.denom, { beginning: 12, ending: 6 })}</Text>],
+            ["Symbol", symbol],
+            ["Name", t.asset?.name ?? "—"],
+            ["Decimals", String(t.asset?.decimals ?? 18)],
+            ["Type", "ERC-20"],
+            ["Stakeable", t.stakeable ? "Yes" : "No"],
+          ]}
+        />
+      </Grid>
+
+      <Panel>
+        <ExplorerTabs
+          value={tab}
+          onChange={setTab}
+          items={[
+            { value: "holders", label: "Holders", count: t.holders.count },
+            { value: "transfers", label: "Transfers", count: activityCount },
+            { value: "staking", label: "Staking", count: t.delegations.count },
+          ]}
+        >
+          <TabPanel value="holders" pt="0">
+            <DataTable columns={evmHolderColumns} rows={t.holders.rows} rowKey={(row) => row.address} loading={t.holders.loading} emptyText="No holders" />
+            <Paged count={t.holders.count} page={t.holders.page} setPage={t.holders.setPage} label="holders" />
+          </TabPanel>
+          <TabPanel value="transfers" pt="2">
+            <Segmented
+              value={transferView}
+              onChange={setTransferView}
+              items={TRANSFER_VIEWS.map((view) => ({ ...view, count: t.transfers[view.value].count }))}
+            />
+            <DataTable
+              columns={transferColumns}
+              rows={activity.rows}
+              rowKey={(row) => `${row.hash}:${row.from}:${row.to}:${row.amount}`}
+              loading={activity.loading}
+              emptyText={`No ${transferView}`}
+            />
+            <Paged count={activity.count} page={activity.page} setPage={activity.setPage} label={transferView} />
+          </TabPanel>
+          <TabPanel value="staking" pt="2">
+            <Segmented
+              value={stakingView}
+              onChange={setStakingView}
+              items={[
+                { value: "delegations", label: "Delegations", count: t.delegations.count },
+                { value: "unbondings", label: "Unbondings", count: t.unbondings.count },
+              ]}
+            />
+            {stakingView === "delegations" ? (
+              <>
+                <DataTable columns={stakeColumns(false)} rows={t.delegations.rows} rowKey={(row) => `${row.address}:${row.validator}`} loading={t.delegations.loading} emptyText="No delegations" />
+                <Paged count={t.delegations.count} page={t.delegations.page} setPage={t.delegations.setPage} label="delegations" />
+              </>
+            ) : (
+              <>
+                <DataTable columns={stakeColumns(true)} rows={t.unbondings.rows} rowKey={(row) => `${row.address}:${row.validator}:${row.height}`} loading={t.unbondings.loading} emptyText="No unbondings" />
+                <Paged count={t.unbondings.count} page={t.unbondings.page} setPage={t.unbondings.setPage} label="unbondings" />
+              </>
+            )}
+          </TabPanel>
+        </ExplorerTabs>
+      </Panel>
+    </Stack>
+  );
+}

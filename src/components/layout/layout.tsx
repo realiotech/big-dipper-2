@@ -1,8 +1,7 @@
-import { Box, Flex, VStack, useBreakpointValue } from "@chakra-ui/react";
-import Sidebar from "./sidebar";
+import { Box, Flex, Skeleton, Stack } from "@chakra-ui/react";
 import Header from "./header";
 import Footer from "./footer";
-import { Skeleton } from "../ui/skeleton";
+import PageHeader from "./page-header";
 import { useValidatorRecoil } from "@/recoil/validators/hooks";
 import { useAssetRecoil } from "@/recoil/asset";
 import { useTokenRecoil } from "@/recoil/erc20";
@@ -11,35 +10,23 @@ export default function Layout({ children }) {
   useAssetRecoil();
   useTokenRecoil();
   const { loading } = useValidatorRecoil();
-  const isMobile = useBreakpointValue({ base: true, lg: false });
+
   return (
-    <Flex
-      bgColor={{base: "white", _dark: "black"}}
-      minH="100vh"
-      color={{base: "black", _dark: "white"}}
-      pt={{ base: "15px", md: "50px" }}
-      px={{ base: "15px", md: "50px" }}
-    >
-      {!isMobile ? (
-        <>
-          <Sidebar />
-          <VStack w="full">
-            <Header />
-            {loading ? (
-              <Skeleton height={400} />
-            ) : (
-              <Box w="full">{children}</Box>
-            )}
-            <Footer />
-          </VStack>
-        </>
-      ) : (
-        <VStack w="full">
-          <Header />
-          {loading ? <Skeleton height={400} /> : <Box w="full">{children}</Box>}
-          <Footer />
-        </VStack>
-      )}
+    <Flex direction="column" minH="100vh" bg="explorer.page" color="explorer.text">
+      <Header />
+      <Box as="main" flex="1" w="full" maxW="1440px" mx="auto" px={{ base: "4", md: "12" }} py={{ base: "6", md: "10" }}>
+        {/* Pages that are not redesigned yet have no title of their own. */}
+        <PageHeader />
+        {loading ? (
+          <Stack gap="4">
+            <Skeleton h="160px" />
+            <Skeleton h="320px" />
+          </Stack>
+        ) : (
+          children
+        )}
+      </Box>
+      <Footer />
     </Flex>
   );
 }

@@ -175,24 +175,24 @@ export default function Delegations({ data, page, setPage, displayMode, handleSo
 
 export const SkeletonItem = ({ index }) => {
   return (
-    <Table.Row key={`transaction-${index}`}>
+    <Table.Row bg={{ base: "white", _dark: "#262626" }} key={`transaction-${index}`}>
       <Table.Cell py="26px">
-        <Skeleton h={"10px"} w="full" />
+        <Skeleton bg={{ base: "gray.200", _dark: "#4f4f4fff" }} h={"10px"} w="full" />
       </Table.Cell>
       <Table.Cell py="26px">
-        <Skeleton h={"10px"} w="full" />
+        <Skeleton bg={{ base: "gray.200", _dark: "#4f4f4fff" }} h={"10px"} w="full" />
       </Table.Cell>
       <Table.Cell py="26px">
-        <Skeleton h={"10px"} w="full" />
+        <Skeleton bg={{ base: "gray.200", _dark: "#4f4f4fff" }} h={"10px"} w="full" />
       </Table.Cell>
       <Table.Cell display={{ base: "none", md: "table-cell" }} py="26px">
-        <Skeleton h={"10px"} w="full" />
+        <Skeleton bg={{ base: "gray.200", _dark: "#4f4f4fff" }} h={"10px"} w="full" />
       </Table.Cell>
       <Table.Cell display={{ base: "none", lg: "table-cell" }} py="26px">
-        <Skeleton h={"10px"} w="full" />
+        <Skeleton bg={{ base: "gray.200", _dark: "#4f4f4fff" }} h={"10px"} w="full" />
       </Table.Cell>
       <Table.Cell display={{ base: "none", lg: "table-cell" }} py="10px">
-        <Skeleton h={"10px"} w="full" />
+        <Skeleton bg={{ base: "gray.200", _dark: "#4f4f4fff" }} h={"10px"} w="full" />
       </Table.Cell>
     </Table.Row>
   );

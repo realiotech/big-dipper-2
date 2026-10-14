@@ -10,7 +10,11 @@
     "type-check": "tsc",
     "lint": "eslint . --ext .ts,.tsx,.js,.jsx",
     "test": "NODE_ENV=test jest",
-    "graphql:codegen": "graphql-codegen"
+    "graphql:codegen": "graphql-codegen",
+    "monitor:migrate": "tsx scripts/monitor-migrate.ts",
+    "monitor:worker": "tsx scripts/monitor-worker.ts",
+    "monitor:once": "tsx scripts/monitor-worker.ts --once",
+    "monitor:prune": "tsx scripts/monitor-prune.ts"
   },
   "dependencies": {
     "@apollo/client": "^3.7.14",
@@ -31,6 +35,7 @@
     "add": "^2.0.6",
     "apollo-link-rest": "^0.9.0",
     "bech32": "^2.0.0",
+    "better-sqlite3": "^11.10.0",
     "big.js": "^6.2.1",
     "chart.js": "^4.4.7",
     "color": "^4.2.3",
@@ -38,6 +43,7 @@
     "copy-to-clipboard": "^3.3.3",
     "cosmjs-types": "^0.9.0",
     "dayjs": "^1.11.7",
+    "dotenv": "^16.0.3",
     "ethereumjs-util": "^7.1.5",
     "framer-motion": "^10.12.8",
     "graphql": "^16.6.0",
@@ -74,6 +80,7 @@
     "timeago.js": "^4.0.2",
     "tslib": "^2.5.0",
     "tss-react": "^4.8.3",
+    "tsx": "^4.23.13",
     "typanion": "^3.12.1",
     "usehooks-ts": "^2.9.1",
     "ws": "^8.13.0",
@@ -115,7 +122,6 @@
     "@typescript-eslint/eslint-plugin": "^5.59.2",
     "@typescript-eslint/parser": "^5.59.2",
     "csstype": "^3.1.2",
-    "dotenv": "^16.0.3",
     "eslint": "^8.40.0",
     "eslint-config-airbnb": "^19.0.4",
     "eslint-config-next": "^13.4.1",
@@ -142,6 +148,6 @@
   },
   "overrides": {
     "tar": "^7.5.22",
-    "shell-quote": "^1.10.0"
+    "shell-quote": "^1.12.0"
   }
 }

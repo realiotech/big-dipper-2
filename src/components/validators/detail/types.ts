@@ -5,6 +5,7 @@ export interface OverviewType {
     description: string;
     website: string;
     denom: string;
+    selfStake: number;
 }
 
 export interface StatusType {

@@ -1,5 +1,6 @@
 import type { NextApiRequest, NextApiResponse } from "next";
 import { fetchUsdPrices } from "@/utils/spot_prices";
+import { chainConfig } from '@/configs';
 
 const ASSET_METADATA = [
     {
@@ -30,7 +31,8 @@ const ASSET_METADATA = [
         price: 1
     },
     {
-        denom: 'erc20:0x9b81cFe34C25131DaE2248c5e508829a3b52518b',
+        // The DSTRX contract differs per network; the denom keeps its checksum casing.
+        denom: `erc20:${chainConfig.dstrxAddress}`,
         symbol: 'DSTRX',
         name: 'District token',
         description: 'Districts token for LandBank',
