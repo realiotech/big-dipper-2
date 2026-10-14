@@ -39,7 +39,7 @@ const httpLink = createHttpLink({
   }
 });
 
-const wsLink = new WebSocketLink({
+const wsLink = typeof window !== 'undefined' ? new WebSocketLink({
   uri: process.env.NEXT_PUBLIC_GRAPHQL_WS ?? 'wss://localhost:3000',
   options: {
     reconnect: true,
@@ -53,7 +53,7 @@ const wsLink = new WebSocketLink({
     },
   },
   webSocketImpl: WebSocket,
-});
+}) : null;
 
 const link = typeof window !== 'undefined' ? split(
   ({ query }) => {
