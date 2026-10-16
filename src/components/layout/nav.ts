@@ -50,6 +50,8 @@ export const EXTERNAL_LINKS = [
   { label: "realio.network", href: "https://realio.network" },
   { label: "Docs", href: "https://docs.realio.network/" },
   { label: "GitHub", href: "https://github.com/realiotech" },
+  { label: "X", href: "https://x.com/realio_network" },
+  { label: "Telegram", href: "https://t.me/realio_network_official" },
 ];
 
 // Routes that live outside their nav item's path: ERC-20 token pages belong to "All assets".

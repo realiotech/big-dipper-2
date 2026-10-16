@@ -23,6 +23,7 @@ import { useKeplrConnect } from "@/recoil/wallet/hooks";
 import { useRecoilValue } from "recoil";
 import { atomState } from "@/recoil/wallet/atom";
 import styles from "./wallet-popover.module.css";
+import { SoonTag } from "./brand";
 
 const WalletPopover = ({ fullWidth = false }: { fullWidth?: boolean }) => {
   const [selectedWallet, setSelectedWallet] = useState<string | null>(null);
@@ -165,6 +166,7 @@ const WalletPopover = ({ fullWidth = false }: { fullWidth?: boolean }) => {
                         {wallet.label}
                       </Text>
                     </HStack>
+                    {wallet.disabled && <SoonTag label="Coming soon" />}
                     {selectedWallet === wallet.id && (
                       <FaCheckCircle className="spin" color="green" />
                     )}
