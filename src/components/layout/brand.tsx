@@ -18,9 +18,9 @@ export const Logo = () => (
   </ChakraLink>
 );
 
-export const SoonTag = () => (
-  <Text as="span" fontSize="10px" color="explorer.muted" borderWidth="1px" borderColor="explorer.border" borderRadius="4px" px="1.5">
-    Soon
+export const SoonTag = ({ label = "Soon" }: { label?: string }) => (
+  <Text as="span" fontSize="10px" color="explorer.muted" borderWidth="1px" borderColor="explorer.border" borderRadius="4px" px="1.5" whiteSpace="nowrap">
+    {label}
   </Text>
 );
 

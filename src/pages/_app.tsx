@@ -51,8 +51,9 @@ function App({
       >
         <RecoilRoot>
           <ChakraProvider value={system}>
-            <ColorModeProvider>
-            <ThemeProvider attribute="class" disableTransitionOnChange>
+            {/* Dark is the default for first-time visitors; the toggle still switches and is remembered. */}
+            <ColorModeProvider defaultTheme="dark">
+            <ThemeProvider attribute="class" defaultTheme="dark" disableTransitionOnChange>
               <Layout>
                 <Component {...pageProps} />
               </Layout>

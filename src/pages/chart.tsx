@@ -111,19 +111,19 @@ export default function ChartsPage() {
         </SimpleGrid>
 
         <Grid templateColumns={{ base: "1fr", lg: "1fr 1fr" }} gap="5">
-          <ChartPanel title="RIO price" subtitle={`${price.points.length} hourly points`} loading={price.loading}>
+          <ChartPanel title="RIO price" subtitle={`Last ${price.points.length} hourly price observations`} loading={price.loading}>
             <Line data={line(price.points.map((p) => shortTime(p.time)), price.points.map((p) => p.price), theme.series[0])} options={lineOptions(usd)} />
           </ChartPanel>
-          <ChartPanel title="Market cap" subtitle="Same window as the price series" loading={price.loading}>
+          <ChartPanel title="Market cap" subtitle={`Based on the last ${price.points.length} hourly price observations`} loading={price.loading}>
             <Line data={line(price.points.map((p) => shortTime(p.time)), price.points.map((p) => p.marketCap), theme.series[2])} options={lineOptions(usd)} />
           </ChartPanel>
-          <ChartPanel title="Block time" subtitle={`Hourly average, most recent ${blockTime.points.length} hours`} loading={blockTime.loading}>
+          <ChartPanel title="Block time" subtitle={`Hourly average · Last ${blockTime.points.length} hours`} loading={blockTime.loading}>
             <Line
               data={line(blockTime.points.map((p) => shortTime(p.time)), blockTime.points.map((p) => Number(p.seconds.toFixed(3))), theme.series[1])}
               options={lineOptions((v) => `${numeral(v).format("0.00")}s`)}
             />
           </ChartPanel>
-          <ChartPanel title="Voting power by staking token" subtitle="Realio bonds several tokens, not one" loading={validators.loading}>
+          <ChartPanel title="Voting power by staking token" subtitle="Realio Network enables multiple tokens to be staked to secure the network and participate in consensus." loading={validators.loading}>
             <Flex h="full" align="center" justify="center" gap="8" direction={{ base: "column", sm: "row" }}>
               <Box boxSize="170px">
                 <Doughnut
@@ -152,7 +152,7 @@ export default function ChartsPage() {
           </ChartPanel>
         </Grid>
 
-        <ChartPanel title="Validator concentration" subtitle="Top 20 of the active set by voting power" loading={validators.loading} height="260px">
+        <ChartPanel title="Validator concentration" subtitle="Voting power distribution among the top 20 active validators." loading={validators.loading} height="260px">
           <Bar
             data={{
               labels: validators.top.map((v, i) => profiles[i]?.name && profiles[i].name !== v.validator ? profiles[i].name : `#${i + 1}`),
