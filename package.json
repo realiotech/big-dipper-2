@@ -142,6 +142,6 @@
   },
   "overrides": {
     "tar": "^7.5.22",
-    "shell-quote": "^1.10.0"
+    "shell-quote": "^1.12.0"
   }
 }
