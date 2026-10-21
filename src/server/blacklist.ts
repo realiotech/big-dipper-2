@@ -26,7 +26,8 @@ const CHUNK = 5000;
 const FRESH_MS = 5 * 60 * 1000;
 const MAX_TOKENS = 10;
 
-// Same indexer as the explorer's pages, read with the server-only admin secret.
+// Same indexer as the explorer's pages. The admin secret is optional: without it
+// reads run as the public role, which is enough now that results are paged.
 const indexer = async <T>(query: string, variables: Record<string, unknown>): Promise<T> => {
   const url = process.env.NEXT_PUBLIC_GRAPHQL_URL;
   if (!url) throw new Error('NEXT_PUBLIC_GRAPHQL_URL is not configured');
@@ -45,9 +46,27 @@ const indexer = async <T>(query: string, variables: Record<string, unknown>): Pr
   return body.data;
 };
 
-const BALANCES = `query BlacklistBalances($addresses: [String!]!, $denom: String!) {
-  balance(where: {address: {_in: $addresses}, denom: {_eq: $denom}, amount: {_neq: "0"}}) { address amount }
+// Rows asked for per request. Without the admin secret Hasura caps each read
+// (1000 for the explorer role, 200 for balance under the old public role), so
+// results are paged and a page is only "last" when it comes back empty.
+const PAGE = 1000;
+
+const BALANCES = `query BlacklistBalances($addresses: [String!]!, $denom: String!, $limit: Int!, $offset: Int!) {
+  balance(where: {address: {_in: $addresses}, denom: {_eq: $denom}, amount: {_neq: "0"}}, order_by: {address: asc}, limit: $limit, offset: $offset) { address amount }
 }`;
+
+/** Every non-zero balance of `denom` among `chunk`, read page by page. */
+const chunkHolders = async (chunk: string[], denom: string) => {
+  const rows: BlacklistedHolder[] = [];
+  for (let offset = 0; ; ) {
+    // Pages depend on each other's offsets, so they are read one at a time.
+    // eslint-disable-next-line no-await-in-loop
+    const page = (await indexer<{ balance: BlacklistedHolder[] }>(BALANCES, { addresses: chunk, denom, limit: PAGE, offset })).balance;
+    if (!page.length) return rows;
+    rows.push(...page);
+    offset += page.length;
+  }
+};
 
 // Amounts are base-unit integers, too large for a float to order exactly.
 const byAmountDesc = (a: BlacklistedHolder, b: BlacklistedHolder) => {
@@ -102,8 +121,8 @@ const fetchHolders = async (denom: string) => {
   if (denom.startsWith('erc20:')) return fetchErc20Holders(denom);
   const list = [...addresses()];
   const chunks = Array.from({ length: Math.ceil(list.length / CHUNK) }, (_, i) => list.slice(i * CHUNK, (i + 1) * CHUNK));
-  const results = await Promise.all(chunks.map((chunk) => indexer<{ balance: BlacklistedHolder[] }>(BALANCES, { addresses: chunk, denom })));
-  return results.flatMap((result) => result.balance).sort(byAmountDesc);
+  const results = await Promise.all(chunks.map((chunk) => chunkHolders(chunk, denom)));
+  return results.flat().sort(byAmountDesc);
 };
 
 type Entry = { holders: BlacklistedHolder[]; at: number; refresh: Promise<BlacklistedHolder[]> | null };
