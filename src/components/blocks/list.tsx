@@ -21,7 +21,7 @@ const blockLink = (height: number) => (
 const columns: Column<BlockType>[] = [
   { key: "height", header: "Height", width: "130px", render: (row) => blockLink(row.height) },
   { key: "age", header: "Age", width: "150px", render: (row) => <Text color="explorer.muted">{timeAgo(row.timestamp)}</Text> },
-  { key: "proposer", header: "Proposed by", render: (row) => <ValidatorName address={row.proposer} /> },
+  { key: "proposer", header: "Validator", render: (row) => <ValidatorName address={row.proposer} /> },
   { key: "txs", header: "Txns", align: "end", width: "80px", render: (row) => numeral(row.txs).format("0,0") },
   { key: "gas", header: "Gas used", align: "end", width: "120px", render: (row) => numeral(row.gasUsed).format("0,0") },
   {
