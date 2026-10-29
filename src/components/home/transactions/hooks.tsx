@@ -1,37 +1,31 @@
 import { useState } from 'react';
 import {
-  useTransactionsListenerSubscription,
-  TransactionsListenerSubscription,
+  useLatestTransactionsListenerSubscription,
+  LatestTransactionsListenerSubscription,
 } from '@/graphql/types/general_types';
+import { toTxRow } from '@/utils/tx_label';
 import { TransactionsState } from './types';
 
-export const useTransactions = () => {
+export const useTransactions = (limit = 8) => {
   const [state, setState] = useState<TransactionsState>({
+    loading: true,
     items: [],
   });
 
   // ================================
   // txs subscription
   // ================================
-  useTransactionsListenerSubscription({
-    onSubscriptionData: (data) => {
+  useLatestTransactionsListenerSubscription({
+    variables: { limit },
+    onData: ({ data }) => {
       setState({
-        items: formatTransactions(data.subscriptionData.data),
+        loading: false,
+        items: data.data ? formatTransactions(data.data) : [],
       });
     },
   });
 
-  const formatTransactions = (data: TransactionsListenerSubscription) => {
-    return data.transactions.map((x) => {
-      return ({
-        height: x.height,
-        hash: x.hash,
-        success: x.success,
-        timestamp: x.block.timestamp,
-        messages: x.messages.length,
-      });
-    });
-  };
+  const formatTransactions = (data: LatestTransactionsListenerSubscription) => data.transactions.map(toTxRow);
 
   return {
     state,

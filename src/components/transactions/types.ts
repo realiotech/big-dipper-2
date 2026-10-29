@@ -1,11 +1,4 @@
-export type TransactionsState = {
-  loading: boolean;
-  exists: boolean;
-  hasNextPage: boolean;
-  isNextPageLoading: boolean;
-  items: Transactions[];
-  oldestHeight: number | null;
-}
+import type { TxLabel } from '@/utils/tx_label';
 
 export interface OverviewType {
   hash: string;
@@ -29,4 +22,6 @@ export interface TransactionState {
     viewRaw: boolean;
     items: unknown[];
   };
+  rawMessages: Array<Record<string, any>>;
+  label?: TxLabel;
 }

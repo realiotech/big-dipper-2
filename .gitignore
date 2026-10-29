@@ -5,6 +5,7 @@
 
 # Node artifact files
 node_modules/
+.monitor-data/
 dist/
 yarn.lock
 # Compiled Java class files
@@ -57,3 +58,4 @@ Thumbs.db
 test.js
 
 .next
+*.tsbuildinfo

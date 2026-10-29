@@ -1,11 +1,8 @@
-export type TransactionType = {
-  height: number;
-  hash: string;
-  success: boolean;
-  timestamp: string;
-  messages: number;
-}
+import type { TxRow } from "@/utils/tx_label";
+
+export type TransactionType = TxRow;
 
 export type TransactionsState = {
+  loading: boolean;
   items: TransactionType[]
 }

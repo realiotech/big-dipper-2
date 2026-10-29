@@ -1,176 +1,39 @@
-import numeral from 'numeral';
-import * as R from 'ramda';
-import { useCallback, useState } from 'react';
-import { chainConfig } from '@/configs';
-import { ParamsQuery, useParamsQuery } from '@/graphql/types/general_types';
-import { DistributionParams, GovParams, MintParams, SlashingParams, StakingParams } from '@/models';
-import type { ParamsState } from '@/components/params/types';
-import { formatToken } from '@/utils/format_token';
+import { useEffect, useState } from 'react';
+import { useChainParamsQuery } from '@/graphql/types/general_types';
 
-const { primaryTokenUnit } = chainConfig;
-
-const initialState: ParamsState = {
-  loading: true,
-  exists: true,
-  staking: null,
-  slashing: null,
-  minting: null,
-  distribution: null,
-  gov: null,
+/** GET a chain REST endpoint (NEXT_PUBLIC_RPC_API); `null` until loaded or on failure. */
+export const useChainRest = <T,>(path: string) => {
+  const [data, setData] = useState<T | null>(null);
+  useEffect(() => {
+    fetch(`${process.env.NEXT_PUBLIC_RPC_API}${path}`)
+      .then((res) => (res.ok ? res.json() : null))
+      .then(setData)
+      .catch(() => setData(null));
+  }, [path]);
+  return data;
 };
 
-// ================================
-// staking
-// ================================
-const formatStaking = (data: ParamsQuery) => {
-  if (data.stakingParams.length) {
-    const stakingParamsRaw = StakingParams.fromJson(data?.stakingParams?.[0]?.params ?? {});
-    return {
-      bondDenom: stakingParamsRaw.bondDenom,
-      unbondingTime: stakingParamsRaw.unbondingTime,
-      maxEntries: stakingParamsRaw.maxEntries,
-      historicalEntries: stakingParamsRaw.historicalEntries,
-      maxValidators: stakingParamsRaw.maxValidators,
-    };
-  }
+type Module = { params: Record<string, any>; height: number } | null;
 
-  return null;
-};
+export const useChainParams = () => {
+  const { data, loading } = useChainParamsQuery();
+  const pick = (rows?: Array<{ params: any; height: any }>): Module =>
+    rows?.[0] ? { params: rows[0].params ?? {}, height: Number(rows[0].height) } : null;
 
-// ================================
-// slashing
-// ================================
-const formatSlashing = (data: ParamsQuery) => {
-  if (data.slashingParams.length) {
-    const slashingParamsRaw = SlashingParams.fromJson(data?.slashingParams?.[0]?.params ?? {});
-    return {
-      downtimeJailDuration: slashingParamsRaw.downtimeJailDuration,
-      minSignedPerWindow: slashingParamsRaw.minSignedPerWindow,
-      signedBlockWindow: slashingParamsRaw.signedBlockWindow,
-      slashFractionDoubleSign: slashingParamsRaw.slashFractionDoubleSign,
-      slashFractionDowntime: slashingParamsRaw.slashFractionDowntime,
-    };
-  }
-  return null;
-};
-
-// ================================
-// minting
-// ================================
-const formatMint = (data: ParamsQuery) => {
-  if (data.mintParams.length) {
-    const mintParamsRaw = MintParams.fromJson(data?.mintParams?.[0]?.params ?? {});
-
-    return {
-      blocksPerYear: mintParamsRaw.blocksPerYear,
-      goalBonded: mintParamsRaw.goalBonded,
-      inflationMax: mintParamsRaw.inflationMax,
-      inflationMin: mintParamsRaw.inflationMin,
-      inflationRateChange: mintParamsRaw.inflationRateChange,
-      mintDenom: mintParamsRaw.mintDenom,
-    };
-  }
-
-  return null;
-};
-
-// ================================
-// distribution
-// ================================
-
-const formatDistribution = (data: ParamsQuery) => {
-  if (data.distributionParams.length) {
-    const distributionParamsRaw = DistributionParams.fromJson(
-      data?.distributionParams?.[0]?.params ?? {}
-    );
-    return {
-      baseProposerReward: distributionParamsRaw.baseProposerReward,
-      bonusProposerReward: distributionParamsRaw.bonusProposerReward,
-      communityTax: distributionParamsRaw.communityTax,
-      withdrawAddressEnabled: distributionParamsRaw.withdrawAddressEnabled,
-    };
-  }
-
-  return null;
-};
-
-// ================================
-// gov
-// ================================
-
-const formatGov = (data: ParamsQuery) => {
-  if (data.govParams.length) {
-    const govParamsRaw = GovParams.fromJson(data?.govParams?.[0] ?? {});
-    return {
-      minDeposit: formatToken(
-        govParamsRaw.params.minDeposit?.[0]?.amount ?? 0,
-        govParamsRaw.params.minDeposit?.[0]?.denom ?? primaryTokenUnit
-      ),
-      maxDepositPeriod: govParamsRaw.params.maxDepositPeriod,
-      quorum: numeral(numeral(govParamsRaw.params.quorum).format('0.[00]')).value() ?? 0,
-      threshold: numeral(numeral(govParamsRaw.params.threshold).format('0.[00]')).value() ?? 0,
-      vetoThreshold:
-        numeral(numeral(govParamsRaw.params.vetoThreshold).format('0.[00]')).value() ?? 0,
-      votingPeriod: govParamsRaw.params.votingPeriod,
-      minDepositRatio: numeral(numeral(govParamsRaw.params.minDepositRatio).format('0.[00]')).value() ?? 0,
-      minInitialDepositRatio: numeral(numeral(govParamsRaw.params.minInitialDepositRatio).format('0.[00]')).value() ?? 0,
-      proposalCancelRatio: numeral(numeral(govParamsRaw.params.proposalCancelRatio).format('0.[00]')).value() ?? 0,
-      expeditedMinDeposit: formatToken(
-        govParamsRaw.params.expeditedMinDeposit?.[0]?.amount ?? 0,
-        govParamsRaw.params.expeditedMinDeposit?.[0]?.denom ?? primaryTokenUnit
-      ),
-      expeditedThreshold: numeral(numeral(govParamsRaw.params.expeditedThreshold).format('0.[00]')).value() ?? 0,
-      expeditedVotingPeriod: numeral(numeral(govParamsRaw.params.expeditedVotingPeriod).format('0.[00]')).value() ?? 0,
-      burnVoteVeto: govParamsRaw.params.burnVoteVeto,
-    };
-  }
-
-  return null;
-};
-
-const formatParam = (data: ParamsQuery) => {
-  const results: Partial<ParamsState> = {};
-
-  results.staking = formatStaking(data);
-
-  results.slashing = formatSlashing(data);
-
-  results.minting = formatMint(data);
-
-  results.distribution = formatDistribution(data);
-
-  results.gov = formatGov(data);
-
-  return results;
-};
-
-export const useParams = () => {
-  const [state, setState] = useState<ParamsState>(initialState);
-
-  const handleSetState = useCallback((stateChange: (prevState: ParamsState) => ParamsState) => {
-    setState((prevState) => {
-      const newState = stateChange(prevState);
-      return R.equals(prevState, newState) ? prevState : newState;
-    });
-  }, []);
-
-  // ================================
-  // param query
-  // ================================
-  useParamsQuery({
-    onCompleted: (data) => {
-      handleSetState((prevState) => ({
-        ...prevState,
-        loading: false,
-        ...formatParam(data),
-      }));
-    },
-    onError: () => {
-      handleSetState((prevState) => ({ ...prevState, loading: false }));
-    },
-  });
+  const nodeInfo = useChainRest<{
+    default_node_info?: { network?: string; version?: string };
+    application_version?: { version?: string; cosmos_sdk_version?: string };
+  }>('/cosmos/base/tendermint/v1beta1/node_info');
+  const consensus = useChainRest<{ params?: Record<string, unknown> }>('/cosmos/consensus/v1/params');
 
   return {
-    state,
+    loading,
+    staking: pick(data?.staking),
+    slashing: pick(data?.slashing),
+    mint: pick(data?.mint),
+    distribution: pick(data?.distribution),
+    gov: pick(data?.gov),
+    nodeInfo,
+    consensus: consensus?.params ?? null,
   };
 };

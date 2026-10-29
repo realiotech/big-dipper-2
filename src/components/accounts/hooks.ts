@@ -1,8 +1,11 @@
 import { useRouter } from 'next/router';
-import * as R from 'ramda';
-import { useEffect, useState, useCallback } from 'react';
+import { useCallback, useEffect, useMemo, useState } from 'react';
+import { useApolloClient } from '@apollo/client';
 
+import Big from 'big.js';
 import {
+  GetMessagesByAddressExportDocument,
+  GetMessagesByAddressExportQuery,
   GetMessagesByAddressQuery,
   useAccountDelegationsQuery,
   useAccountUndelegationsQuery,
@@ -11,177 +14,136 @@ import {
   useGetMessagesByAddressCountQuery,
 } from '@/graphql/types/general_types';
 
-import { convertMsgsToModels } from '@/components/msg/utils';
-import type { TransactionState } from '@/components/validators/detail/types';
-import { convertMsgType } from '@/utils/convert_msg_type';
+import { txFeeWei, txLabel } from '@/utils/tx_label';
 import { useRecoilValue } from 'recoil';
-import { readFilter } from '@/recoil/transactions_filter';
-import type { OverviewType } from './types';
+import { messageTypesArg, messageWhere, rangeFilePart, TxFilters } from '@/components/explorer/tx_filters';
+import { readAllPages, uniqueByHash } from '@/components/explorer/tx_export';
+import { buildTxCsv, downloadCsv } from '@/utils/csv_export';
+import type { AccountInfo, AccountTransaction, OverviewType } from './types';
 import { realioNetworkToEth, ethToRealionetwork } from "@realiotech/address-generator"
 import { ACCOUNT_DETAILS } from '@/utils/go_to_page'
-import { useEvmBalancesQuery } from '@/graphql/types/subgraph';
-import { PageInfo } from '@/components/layout/pagination';
+import { readAssets } from '@/recoil/asset';
+import { formatTokenByExponent } from '@/utils';
 
-const PAGE_SIZE = 20;
+export const PAGE_SIZE = 20;
+// Staking rewards are paid in RIO.
+const REWARD_DENOM = 'ario';
+const REWARD_DECIMALS = 18;
 
-const formatTransactions = (data: GetMessagesByAddressQuery): Transactions[] => {
+// messages_by_address returns one row per message, so a transaction with
+// several messages for this account appears more than once.
+const formatTransactions = (data?: GetMessagesByAddressQuery): AccountTransaction[] => {
   const seen = new Set<string>();
-  const result: Transactions[] = [];
+  const result: AccountTransaction[] = [];
 
-  for (const x of data.messagesByAddress) {
-    const { transaction } = x;
+  for (const { transaction } of data?.messagesByAddress ?? []) {
     const hash = transaction?.hash ?? '';
-    if (seen.has(hash)) continue;
+    if (!transaction || seen.has(hash)) continue;
     seen.add(hash);
-
-    const messages = convertMsgsToModels(transaction);
-    const msgType = messages.map((eachMsg) => eachMsg?.type ?? 'none type');
-    const convertedMsgType = convertMsgType(msgType);
-
     result.push({
-      height: transaction?.height,
       hash,
-      type: convertedMsgType,
-      messages: {
-        count: messages.length,
-        items: messages,
-      },
-      success: transaction?.success ?? false,
-      timestamp: transaction?.block.timestamp,
+      height: Number(transaction.height),
+      success: transaction.success,
+      timestamp: transaction.block.timestamp,
+      label: txLabel(transaction.messages),
+      fee: txFeeWei(transaction.fee),
     });
   }
-
   return result;
 };
 
-export function useTransactions() {
-  const router = useRouter();
-  const rawAddress = router?.query?.address as string;
-  const address = rawAddress?.startsWith('0x') && rawAddress?.length === 42
-    ? ethToRealionetwork(rawAddress)
-    : rawAddress;
+export function useTransactions(address: string | undefined, filters: TxFilters) {
+  const [page, setPage] = useState(1);
+  const variables = useMemo(
+    () => ({ address: `{${address ?? ''}}`, types: messageTypesArg(filters), where: messageWhere(filters) }),
+    [address, filters]
+  );
+  useEffect(() => setPage(1), [variables]);
 
-  const [state, setState] = useState<TransactionState>({
-    data: [],
-    hasNextPage: false,
-    isNextPageLoading: true,
-    offsetCount: 0,
-  });
-  const [pageInfo, setPageInfo] = useState<PageInfo>({
-    count: 0,
-    pageSize: PAGE_SIZE,
-    currentPage: 1,
-  });
-  const msgTypes = useRecoilValue(readFilter);
-
-  useEffect(() => {
-    setState((prevState) => ({
-      ...prevState,
-      data: [],
-      hasNextPage: false,
-      isNextPageLoading: true,
-      offsetCount: 0,
-    }));
-    setPageInfo({
-      count: 0,
-      pageSize: PAGE_SIZE,
-      currentPage: 1,
-    });
-  }, [address, msgTypes]);
-
-  const handleSetState = useCallback((stateChange: (prevState: TransactionState) => TransactionState) => {
-    setState((prevState) => {
-      const newState = stateChange(prevState);
-      return R.equals(prevState, newState) ? prevState : newState;
-    });
-  }, []);
-
-  // Query to get the exact total count of transactions
-  const countQuery = useGetMessagesByAddressCountQuery({
-    variables: {
-      address: `{${address ?? ''}}`,
-      types: msgTypes,
-    },
-    onCompleted: (data) => {
-      const totalCount = data.messagesByAddressAggregate.aggregate?.count ?? 0;
-      setPageInfo((prevPageInfo) => ({
-        ...prevPageInfo,
-        count: totalCount,
-      }));
-    },
+  const { data: countData } = useGetMessagesByAddressCountQuery({ variables, skip: !address });
+  const { data, loading } = useGetMessagesByAddressQuery({
+    variables: { ...variables, limit: PAGE_SIZE, offset: (page - 1) * PAGE_SIZE },
     skip: !address,
   });
 
-  const transactionQuery = useGetMessagesByAddressQuery({
-    variables: {
-      limit: PAGE_SIZE + 1, // to check if more exist
-      offset: 0,
-      address: `{${address ?? ''}}`,
-      types: msgTypes,
-    },
-    onCompleted: (data) => {
-      const itemsLength = data.messagesByAddress.length;
-      const formattedData = formatTransactions(data);
-      const hasNextPage = itemsLength === PAGE_SIZE + 1;
-
-      const stateChange: TransactionState = {
-        data: formattedData.slice(0, PAGE_SIZE),
-        hasNextPage: hasNextPage,
-        isNextPageLoading: false,
-        offsetCount: PAGE_SIZE,
-      };
-
-      handleSetState((prevState) => ({ ...prevState, ...stateChange }));
-    },
-  });
-
-  const loadPage = (page: number) => {
-    handleSetState((prevState) => ({
-      ...prevState,
-      isNextPageLoading: true,
-    }));
-
-    // refetch query
-    transactionQuery.refetch({
-      offset: (page - 1) * PAGE_SIZE,
-      limit: PAGE_SIZE + 1,
-    }).then(({ data }) => {
-      const itemsLength = data.messagesByAddress.length;
-      const formattedData = formatTransactions(data);
-      const hasNextPage = itemsLength === PAGE_SIZE + 1;
-
-      const currentPageStart = (page - 1) * PAGE_SIZE;
-
-      const stateChange: TransactionState = {
-        data: formattedData.slice(0, PAGE_SIZE),
-        hasNextPage: hasNextPage,
-        isNextPageLoading: false,
-        offsetCount: currentPageStart + PAGE_SIZE,
-      };
-
-      handleSetState((prevState) => ({ ...prevState, ...stateChange }));
-    }).catch((error) => {
-      console.error('Error loading page:', error);
-      handleSetState((prevState) => ({
-        ...prevState,
-        isNextPageLoading: false,
-      }));
-    });
-  };
-
-  const handlePageChange = (e: any) => {
-    loadPage(e.page);
-    setPageInfo((prevPageInfo) => ({
-      ...prevPageInfo,
-      currentPage: e.page,
-    }));
-  };
-
   return {
-    state,
-    pageInfo,
-    handlePageChange,
+    items: formatTransactions(data),
+    loading,
+    total: countData?.messagesByAddressAggregate.aggregate?.count ?? 0,
+    counted: Boolean(countData),
+    page,
+    setPage,
   };
+}
+
+/** Height of the account's newest transaction, whatever the Activity filters are. */
+export function useLastActivity(address?: string) {
+  const { data } = useGetMessagesByAddressQuery({ variables: { address: `{${address ?? ''}}`, limit: 1 }, skip: !address });
+  const height = data?.messagesByAddress[0]?.transaction?.height;
+  return height === undefined ? undefined : Number(height);
+}
+
+/**
+ * Saves the account's transactions matching the filters as CSV, one row per
+ * transaction. The newest matching height is pinned first so the pages read
+ * stay consistent.
+ */
+export function useAccountExport(address: string | undefined, filters: TxFilters) {
+  const client = useApolloClient();
+
+  return useCallback(async () => {
+    if (!address) return 0;
+    const base = { address: `{${address}}`, types: messageTypesArg(filters) };
+    const readPage = async (where: object, offset: number, limit: number) => {
+      const result = await client.query<GetMessagesByAddressExportQuery>({
+        query: GetMessagesByAddressExportDocument,
+        variables: { ...base, where, limit, offset },
+      });
+      if (result.errors?.length) throw new Error(result.errors[0].message);
+      return result.data.messagesByAddress.flatMap(({ transaction }) => (transaction ? [transaction] : []));
+    };
+
+    const where = messageWhere(filters);
+    const [top] = await readPage(where, 0, 1);
+    if (!top) return 0;
+
+    const pinned = { _and: [where, { height: { _lte: top.height } }] };
+    const rows = uniqueByHash(await readAllPages((offset, limit) => readPage(pinned, offset, limit)));
+    const scope = [address, filters.type].filter(Boolean).join('_');
+    downloadCsv(buildTxCsv(rows), `transactions_${scope}_${rangeFilePart(filters.range)}.csv`);
+    return rows.length;
+  }, [address, client, filters]);
+}
+
+/** Account type, public key type and pending staking rewards, read from the chain's REST API. */
+export function useAccountInfo(address?: string) {
+  const [info, setInfo] = useState<AccountInfo>({ loading: true, accountType: '', publicKey: '', rewards: 0, rewardsWei: '0' });
+
+  useEffect(() => {
+    if (!address) return;
+    const api = process.env.NEXT_PUBLIC_RPC_API;
+    const shortType = (type?: string) => type?.slice(type.lastIndexOf('.') + 1) ?? '';
+    const get = (path: string) => fetch(`${api}${path}`).then((res) => (res.ok ? res.json() : null)).catch(() => null);
+
+    Promise.all([
+      get(`/cosmos/auth/v1beta1/accounts/${address}`),
+      get(`/cosmos/distribution/v1beta1/delegators/${address}/rewards`),
+    ]).then(([auth, rewards]) => {
+      const account = auth?.account;
+      const pubKey = account?.pub_key ?? account?.base_account?.pub_key;
+      const reward = (rewards?.total ?? []).find((coin) => coin.denom === REWARD_DENOM)?.amount ?? '0';
+      setInfo({
+        loading: false,
+        accountType: shortType(account?.['@type']),
+        // "/ethermint.crypto.v1.ethsecp256k1.PubKey" -> "eth_secp256k1"
+        publicKey: pubKey ? shortType(pubKey['@type'].replace(/\.PubKey$/, '')).replace('ethsecp256k1', 'eth_secp256k1') : '',
+        rewards: Big(reward.split('.')[0] || '0').div(Big(10).pow(REWARD_DECIMALS)).toNumber(),
+        rewardsWei: reward.split('.')[0] || '0',
+      });
+    });
+  }, [address]);
+
+  return info;
 }
 
 export function useOverview(): OverviewType {
@@ -301,25 +263,55 @@ export const useStaking = (
   };
 };
 
+/**
+ * ERC-20 balances in whole tokens, read from the chain with balanceOf for
+ * each listed ERC-20 asset (DSTRX), in one batched JSON-RPC request.
+ * Staking moves tokens out of the wallet without a Transfer event, so the
+ * subgraph and Blockscout's cached token balances can keep showing a balance
+ * the account has already staked; balanceOf is always current.
+ */
 export const useErc20Balances = (
-  evmAddress?: string
+  evmAddress?: string,
 ) => {
-  const [balances, setBalances] = useState([])
+  const { assetArr } = useRecoilValue(readAssets);
+  const tokens = useMemo(
+    () => assetArr
+      .filter((asset) => asset.denom.startsWith('erc20:'))
+      .map((asset) => ({ contract: asset.denom.slice('erc20:'.length).toLowerCase(), decimals: asset.decimals })),
+    [assetArr],
+  );
+  const [balances, setBalances] = useState<Array<{ value: string; contract: { id: string } }>>([]);
+  const key = tokens.map((token) => token.contract).join(',');
 
-  useEvmBalancesQuery({
-    context: {
-      apiName: "subgraph"
-    },
-    variables: {
-      address: evmAddress
-    },
-    onCompleted: (data) => {
-      setBalances(data.erc20Balances)
-    },
-    onError: (e) => {
-      console.error(e)
-    }
-  })
+  useEffect(() => {
+    setBalances([]);
+    if (!evmAddress || !tokens.length || !process.env.NEXT_PUBLIC_JSON_RPC_URL) return;
+    const controller = new AbortController();
+    // balanceOf(address): selector 0x70a08231 and the address padded to 32 bytes.
+    const data = `0x70a08231${evmAddress.slice(2).toLowerCase().padStart(64, '0')}`;
+    fetch(process.env.NEXT_PUBLIC_JSON_RPC_URL, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(tokens.map((token, id) => ({ jsonrpc: '2.0', id, method: 'eth_call', params: [{ to: token.contract, data }, 'latest'] }))),
+      signal: controller.signal,
+    })
+      .then((res) => res.json())
+      .then((results: Array<{ id: number; result?: string }>) =>
+        setBalances(
+          results
+            .filter((r) => r.result && r.result !== '0x')
+            .map((r) => ({
+              value: formatTokenByExponent(BigInt(r.result as string).toString(), tokens[r.id].decimals),
+              contract: { id: tokens[r.id].contract },
+            })),
+        ),
+      )
+      .catch((error) => error?.name !== 'AbortError' && console.error('ERC-20 balanceOf failed:', error));
+    return () => controller.abort();
+    // tokens is derived from key.
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [evmAddress, key]);
+
   return balances;
 };
 

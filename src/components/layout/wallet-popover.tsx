@@ -5,7 +5,6 @@ import {
   VStack,
   Button,
   HStack,
-  IconButton,
   StackSeparator,
 } from "@chakra-ui/react";
 import {
@@ -15,7 +14,7 @@ import {
   PopoverArrow,
   PopoverBody,
 } from "@/components/ui/popover";
-import { Wallet } from "../icons/wallet";
+import { getMiddleEllipsis } from "@/utils/get_middle_ellipsis";
 import { IoCloseOutline } from "react-icons/io5";
 import { FaCheckCircle } from "react-icons/fa";
 import { AiOutlineLoading } from "react-icons/ai";
@@ -24,8 +23,9 @@ import { useKeplrConnect } from "@/recoil/wallet/hooks";
 import { useRecoilValue } from "recoil";
 import { atomState } from "@/recoil/wallet/atom";
 import styles from "./wallet-popover.module.css";
+import { SoonTag } from "./brand";
 
-const WalletPopover = () => {
+const WalletPopover = ({ fullWidth = false }: { fullWidth?: boolean }) => {
   const [selectedWallet, setSelectedWallet] = useState<string | null>(null);
   const [isLoading, setIsLoading] = useState(false);
   const { connectKeplr, disconnectKeplr, triggerWalletConnectPopover } =
@@ -72,18 +72,23 @@ const WalletPopover = () => {
       unmountOnExit
     >
       <PopoverTrigger asChild>
-        <IconButton
-          aria-label="connect wallet"
-          rounded="full"
-          bgColor={{ base: "#707D8A", _dark: "#F5F8F9" }}
-          w="60px"
-          h="60px"
-          color={{ base: "white", _dark: "black" }}
+        <Button
+          size="sm"
+          h="32px"
+          px="3.5"
+          w={fullWidth ? "full" : "auto"}
+          borderRadius="full"
+          bg="explorer.button"
+          color="explorer.buttonText"
+          fontWeight="500"
+          _hover={{ opacity: 0.85 }}
         >
-          <Wallet />
-        </IconButton>
+          {wallet?.walletAddress
+            ? getMiddleEllipsis(wallet.walletAddress, { beginning: 8, ending: 4 })
+            : "Connect Wallet"}
+        </Button>
       </PopoverTrigger>
-      <PopoverContent w="400px">
+      <PopoverContent w={{ base: "calc(100vw - 32px)", sm: "400px" }} bg="explorer.card" borderWidth="1px" borderColor="explorer.border" color="explorer.text">
         <PopoverArrow />
         <PopoverBody>
           {/* Header */}
@@ -103,7 +108,7 @@ const WalletPopover = () => {
           {wallet?.walletAddress ? (
             <VStack align="stretch" mt={4}>
               <Box>
-                <Text fontSize="sm" color="gray.600">
+                <Text fontSize="sm" color="explorer.muted">
                   Cosmos Address:
                 </Text>
                 <Text fontSize="sm" fontWeight="bold">
@@ -113,7 +118,8 @@ const WalletPopover = () => {
               <HStack>
                 <Button
                   size="sm"
-                  bg={"#707D8A"}
+                  bg="explorer.button"
+                  color="explorer.buttonText"
                   onClick={disconnectKeplr}
                   variant="solid"
                   w="full"
@@ -131,8 +137,7 @@ const WalletPopover = () => {
                     p={4}
                     border="1px solid"
                     borderColor={{
-                      base: selectedWallet === wallet.id ? "black" : "#E2E8F0",
-                      _dark: selectedWallet === wallet.id ? "white" : "#2D3748",
+                      base: selectedWallet === wallet.id ? "explorer.text" : "explorer.border",
                     }}
                     borderRadius="md"
                     justify="space-between"
@@ -161,6 +166,7 @@ const WalletPopover = () => {
                         {wallet.label}
                       </Text>
                     </HStack>
+                    {wallet.disabled && <SoonTag label="Coming soon" />}
                     {selectedWallet === wallet.id && (
                       <FaCheckCircle className="spin" color="green" />
                     )}
@@ -172,11 +178,11 @@ const WalletPopover = () => {
               <Button
                 mt={6}
                 w="full"
-                bg="#707D8A"
-                color="white"
-                _hover={{ bg: "#505D6A" }}
+                bg="explorer.button"
+                color="explorer.buttonText"
+                _hover={{ opacity: 0.85 }}
                 onClick={handleConnect}
-                isDisabled={selectedWallet !== "keplr"}
+                disabled={selectedWallet !== "keplr"}
                 cursor={selectedWallet === "keplr" ? "pointer" : "not-allowed"}
               >
                 {isLoading ? (

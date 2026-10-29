@@ -7,7 +7,6 @@ import {
   Flex,
   InputAddon,
   Group,
-  PopoverRoot,
 } from "@chakra-ui/react";
 import {
   DialogBody,
@@ -18,7 +17,6 @@ import {
   DialogTitle,
   DialogTrigger,
 } from "@/components/ui/dialog";
-import { PopoverTrigger } from "@/components/ui/popover";
 import { IoCloseOutline } from "react-icons/io5";
 import { useState, useEffect } from "react";
 import { createDelegateTx } from "@/utils/delegate_transaction";
@@ -167,17 +165,20 @@ export const DelegateDialog = ({
     }
   };
 
+  // "Delegate DSTRX" when staking an ERC-20 token, as on testnet.
+  const actionLabel = isERC20 ? `Delegate ${denomSymbol}` : "Delegate";
+
   return (
     <DialogRoot size="md"  placement={"center"} motionPreset="slide-in-bottom">
       <DialogTrigger asChild>
-        <Button bg={{base: "#707D8A", _dark: "#242323"}} color="white" w='full' size="sm">
-          {"Delegate"}
+        <Button bg="explorer.button" color="explorer.buttonText" size="xs" h="28px" px="3" borderRadius="full" _hover={{ opacity: 0.85 }}>
+          {actionLabel}
         </Button>
       </DialogTrigger>
       <DialogContent>
         <DialogHeader>
           <Flex justify={"space-between"}>
-            <DialogTitle>{"Delegate"}</DialogTitle>
+            <DialogTitle>{actionLabel}</DialogTitle>
             <DialogTrigger style={{ cursor: "pointer" }}>
               <IoCloseOutline size={30} />
             </DialogTrigger>
@@ -189,20 +190,17 @@ export const DelegateDialog = ({
               <Text fontSize="md" textAlign="center">
                 You need to connect your wallet to use this feature.
               </Text>
-              <DialogTrigger style={{ cursor: "pointer" }}>
-                <PopoverRoot>
-                  <PopoverTrigger asChild>
-                    <Button
-                      onClick={triggerWalletConnectPopover}
-                      w="full"
-                      colorScheme="blue"
-                      bg={"#707D8A"}
-                      _hover={{ bg: "#505D6A" }}
-                    >
-                      Connect Wallet
-                    </Button>
-                  </PopoverTrigger>
-                </PopoverRoot>
+              {/* Closes this dialog and opens the header's wallet popover. */}
+              <DialogTrigger asChild>
+                <Button
+                  onClick={triggerWalletConnectPopover}
+                  w="full"
+                  bg="explorer.button"
+                  color="explorer.buttonText"
+                  _hover={{ opacity: 0.85 }}
+                >
+                  Connect Wallet
+                </Button>
               </DialogTrigger>
             </VStack>
           </DialogBody>
@@ -318,7 +316,7 @@ export const DelegateDialog = ({
                 {loading ? (
                   <AiOutlineLoading className={styles.spin} />
                 ) : (
-                  "Delegate"
+                  actionLabel
                 )}
               </Button>
             </DialogFooter>

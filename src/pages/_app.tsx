@@ -1,10 +1,7 @@
 import Layout from '@/components/layout/layout';
 import { ThemeProvider } from 'next-themes';
 import { AppProps } from 'next/app';
-import {
-  ChakraProvider,
-  defaultSystem
-} from '@chakra-ui/react';
+import { ChakraProvider } from '@chakra-ui/react';
 import React from 'react';
 import { RecoilRoot } from 'recoil';
 import { DefaultSeo } from 'next-seo';
@@ -53,9 +50,10 @@ function App({
         client={apolloClient}
       >
         <RecoilRoot>
-          <ChakraProvider value={defaultSystem}>
-            <ColorModeProvider>
-            <ThemeProvider attribute="class" disableTransitionOnChange>
+          <ChakraProvider value={system}>
+            {/* Dark is the default for first-time visitors; the toggle still switches and is remembered. */}
+            <ColorModeProvider defaultTheme="dark">
+            <ThemeProvider attribute="class" defaultTheme="dark" disableTransitionOnChange>
               <Layout>
                 <Component {...pageProps} />
               </Layout>

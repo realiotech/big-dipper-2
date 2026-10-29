@@ -129,9 +129,8 @@ export const useKeplrConnect = () => {
   const reloadBalances = async () => {
     if (!wallet.walletAddress) return;
 
-    const client = await StargateClient.connect(
-      "https://realio.rpc.decentrio.ventures:443"
-    );
+    // This network's RPC: a fixed mainnet URL showed mainnet balances on testnet.
+    const client = await StargateClient.connect(process.env.NEXT_PUBLIC_RPC_URL ?? "");
     const denoms = ["ario", "arst", "almx"];
     const balances: Record<string, string> = {};
 

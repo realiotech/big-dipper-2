@@ -1,118 +1,143 @@
 import React, { useState } from "react";
-import {
-  Flex,
-  Text,
-  VStack,
-  HStack,
-  Tabs,
-  Center,
-  Grid,
-  GridItem,
-} from "@chakra-ui/react";
-import AssetOverview from "./overview";
-import Staking from "./staking";
-import { useRouter } from "next/router";
-import { useRecoilValue } from "recoil";
-import { readAsset } from "@/recoil/asset";
-import { Avatar } from "../ui/avatar";
-import Holders from "./holders";
+import { Flex, Grid, Image, SimpleGrid, Stack } from "@chakra-ui/react";
+import numeral from "numeral";
+import { Panel } from "@/components/explorer/panel";
+import { PageTitle } from "@/components/explorer/page_title";
+import { StatCard } from "@/components/explorer/stat_card";
+import { DataTable } from "@/components/explorer/data_table";
+import { ExplorerTabs, TabPanel } from "@/components/explorer/tabs";
+import { AddressLink } from "@/components/explorer/address_link";
+import { StatusTag, ValidatorAvatar } from "@/components/explorer/badges";
+import { formatPercent } from "@/components/explorer/format";
+import { NotFound } from "@/components/explorer/not_found";
+import { useAssetDetails } from "./hooks";
+import { Paged, Segmented, SupplyComposition, TokenInformation, holderColumns, stakeColumns, tokens } from "./parts";
 
-const AssetDetails = () => {
-  const router = useRouter();
-  const routerName = router?.query?.denom as string;
-  const denom = ("a"+routerName) as string;
-  const [selectedTab, setSelectedTab] = useState("holders");
-  const assetDetail = useRecoilValue(readAsset(denom));
+export default function AssetDetails() {
+  const a = useAssetDetails();
+  const [tab, setTab] = useState("holders");
+  const [stakingView, setStakingView] = useState<"delegations" | "unbondings">("delegations");
+  const symbol = a.asset?.symbol ?? a.denom.toUpperCase();
+
+  if (!a.exists) return <NotFound />;
 
   return (
-    <Grid templateColumns="repeat(6, 1fr)" gap={"1.5rem"} minH="auto">
-      <GridItem
-        colSpan={6}
-        direction={"row"}
-        bg={{ base: "white", _dark: "black" }}
-        p={6}
-        height={"auto"}
-        borderRadius="lg"
-        bgColor={"#FAFBFC"}
-        maxH={"300px"}
-      >
-        <Flex justify="space-between">
-          <HStack>
-            <Avatar src={assetDetail?.image} size="xl" />
-            <VStack align="flex-start" gap={0}>
-              <Text fontSize="lg" fontWeight="bold">
-                {`${assetDetail?.name} (${assetDetail?.symbol})`}
-              </Text>
-              <Text color="gray.500">Token Overview</Text>
-            </VStack>
-          </HStack>
-        </Flex>
-      </GridItem>
-      <AssetOverview />
-      <Center>
-        <Tabs.Root
-          value={selectedTab}
-          onValueChange={(e) => setSelectedTab(e.value)}
-          size="md"
-          variant={"subtle"}
-        >
-          <Tabs.List bg={{ base: "white", _dark: "black" }}>
-            <Tabs.Trigger
-              _selected={{
-                bg: "#707D8A",
-                color: "white",
-                borderRadius: "100px",
-                border: "none",
-              }}
-              p={4}
-              w={{ base: "full", lg: "150px" }}
-              value="holders"
-            >
-              <Center w={"full"}>Holders</Center>
-            </Tabs.Trigger>
-            <Tabs.Trigger
-              _selected={{
-                bg: "#707D8A",
-                color: "white",
-                borderRadius: "100px",
-                border: "none",
-              }}
-              p={4}
-              w={{ base: "full", lg: "150px" }}
-              value="staking"
-            >
-              <Center w={"full"}>Staking</Center>
-            </Tabs.Trigger>
-            <Tabs.Indicator bg="#707D8A" borderRadius="100px" />
-          </Tabs.List>
-        </Tabs.Root>
-      </Center>
-      <GridItem
-        borderRadius="lg"
-        colSpan={6}
-        bg={{ base: "#FAFBFC", _dark: "#0F0F0F" }}
-      >
-        <Tabs.Root
-          value={selectedTab}
-          onValueChange={(e) => setSelectedTab(e.value)}
-          size="md"
-        >
-          <Tabs.ContentGroup>
-            <Tabs.Content p={0} value="holders">
-              <Holders denom={denom} />
-            </Tabs.Content>
-            <Tabs.Content
-              bg={{ base: "#FAFBFC", _dark: "#0F0F0F" }}
-              p={0}
-              value="staking"
-            >
-              <Staking denom={denom} />
-            </Tabs.Content>
-          </Tabs.ContentGroup>
-        </Tabs.Root>
-      </GridItem>
-    </Grid>
-  );
-};
+    <Stack gap="5">
+      <PageTitle
+        crumbs={[{ label: "Assets", href: "/assets" }, { label: symbol }]}
+        title={
+          <Flex as="span" align="center" gap="3">
+            {a.asset?.image ? <Image src={a.asset.image} alt="" boxSize="40px" borderRadius="full" /> : <ValidatorAvatar name={symbol} size="40px" />}
+            {a.asset?.name ?? symbol}
+          </Flex>
+        }
+        subtitle="Token overview"
+        actions={
+          <Flex gap="2">
+            <StatusTag tone="accent">{symbol}</StatusTag>
+            <StatusTag tone="neutral">Native</StatusTag>
+            {a.stakeable && <StatusTag tone="success">Stakeable</StatusTag>}
+          </Flex>
+        }
+      />
 
-export default AssetDetails;
+      <SimpleGrid columns={{ base: 1, md: 2, xl: 4 }} gap="4">
+        <StatCard
+          label="Price"
+          loading={a.loading}
+          value={a.asset?.price ? `$${numeral(a.asset.price).format("0,0.[000000]")}` : "—"}
+          rows={[
+            { label: "Market cap", value: a.asset?.price ? `$${numeral(a.asset.price * a.supply).format("0,0.00")}` : "—" },
+            { label: "Denom", value: a.denom },
+          ]}
+        />
+        <StatCard
+          label="Total supply"
+          loading={a.loading}
+          value={tokens(a.supply)}
+          suffix={symbol}
+          rows={[
+            { label: "Decimals", value: a.asset?.decimals ?? 18 },
+            { label: "Symbol", value: symbol },
+          ]}
+        />
+        <StatCard
+          label="Holders"
+          loading={a.loading}
+          value={numeral(a.holderCount).format("0,0")}
+          rows={[
+            { label: "Top holder share", value: formatPercent(a.topHolderShare) },
+            { label: "Top holder", value: a.topHolder ? <AddressLink address={a.topHolder} beginning={8} ending={6} /> : "—" },
+          ]}
+        />
+        <StatCard
+          label="Bonded"
+          loading={a.loading}
+          value={tokens(a.bonded)}
+          suffix={symbol}
+          rows={[
+            { label: "Bonded ratio", value: formatPercent(a.supply ? (a.bonded / a.supply) * 100 : 0) },
+            { label: "Delegations", value: numeral(a.delegations.count).format("0,0") },
+          ]}
+        />
+      </SimpleGrid>
+
+      <Grid templateColumns={{ base: "1fr", lg: "1fr 444px" }} gap="5">
+        <SupplyComposition
+          supply={a.supply}
+          bonded={a.bonded}
+          unbonding={a.unbonding}
+          symbol={symbol}
+          footer={{ label: "Snapshot height", value: numeral(a.snapshotHeight).format("0,0") }}
+        />
+        <TokenInformation
+          rows={[
+            ["Denom", a.denom],
+            ["Symbol", symbol],
+            ["Name", a.asset?.name ?? "—"],
+            ["Decimals", String(a.asset?.decimals ?? 18)],
+            ["Type", "Native"],
+            ["Stakeable", a.stakeable ? "Yes" : "No"],
+          ]}
+        />
+      </Grid>
+
+      <Panel>
+        <ExplorerTabs
+          value={tab}
+          onChange={setTab}
+          items={[
+            { value: "holders", label: "Holders", count: a.holders.count },
+            { value: "staking", label: "Staking", count: a.delegations.count },
+          ]}
+        >
+          <TabPanel value="holders" pt="0">
+            <DataTable columns={holderColumns} rows={a.holders.rows} rowKey={(row) => row.address} loading={a.holders.loading} emptyText="No holders" />
+            <Paged count={a.holders.count} page={a.holders.page} setPage={a.holders.setPage} label="holders" />
+          </TabPanel>
+          <TabPanel value="staking" pt="2">
+            <Segmented
+              value={stakingView}
+              onChange={setStakingView}
+              items={[
+                { value: "delegations", label: "Delegations", count: a.delegations.count },
+                { value: "unbondings", label: "Unbondings", count: a.unbondings.count },
+              ]}
+            />
+            {stakingView === "delegations" ? (
+              <>
+                <DataTable columns={stakeColumns(false)} rows={a.delegations.rows} rowKey={(row) => `${row.address}:${row.validator}`} loading={a.delegations.loading} emptyText="No delegations" />
+                <Paged count={a.delegations.count} page={a.delegations.page} setPage={a.delegations.setPage} label="delegations" />
+              </>
+            ) : (
+              <>
+                <DataTable columns={stakeColumns(true)} rows={a.unbondings.rows} rowKey={(row) => `${row.address}:${row.validator}:${row.height}`} loading={a.unbondings.loading} emptyText="No unbondings" />
+                <Paged count={a.unbondings.count} page={a.unbondings.page} setPage={a.unbondings.setPage} label="unbondings" />
+              </>
+            )}
+          </TabPanel>
+        </ExplorerTabs>
+      </Panel>
+    </Stack>
+  );
+}

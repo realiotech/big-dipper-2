@@ -1,4 +1,4 @@
-import { searchData } from '@/configs';
+import { chainConfig, searchData } from '@/configs';
 import { ERC20_DETAILS } from '@/utils/go_to_page';
 
 /**
@@ -10,6 +10,6 @@ export const getDistrictsTokenUrl = (): string => {
   if (tokenData?.value) {
     return ERC20_DETAILS(tokenData.value);
   }
-  // Fallback to mainnet address if search data is not available
-  return ERC20_DETAILS('0xb841F365D5221Bed66d60E69094418D8C2aa5A44');
+  // Fall back to this network's DSTRX contract if search data is not available.
+  return ERC20_DETAILS(chainConfig.dstrxAddress);
 };
