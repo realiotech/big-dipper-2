@@ -27,7 +27,8 @@ export const ExplorerTabs = ({
       borderColor="explorer.border"
       mb="2"
     >
-      <Tabs.List borderBottomWidth="0" gap="2">
+      {/* Scrolls inside the panel on phones instead of widening the page. */}
+      <Tabs.List borderBottomWidth="0" gap="2" maxW="full" overflowX="auto" scrollbarWidth="none">
         {items.map((item) => (
           <Tabs.Trigger
             key={item.value}

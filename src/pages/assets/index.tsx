@@ -11,6 +11,8 @@ import { ExplorerTabs } from "@/components/explorer/tabs";
 import { StatusTag, Tag, ValidatorAvatar } from "@/components/explorer/badges";
 import { formatCompact } from "@/components/explorer/format";
 import { AssetListRow, useAssetList } from "@/components/assets/list_hooks";
+import { StockSortMenu, StocksTable } from "@/components/assets/stocks";
+import { STOCK_SORTS, StockSort } from "@/utils/stocks";
 
 const usd = (value: number) => (value ? `$${formatCompact(value)}` : "—");
 
@@ -53,19 +55,26 @@ const columns: Column<AssetListRow>[] = [
   },
 ];
 
-const TABS = { native: "native", ibc: "ibc", erc20: "erc20", all: "all" } as const;
+const TABS = { native: "native", ibc: "ibc", erc20: "erc20", stocks: "stocks", all: "all" } as const;
 type Tab = keyof typeof TABS;
 
 export default function AssetsPage() {
   const { rows, stats, height, loading } = useAssetList();
   const [tab, setTab] = useState<Tab>("native");
+  const [stockSort, setStockSort] = useState<StockSort>("volume");
   const visible = useMemo(() => (tab === "all" ? rows : rows.filter((row) => row.kind === tab)), [rows, tab]);
+  const subtitle =
+    tab === "stocks"
+      ? `Tokenized stocks ranked by ${STOCK_SORTS.find((sort) => sort.value === stockSort)?.label}`
+      : loading
+        ? " "
+        : `Showing ${visible.length} of ${stats.total} denoms`;
   const count = (kind: string) => rows.filter((row) => row.kind === kind).length;
 
   return (
     <>
       <NextSeo title="Assets" openGraph={{ title: "Assets" }} />
-      <PageTitle title="Assets" subtitle={loading ? " " : `Showing ${visible.length} of ${stats.total} denoms`} />
+      <PageTitle title="Assets" subtitle={subtitle} />
       <SimpleGrid columns={{ base: 1, md: 2, xl: 4 }} gap="4" mb="5">
         <StatCard
           label="Total market cap"
@@ -113,10 +122,16 @@ export default function AssetsPage() {
             { value: "native", label: "Native", count: count("native") },
             { value: "ibc", label: "IBC", count: count("ibc") },
             { value: "erc20", label: "ERC-20", count: count("erc20") },
+            { value: "stocks", label: "Stocks" },
             { value: "all", label: "All denoms", count: rows.length },
           ]}
+          actions={tab === "stocks" ? <StockSortMenu value={stockSort} onChange={setStockSort} /> : undefined}
         />
-        <DataTable columns={columns} rows={visible} rowKey={(row) => row.denom} loading={loading} skeletonRows={4} emptyText="No denoms" />
+        {tab === "stocks" ? (
+          <StocksTable sort={stockSort} />
+        ) : (
+          <DataTable columns={columns} rows={visible} rowKey={(row) => row.denom} loading={loading} skeletonRows={4} emptyText="No denoms" />
+        )}
       </Panel>
     </>
   );
