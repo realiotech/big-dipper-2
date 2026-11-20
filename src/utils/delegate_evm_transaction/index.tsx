@@ -177,7 +177,7 @@ export const createDelegateEVMTx = async ({
 
       return result;
     } catch (err) {
-      console.error("EVM Delegate transaction failed:", err);
+      console.warn("EVM Delegate transaction failed:", err);
       throw err;
     }
   };

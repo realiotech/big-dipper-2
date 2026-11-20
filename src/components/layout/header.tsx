@@ -70,9 +70,7 @@ export default function Header() {
         </Flex>
         <Flex align="center" gap="3" ml={{ base: "auto", lg: "2" }}>
           <ThemeToggle />
-          <Box hideBelow="lg">
-            <WalletPopover />
-          </Box>
+          <WalletPopover />
           <Box hideFrom="lg">
             <MenuDrawer />
           </Box>
