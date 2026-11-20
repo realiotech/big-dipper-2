@@ -113,7 +113,7 @@ export const createDelegateTx = async ({
   
       return result;
     } catch (err) {
-      console.error("Delegate transaction failed:", err);
+      console.warn("Delegate transaction failed:", err);
       throw err;
     }
   };

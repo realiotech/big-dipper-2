@@ -15,7 +15,8 @@ export interface AtomState {
   chainId: string | null; // New field for the chain ID
   signer: any | null; // New field for the signer object
   accounts: any | null; // New field for the accounts object
-  balances: Record<string, string> | null; 
+  balances: Record<string, string> | null; // null while loading or after a failed load
+  balancesError: boolean; // the last balance load failed (eg. the RPC is unreachable)
   offlineSigner: any | null; // New field for the offline signer object
 }
 
@@ -35,6 +36,7 @@ const initialState: AtomState = {
   signer: null, // Default to null
   accounts: null, // Default to null
   balances: null,
+  balancesError: false,
   offlineSigner: null, // Default to null
 };
 

@@ -1,39 +1,96 @@
-import { Button } from "@/components/ui/button";
 import {
   Box,
-  Input,
-  Text,
-  VStack,
+  Button,
   Flex,
-  InputAddon,
-  Group,
+  Input,
+  Link as ChakraLink,
+  Skeleton,
+  Spinner,
+  Stack,
+  Text,
 } from "@chakra-ui/react";
+import Big from "big.js";
+import NextLink from "next/link";
+import { ReactNode, useEffect, useState } from "react";
+import { LuChevronDown, LuCircleCheck, LuWallet } from "react-icons/lu";
+import { useRecoilValue } from "recoil";
+import { realioNetworkToEth } from "@realiotech/address-generator";
+import { useErc20SpendableBalance } from "@/components/accounts/hooks";
 import {
   DialogBody,
+  DialogCloseTrigger,
   DialogContent,
-  DialogFooter,
-  DialogHeader,
   DialogRoot,
   DialogTitle,
   DialogTrigger,
 } from "@/components/ui/dialog";
-import { IoCloseOutline } from "react-icons/io5";
-import { useState, useEffect } from "react";
-import { createDelegateTx } from "@/utils/delegate_transaction";
-import { createDelegateEVMTx } from "@/utils/delegate_evm_transaction";
-import { useRecoilValue } from "recoil";
+import { chainConfig } from "@/configs";
 import { atomState } from "@/recoil/wallet/atom";
 import { useKeplrConnect } from "@/recoil/wallet/hooks";
-import { AiOutlineLoading } from "react-icons/ai";
-import styles from "../layout/wallet-popover.module.css";
-import openNotification from "@/utils/notifications";
-import { ToastContainer } from "react-toastify";
-import Big from "big.js";
-import { useErc20SpendableBalance } from "@/components/accounts/hooks";
-import { realioNetworkToEth } from "@realiotech/address-generator";
-import { formatTokenByExponent } from "@/utils";
-import { chainConfig } from "@/configs";
+import { createDelegateEVMTx } from "@/utils/delegate_evm_transaction";
+import { createDelegateTx } from "@/utils/delegate_transaction";
+import { getMiddleEllipsis } from "@/utils/get_middle_ellipsis";
+import { TRANSACTION_DETAILS } from "@/utils/go_to_page";
+import { shortUnits } from "../explorer/format";
 
+// Fee and gas the transaction builders are given; the fee is in base units
+// of the staked denom (ario for ERC-20 delegations).
+const DEFAULT_FEE = "2000";
+const DEFAULT_GAS = { native: "300000", erc20: "3000000" };
+const DEFAULT_MEMO = "realio.network";
+
+const AMOUNT_PATTERN = /^\d*\.?\d*$/;
+
+const fieldStyles = {
+  h: "40px",
+  bg: "explorer.page",
+  borderColor: "explorer.border",
+  borderRadius: "6px",
+  color: "explorer.text",
+  fontSize: "sm",
+  _placeholder: { color: "explorer.muted" },
+  _focusVisible: { borderColor: "explorer.accent", outline: "none" },
+} as const;
+
+const FieldLabel = ({ children, end }: { children: ReactNode; end?: ReactNode }) => (
+  <Flex justify="space-between" align="center" mb="1.5" gap="2">
+    <Text fontSize="xs" color="explorer.muted" textTransform="uppercase" letterSpacing="0.04em">
+      {children}
+    </Text>
+    {end}
+  </Flex>
+);
+
+const SummaryRow = ({ label, children }: { label: string; children: ReactNode }) => (
+  <Flex justify="space-between" align="center" gap="3" fontSize="sm">
+    <Text color="explorer.muted" flexShrink={0}>
+      {label}
+    </Text>
+    <Box minW="0" textAlign="right" color="explorer.text">
+      {children}
+    </Box>
+  </Flex>
+);
+
+const primaryButton = {
+  w: "full",
+  h: "40px",
+  bg: "explorer.button",
+  color: "explorer.buttonText",
+  borderRadius: "6px",
+  fontWeight: "500",
+  _hover: { opacity: 0.85 },
+  _disabled: { opacity: 0.4, cursor: "not-allowed" },
+} as const;
+
+/** Base units -> display amount, rounded down so "Max" never exceeds the balance. */
+const toDisplay = (raw: string, decimals: number) =>
+  Big(raw || "0").div(Big(10).pow(decimals)).round(6, Big.roundDown);
+
+const isPositiveAmount = (amount: string) => {
+  if (!amount || !AMOUNT_PATTERN.test(amount) || amount === ".") return false;
+  return Big(amount).gt(0);
+};
 
 export const DelegateDialog = ({
   denom,
@@ -41,288 +98,323 @@ export const DelegateDialog = ({
   decimal,
   operatorName,
   operatorAddress,
+}: {
+  denom: string;
+  denomSymbol: string;
+  decimal: number;
+  operatorName: string;
+  operatorAddress: string;
 }) => {
-
   const wallet = useRecoilValue(atomState);
   const { triggerWalletConnectPopover, reloadBalances } = useKeplrConnect();
 
-  // Check if this is an ERC20 token delegation by checking denom format
-  const isERC20 = denom?.startsWith('erc20:');
-
-  // Extract contract address from ERC20 denom (erc20:0x...)
-  const contractAddress = isERC20 ? denom.replace('erc20:', '') : null;
-
-
-
-  // Get user's spendable ERC20 balance if it's an ERC20 token
-  const evmAddress = wallet?.walletAddress ? realioNetworkToEth(wallet.walletAddress) : undefined;
-
-  // Use spendable balance hook with JSON RPC balanceOf call
-  const { balance: rawSpendableBalance, loading: balanceLoading } = useErc20SpendableBalance(
+  const isERC20 = denom?.startsWith("erc20:");
+  const contractAddress = isERC20 ? denom.replace("erc20:", "") : null;
+  const decimals = decimal || 18;
+  const evmAddress = wallet.walletAddress ? realioNetworkToEth(wallet.walletAddress) : undefined;
+  const { balance: erc20Balance, loading: erc20Loading } = useErc20SpendableBalance(
     isERC20 ? evmAddress : undefined,
     isERC20 ? contractAddress : undefined
   );
 
-
-  const [formData, setFormData] = useState({
-    sender: wallet?.walletAddress || "",
-    validator: operatorAddress || "",
-    denom: denom || "",
-    amount: "",
-    fees: "2000",
-    gas: isERC20 ? "3000000" : "300000",
-    memo: "realio.network",
-  });
-    const GAS_PRICE = Big(0.000000005); // Adjust this if needed    
-    const estimatedFee = formData.gas ? Big(formData.gas).times(GAS_PRICE).toFixed(6) : "0.000000";
+  const [open, setOpen] = useState(false);
+  const [amount, setAmount] = useState("");
+  const [gas, setGas] = useState(isERC20 ? DEFAULT_GAS.erc20 : DEFAULT_GAS.native);
+  const [memo, setMemo] = useState(DEFAULT_MEMO);
+  const [showAdvanced, setShowAdvanced] = useState(false);
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState<string | null>(null);
+  const [txHash, setTxHash] = useState<string | null>(null);
 
   useEffect(() => {
-    if (operatorAddress) {
-      setFormData((prev) => ({ ...prev, validator: operatorAddress }));
-    }
-  }, [operatorAddress]);
-
-  useEffect(() => {
-    // Update gas based on token type
-    setFormData((prev) => ({
-      ...prev,
-      gas: isERC20 ? "3000000" : "300000"
-    }));
+    setGas(isERC20 ? DEFAULT_GAS.erc20 : DEFAULT_GAS.native);
   }, [isERC20]);
 
-  const [loading, setLoading] = useState(false);
+  // Start clean each time the dialog opens.
+  useEffect(() => {
+    if (!open) return;
+    setAmount("");
+    setError(null);
+    setTxHash(null);
+    setShowAdvanced(false);
+  }, [open]);
 
-  const handleChange = (e) => {
-    const { name, value } = e.target;
-    setFormData((prev) => ({ ...prev, [name]: value }));
-  };
+  const feeDenom = isERC20 ? "ario" : denom;
+  const feeSymbol = isERC20 ? "RIO" : denomSymbol;
+  const rawAvailable = isERC20 ? erc20Balance : wallet.balances?.[denom];
+  const availableLoading = isERC20 ? erc20Loading : !wallet.balances && !wallet.balancesError;
+  const available = rawAvailable != null ? toDisplay(rawAvailable, decimals) : null;
+  // A native delegation pays its fee in the same denom, so leave room for it.
+  const maxAmount = (() => {
+    if (!available) return null;
+    if (isERC20) return available;
+    const max = Big(rawAvailable).minus(DEFAULT_FEE);
+    return max.gt(0) ? toDisplay(max.toFixed(0), decimals) : Big(0);
+  })();
 
-  const handleSubmit = async (e) => {
+  let amountError: string | null = null;
+  if (amount && !AMOUNT_PATTERN.test(amount)) amountError = "Enter a number.";
+  else if (amount && maxAmount && isPositiveAmount(amount) && Big(amount).gt(maxAmount)) {
+    amountError = "Amount is more than your available balance.";
+  }
+  const canSubmit = isPositiveAmount(amount) && !amountError && !loading;
+
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-
+    if (!canSubmit || !wallet.walletAddress) return;
+    setError(null);
+    setLoading(true);
     try {
-      setLoading(true);
-    //   console.log("Sending transaction with data:", formData);
-
-      let txResult;
-
-      // Validate required data before transaction
-      if (!wallet.walletAddress) {
-        throw new Error("Wallet address is required");
-      }
-      if (!formData.validator) {
-        throw new Error("Validator address is required");
-      }
-      if (!formData.amount || parseFloat(formData.amount) <= 0) {
-        throw new Error("Valid amount is required");
-      }
-
-
-
-      if (isERC20) {
-        // Use EVM delegation for ERC20 tokens
-        txResult = await createDelegateEVMTx({
-          sender: wallet.walletAddress,
-          validator: formData.validator,
-          contractAddress: contractAddress,
-          amount: formData.amount,
-          fees: formData.fees,
-          gas: formData.gas,
-          memo: formData.memo,
-          accounts: wallet.accounts,
-          offlineSigner: wallet.offlineSigner,
-          signer: wallet.signer,
-          decimal: decimal,
-          chainId: chainConfig.network,
-          rpcEndpoint: process.env.NEXT_PUBLIC_RPC_URL,
-          apiEndpoint: process.env.NEXT_PUBLIC_API_URL,
-        });
-      } else {
-        // Use regular delegation for native tokens
-        txResult = await createDelegateTx({
-          sender: wallet.walletAddress,
-          validator: formData.validator,
-          denom: denom,
-          amount: formData.amount,
-          fees: formData.fees,
-          gas: formData.gas,
-          memo: formData.memo,
-          accounts: wallet.accounts,
-          offlineSigner: wallet.offlineSigner,
-          signer: wallet.signer,
-          decimal: decimal,
-          chainId: chainConfig.network,
-          rpcEndpoint: process.env.NEXT_PUBLIC_RPC_URL,
-          apiEndpoint: process.env.NEXT_PUBLIC_API_URL,
-        });
-      }
+      const params = {
+        sender: wallet.walletAddress,
+        validator: operatorAddress,
+        amount,
+        fees: DEFAULT_FEE,
+        gas,
+        memo,
+        accounts: wallet.accounts,
+        offlineSigner: wallet.offlineSigner,
+        signer: wallet.signer,
+        decimal: decimals,
+        chainId: chainConfig.network,
+        rpcEndpoint: process.env.NEXT_PUBLIC_RPC_URL,
+        apiEndpoint: process.env.NEXT_PUBLIC_API_URL,
+      };
+      if (!wallet.signer) throw new Error("The wallet is still connecting to the network. Try again in a moment.");
+      const result = isERC20
+        ? await createDelegateEVMTx({ ...params, contractAddress })
+        : await createDelegateTx({ ...params, denom });
+      setTxHash(result.transactionHash);
       reloadBalances();
-      openNotification("success", `Transaction success: ${txResult.transactionHash}` )
-      setLoading(false);
     } catch (err) {
-        openNotification("error", `Transaction failed: ${err.message}` )
+      const message = err instanceof Error ? err.message : String(err);
+      setError(/reject|denied/i.test(message) ? "The transaction was rejected in Keplr." : message);
+    } finally {
       setLoading(false);
     }
   };
 
-  // "Delegate DSTRX" when staking an ERC-20 token, as on testnet.
   const actionLabel = isERC20 ? `Delegate ${denomSymbol}` : "Delegate";
 
+  let body: ReactNode;
+  if (!wallet.walletAddress) {
+    body = (
+      <Stack align="center" textAlign="center" gap="3" py="4">
+        <Flex boxSize="44px" align="center" justify="center" borderRadius="full" bg="explorer.inset" color="explorer.text" fontSize="lg">
+          <LuWallet />
+        </Flex>
+        <Box>
+          <Text fontSize="sm" fontWeight="500" color="explorer.text">
+            Connect a wallet to delegate
+          </Text>
+          <Text fontSize="sm" color="explorer.muted" mt="1">
+            Your {denomSymbol} stays in your wallet until you sign the delegation.
+          </Text>
+        </Box>
+        {/* Closes this dialog and opens the header's wallet popover. */}
+        <Button {...primaryButton} mt="2" onClick={() => { setOpen(false); triggerWalletConnectPopover(); }}>
+          <LuWallet />
+          Connect Wallet
+        </Button>
+      </Stack>
+    );
+  } else if (txHash) {
+    body = (
+      <Stack align="center" textAlign="center" gap="3" py="4">
+        <Box color="explorer.successMuted" fontSize="40px">
+          <LuCircleCheck />
+        </Box>
+        <Box>
+          <Text fontSize="md" fontWeight="600" color="explorer.text">
+            Delegation submitted
+          </Text>
+          <Text fontSize="sm" color="explorer.muted" mt="1">
+            {amount} {denomSymbol} delegated to {operatorName}.
+          </Text>
+        </Box>
+        <ChakraLink asChild fontSize="sm" color="explorer.link" fontFamily="mono">
+          <NextLink href={TRANSACTION_DETAILS(txHash)}>{getMiddleEllipsis(txHash, { beginning: 10, ending: 8 })}</NextLink>
+        </ChakraLink>
+        <Button {...primaryButton} mt="2" onClick={() => setOpen(false)}>
+          Done
+        </Button>
+      </Stack>
+    );
+  } else {
+    body = (
+      <form onSubmit={handleSubmit}>
+        <Stack gap="4">
+          <Stack gap="2.5" p="3" bg="explorer.inset" borderRadius="6px">
+            <SummaryRow label="From">
+              <Text fontFamily="mono" truncate title={wallet.walletAddress}>
+                {getMiddleEllipsis(wallet.walletAddress, { beginning: 10, ending: 6 })}
+              </Text>
+            </SummaryRow>
+            <SummaryRow label="Validator">
+              <Text truncate title={operatorAddress}>
+                {operatorName}
+              </Text>
+            </SummaryRow>
+          </Stack>
+
+          <Box>
+            <FieldLabel
+              end={
+                <Text fontSize="xs" color="explorer.muted">
+                  Available:{" "}
+                  {availableLoading ? (
+                    <Skeleton as="span" display="inline-block" h="12px" w="56px" verticalAlign="middle" />
+                  ) : (
+                    <Text as="span" color="explorer.text">
+                      {available ? shortUnits(rawAvailable, decimals, 6) : "—"}
+                    </Text>
+                  )}{" "}
+                  {denomSymbol}
+                </Text>
+              }
+            >
+              Amount
+            </FieldLabel>
+            <Flex
+              align="center"
+              borderWidth="1px"
+              borderColor={amountError ? "explorer.critical" : "explorer.border"}
+              borderRadius="6px"
+              bg="explorer.page"
+              pr="2"
+              _focusWithin={{ borderColor: amountError ? "explorer.critical" : "explorer.accent" }}
+            >
+              <Input
+                {...fieldStyles}
+                border="none"
+                bg="transparent"
+                flex="1"
+                fontSize="md"
+                fontVariantNumeric="tabular-nums"
+                inputMode="decimal"
+                autoComplete="off"
+                placeholder="0.00"
+                value={amount}
+                onChange={(e) => setAmount(e.target.value.replace(",", "."))}
+                _focusVisible={{ outline: "none" }}
+                aria-invalid={Boolean(amountError)}
+              />
+              <Button
+                variant="outline"
+                size="xs"
+                h="24px"
+                px="2"
+                borderColor="explorer.border"
+                color="explorer.muted"
+                fontSize="xs"
+                _hover={{ color: "explorer.text", bg: "explorer.inset" }}
+                disabled={!maxAmount || maxAmount.lte(0)}
+                onClick={() => maxAmount && setAmount(maxAmount.toFixed())}
+              >
+                Max
+              </Button>
+              <Text ml="2.5" fontSize="sm" fontWeight="500" color="explorer.text">
+                {denomSymbol}
+              </Text>
+            </Flex>
+            {amountError && (
+              <Text mt="1.5" fontSize="xs" color="explorer.critical">
+                {amountError}
+              </Text>
+            )}
+          </Box>
+
+          <Stack gap="2" pt="3" borderTopWidth="1px" borderColor="explorer.border">
+            <SummaryRow label="Network fee">
+              {shortUnits(DEFAULT_FEE, 18, 6)} {feeSymbol}
+            </SummaryRow>
+            <Flex justify="space-between" align="center">
+              <Button
+                variant="plain"
+                size="xs"
+                h="auto"
+                p="0"
+                color="explorer.muted"
+                fontWeight="400"
+                fontSize="sm"
+                _hover={{ color: "explorer.text" }}
+                onClick={() => setShowAdvanced((value) => !value)}
+                aria-expanded={showAdvanced}
+              >
+                Advanced
+                <Box as="span" transform={showAdvanced ? "rotate(180deg)" : undefined} transition="transform 0.15s">
+                  <LuChevronDown />
+                </Box>
+              </Button>
+              {!showAdvanced && (
+                <Text fontSize="xs" color="explorer.muted">
+                  Gas {Number(gas || 0).toLocaleString("en-US")}
+                </Text>
+              )}
+            </Flex>
+            {showAdvanced && (
+              <Stack gap="3" pt="1">
+                <Box>
+                  <FieldLabel>Gas limit</FieldLabel>
+                  <Input {...fieldStyles} inputMode="numeric" value={gas} onChange={(e) => setGas(e.target.value.replace(/\D/g, ""))} />
+                </Box>
+                <Box>
+                  <FieldLabel>Memo</FieldLabel>
+                  <Input {...fieldStyles} value={memo} placeholder="Optional" onChange={(e) => setMemo(e.target.value)} />
+                </Box>
+              </Stack>
+            )}
+          </Stack>
+
+          {error && (
+            <Text px="3" py="2" fontSize="xs" color="explorer.critical" bg="explorer.inset" borderRadius="6px" wordBreak="break-word">
+              {error}
+            </Text>
+          )}
+
+          <Button {...primaryButton} type="submit" disabled={!canSubmit}>
+            {loading ? (
+              <>
+                <Spinner size="sm" />
+                Confirm in Keplr…
+              </>
+            ) : (
+              actionLabel
+            )}
+          </Button>
+        </Stack>
+      </form>
+    );
+  }
+
   return (
-    <DialogRoot size="md"  placement={"center"} motionPreset="slide-in-bottom">
+    <DialogRoot open={open} onOpenChange={(e) => setOpen(e.open)} size="sm" placement="center" motionPreset="slide-in-bottom">
       <DialogTrigger asChild>
         <Button bg="explorer.button" color="explorer.buttonText" size="xs" h="28px" px="3" borderRadius="full" _hover={{ opacity: 0.85 }}>
           {actionLabel}
         </Button>
       </DialogTrigger>
-      <DialogContent>
-        <DialogHeader>
-          <Flex justify={"space-between"}>
-            <DialogTitle>{actionLabel}</DialogTitle>
-            <DialogTrigger style={{ cursor: "pointer" }}>
-              <IoCloseOutline size={30} />
-            </DialogTrigger>
-          </Flex>
-        </DialogHeader>
-        {!wallet.walletAddress ? (
-          <DialogBody>
-            <VStack align="stretch" spacing={4}>
-              <Text fontSize="md" textAlign="center">
-                You need to connect your wallet to use this feature.
-              </Text>
-              {/* Closes this dialog and opens the header's wallet popover. */}
-              <DialogTrigger asChild>
-                <Button
-                  onClick={triggerWalletConnectPopover}
-                  w="full"
-                  bg="explorer.button"
-                  color="explorer.buttonText"
-                  _hover={{ opacity: 0.85 }}
-                >
-                  Connect Wallet
-                </Button>
-              </DialogTrigger>
-            </VStack>
-          </DialogBody>
-        ) : (
-          <form onSubmit={handleSubmit}>
-            <DialogBody>
-              <VStack align="stretch">
-                {/* Sender */}
-                <Box>
-                  <Text fontSize="sm" mb={1}>
-                    Sender
-                  </Text>
-                  <Input
-                    readOnly
-                    name="sender"
-                    placeholder="realio13zz4mvgwm..."
-                    value={wallet.walletAddress}
-                  />
-                </Box>
-
-                {/* Validator */}
-                <Box>
-                  <Text fontSize="sm" mb={1}>
-                    Validator
-                  </Text>
-                  <Input
-                    name="validator"
-                    readOnly
-                    placeholder="Validator"
-                    value={formData.validator}
-                  />
-                </Box>
-
-                {/* Amount */}
-                <Box>
-                  <Flex justify="space-between" mb={1}>
-                    <Text fontSize="sm" mb={1}>
-                      Amount
-                    </Text>
-                    <Text fontSize="xs">
-                      Available:{" "}
-                      {isERC20 ?
-                        formatTokenByExponent(rawSpendableBalance, decimal || 18) :
-                        (parseFloat(wallet.balances[`${denom}`]) / 10 ** decimal)
-                          .toFixed(2)
-                          .toString()
-                      }{" "}
-                      {denomSymbol}
-                    </Text>
-                  </Flex>
-                  <Group w={"full"} attached>
-                    <Input
-                      name="amount"
-                      placeholder="Enter amount"
-                      value={formData.amount}
-                      onChange={handleChange}
-                    />
-                    <InputAddon>{denomSymbol}</InputAddon>
-                  </Group>
-                </Box>
-
-                {/* Fees */}
-                <Box display="none">
-                  <Text fontSize="sm" mb={1}>
-                    Fees
-                  </Text>
-                  <Input
-                    name="fees"
-                    placeholder="2000"
-                    value={formData.fees}
-                    onChange={handleChange}
-                  />
-                </Box>
-
-                {/* Gas */}
-                <Box>
-  <Text fontSize="sm" mb={1}>
-    Gas
-  </Text>
-  <Input
-    name="gas"
-    placeholder="300000"
-    value={formData.gas}
-    onChange={handleChange}
-  />
-  <Text fontSize="xs" mt={1} color="gray.500">
-    Estimated Fee: {estimatedFee.toString()} RIO (Gas Price: {GAS_PRICE.toFixed(10).toString()} RIO per unit)
-  </Text>
-</Box>
-
-                {/* Memo */}
-                <Box>
-                  <Text fontSize="sm" mb={1}>
-                    Memo
-                  </Text>
-                  <Input
-                    name="memo"
-                    placeholder="realio.network"
-                    value={formData.memo}
-                    onChange={handleChange}
-                  />
-                </Box>
-              </VStack>
-            </DialogBody>
-            <DialogFooter>
-              <Button
-                type="submit"
-                bg={"#707D8A"}
-                w={"full"}
-                colorScheme="blue"
-                disabled={loading}
-              >
-                {loading ? (
-                  <AiOutlineLoading className={styles.spin} />
-                ) : (
-                  actionLabel
-                )}
-              </Button>
-            </DialogFooter>
-            <ToastContainer closeOnClick={false} draggable={false} />
-          </form>
-        )}
+      <DialogContent
+        bg="explorer.card"
+        color="explorer.text"
+        borderWidth="1px"
+        borderColor="explorer.border"
+        borderRadius="8px"
+        boxShadow="lg"
+        mx="4"
+      >
+        <DialogCloseTrigger top="3" insetEnd="3" color="explorer.muted" />
+        <Box px="5" pt="5" pr="12">
+          <DialogTitle fontSize="md" fontWeight="600" color="explorer.text">
+            {actionLabel}
+          </DialogTitle>
+          <Text fontSize="sm" color="explorer.muted" mt="1">
+            Stake {denomSymbol} with {operatorName}.
+          </Text>
+        </Box>
+        <DialogBody px="5" pt="4" pb="5">
+          {body}
+        </DialogBody>
       </DialogContent>
     </DialogRoot>
   );
