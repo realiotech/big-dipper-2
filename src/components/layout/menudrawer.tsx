@@ -8,13 +8,11 @@ import {
   DrawerBackdrop,
   DrawerBody,
   DrawerContent,
-  DrawerFooter,
   DrawerHeader,
   DrawerTitle,
   DrawerCloseTrigger,
   DrawerTrigger,
 } from "@/components/ui/drawer";
-import WalletPopover from "./wallet-popover";
 import { NAV_GROUPS, isActive } from "./nav";
 import { Logo, SoonTag } from "./brand";
 
@@ -74,9 +72,6 @@ export default function MenuDrawer() {
             ))}
           </Stack>
         </DrawerBody>
-        <DrawerFooter borderTopWidth="1px" borderColor="explorer.border" justifyContent="stretch">
-          <WalletPopover fullWidth />
-        </DrawerFooter>
       </DrawerContent>
     </DrawerRoot>
   );

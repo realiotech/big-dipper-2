@@ -1,4 +1,4 @@
-import { formatPrecise, formatUsd, shortUnits } from '@/components/explorer/format';
+import { formatCompact, formatPrecise, formatUsd, formatWhole, shortUnits } from '@/components/explorer/format';
 import { formatUnits } from '@/components/explorer/blockscout';
 import { txFeeWei } from '@/utils/tx_label';
 
@@ -51,5 +51,25 @@ describe('formatPrecise', () => {
     expect(formatPrecise(0.0042)).toBe('0.0042');
     expect(formatPrecise(0)).toBe('0');
     expect(formatPrecise(Number.NaN)).toBe('0');
+  });
+});
+
+describe('formatWhole', () => {
+  it('never shows NaN for one base unit of an 18-decimal token', () => {
+    expect(formatWhole(1e-18)).toBe('<1');
+    expect(formatWhole(0)).toBe('0');
+    expect(formatWhole(Number.NaN)).toBe('0');
+  });
+
+  it('rounds to whole, grouped units', () => {
+    expect(formatWhole(20374.339994)).toBe('20,374');
+    expect(formatWhole(0.6)).toBe('1');
+  });
+});
+
+describe('formatCompact', () => {
+  it('never shows NaN for tiny amounts', () => {
+    expect(formatCompact(1e-18)).toBe('0');
+    expect(formatCompact(135461234)).toBe('135.46M');
   });
 });
