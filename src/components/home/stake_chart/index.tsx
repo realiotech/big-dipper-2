@@ -7,6 +7,7 @@ import numeral from "numeral";
 import { readAssets } from "@/recoil/asset";
 import { formatTokenByExponent } from "@/utils";
 import { useColorModeValue } from "@/components/ui/color-mode";
+import { formatWhole } from "@/components/explorer/format";
 import { Panel } from "@/components/explorer/panel";
 import { useHero } from "./hooks";
 
@@ -61,7 +62,7 @@ export default function StakingChart() {
     plugins: {
       legend: { display: false },
       tooltip: {
-        callbacks: { label: (context: any) => `Bonded: ${numeral(context.raw).format("0,0")}` },
+        callbacks: { label: (context: any) => `Bonded: ${formatWhole(context.raw)}` },
       },
     },
     scales: {
@@ -113,10 +114,10 @@ export default function StakingChart() {
                   </Flex>
                 </Table.Cell>
                 <Table.Cell borderColor="explorer.border" px="0" textAlign="end" color="explorer.text">
-                  {numeral(row.bonded).format("0,0")}
+                  {formatWhole(row.bonded)}
                 </Table.Cell>
                 <Table.Cell borderColor="explorer.border" px="0" textAlign="end" color="explorer.muted">
-                  {numeral(row.unbonding).format("0,0")}
+                  {formatWhole(row.unbonding)}
                 </Table.Cell>
               </Table.Row>
             ))}

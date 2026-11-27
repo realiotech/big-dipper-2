@@ -3,9 +3,22 @@ import numeral from "numeral";
 import dayjs from "@/utils/dayjs";
 import { formatNumber } from "@/utils/format_token";
 
-/** 135461234 -> "135.46M" */
+/**
+ * 135461234 -> "135.46M". Rounds first: numeral returns "NaN" for tiny values
+ * such as 1e-18 (one base unit of an 18-decimal token).
+ */
 export const formatCompact = (value: number) =>
-  numeral(value || 0).format("0.[00]a").toUpperCase();
+  numeral(Number((value || 0).toFixed(2))).format("0.[00]a").toUpperCase();
+
+/**
+ * Whole token amount for tables: 1234.6 -> "1,235". Rounds before numeral
+ * (see formatCompact), and non-zero amounts that round to 0 read "<1".
+ */
+export const formatWhole = (value: number) => {
+  const amount = Number.isFinite(value) ? value : 0;
+  if (amount > 0 && amount < 0.5) return "<1";
+  return numeral(Math.round(amount)).format("0,0");
+};
 
 /** Relative time in the design's short form: "39 secs ago", "3 hrs ago". */
 export const timeAgo = (timestamp: string) => {
